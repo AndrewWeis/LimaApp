@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Tracker</string>
 
-    <string name="clear_note">Clear Note</string>
-    <string name="success_delete">Success delete note</string>
-    <string name="success_clear">Success clear note</string>
-    <string name="sure_clear_note">Are you sure, you want to delete all note?</string>
+    <string name="clear_tasks">Clear all tasks</string>
+    <string name="success_delete">Success delete task</string>
+    <string name="success_clear">Success clear all tasks</string>
+    <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
     <string name="form_empty">Some data is empty, checked your form</string>
-    <string name="update_note">Update Note</string>
-    <string name="success_save">Success save note</string>
-    <string name="success_update">Success update note</string>
+    <string name="update_task">Update task</string>
+    <string name="success_save">Success save task</string>
+    <string name="success_update">Success update task</string>
 </resources>

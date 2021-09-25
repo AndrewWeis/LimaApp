@@ -24,12 +24,15 @@ class TaskAdapter (private val listener: (Task) -> Unit) : ListAdapter<Task, Tas
         fun bindItem(task: Task, listener: (Task) -> Unit) {
             binding.apply {
                 label.text = task.label
-                priorityTV.text = task.priority.toString()
             }
             binding.root.setOnClickListener {
                 listener(task)
             }
         }
+    }
+
+    fun getNoteAt(position: Int): Task {
+        return getItem(position)
     }
 
     private class DiffUtilNote : DiffUtil.ItemCallback<Task>() {
