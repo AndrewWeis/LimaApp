@@ -1,8 +1,7 @@
-package start.up.tracker.data
+package start.up.tracker.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import start.up.tracker.model.Task
 
 @Dao
 interface TaskDao {
@@ -21,7 +20,4 @@ interface TaskDao {
 
     @Query("SELECT * FROM task_table ORDER BY priority DESC")
     fun getAllTasks(): LiveData<List<Task>>
-
-
-
 }

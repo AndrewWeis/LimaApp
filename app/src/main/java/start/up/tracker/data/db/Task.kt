@@ -1,4 +1,4 @@
-package start.up.tracker.model
+package start.up.tracker.data.db
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -8,7 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "task_table")
 data class Task (
-
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val label: String,
@@ -17,5 +16,4 @@ data class Task (
     val category: String,
     val dateAndTime: String,
     val repeats: String
-
 ): Parcelable
