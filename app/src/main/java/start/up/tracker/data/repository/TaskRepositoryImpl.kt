@@ -1,7 +1,8 @@
-package start.up.tracker.repository
+package start.up.tracker.data.repository
 
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.repository.TaskRepository
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao): TaskRepository {
