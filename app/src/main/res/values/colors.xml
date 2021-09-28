@@ -9,4 +9,8 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="background">#F2F7F8</color>
+    <color name="colorPrimaryDark">#7D54F1</color>
+    <color name="colorAccent">#5471F1</color>
+    <color name="inactiveIcon">#B1C0C7</color>
+
 </resources>

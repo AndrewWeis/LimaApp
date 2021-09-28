@@ -8,10 +8,6 @@ import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 
-/**
- * Created by rivaldy on Oct/19/2020.
- * Find me on my lol Github :D -> https://github.com/im-o
- */
 
 object UtilExtensions {
     fun <T> Context.openActivity(it: Class<T>, extras: Bundle.() -> Unit = {}) {

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import start.up.tracker.R
 import start.up.tracker.databinding.ActivityMainBinding
 import start.up.tracker.utils.Coroutines
@@ -42,7 +43,21 @@ class MainActivity : AppCompatActivity() {
 
         initView()
         observeTasks()
+        initBottomNavigation()
     }
+
+    private fun initBottomNavigation() {
+        bottomNavigationView.selectedItemId = R.id.home
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.category->openActivity(CategoryActivity::class.java)
+                R.id.analytics->openActivity(AnalyticsActivity::class.java)
+                R.id.settings->openActivity(SettingsActivity::class.java)
+            }
+            true
+        }
+    }
+
 
     private fun initView() {
         binding.addTaskFAB.setOnClickListener {

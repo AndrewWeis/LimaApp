@@ -4,10 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Tracker/app/src/main/res/drawable-v24/ic_baseline_add_24.xml" value="0.2703125" />
+        <entry key="..\:/Tracker/app/src/main/res/drawable/selector.xml" value="0.2703125" />
         <entry key="..\:/Tracker/app/src/main/res/layout/activity_add_task.xml" value="0.1" />
-        <entry key="..\:/Tracker/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/activity_analytics.xml" value="0.25416666666666665" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/activity_category.xml" value="0.25416666666666665" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/activity_settings.xml" value="0.25416666666666665" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/fragment_add_task.xml" value="0.25416666666666665" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/fragment_blank.xml" value="0.19166666666666668" />
+        <entry key="..\:/Tracker/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Tracker/app/src/main/res/layout/item_task.xml" value="0.264" />
+        <entry key="..\:/Tracker/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Tracker/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Tracker/app/src/main/res/menu/selector.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
