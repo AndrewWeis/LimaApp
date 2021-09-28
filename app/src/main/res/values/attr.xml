@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="whiteTheme">
+    <declare-styleable name="darkTheme">
         <attr name="colorBackground" format="color"/>
+        <attr name="textColor" format="color"/>
     </declare-styleable>
 </resources>
