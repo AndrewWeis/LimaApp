@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import start.up.tracker.R
+import start.up.tracker.data.sp.SharedPref
 import start.up.tracker.databinding.ActivityMainBinding
 import start.up.tracker.utils.Coroutines
 import start.up.tracker.utils.UtilExtensions.myToast
@@ -27,9 +28,13 @@ class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<TaskViewModel>()
     private lateinit var binding: ActivityMainBinding
     private lateinit var noteAdapter: TaskAdapter
+    private lateinit var sharedPref: SharedPref
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        initAppTheme()
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -44,6 +49,15 @@ class MainActivity : AppCompatActivity() {
         initView()
         observeTasks()
         initBottomNavigation()
+    }
+
+    private fun initAppTheme() {
+        sharedPref = SharedPref(this)
+        if (sharedPref.loadNightModeState()) {
+            setTheme(R.style.DarkTheme)
+        } else {
+            setTheme(R.style.TrackerTheme)
+        }
     }
 
     private fun initBottomNavigation() {

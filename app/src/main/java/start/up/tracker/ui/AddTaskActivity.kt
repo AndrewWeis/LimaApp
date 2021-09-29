@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.data.db.Task
+import start.up.tracker.data.sp.SharedPref
 import start.up.tracker.databinding.ActivityAddTaskBinding
 import start.up.tracker.utils.Coroutines
 import start.up.tracker.utils.UtilExtensions.myToast
@@ -16,11 +17,13 @@ import start.up.tracker.utils.UtilExtensions.setTextEditable
 class AddTaskActivity : AppCompatActivity() {
     private val viewModel by viewModels<TaskViewModel>()
     private lateinit var binding: ActivityAddTaskBinding
+    private lateinit var sharedPref: SharedPref
 
     private var task: Task? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initAppTheme()
         binding = ActivityAddTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
         task = intent.extras?.getParcelable(MainActivity.TASK_DATA)
@@ -28,6 +31,15 @@ class AddTaskActivity : AppCompatActivity() {
         initToolbar()
         initView()
         initClick()
+    }
+
+    private fun initAppTheme() {
+        sharedPref = SharedPref(this)
+        if (sharedPref.loadNightModeState()) {
+            setTheme(R.style.DarkTheme)
+        } else {
+            setTheme(R.style.TrackerTheme)
+        }
     }
 
     private fun initToolbar() {

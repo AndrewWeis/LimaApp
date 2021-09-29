@@ -9,10 +9,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Tracker">
+        android:theme="@style/TrackerTheme">
         <activity
             android:name=".ui.SettingsActivity"
-            android:exported="true" />
+            android:exported="true"/>
         <activity
             android:name=".ui.AnalyticsActivity"
             android:exported="true" />
@@ -23,11 +23,13 @@
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

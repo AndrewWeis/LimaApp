@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     tools:context=".ui.SettingsActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:background="?attr/backgroundColor"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="unlabeled"
         app:itemTextColor="@drawable/selector"
@@ -26,7 +28,7 @@
         android:layout_marginTop="72dp"
         android:fontFamily="@font/montserrat_medium"
         android:text="Settings"
-        android:textColor="@color/black"
+        android:textColor="?attr/textColor"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,7 +41,7 @@
         android:layout_marginTop="144dp"
         android:fontFamily="@font/montserrat_medium"
         android:text="Dark mode"
-        android:textColor="@color/black"
+        android:textColor="?attr/textColor"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/img_darkMode"
         app:layout_constraintTop_toTopOf="parent" />
