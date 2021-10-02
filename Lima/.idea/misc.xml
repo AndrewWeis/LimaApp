@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/LimaApp/Lima/app/src/main/res/layout/activity_main.xml" value="0.275" />
+        <entry key="..\:/LimaApp/Tracker/app/src/main/res/layout/activity_main.xml" value="0.275" />
         <entry key="..\:/Tracker/app/src/main/res/drawable-v24/ic_baseline_add_24.xml" value="0.2703125" />
         <entry key="..\:/Tracker/app/src/main/res/drawable/btn_gradient.xml" value="0.2866666666666667" />
         <entry key="..\:/Tracker/app/src/main/res/drawable/ic_add.xml" value="0.2866666666666667" />
