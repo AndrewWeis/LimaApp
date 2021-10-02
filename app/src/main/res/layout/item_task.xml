@@ -9,7 +9,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="?attr/backgroundColor">
+    app:cardBackgroundColor="?attr/taskColor">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:layout_marginEnd="24dp"
             android:textColor="?attr/textColor"
             android:textSize="16sp"
-            android:fontFamily="@font/montserrat_medium"
+            android:fontFamily="@font/b612_regular"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/priorityTV"
             app:layout_constraintStart_toEndOf="@+id/checkBox"
@@ -36,7 +36,7 @@
             android:layout_marginEnd="24dp"
             android:textSize="20sp"
             android:textColor="?attr/textColor"
-            android:fontFamily="@font/montserrat_semibold"
+            android:fontFamily="@font/b612_regular"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:buttonTint="?attr/buttonColor"
+            android:buttonTint="?attr/textFaded"
             android:minWidth="48dp"
             android:minHeight="48dp"
             app:layout_constraintBottom_toBottomOf="parent"

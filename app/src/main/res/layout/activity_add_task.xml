@@ -66,10 +66,10 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
         style="@style/Widget.MaterialComponents.Button"
-        android:background="?attr/buttonColor"
-        android:textColor="?attr/textColor"
+        app:backgroundTint="@color/colorAccent"
+        android:textColor="@color/colorWhite"
         android:textSize="14sp"
-        android:fontFamily="@font/montserrat_medium"
+        android:fontFamily="@font/b612_regular"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"

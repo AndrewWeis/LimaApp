@@ -4,6 +4,9 @@
         <attr name="backgroundColor" format="color"/>
         <attr name="textColor" format="color"/>
         <attr name="textFaded" format="color"/>
+        <attr name="taskColor" format="color"/>
+
+
         <attr name="tintColor" format="color"/>
         <attr name="buttonColor" format="color"/>
     </declare-styleable>
