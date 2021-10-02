@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TrackerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="TrackerTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="backgroundColor">#ffffff</item>
-        <item name="textColor">#4E4C4C</item>
+        <item name="backgroundColor">#F2F6FC</item>
+        <item name="textColor">#000000</item>
+        <item name="textFaded">#687680</item>
         <item name="tintColor">#000000</item>
         <item name="buttonColor">#C1C1B4</item>
     </style>
 
 
-    <style name="DarkTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="DarkTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="backgroundColor">#303030</item>
+        <item name="backgroundColor">#201B2A</item>
         <item name="textColor">#ffffff</item>
+        <item name="textFaded">#5F5E71</item>
         <item name="tintColor">#ffffff</item>
         <item name="buttonColor">#303030</item>
     </style>
