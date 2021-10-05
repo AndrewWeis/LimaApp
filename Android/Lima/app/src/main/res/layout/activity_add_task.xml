@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,75 +7,134 @@
     android:background="?attr/backgroundColor"
     tools:context=".ui.AddTaskActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tx_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/b612_bold"
+        android:text="Label"
+        android:textColor="?attr/textColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/titleTIL"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:textColorHint="?attr/textColor"
+        app:boxBackgroundColor="?attr/taskColor"
+        app:boxCornerRadiusBottomEnd="@dimen/field_radious"
+        app:boxCornerRadiusBottomStart="@dimen/field_radious"
+        app:boxCornerRadiusTopEnd="@dimen/field_radious"
+        app:boxCornerRadiusTopStart="@dimen/field_radious"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tx_label">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/titleTIL"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/titleET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:textColorHint="?attr/textColor"
-            android:hint="Label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:inputType="textCapSentences|textMultiLine"
+            android:textColor="?attr/textColor"
+            android:textSize="12sp"
+            android:fontFamily="@font/b612_regular"
+            android:textAlignment="viewStart"
+            android:gravity="start|top"
+            android:maxLines ="1"
+            android:maxLength ="50"
+            android:scrollHorizontally="false"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/titleET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="?attr/textColor"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/tx_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/b612_bold"
+        android:text="Description"
+        android:textColor="?attr/textColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTIL" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/descriptionTIL"
-            style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/descriptionTIL"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:boxBackgroundColor="?attr/taskColor"
+        app:boxCornerRadiusBottomEnd="@dimen/field_radious"
+        app:boxCornerRadiusBottomStart="@dimen/field_radious"
+        app:boxCornerRadiusTopEnd="@dimen/field_radious"
+        app:boxCornerRadiusTopStart="@dimen/field_radious"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tx_desc">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/descriptionET"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:hint="Description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/titleTIL">
+            android:layout_height="100dp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:textColor="?attr/textColor"
+            android:textSize="12sp"
+            android:fontFamily="@font/b612_regular"
+            android:textAlignment="viewStart"
+            android:gravity="start|top"
+            android:maxLines ="3"
+            android:maxLength ="150"
+            android:scrollHorizontally="false"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/descriptionET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="?attr/textColor"
-                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tx_prioirty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/b612_bold"
+        android:text="Priority type"
+        android:textColor="?attr/textColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTIL" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveButton"
         style="@style/Widget.MaterialComponents.Button"
-        app:backgroundTint="@color/colorAccent"
-        android:textColor="@color/colorWhite"
-        android:textSize="14sp"
-        android:fontFamily="@font/b612_regular"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="Save" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:fontFamily="@font/b612_regular"
+        android:text="Save"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
