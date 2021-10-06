@@ -34,3 +34,4 @@
 2. [Trello board](https://trello.com/b/KMLbj2KN/lima-app)
 3. [Milestones](./Docs/milestones.md)
 4. [Architecture](./Docs/achitecture.md)
+5. [Presentation](./Docs/presentation.pdf)
