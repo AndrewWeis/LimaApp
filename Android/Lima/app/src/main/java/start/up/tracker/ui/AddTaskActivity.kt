@@ -1,9 +1,12 @@
 package start.up.tracker.ui
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_add_task.*
 import start.up.tracker.R
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.sp.SharedPref
@@ -43,8 +46,11 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false);
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
 
     private fun initView() {

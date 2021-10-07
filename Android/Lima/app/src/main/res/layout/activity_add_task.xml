@@ -7,18 +7,62 @@
     android:background="?attr/backgroundColor"
     tools:context=".ui.AddTaskActivity">
 
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:elevation="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:navigationIcon="@drawable/ic_back"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/backgroundColor"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/b612_regular"
+                android:textSize="18sp"
+                android:textColor="?attr/textColor"
+                android:text="Add task"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
     <TextView
         android:id="@+id/tx_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/b612_bold"
         android:text="Label"
         android:textColor="?attr/textColor"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleTIL"
@@ -160,7 +204,7 @@
                 android:checked="false"
                 android:gravity="center"
                 android:fontFamily="@font/b612_regular"
-                android:textColor="@color/bth_text_selector"
+                android:textColor="?attr/textColor"
                 android:textSize="14sp"
                 android:text="No" />
 
@@ -174,7 +218,7 @@
                 android:checked="false"
                 android:gravity="center"
                 android:fontFamily="@font/b612_regular"
-                android:textColor="@color/bth_text_selector"
+                android:textColor="?attr/textColor"
                 android:textSize="14sp"
                 android:text="High" />
 
@@ -186,7 +230,7 @@
                 android:button="@null"
                 android:checked="false"
                 android:gravity="center"
-                android:textColor="@color/bth_text_selector"
+                android:textColor="?attr/textColor"
                 android:fontFamily="@font/b612_regular"
                 android:textSize="14sp"
                 android:text="Average" />
@@ -204,7 +248,7 @@
                 android:checked="false"
                 android:gravity="center"
                 android:fontFamily="@font/b612_regular"
-                android:textColor="@color/bth_text_selector"
+                android:textColor="?attr/textColor"
                 android:textSize="14sp"
                 android:text="Low" />
         </TableRow>
