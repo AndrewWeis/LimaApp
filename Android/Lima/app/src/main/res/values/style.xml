@@ -10,6 +10,7 @@
         <item name="textColor">#000000</item>
         <item name="textFaded">#687680</item>
         <item name="taskColor">#ffffff</item>
+        <item name="btnColor">#DADEE3</item>
 
 
         <item name="tintColor">#000000</item>
@@ -26,6 +27,7 @@
         <item name="textColor">#ffffff</item>
         <item name="textFaded">#5F5E71</item>
         <item name="taskColor">#2C2B3C</item>
+        <item name="btnColor">#2C2B3C</item>
 
         <item name="tintColor">#ffffff</item>
         <item name="buttonColor">#303030</item>
