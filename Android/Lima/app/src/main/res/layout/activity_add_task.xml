@@ -7,29 +7,66 @@
     android:background="?attr/backgroundColor"
     tools:context=".ui.AddTaskActivity">
 
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/backgroundColor"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navigationIcon="@drawable/ic_back" />
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/layout_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_task"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
     <TextView
         android:id="@+id/tx_label"
+        style="@style/fields_hints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/b612_bold"
-        android:text="Label"
-        android:textColor="?attr/textColor"
-        android:textSize="12sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:text="@string/label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleTIL"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/layout_margin"
         android:background="@null"
-        android:textColorHint="?attr/textColor"
         app:boxBackgroundColor="?attr/taskColor"
         app:boxCornerRadiusBottomEnd="@dimen/field_radious"
         app:boxCornerRadiusBottomStart="@dimen/field_radious"
@@ -44,30 +81,23 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/titleET"
+            style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences|textMultiLine"
-            android:textColor="?attr/textColor"
-            android:textSize="12sp"
-            android:fontFamily="@font/b612_regular"
-            android:textAlignment="viewStart"
-            android:gravity="start|top"
-            android:maxLines ="1"
-            android:maxLength ="50"
-            android:scrollHorizontally="false"
+            android:maxLength="50"
+            android:maxLines="1"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tx_desc"
+        style="@style/fields_hints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/b612_bold"
-        android:text="Description"
-        android:textColor="?attr/textColor"
-        android:textSize="12sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:text="@string/description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTIL" />
 
@@ -76,9 +106,9 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:layout_marginEnd="@dimen/layout_margin"
         app:boxBackgroundColor="?attr/taskColor"
         app:boxCornerRadiusBottomEnd="@dimen/field_radious"
         app:boxCornerRadiusBottomStart="@dimen/field_radious"
@@ -93,30 +123,23 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descriptionET"
+            style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:inputType="textCapSentences|textMultiLine"
-            android:textColor="?attr/textColor"
-            android:textSize="12sp"
-            android:fontFamily="@font/b612_regular"
-            android:textAlignment="viewStart"
-            android:gravity="start|top"
-            android:maxLines ="3"
-            android:maxLength ="150"
-            android:scrollHorizontally="false"
+            android:maxLength="150"
+            android:maxLines="3"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/tx_priority"
+        style="@style/fields_hints"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/b612_bold"
-        android:text="Priority type"
-        android:textColor="?attr/textColor"
-        android:textSize="12sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:text="@string/priority_type"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTIL" />
 
@@ -126,12 +149,12 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/b612_regular"
-        android:text="Save"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/layout_margin"
+        android:fontFamily="@font/ibm_medium"
+        android:text="@string/save"
         android:textColor="@color/colorWhite"
-        android:textSize="14sp"
+        android:textSize="@dimen/tx_size_16"
         app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -150,63 +173,34 @@
         app:layout_constraintTop_toBottomOf="@+id/tx_priority">
 
         <TableRow android:layout_marginTop="0dp">
+
             <RadioButton
                 android:id="@+id/radioButton"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="14dp"
-                android:background="@drawable/btn_selector"
-                android:button="@null"
+                style="@style/radio_btn"
                 android:checked="false"
-                android:gravity="center"
-                android:fontFamily="@font/b612_regular"
-                android:textColor="@color/bth_text_selector"
-                android:textSize="14sp"
-                android:text="No" />
+                android:text="@string/no" />
 
             <RadioButton
                 android:id="@+id/radioButton2"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="14dp"
-                android:background="@drawable/btn_selector"
-                android:button="@null"
+                style="@style/radio_btn"
                 android:checked="false"
-                android:gravity="center"
-                android:fontFamily="@font/b612_regular"
-                android:textColor="@color/bth_text_selector"
-                android:textSize="14sp"
-                android:text="High" />
+                android:text="@string/high" />
 
             <RadioButton
                 android:id="@+id/radioButton3"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_selector"
-                android:button="@null"
+                style="@style/radio_btn"
                 android:checked="false"
-                android:gravity="center"
-                android:textColor="@color/bth_text_selector"
-                android:fontFamily="@font/b612_regular"
-                android:textSize="14sp"
-                android:text="Average" />
+                android:text="@string/average" />
 
         </TableRow>
 
         <TableRow android:layout_marginTop="16dp">
+
             <RadioButton
                 android:id="@+id/radioButton4"
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="14dp"
-                android:background="@drawable/btn_selector"
-                android:button="@null"
+                style="@style/radio_btn"
                 android:checked="false"
-                android:gravity="center"
-                android:fontFamily="@font/b612_regular"
-                android:textColor="@color/bth_text_selector"
-                android:textSize="14sp"
-                android:text="Low" />
+                android:text="@string/low" />
         </TableRow>
 
 

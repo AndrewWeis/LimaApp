@@ -12,39 +12,35 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/backgroundColor"
-        app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="unlabeled"
-        app:itemTextColor="@drawable/selector"
         app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@drawable/selector"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
     <TextView
         android:id="@+id/tx_setting"
+        style="@style/layout_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="72dp"
-        android:fontFamily="@font/montserrat_medium"
-        android:text="Settings"
-        android:textColor="?attr/textColor"
-        android:textSize="20sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/title_top_margin"
+        android:text="@string/settings"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tx_darkMode"
+        style="@style/option_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="144dp"
-        android:fontFamily="@font/montserrat_medium"
-        android:text="Dark mode"
-        android:textColor="?attr/textColor"
-        android:textSize="20sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:text="@string/dark_mode"
+        app:layout_constraintBottom_toBottomOf="@+id/img_darkMode"
         app:layout_constraintStart_toEndOf="@+id/img_darkMode"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/img_darkMode" />
 
     <ImageView
         android:id="@+id/img_darkMode"
@@ -60,7 +56,7 @@
         android:id="@+id/switch_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="@dimen/layout_margin"
         app:layout_constraintBottom_toBottomOf="@+id/tx_darkMode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tx_darkMode" />
