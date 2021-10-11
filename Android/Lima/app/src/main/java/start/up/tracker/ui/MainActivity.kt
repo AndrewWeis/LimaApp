@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         //@todo bad practice because boilerplate code, but we'll be change this later using DI.
 
         noteAdapter = TaskAdapter {
@@ -117,7 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteAllTasks() {
+    /*private fun deleteAllTasks() {
         val dialog = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         dialog.setTitle(getString(R.string.clear_tasks))
             .setMessage(getString(R.string.sure_clear_task))
@@ -128,9 +129,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }.setNegativeButton(android.R.string.cancel, null).create().show()
-    }
+    }*/
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
@@ -140,5 +141,5 @@ class MainActivity : AppCompatActivity() {
             R.id.clearNoteItem -> deleteAllTasks()
         }
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 }

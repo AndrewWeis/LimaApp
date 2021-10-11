@@ -9,62 +9,62 @@
 
     <TextView
         android:id="@+id/tx_welcome"
+        style="@style/layout_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="72dp"
-        android:fontFamily="@font/b612_regular"
-        android:text="Good evening, Nikita"
-        android:textColor="?attr/textColor"
-        android:textSize="20sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/title_top_margin"
+        android:text="@string/tx_welcome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tx_organize"
+        style="@style/tx_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/b612_regular"
-        android:text="Organize your plans for the day"
-        android:textColor="?attr/textFaded"
-        android:textSize="14sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:text="@string/tx_subtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_welcome" />
+        app:layout_constraintTop_toBottomOf="@+id/tx_welcome"
+        tools:ignore="TextContrastCheck" />
 
-    <ImageView
-        android:id="@+id/img_card"
-        android:layout_width="0dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_today"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/img_card"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/layout_margin"
+        app:cardCornerRadius="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_organize" />
+        app:layout_constraintTop_toBottomOf="@+id/tx_organize">
+
+        <ImageView
+            android:id="@+id/img_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_img_card" />
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/tx_unsorted"
+        style="@style/logic_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/b612_regular"
-        android:text="Unsorted tasks"
-        android:textColor="?attr/textColor"
-        android:textSize="14sp"
+        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginTop="@dimen/margin_32dp"
+        android:text="@string/unsorted_tasks"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_card" />
+        app:layout_constraintTop_toBottomOf="@+id/card_today" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
         android:background="?attr/backgroundColor"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,30 +75,26 @@
         android:id="@+id/addTaskFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
-        android:contentDescription="TODO"
+        android:layout_margin="@dimen/layout_margin"
+        android:contentDescription="@string/fab"
         android:scaleType="fitXY"
+        android:src="@drawable/ic_add"
         app:backgroundTint="@color/colorAccent"
-        app:tint="@color/colorBackground"
-
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:tint="@color/colorBackground" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/nav_bar"
         android:background="?attr/backgroundColor"
-        app:menu="@menu/bottom_nav_menu"
-        app:labelVisibilityMode="unlabeled"
-        app:itemTextColor="@drawable/selector"
         app:itemIconTint="@drawable/selector"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

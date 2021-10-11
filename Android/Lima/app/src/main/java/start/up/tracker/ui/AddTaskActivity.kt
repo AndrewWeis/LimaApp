@@ -43,8 +43,11 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false);
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
 
     private fun initView() {
