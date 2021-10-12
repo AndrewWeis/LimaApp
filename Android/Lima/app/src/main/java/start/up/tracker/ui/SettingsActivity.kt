@@ -3,7 +3,6 @@ package start.up.tracker.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.bottomNavigationView
 import start.up.tracker.R
 import start.up.tracker.data.sp.SharedPref
 import start.up.tracker.databinding.ActivitySettingsBinding
@@ -24,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
 
 
         setUpSwitch()
-        initBottomNavigation()
+       // initBottomNavigation()
     }
 
     private fun setUpSwitch() {
@@ -58,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBottomNavigation() {
+    /*private fun initBottomNavigation() {
         bottomNavigationView.selectedItemId = R.id.settings
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
@@ -68,5 +67,5 @@ class SettingsActivity : AppCompatActivity() {
             }
             true
         }
-    }
+    }*/
 }

@@ -26,7 +26,7 @@ class AddTaskActivity : AppCompatActivity() {
         initAppTheme()
         binding = ActivityAddTaskBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        task = intent.extras?.getParcelable(MainActivity.TASK_DATA)
+        //task = intent.extras?.getParcelable(MainActivity.TASK_DATA)
 
         initToolbar()
         initView()
@@ -72,7 +72,7 @@ class AddTaskActivity : AppCompatActivity() {
             return
         }
 
-        val task = Task(id = id, label = label)
+        /*val task = Task(id = id, label = label)
         Coroutines.main {
             if (id != null) { //for update note
                 viewModel.updateTask(task).also {
@@ -85,7 +85,7 @@ class AddTaskActivity : AppCompatActivity() {
                     finish()
                 }
             }
-        }
+        }*/
     }
 
     override fun onSupportNavigateUp(): Boolean {

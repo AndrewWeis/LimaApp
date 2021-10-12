@@ -18,7 +18,7 @@ class AnalyticsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_analytics)
 
 
-        initBottomNavigation()
+        //initBottomNavigation()
     }
 
     private fun initAppTheme() {
@@ -30,7 +30,7 @@ class AnalyticsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBottomNavigation() {
+    /*private fun initBottomNavigation() {
         bottomNavigationView.selectedItemId = R.id.analytics
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
@@ -40,5 +40,5 @@ class AnalyticsActivity : AppCompatActivity() {
             }
             true
         }
-    }
+    }*/
 }

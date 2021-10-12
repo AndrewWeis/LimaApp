@@ -21,7 +21,7 @@ import start.up.tracker.utils.UtilExtensions.openActivity
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    companion object {
+    /*companion object {
         const val TASK_DATA = "TASK_DATA"
     }
 
@@ -29,18 +29,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var noteAdapter: TaskAdapter
     private lateinit var sharedPref: SharedPref
-
+*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContentView(R.layout.activity_main)
+/*
         initAppTheme()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+*/
 
 
-        //@todo bad practice because boilerplate code, but we'll be change this later using DI.
 
+/*
         noteAdapter = TaskAdapter {
             openActivity(AddTaskActivity::class.java) {
                 putParcelable(TASK_DATA, it)
@@ -50,8 +52,10 @@ class MainActivity : AppCompatActivity() {
         initView()
         observeTasks()
         initBottomNavigation()
+*/
     }
 
+/*
     private fun initAppTheme() {
         sharedPref = SharedPref(this)
         if (sharedPref.loadNightModeState()) {
@@ -117,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+*/
 
     /*private fun deleteAllTasks() {
         val dialog = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)

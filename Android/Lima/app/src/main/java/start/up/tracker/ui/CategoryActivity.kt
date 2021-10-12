@@ -19,7 +19,7 @@ class CategoryActivity : AppCompatActivity() {
 
 
 
-        initBottomNavigation()
+      //  initBottomNavigation()
     }
 
     private fun initAppTheme() {
@@ -31,7 +31,7 @@ class CategoryActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBottomNavigation() {
+    /*private fun initBottomNavigation() {
         bottomNavigationView.selectedItemId = R.id.category
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
@@ -41,5 +41,5 @@ class CategoryActivity : AppCompatActivity() {
             }
             true
         }
-    }
+    }*/
 }
