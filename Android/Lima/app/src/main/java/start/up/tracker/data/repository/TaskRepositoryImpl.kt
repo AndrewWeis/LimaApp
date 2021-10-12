@@ -7,11 +7,11 @@ import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(private val taskDao: TaskDao): TaskRepository {
 
-    override suspend fun addTask(task: Task) = taskDao.addTask(task)
+    override suspend fun addTask(task: Task) = taskDao.insert(task)
 
-    override suspend fun updateTask(task: Task) = taskDao.updateTask(task)
+    override suspend fun updateTask(task: Task) = taskDao.update(task)
 
-    override suspend fun deleteTask(task: Task) = taskDao.deleteTask(task)
+    override suspend fun deleteTask(task: Task) = taskDao.delete(task)
 
     override suspend fun deleteAllTasks() = taskDao.deleteAllTasks()
 

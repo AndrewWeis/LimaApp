@@ -2,22 +2,20 @@ package start.up.tracker.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addTask(task: Task)
+    suspend fun insert(task: Task)
 
     @Update
-    suspend fun updateTask(task: Task)
+    suspend fun update(task: Task)
 
     @Delete
-    suspend fun deleteTask(task: Task)
+    suspend fun delete(task: Task)
 
-    @Query("DELETE FROM task_table")
-    suspend fun deleteAllTasks()
-
-    @Query("SELECT * FROM task_table ORDER BY id DESC")
-    fun getAllTasks(): LiveData<List<Task>>
+    @Query("SELECT * FROM task_table")
+    fun getTasks(): Flow<List<Task>>
 }

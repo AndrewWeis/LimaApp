@@ -8,11 +8,11 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "task_table")
 data class Task (
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
     val label: String,
     val important: Boolean = false,
     val completed: Boolean = false,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     /*val desc: String,
     val priority: String,
     val category: String,
