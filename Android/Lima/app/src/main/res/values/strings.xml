@@ -24,4 +24,6 @@
     <string name="low">Low</string>
     <string name="save">Save</string>
     <string name="dark_mode">Dark mode</string>
+    <string name="importance_icon">Importance icon</string>
+    <string name="important">Important</string>
 </resources>
