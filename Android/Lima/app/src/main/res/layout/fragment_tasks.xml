@@ -66,7 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="?attr/backgroundColor"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tx_unsorted" />
@@ -76,25 +75,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_margin"
+        android:layout_marginBottom="@dimen/layout_margin"
         android:contentDescription="@string/fab"
         android:scaleType="fitXY"
         android:src="@drawable/ic_add"
         app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/colorBackground" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/nav_bar"
-        android:background="?attr/backgroundColor"
-        app:itemIconTint="@drawable/selector"
-        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:tint="@color/colorBackground" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
