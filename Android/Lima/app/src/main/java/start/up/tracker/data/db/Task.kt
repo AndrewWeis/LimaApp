@@ -11,6 +11,7 @@ data class Task (
     val name: String,
     val important: Boolean = false,
     val completed: Boolean = false,
+    val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true)  val id: Int = 0,
     /*val desc: String,
     val priority: String,

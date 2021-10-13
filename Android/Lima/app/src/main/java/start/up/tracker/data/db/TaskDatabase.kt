@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 
-@Database(entities = [Task::class], version = 3)
+@Database(entities = [Task::class], version = 1)
 abstract class TaskDatabase: RoomDatabase() {
 
     abstract fun taskDao(): TaskDao

@@ -27,5 +27,8 @@
     <string name="importance_icon">Importance icon</string>
     <string name="important">Important</string>
     <string name="hide_completed">Hide completed</string>
+    <string name="action_sort">Sort</string>
+    <string name="sort_by_name">Sort by name</string>
+    <string name="sort_by_date_created">Sort by date created</string>
     <string name="delete_all_completed">Delete all completed</string>
 </resources>
