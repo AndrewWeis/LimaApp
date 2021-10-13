@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/check_box_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -28,20 +28,20 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
-            android:id="@+id/label"
+            android:id="@+id/text_view_name"
             style="@style/card_label"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/layout_margin"
             android:layout_marginEnd="@dimen/layout_margin"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintStart_toEndOf="@+id/checkBox"
+            app:layout_constraintEnd_toStartOf="@+id/label_priority"
+            app:layout_constraintStart_toEndOf="@+id/check_box_completed"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Some task we need to complete or we are going to suffer" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/label_priority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/layout_margin"

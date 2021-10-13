@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 
-@Database(entities = [Task::class], version = 1)
+@Database(entities = [Task::class], version = 3)
 abstract class TaskDatabase: RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
@@ -26,9 +26,13 @@ abstract class TaskDatabase: RoomDatabase() {
 
             applicationScope.launch {
                 dao.insert(Task("Wash the dishes"))
-                dao.insert(Task("Wash the dishes"))
-                dao.insert(Task("Wash the dishes", important = true))
-                dao.insert(Task("Wash the dishes", completed = true))
+                dao.insert(Task("Do the laundry"))
+                dao.insert(Task("Buy groceries", important = true))
+                dao.insert(Task("Prepare food", completed = true))
+                dao.insert(Task("Call mom"))
+                dao.insert(Task("Visit grandma", completed = true))
+                dao.insert(Task("Repair my bike"))
+                dao.insert(Task("Call Elon Musk"))
             }
         }
     }

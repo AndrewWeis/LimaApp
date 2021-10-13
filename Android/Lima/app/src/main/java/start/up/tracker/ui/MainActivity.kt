@@ -27,15 +27,15 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<TaskViewModel>()
     private lateinit var binding: ActivityMainBinding
-    private lateinit var noteAdapter: TaskAdapter
+    private lateinit var noteAdapter: TaskAdapter*/
     private lateinit var sharedPref: SharedPref
-*/
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-/*
-        initAppTheme()
 
+        initAppTheme()
+/*
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 */
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 */
     }
 
-/*
+
     private fun initAppTheme() {
         sharedPref = SharedPref(this)
         if (sharedPref.loadNightModeState()) {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
             setTheme(R.style.TrackerTheme)
         }
     }
-
+/*
     private fun initBottomNavigation() {
         bottomNavigationView.selectedItemId = R.id.home
         bottomNavigationView.setOnNavigationItemSelectedListener {
@@ -81,22 +81,6 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         binding.addTaskFAB.setOnClickListener {
             openActivity(AddTaskActivity::class.java)
-        }
-
-        binding.taskRV.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = noteAdapter
-        }
-
-        ItemTouchHelper(itemTouchHelperCallback()).attachToRecyclerView(binding.taskRV)
-    }
-
-    private fun observeTasks() {
-        Coroutines.main {
-            viewModel.getAllTasks().observe(this@MainActivity, {
-                noteAdapter.submitList(it)
-            })
         }
     }
 

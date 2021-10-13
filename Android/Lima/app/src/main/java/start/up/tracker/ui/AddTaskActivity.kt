@@ -8,14 +8,14 @@ import start.up.tracker.R
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.sp.SharedPref
 import start.up.tracker.databinding.ActivityAddTaskBinding
-import start.up.tracker.ui.tasks.TaskViewModel
+import start.up.tracker.ui.tasks.TasksViewModel
 import start.up.tracker.utils.UtilExtensions.myToast
 import start.up.tracker.utils.UtilExtensions.setTextEditable
 
 
 @AndroidEntryPoint
 class AddTaskActivity : AppCompatActivity() {
-    private val viewModel by viewModels<TaskViewModel>()
+    private val viewModel by viewModels<TasksViewModel>()
     private lateinit var binding: ActivityAddTaskBinding
     private lateinit var sharedPref: SharedPref
 
@@ -52,7 +52,7 @@ class AddTaskActivity : AppCompatActivity() {
 
     private fun initView() {
         if (task != null) { //this is for set data to form and update data
-            binding.titleET.setTextEditable(task?.label ?: "")
+            binding.titleET.setTextEditable(task?.name ?: "")
         }
     }
 
