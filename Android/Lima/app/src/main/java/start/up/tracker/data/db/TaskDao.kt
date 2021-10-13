@@ -2,7 +2,6 @@ package start.up.tracker.data.db
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import start.up.tracker.ui.tasks.SortOrder
 
 @Dao
 interface TaskDao {
