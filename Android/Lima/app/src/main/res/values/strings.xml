@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Tracker</string>
 
-    <string name="clear_tasks">Clear all tasks</string>
+    <string name="action_search">Search</string>
     <string name="success_delete">Success delete task</string>
     <string name="success_clear">Success clear all tasks</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
@@ -26,4 +26,6 @@
     <string name="dark_mode">Dark mode</string>
     <string name="importance_icon">Importance icon</string>
     <string name="important">Important</string>
+    <string name="hide_completed">Hide completed</string>
+    <string name="delete_all_completed">Delete all completed</string>
 </resources>

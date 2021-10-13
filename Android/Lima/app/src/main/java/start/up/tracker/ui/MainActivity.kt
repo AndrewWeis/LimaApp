@@ -21,10 +21,7 @@ import start.up.tracker.utils.UtilExtensions.openActivity
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    /*companion object {
-        const val TASK_DATA = "TASK_DATA"
-    }
-
+    /*
     private val viewModel by viewModels<TaskViewModel>()
     private lateinit var binding: ActivityMainBinding
     private lateinit var noteAdapter: TaskAdapter*/
@@ -38,16 +35,6 @@ class MainActivity : AppCompatActivity() {
 /*
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-*/
-
-
-
-/*
-        noteAdapter = TaskAdapter {
-            openActivity(AddTaskActivity::class.java) {
-                putParcelable(TASK_DATA, it)
-            }
-        }
 
         initView()
         observeTasks()
@@ -106,29 +93,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 */
-
-    /*private fun deleteAllTasks() {
-        val dialog = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
-        dialog.setTitle(getString(R.string.clear_tasks))
-            .setMessage(getString(R.string.sure_clear_task))
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                Coroutines.main {
-                    viewModel.deleteAllTasks().also {
-                        myToast(getString(R.string.success_clear))
-                    }
-                }
-            }.setNegativeButton(android.R.string.cancel, null).create().show()
-    }*/
-
-    /*override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.clearNoteItem -> deleteAllTasks()
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
 }
