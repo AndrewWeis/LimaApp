@@ -1,5 +1,6 @@
-package start.up.tracker.ui
 
+package start.up.tracker.ui
+/*
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -57,7 +58,8 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun initBottomNavigation() {
+    */
+/*private fun initBottomNavigation() {
         bottomNavigationView.selectedItemId = R.id.settings
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
@@ -67,5 +69,6 @@ class SettingsActivity : AppCompatActivity() {
             }
             true
         }
-    }*/
-}
+    }*//*
+
+}*/
