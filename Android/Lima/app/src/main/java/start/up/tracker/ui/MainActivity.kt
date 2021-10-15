@@ -1,6 +1,7 @@
 package start.up.tracker.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -28,12 +29,13 @@ class MainActivity : AppCompatActivity() {
 
         setTheme(R.style.TrackerTheme)
 
+        setUpNav()
+    }
 
+    private fun setUpNav() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-
-        setupActionBarWithNavController(navController)
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -44,11 +46,31 @@ class MainActivity : AppCompatActivity() {
             )
         )
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.tasksFragment -> showBottomNav()
+                R.id.categoryFragment -> showBottomNav()
+                R.id.analyticsFragment -> showBottomNav()
+                R.id.settingsFragment -> showBottomNav()
+                else -> hideBottomNav()
+            }
+        }
+
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
+
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    private fun showBottomNav() {
+        binding.bottomNavigationView.visibility = View.VISIBLE
+    }
+
+    private fun hideBottomNav() {
+        binding.bottomNavigationView.visibility = View.GONE
     }
 
     private fun initAppTheme() {
