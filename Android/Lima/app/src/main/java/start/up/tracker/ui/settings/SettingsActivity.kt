@@ -1,5 +1,5 @@
 
-package start.up.tracker.ui
+package start.up.tracker.ui.settings
 /*
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

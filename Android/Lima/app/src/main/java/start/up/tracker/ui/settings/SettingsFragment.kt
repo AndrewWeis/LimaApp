@@ -1,4 +1,4 @@
-package start.up.tracker.ui
+package start.up.tracker.ui.settings
 
 import androidx.fragment.app.Fragment
 import start.up.tracker.R

@@ -160,7 +160,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <start.up.tracker.ui.RadioGridGroup
+    <start.up.tracker.ui.addedittask.RadioGridGroup
         android:id="@+id/group_priority"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -204,6 +204,6 @@
         </TableRow>
 
 
-    </start.up.tracker.ui.RadioGridGroup>
+    </start.up.tracker.ui.addedittask.RadioGridGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
