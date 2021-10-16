@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tx_label">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/titleET"
+            android:id="@+id/editTextTaskLabel"
             style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
     </start.up.tracker.ui.addedittask.RadioGridGroup>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveButton"
+        android:id="@+id/fabSaveTask"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="60dp"

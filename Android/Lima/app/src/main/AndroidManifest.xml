@@ -11,17 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/TrackerTheme">
         <activity
-            android:name=".ui.SettingsActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".ui.AnalyticsActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.CategoryActivity"
-            android:exported="true" />
-        <activity android:name=".ui.AddTaskActivity" />
-        <activity
             android:name=".ui.MainActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
 
             <intent-filter>
