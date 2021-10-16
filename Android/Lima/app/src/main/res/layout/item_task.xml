@@ -4,55 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardBackgroundColor="?attr/taskColor">
+    android:layout_marginStart="@dimen/layout_margin"
+    android:layout_marginTop="@dimen/margin_16dp"
+    android:layout_marginEnd="@dimen/layout_margin"
+    app:cardBackgroundColor="?attr/taskColor"
+    app:cardCornerRadius="@dimen/corner_radious_16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:textColor="?attr/textColor"
-            android:textSize="16sp"
-            android:fontFamily="@font/b612_regular"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/priorityTV"
-            app:layout_constraintStart_toEndOf="@+id/checkBox"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Label" />
-
-        <TextView
-            android:id="@+id/priorityTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:textSize="20sp"
-            android:textColor="?attr/textColor"
-            android:fontFamily="@font/b612_regular"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="10" />
-
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/check_box_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:buttonTint="?attr/textFaded"
-            android:minWidth="48dp"
-            android:minHeight="48dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/text_view_name"
+            style="@style/card_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/layout_margin"
+            android:layout_marginEnd="@dimen/layout_margin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/label_priority"
+            app:layout_constraintStart_toEndOf="@+id/check_box_completed"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Some task we need to complete or we are going to suffer" />
+
+        <ImageView
+            android:id="@+id/label_priority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/layout_margin"
+            android:contentDescription="@string/importance_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_important" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
