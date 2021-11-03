@@ -4,26 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundColor"
     tools:context=".ui.settings.SettingsFragment">
 
     <TextView
-        android:id="@+id/tx_setting"
-        style="@style/layout_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
-        android:text="@string/settings"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/tx_darkMode"
-        style="@style/option_label"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
+        android:layout_marginStart="@dimen/spacing_normal"
         android:text="@string/dark_mode"
         app:layout_constraintBottom_toBottomOf="@+id/img_darkMode"
         app:layout_constraintStart_toEndOf="@+id/img_darkMode"
@@ -33,17 +21,17 @@
         android:id="@+id/img_darkMode"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_setting"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_app_mode" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/layout_margin"
+        android:layout_marginEnd="@dimen/spacing_normal"
         app:layout_constraintBottom_toBottomOf="@+id/tx_darkMode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tx_darkMode" />

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/backgroundColor"
     tools:context=".ui.addedittask.AddEditTaskFragment">
 
 
@@ -12,89 +11,60 @@
         android:id="@+id/checkBoxImportant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:text="@string/important"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/group_priority" />
 
 
-    <TextView
-        android:id="@+id/tx_label"
-        style="@style/fields_hints"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/title_top_margin"
-        android:text="@string/label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleTIL"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/margin_8dp"
-        android:layout_marginEnd="@dimen/layout_margin"
-        android:background="@null"
-        app:boxBackgroundColor="?attr/taskColor"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:hint="@string/label"
         app:boxCornerRadiusBottomEnd="@dimen/field_radious"
         app:boxCornerRadiusBottomStart="@dimen/field_radious"
         app:boxCornerRadiusTopEnd="@dimen/field_radious"
         app:boxCornerRadiusTopStart="@dimen/field_radious"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_label">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextTaskLabel"
-            style="@style/edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLength="50"
+            android:maxLength="40"
             android:maxLines="1"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tx_desc"
-        style="@style/fields_hints"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
-        android:text="@string/description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTIL" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionTIL"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/margin_8dp"
-        android:layout_marginEnd="@dimen/layout_margin"
-        app:boxBackgroundColor="?attr/taskColor"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:hint="@string/description"
         app:boxCornerRadiusBottomEnd="@dimen/field_radious"
         app:boxCornerRadiusBottomStart="@dimen/field_radious"
         app:boxCornerRadiusTopEnd="@dimen/field_radious"
         app:boxCornerRadiusTopStart="@dimen/field_radious"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_desc">
+        app:layout_constraintTop_toBottomOf="@+id/titleTIL">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descriptionET"
-            style="@style/edit_text"
+            style="@style/CustomSubtitle2"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:inputType="textCapSentences|textMultiLine"
@@ -105,11 +75,11 @@
 
     <TextView
         android:id="@+id/tx_priority"
-        style="@style/fields_hints"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:text="@string/priority_type"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTIL" />
@@ -160,21 +130,16 @@
 
     </start.up.tracker.ui.addedittask.RadioGridGroup>
 
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSaveTask"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="@dimen/layout_margin"
-        android:layout_marginEnd="@dimen/layout_margin"
-        android:fontFamily="@font/ibm_medium"
-        android:text="@string/save"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/tx_size_16"
-        app:backgroundTint="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:contentDescription="@string/fab"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_done"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

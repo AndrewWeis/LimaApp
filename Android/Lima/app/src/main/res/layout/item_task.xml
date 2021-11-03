@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginStart="@dimen/layout_margin"
-    android:layout_marginTop="@dimen/margin_16dp"
-    android:layout_marginEnd="@dimen/layout_margin"
-    app:cardBackgroundColor="?attr/taskColor"
+    android:layout_marginBottom="@dimen/spacing_normal"
+    android:layout_marginStart="@dimen/spacing_little"
+    android:layout_marginEnd="@dimen/spacing_little"
+    android:layout_marginTop="@dimen/spacing_tiny"
     app:cardCornerRadius="@dimen/corner_radious_16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,8 +18,7 @@
             android:id="@+id/check_box_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:buttonTint="?attr/textFaded"
+            android:layout_marginStart="16dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -29,11 +28,11 @@
 
         <TextView
             android:id="@+id/text_view_name"
-            style="@style/card_label"
+            style="@style/CustomBody1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/layout_margin"
-            android:layout_marginEnd="@dimen/layout_margin"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/label_priority"
             app:layout_constraintStart_toEndOf="@+id/check_box_completed"
@@ -44,7 +43,7 @@
             android:id="@+id/label_priority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/layout_margin"
+            android:layout_marginEnd="@dimen/spacing_normal"
             android:contentDescription="@string/importance_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,4 +52,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
