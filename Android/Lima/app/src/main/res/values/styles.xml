@@ -1,100 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="TrackerTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="TrackerTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorPrimaryVariant">@color/primaryLightColor</item>
+        <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <item name="colorSecondary">@color/secondaryColor</item>
+        <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorOnSecondary">@color/secondaryTextColor</item>
 
-        <item name="backgroundColor">#F2F6FC</item>
-        <item name="textColor">#000000</item>
-        <item name="textFaded">#687680</item>
-        <item name="taskColor">#ffffff</item>
-        <item name="btnColor">#DADEE3</item>
-
-
-        <item name="tintColor">#000000</item>
-        <item name="buttonColor">#C1C1B4</item>
-
-        <item name="colorControlNormal">@color/colorWhite</item>
-    </style>
-
-
-    <style name="DarkTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
-
-        <item name="backgroundColor">#201B2A</item>
-        <item name="textColor">#ffffff</item>
-        <item name="textFaded">#687782</item>
-        <item name="taskColor">#2C2B3C</item>
-        <item name="btnColor">#2C2B3C</item>
-
-        <item name="tintColor">#ffffff</item>
-        <item name="buttonColor">#303030</item>
-
-        <item name="colorControlNormal">@color/colorBlack</item>
-    </style>
-
-
-    <style name="layout_title">
-        <item name="android:fontFamily">@font/ibm_medium</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_20</item>
-    </style>
-
-    <style name="tx_subtitle">
         <item name="android:fontFamily">@font/ibm_regular</item>
-        <item name="android:textColor">?attr/textFaded</item>
-        <item name="android:textSize">@dimen/tx_size_14</item>
+        <item name="fontFamily">@font/ibm_regular</item>
+        <item name="textAppearanceBody1">@style/CustomBody1</item>
+        <item name="textAppearanceSubtitle2">@style/CustomSubtitle2</item>
     </style>
 
-    <style name="logic_title">
-        <item name="android:fontFamily">@font/ibm_medium</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_14</item>
-    </style>
-
-    <style name="card_label">
-        <item name="android:fontFamily">@font/ibm_regular</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_16</item>
+    <style name="CustomBody1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="option_label">
-        <item name="android:fontFamily">@font/ibm_regular</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_18</item>
-    </style>
-
-    <style name="fields_hints">
-        <item name="android:fontFamily">@font/ibm_medium</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_14</item>
-    </style>
-
-    <style name="edit_text">
-        <item name="android:fontFamily">@font/ibm_regular</item>
+    <style name="CustomSubtitle2">
         <item name="android:gravity">start|top</item>
         <item name="android:scrollHorizontally">false</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_14</item>
     </style>
 
     <style name="radio_btn">
         <item name="android:layout_width">110dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">14dp</item>
-        <item name="android:background">@drawable/btn_selector</item>
         <item name="android:button">@null</item>
         <item name="android:fontFamily">@font/ibm_regular</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:textSize">@dimen/tx_size_14</item>
     </style>
 
 </resources>
