@@ -18,76 +18,49 @@
         app:layout_constraintTop_toBottomOf="@+id/group_priority" />
 
 
-    <TextView
-        android:id="@+id/tx_label"
-        style="@style/TextAppearance.MaterialComponents.Subtitle2"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/titleTIL"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/label"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/titleTIL"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_little"
         android:layout_marginEnd="@dimen/spacing_normal"
-        android:background="@null"
+        android:hint="@string/label"
         app:boxCornerRadiusBottomEnd="@dimen/field_radious"
         app:boxCornerRadiusBottomStart="@dimen/field_radious"
         app:boxCornerRadiusTopEnd="@dimen/field_radious"
         app:boxCornerRadiusTopStart="@dimen/field_radious"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_label">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextTaskLabel"
-            style="@style/CustomSubtitle2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences|textMultiLine"
-            android:maxLength="50"
+            android:maxLength="40"
             android:maxLines="1"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tx_desc"
-        style="@style/TextAppearance.MaterialComponents.Subtitle2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/description"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTIL" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/descriptionTIL"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_little"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
+        android:hint="@string/description"
         app:boxCornerRadiusBottomEnd="@dimen/field_radious"
         app:boxCornerRadiusBottomStart="@dimen/field_radious"
         app:boxCornerRadiusTopEnd="@dimen/field_radious"
         app:boxCornerRadiusTopStart="@dimen/field_radious"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_desc">
+        app:layout_constraintTop_toBottomOf="@+id/titleTIL">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descriptionET"
