@@ -3,6 +3,7 @@
     <dimen name="field_radious">13dp</dimen>
     <dimen name="corner_radious_16dp">16dp</dimen>
 
+    <dimen name="spacing_tiny">4dp</dimen>
     <dimen name="spacing_little">8dp</dimen>
     <dimen name="spacing_normal">16dp</dimen>
     <dimen name="spacing_large">32dp</dimen>
