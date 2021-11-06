@@ -22,7 +22,7 @@ class AddEditTaskViewModel @Inject constructor(
 
     val task = state.get<Task>("task")
 
-    var taskName = state.get<String>("taskName") ?: task?.name ?: ""
+    var taskName = state.get<String>("taskName") ?: task?.taskName ?: ""
         set(value) {
             field = value
             state.set("taskName", value)
@@ -44,21 +44,21 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
         if (task != null) {
-            val updatedTask = task.copy(name = taskName, important = taskImportance)
+            val updatedTask = task.copy(taskName = taskName, important = taskImportance)
             updatedTask(updatedTask)
         } else {
-            val newTask = Task(name = taskName, important = taskImportance)
+            val newTask = Task(taskName = taskName, important = taskImportance)
             createTask(newTask)
         }
     }
 
     private fun createTask(task: Task) = viewModelScope.launch {
-        taskDao.insert(task)
+        taskDao.insertTask(task)
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 
     private fun updatedTask(task: Task) = viewModelScope.launch {
-        taskDao.update(task)
+        taskDao.updateTask(task)
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
     }
 
