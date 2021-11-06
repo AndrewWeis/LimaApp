@@ -35,7 +35,7 @@
         tools:layout="@layout/fragment_analytics" />
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="start.up.tracker.ui.categories.CategoryFragment"
+        android:name="start.up.tracker.ui.categories.CategoriesFragment"
         android:label="Categories"
         tools:layout="@layout/fragment_categories" />
     <fragment

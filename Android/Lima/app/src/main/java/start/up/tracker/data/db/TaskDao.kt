@@ -38,6 +38,9 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE taskName = :taskName")
     suspend fun getCategoriesOfTask(taskName: String): List<TaskWithCategories>
 
+    @Query("SELECT * FROM category")
+    fun getCategories() : Flow<List<Category>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
 
