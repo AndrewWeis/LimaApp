@@ -8,51 +8,31 @@ import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.data.db.Category
 import start.up.tracker.databinding.ItemCategoryBinding
 
-class CategoriesAdapter/*(private val listener: OnItemClickListener)*/ : ListAdapter<Category,
-        CategoriesAdapter.CategoryViewHolder>(CategoriesAdapter.DiffCallback()
+class CategoriesAdapter : ListAdapter<Category,
+        CategoriesAdapter.CategoryViewHolder>(DiffCallback()
 ) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): CategoriesAdapter.CategoryViewHolder {
+    ): CategoryViewHolder {
         val binding = ItemCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CategoryViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: CategoriesAdapter.CategoryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    inner class CategoryViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.apply {
-                root.setOnClickListener {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        val category = getItem(position)
-                     //   listener.onItemClick(category)
-                    }
-                }
-            }
-
-            // TODO(Implement onClickListener on Image)
-        }
+    class CategoryViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(category: Category) {
             binding.apply {
                 textViewCategoryName.text = category.categoryName
                 // TODO(Implement the number of tasks inside the category)
-                // TODO(Implement setting chosen Image)
             }
         }
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(category: Category)
-        // TODO(Implement onImageClick logic)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Category>() {
