@@ -62,5 +62,8 @@
         <argument
             android:name="titleCategory"
             app:argType="string" />
+        <action
+            android:id="@+id/action_categoryInsideFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
     </fragment>
 </navigation>

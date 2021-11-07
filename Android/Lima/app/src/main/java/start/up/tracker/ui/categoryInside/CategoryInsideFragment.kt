@@ -93,11 +93,11 @@ class CategoryInsideFragment : Fragment(R.layout.fragment_category_inside), Task
                             }.show()
                     }
                     is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(title = "Add new task")
+                        val action = CategoryInsideFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task")
                         findNavController().navigate(action)
                     }
                     is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(event.task, "Edit task")
+                        val action = CategoryInsideFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(event.task, "Edit task")
                         findNavController().navigate(action)
                     }
                     is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
