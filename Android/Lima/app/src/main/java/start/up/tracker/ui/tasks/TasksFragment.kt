@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.db.SortOrder
-import start.up.tracker.data.db.models.Task
+import start.up.tracker.data.db.Task
 import start.up.tracker.databinding.FragmentTasksBinding
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.onQueryTextChanged

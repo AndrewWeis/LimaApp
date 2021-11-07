@@ -3,7 +3,6 @@ package start.up.tracker.data.db
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.db.models.Category
-import start.up.tracker.data.db.models.Task
 import start.up.tracker.data.db.relations.CategoryWithTasks
 import start.up.tracker.data.db.relations.TaskCategoryCrossRef
 import start.up.tracker.data.db.relations.TaskWithCategories

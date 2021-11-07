@@ -37,7 +37,11 @@
         android:id="@+id/categoryFragment"
         android:name="start.up.tracker.ui.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories" />
+        tools:layout="@layout/fragment_categories" >
+        <action
+            android:id="@+id/action_categoryFragment_to_categoryInsideFragment"
+            app:destination="@id/categoryInsideFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="start.up.tracker.ui.settings.SettingsFragment"
@@ -47,4 +51,13 @@
         android:id="@+id/deleteAllCompletedDialogFragment"
         android:name="start.up.tracker.ui.deleteallcompleted.DeleteAllCompletedDialogFragment"
         android:label="DeleteAllCompletedDialogFragment" /><action android:id="@+id/action_global_deleteAllCompletedDialogFragment" app:destination="@id/deleteAllCompletedDialogFragment"/>
+    <fragment
+        android:id="@+id/categoryInsideFragment"
+        android:name="start.up.tracker.ui.categoryInside.CategoryInsideFragment"
+        android:label="fragment_category_inside"
+        tools:layout="@layout/fragment_category_inside" >
+        <argument
+            android:name="category"
+            app:argType="start.up.tracker.data.db.models.Category" />
+    </fragment>
 </navigation>
