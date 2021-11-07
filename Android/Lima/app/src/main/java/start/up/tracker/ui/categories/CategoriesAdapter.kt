@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.data.db.models.Category
 import start.up.tracker.databinding.ItemCategoryBinding
 
-class CategoriesAdapter : ListAdapter<Category,
-        CategoriesAdapter.CategoryViewHolder>(DiffCallback()
-) {
+class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter<Category,
+        CategoriesAdapter.CategoryViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,14 +24,31 @@ class CategoriesAdapter : ListAdapter<Category,
         holder.bind(currentItem)
     }
 
-    class CategoryViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class CategoryViewHolder(private val binding: ItemCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.apply {
+                root.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val category = getItem(position)
+                        listener.onItemClick(category)
+                    }
+                }
+            }
+        }
 
         fun bind(category: Category) {
             binding.apply {
                 textViewCategoryName.text = category.categoryName
-                // TODO(Implement the number of tasks inside the category)
+            // TODO(Implement the number of tasks inside the category)
             }
         }
+    }
+
+
+    interface OnItemClickListener {
+        fun onItemClick(category: Category)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Category>() {

@@ -54,10 +54,13 @@
     <fragment
         android:id="@+id/categoryInsideFragment"
         android:name="start.up.tracker.ui.categoryInside.CategoryInsideFragment"
-        android:label="fragment_category_inside"
+        android:label="{titleCategory}"
         tools:layout="@layout/fragment_category_inside" >
         <argument
             android:name="category"
             app:argType="start.up.tracker.data.db.models.Category" />
+        <argument
+            android:name="titleCategory"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentCategoryInsideBinding
 
+@AndroidEntryPoint
 class CategoryInsideFragment : Fragment(R.layout.fragment_category_inside) {
 
     private val viewModel: CategoryInsideViewModel by viewModels()
