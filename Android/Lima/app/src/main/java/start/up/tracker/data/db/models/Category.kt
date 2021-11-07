@@ -1,4 +1,4 @@
-package start.up.tracker.data.db
+package start.up.tracker.data.db.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

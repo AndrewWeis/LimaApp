@@ -31,4 +31,6 @@
     <string name="sort_by_name">Sort by name</string>
     <string name="sort_by_date_created">Sort by date created</string>
     <string name="delete_all_completed">Delete all completed</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

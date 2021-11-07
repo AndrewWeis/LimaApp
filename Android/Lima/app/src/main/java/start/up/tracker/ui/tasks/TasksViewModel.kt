@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.PreferencesManager
 import start.up.tracker.data.db.SortOrder
-import start.up.tracker.data.db.Task
+import start.up.tracker.data.db.models.Task
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK

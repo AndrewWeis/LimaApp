@@ -1,4 +1,4 @@
-package start.up.tracker.data.db
+package start.up.tracker.data.db.models
 
 import android.os.Parcelable
 import androidx.room.Entity
