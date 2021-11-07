@@ -26,10 +26,53 @@ interface TaskDao {
             SortOrder.BY_NAME -> getTasksSortedByName(query, hideCompleted)
         }
 
-    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND taskName LIKE '%' || :searchQuery || '%' ORDER BY important DESC, taskName")
+    fun getTasksOfCategory(query: String, sortOrder: SortOrder, hideCompleted: Boolean, categoryName: String): Flow<List<Task>> =
+        when(sortOrder) {
+            SortOrder.BY_DATE -> getTasksOfCategorySortedByDateCreated(query, hideCompleted, categoryName)
+            SortOrder.BY_NAME -> getTasksOfCategorySortedByName(query, hideCompleted, categoryName)
+        }
+
+
+    @Query("""
+       SELECT * 
+       FROM task_table 
+       JOIN cross_ref ON task_table.taskName = cross_ref.taskName
+       WHERE categoryName = :categoryName AND
+       (completed != :hideCompleted OR completed = 0) AND 
+       task_table.taskName LIKE '%' || :searchQuery || '%' 
+       ORDER BY important 
+       DESC, taskName
+       """)
+    fun getTasksOfCategorySortedByName(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
+
+    @Query("""
+       SELECT * 
+       FROM task_table
+       JOIN cross_ref ON task_table.taskName = cross_ref.taskName
+       WHERE categoryName = :categoryName AND
+       (completed != :hideCompleted OR completed = 0) AND 
+       task_table.taskName LIKE '%' || :searchQuery || '%' 
+       ORDER BY important 
+       DESC, created""")
+    fun getTasksOfCategorySortedByDateCreated(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
+
+    @Query("""
+       SELECT * 
+       FROM task_table
+       WHERE (completed != :hideCompleted OR completed = 0) AND
+       taskName LIKE '%' || :searchQuery || '%'
+       ORDER BY important
+       DESC, taskName
+       """)
     fun getTasksSortedByName(searchQuery: String, hideCompleted: Boolean): Flow<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND taskName LIKE '%' || :searchQuery || '%' ORDER BY important DESC, created")
+    @Query("""
+       SELECT * 
+       FROM task_table 
+       WHERE (completed != :hideCompleted OR completed = 0) AND 
+       taskName LIKE '%' || :searchQuery || '%' 
+       ORDER BY important 
+       DESC, created""")
     fun getTasksSortedByDateCreated(searchQuery: String, hideCompleted: Boolean): Flow<List<Task>>
 
     @Transaction

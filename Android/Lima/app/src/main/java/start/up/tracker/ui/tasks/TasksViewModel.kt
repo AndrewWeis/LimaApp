@@ -4,9 +4,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.PreferencesManager
 import start.up.tracker.data.db.SortOrder
@@ -31,6 +29,17 @@ class TasksViewModel @Inject constructor(
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
+    private val tasksFlow = combine(
+        searchQuery.asFlow(),
+        preferencesFlow
+    ) { query, filterPreferences ->
+        Pair(query, filterPreferences)
+    }.flatMapLatest { (query, filterPreferences) ->
+        taskDao.getTasks(query, filterPreferences.sortOrder, filterPreferences.hideCompleted)
+    }
+
+    val tasks = tasksFlow.asLiveData()
+
     /**
      * Receive specific category either from [SavedStateHandle] in case app killed our app or from [SaveArgs]
      */
@@ -45,7 +54,7 @@ class TasksViewModel @Inject constructor(
      * Transforms LiveData<List<CategoryWithTask>> to LiveData<List<Task>>
      * We need this transformation for passing all tasks of specific category to [TaskAdapter]
      */
-    private val categoryWithTasks = taskDao.getTasksOfCategory(categoryName)
+    /*private val categoryWithTasks = taskDao.getTasksOfCategory(categoryName)
     val tasksOfCategory: LiveData<List<Task>> =
         Transformations.map(categoryWithTasks) { taskList ->
             var newData: List<Task> = listOf()
@@ -53,18 +62,20 @@ class TasksViewModel @Inject constructor(
                 newData = it.tasks
             }
             return@map newData
-        }
+        }*/
 
-    private val tasksFlow = combine(
+    private val tasksOfCategoryFlow = combine(
         searchQuery.asFlow(),
         preferencesFlow
     ) { query, filterPreferences ->
         Pair(query, filterPreferences)
     }.flatMapLatest { (query, filterPreferences) ->
-        taskDao.getTasks(query, filterPreferences.sortOrder, filterPreferences.hideCompleted)
+        taskDao.getTasksOfCategory(query, filterPreferences.sortOrder, filterPreferences.hideCompleted, categoryName)
     }
 
-    val tasks = tasksFlow.asLiveData()
+    val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
+
+
 
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
         preferencesManager.updateSortOrder(sortOrder)
