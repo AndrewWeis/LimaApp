@@ -10,11 +10,15 @@ import start.up.tracker.R
 import start.up.tracker.data.db.Task
 import start.up.tracker.databinding.FragmentCategoryInsideBinding
 import start.up.tracker.ui.tasks.TasksAdapter
+import start.up.tracker.ui.tasks.TasksViewModel
 
+/**
+ * This class uses [TasksViewModel] because it have similiar functionality to [TasksFragment]
+ */
 @AndroidEntryPoint
 class CategoryInsideFragment : Fragment(R.layout.fragment_category_inside), TasksAdapter.OnItemClickListener{
 
-    private val viewModel: CategoryInsideViewModel by viewModels()
+    private val viewModel: TasksViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +35,7 @@ class CategoryInsideFragment : Fragment(R.layout.fragment_category_inside), Task
             }
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner) {
+        viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
 
