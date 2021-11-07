@@ -1,5 +1,6 @@
 package start.up.tracker.data.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.db.models.Category
@@ -33,11 +34,11 @@ interface TaskDao {
 
     @Transaction
     @Query("SELECT * FROM category WHERE categoryName = :categoryName")
-    suspend fun getTasksOfCategory(categoryName: String): List<CategoryWithTasks>
+    fun getTasksOfCategory(categoryName: String): LiveData<List<CategoryWithTasks>>
 
     @Transaction
     @Query("SELECT * FROM task_table WHERE taskName = :taskName")
-    suspend fun getCategoriesOfTask(taskName: String): List<TaskWithCategories>
+    fun getCategoriesOfTask(taskName: String): LiveData<List<TaskWithCategories>>
 
     @Query("SELECT * FROM category")
     fun getCategories() : Flow<List<Category>>

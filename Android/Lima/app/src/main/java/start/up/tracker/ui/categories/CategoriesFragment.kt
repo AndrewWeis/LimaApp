@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.models.Category
 import start.up.tracker.databinding.FragmentCategoriesBinding
-import start.up.tracker.ui.categoryInside.CategoryInsideAdapter
 import start.up.tracker.utils.exhaustive
 
 @AndroidEntryPoint
