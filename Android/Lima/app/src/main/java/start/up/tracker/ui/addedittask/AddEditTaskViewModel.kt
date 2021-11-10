@@ -39,6 +39,8 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskImportance", value)
         }
 
+    val categoryName = state.get<String>("categoryName") ?: ""
+
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
 
@@ -48,10 +50,12 @@ class AddEditTaskViewModel @Inject constructor(
             return
         }
 
+        // TODO(It can be done better if I could just update CrossRef entity)
+        val newCrossRef = TaskCategoryCrossRef(taskName = taskName, categoryName = categoryName)
+        createCrossRef(newCrossRef)
+
         if (task != null) {
-            val newCrossRef = TaskCategoryCrossRef(taskName = taskName, categoryName = "Today")
             deleteCrossRefByTaskName(task.taskName)
-            createCrossRef(newCrossRef)
 
             val updatedTask = task.copy(taskName = taskName, important = taskImportance)
             updatedTask(updatedTask)
