@@ -19,7 +19,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/titleTIL"
+        android:id="@+id/category_title"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
         app:boxCornerRadiusTopStart="@dimen/field_radious"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTIL">
+        app:layout_constraintTop_toBottomOf="@+id/category_title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descriptionET"
