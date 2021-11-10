@@ -12,6 +12,7 @@ import start.up.tracker.data.db.SortOrder
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.db.models.Category
+import start.up.tracker.data.db.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
@@ -81,11 +82,14 @@ class TasksViewModel @Inject constructor(
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
+        taskDao.deleteCrossRefByTaskName(task.taskName)
         taskDao.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 
     fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
+        val crossRef = TaskCategoryCrossRef(task.taskName, categoryName)
+        taskDao.insertTaskCategoryCrossRef(crossRef)
         taskDao.insertTask(task)
     }
 
