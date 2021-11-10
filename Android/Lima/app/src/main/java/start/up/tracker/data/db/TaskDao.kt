@@ -75,6 +75,12 @@ interface TaskDao {
        DESC, created""")
     fun getTasksSortedByDateCreated(searchQuery: String, hideCompleted: Boolean): Flow<List<Task>>
 
+    @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
+    suspend fun deleteCrossRefByTaskName(taskName: String?)
+
+    @Query("SELECT * FROM cross_ref WHERE taskName = :taskName")
+    suspend fun getCrossRefByTaskName(taskName: String?): TaskCategoryCrossRef
+
     @Transaction
     @Query("SELECT * FROM category WHERE categoryName = :categoryName")
     fun getTasksOfCategory(categoryName: String): LiveData<List<CategoryWithTasks>>
@@ -100,6 +106,9 @@ interface TaskDao {
 
     @Update
     suspend fun updateCategory(category: Category)
+
+    @Update
+    suspend fun updateCrossRef(crossRef: TaskCategoryCrossRef)
 
     @Delete
     suspend fun deleteTask(task: Task)

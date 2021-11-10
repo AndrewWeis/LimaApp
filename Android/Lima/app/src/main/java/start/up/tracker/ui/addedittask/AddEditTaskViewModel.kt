@@ -1,15 +1,19 @@
 package start.up.tracker.ui.addedittask
 
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.data.db.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
@@ -20,6 +24,7 @@ class AddEditTaskViewModel @Inject constructor(
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
+    // Task stays the same because we have val fields in [Task]
     val task = state.get<Task>("task")
 
     var taskName = state.get<String>("taskName") ?: task?.taskName ?: ""
@@ -44,12 +49,24 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
         if (task != null) {
+            val newCrossRef = TaskCategoryCrossRef(taskName = taskName, categoryName = "Today")
+            deleteCrossRefByTaskName(task.taskName)
+            createCrossRef(newCrossRef)
+
             val updatedTask = task.copy(taskName = taskName, important = taskImportance)
             updatedTask(updatedTask)
         } else {
             val newTask = Task(taskName = taskName, important = taskImportance)
             createTask(newTask)
         }
+    }
+
+    private fun createCrossRef(CrossRef: TaskCategoryCrossRef) = viewModelScope.launch {
+        taskDao.insertTaskCategoryCrossRef(CrossRef)
+    }
+
+    private fun deleteCrossRefByTaskName(taskName: String) = viewModelScope.launch {
+        taskDao.deleteCrossRefByTaskName(taskName)
     }
 
     private fun createTask(task: Task) = viewModelScope.launch {

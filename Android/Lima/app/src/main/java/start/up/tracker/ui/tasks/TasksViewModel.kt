@@ -1,5 +1,6 @@
 package start.up.tracker.ui.tasks
 
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
@@ -49,20 +50,6 @@ class TasksViewModel @Inject constructor(
             field = value
             state.set("categoryName", value)
         }
-
-    /**
-     * Transforms LiveData<List<CategoryWithTask>> to LiveData<List<Task>>
-     * We need this transformation for passing all tasks of specific category to [TaskAdapter]
-     */
-    /*private val categoryWithTasks = taskDao.getTasksOfCategory(categoryName)
-    val tasksOfCategory: LiveData<List<Task>> =
-        Transformations.map(categoryWithTasks) { taskList ->
-            var newData: List<Task> = listOf()
-            taskList?.forEach {
-                newData = it.tasks
-            }
-            return@map newData
-        }*/
 
     private val tasksOfCategoryFlow = combine(
         searchQuery.asFlow(),
