@@ -10,4 +10,7 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
 
+    <color name="mediumGray">#D1D1D1</color>
+    <color name="darkGray">#858585</color>
+
 </resources>

@@ -1,7 +1,9 @@
 package start.up.tracker.ui.addedittask
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -9,10 +11,10 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_tasks.*
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
@@ -65,5 +67,45 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         }
 
 
+        val namesOfCategoriesOfTask: MutableList<String> = mutableListOf()
+
+        /**
+         * Dynamically add chips into [ChipGroup]. It checks if the name of category from all categories is in
+         * namesOfCategoriesOfTask. If it is, it means that current task is associated with that category, so
+         * we need to isChipChecked = true
+         */
+        viewModel.categories.observe(viewLifecycleOwner) { categoryList ->
+            categoryList.forEach {
+                var isChipChecked = false
+                if (it.categoryName in namesOfCategoriesOfTask) isChipChecked = true
+                addCategoryChip(it.categoryName, binding.chipCategoriesGroup, isChipChecked)
+            }
+        }
+
+
+        viewModel.categoriesOfTask.observe(viewLifecycleOwner) { categoryList ->
+            categoryList.forEach { taskWithCategories ->
+                taskWithCategories.categories.forEach {
+                    namesOfCategoriesOfTask.add(it.categoryName)
+                }
+            }
+        }
+    }
+
+    private fun addCategoryChip(chipText: String, chipGroup: ChipGroup, isChipChecked: Boolean) {
+        val chip = Chip(context)
+        chip.apply {
+            text = chipText
+            isCheckable = true
+            isChipIconVisible = false
+            isCheckedIconVisible = true
+            isCloseIconVisible = false
+            checkedIcon = context?.let { ContextCompat.getDrawable(it, R.drawable.ic_mtrl_chip_checked_black) }
+            // TODO(Customise colors later)
+            //rippleColor = context?.let { ContextCompat.getColorStateList(it, R.color.mtrl_choice_chip_background_color) }
+        }
+        chipGroup.addView(chip)
+        chip.isChecked = isChipChecked
+        chip.isChipIconVisible = isChipChecked
     }
 }

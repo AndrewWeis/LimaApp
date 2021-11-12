@@ -2,18 +2,15 @@ package start.up.tracker.ui.addedittask
 
 import android.util.Log
 import androidx.hilt.Assisted
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.db.relations.TaskCategoryCrossRef
+import start.up.tracker.data.db.relations.TaskWithCategories
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
@@ -39,7 +36,13 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskImportance", value)
         }
 
+    // TODO(Rewrite it. It's a mistake)
     val categoryName = state.get<String>("categoryName") ?: ""
+
+    // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
+    val categories = taskDao.getCategories().asLiveData()
+
+    val categoriesOfTask = taskDao.getCategoriesOfTask(task!!.taskName)
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()

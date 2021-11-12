@@ -63,8 +63,6 @@ class TasksViewModel @Inject constructor(
 
     val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
 
-
-
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
         preferencesManager.updateSortOrder(sortOrder)
     }

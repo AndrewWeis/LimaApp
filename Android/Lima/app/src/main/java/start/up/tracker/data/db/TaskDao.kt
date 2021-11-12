@@ -83,7 +83,7 @@ interface TaskDao {
 
     @Transaction
     @Query("SELECT * FROM category WHERE categoryName = :categoryName")
-    fun getTasksOfCategory(categoryName: String): LiveData<List<CategoryWithTasks>>
+    suspend fun getTasksOfCategory(categoryName: String): List<CategoryWithTasks>
 
     @Transaction
     @Query("SELECT * FROM task_table WHERE taskName = :taskName")
