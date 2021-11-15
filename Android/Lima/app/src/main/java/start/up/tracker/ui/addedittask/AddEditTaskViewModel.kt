@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.data.db.models.Category
 import start.up.tracker.data.db.relations.TaskCategoryCrossRef
 import start.up.tracker.data.db.relations.TaskWithCategories
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
@@ -36,16 +37,36 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskImportance", value)
         }
 
-    // TODO(Rewrite it. It's a mistake)
     val categoryName = state.get<String>("categoryName") ?: ""
 
     // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
     val categories = taskDao.getCategories().asLiveData()
 
+    // TODO(We need to make query every time AddEditTaskFragment created)
     val categoriesOfTask = taskDao.getCategoriesOfTask(task!!.taskName)
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
+
+    val checkedCategories = combine(
+        categories.asFlow(),
+        categoriesOfTask.asFlow()
+    ) { set, subset ->
+        findSubset(set, subset)
+    }.asLiveData()
+
+    private fun findSubset(set: List<Category>, subset: List<TaskWithCategories>): MutableList<String> {
+        val mutableList: MutableList<String> = mutableListOf()
+        set.forEach { category ->
+            subset.forEach { taskWithCategories ->
+                if (category in taskWithCategories.categories) {
+                    mutableList.add(category.categoryName)
+                }
+            }
+        }
+        return mutableList
+    }
+
 
     fun onSaveClick() {
         if (taskName.isBlank()) {
@@ -95,4 +116,8 @@ class AddEditTaskViewModel @Inject constructor(
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvent()
     }
 
+    override fun onCleared() {
+        Log.i("viewModel", "cleared")
+        super.onCleared()
+    }
 }
