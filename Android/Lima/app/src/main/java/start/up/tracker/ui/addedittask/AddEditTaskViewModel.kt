@@ -42,29 +42,42 @@ class AddEditTaskViewModel @Inject constructor(
     // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
     val categories = taskDao.getCategories().asLiveData()
 
-    // TODO(We need to make query every time AddEditTaskFragment created)
-    val categoriesOfTask = taskDao.getCategoriesOfTask(task!!.taskName)
+    private val categoriesOfTask = taskDao.getCategoriesOfTask(task!!.taskName)
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
 
-    val checkedCategories = combine(
-        categories.asFlow(),
-        categoriesOfTask.asFlow()
-    ) { set, subset ->
-        findSubset(set, subset)
-    }.asLiveData()
 
-    private fun findSubset(set: List<Category>, subset: List<TaskWithCategories>): MutableList<String> {
-        val mutableList: MutableList<String> = mutableListOf()
-        set.forEach { category ->
-            subset.forEach { taskWithCategories ->
-                if (category in taskWithCategories.categories) {
-                    mutableList.add(category.categoryName)
-                }
-            }
+    /**
+     * Observable data of all categories and checked connected to current task
+     */
+    fun combinedChips(): LiveData<Pair<List<Category>, List<Category>>> {
+        val result = MediatorLiveData<Pair<List<Category>, List<Category>>>()
+
+        result.addSource(categories) { _ ->
+            result.value = combinedDataChips(categories, categoriesOfTask)
         }
-        return mutableList
+
+        result.addSource(categoriesOfTask) { _ ->
+            result.value = combinedDataChips(categories, categoriesOfTask)
+        }
+
+        return result
+    }
+
+    private fun combinedDataChips(
+        categories: LiveData<List<Category>>,
+        categoriesOfTask: LiveData<TaskWithCategories>
+    ): Pair<List<Category>, List<Category>> {
+
+        val categoriesList = categories.value
+        val checkedList = categoriesOfTask.value
+        val emptyCategory = Category("",-1)
+
+        if (categoriesList == null || checkedList == null )
+            return Pair(listOf(emptyCategory), listOf(emptyCategory))
+
+        return Pair(categoriesList, checkedList.categories)
     }
 
 

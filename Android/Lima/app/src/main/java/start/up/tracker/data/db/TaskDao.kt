@@ -87,7 +87,7 @@ interface TaskDao {
 
     @Transaction
     @Query("SELECT * FROM task_table WHERE taskName = :taskName")
-    fun getCategoriesOfTask(taskName: String): LiveData<List<TaskWithCategories>>
+    fun getCategoriesOfTask(taskName: String): LiveData<TaskWithCategories>
 
     @Query("SELECT * FROM category")
     fun getCategories() : Flow<List<Category>>
