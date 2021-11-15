@@ -1,7 +1,6 @@
 package start.up.tracker.ui.addedittask
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -17,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
+import start.up.tracker.data.db.models.Category
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
 
@@ -72,25 +72,18 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
          * checked. If it is, it means that current task is associated with that category, so
          * we need to isChipChecked = true
          */
-        viewModel.combinedChips().observe(viewLifecycleOwner) {
-            val categories = it.first
-            val checked = it.second
+        viewModel.combinedCategories.observe(viewLifecycleOwner) {
+            val emptyList = listOf(Category("", -1))
 
-            categories.forEach { category ->
+            val set = it.first ?: emptyList
+            val subset = it.second ?: emptyList
+
+            set.forEach { category ->
                 var isChipChecked = false
-
-                if (category in checked) {
-                    isChipChecked = true
-                }
-
-                if (category.id != -1) {
-                    addCategoryChip(
-                        category.categoryName,
-                        binding.chipCategoriesGroup,
-                        isChipChecked
-                    )
-                }
+                if (category in subset) { isChipChecked = true }
+                addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
             }
+
         }
     }
 

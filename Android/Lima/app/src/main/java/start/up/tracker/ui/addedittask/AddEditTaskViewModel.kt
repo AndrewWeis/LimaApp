@@ -1,17 +1,19 @@
 package start.up.tracker.ui.addedittask
 
-import android.util.Log
 import androidx.hilt.Assisted
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
-import start.up.tracker.data.db.models.Category
 import start.up.tracker.data.db.relations.TaskCategoryCrossRef
-import start.up.tracker.data.db.relations.TaskWithCategories
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
@@ -37,48 +39,25 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskImportance", value)
         }
 
+    //TODO(REPLACE WITH LIST OF CATEGORIES
     val categoryName = state.get<String>("categoryName") ?: ""
 
     // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
-    val categories = taskDao.getCategories().asLiveData()
+    val categories = taskDao.getCategories()
 
-    private val categoriesOfTask = taskDao.getCategoriesOfTask(task!!.taskName)
+    private val categoriesOfTask = taskDao.getCategoriesOfTask(task?.taskName ?: "")
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
 
-
     /**
-     * Observable data of all categories and checked connected to current task
+     * This variable stores all categories and categories of the specific task.
      */
-    fun combinedChips(): LiveData<Pair<List<Category>, List<Category>>> {
-        val result = MediatorLiveData<Pair<List<Category>, List<Category>>>()
-
-        result.addSource(categories) { _ ->
-            result.value = combinedDataChips(categories, categoriesOfTask)
+    val combinedCategories = runBlocking {
+        categories.combine(categoriesOfTask) { set, subset ->
+            Pair(set, subset?.categories)
         }
-
-        result.addSource(categoriesOfTask) { _ ->
-            result.value = combinedDataChips(categories, categoriesOfTask)
-        }
-
-        return result
-    }
-
-    private fun combinedDataChips(
-        categories: LiveData<List<Category>>,
-        categoriesOfTask: LiveData<TaskWithCategories>
-    ): Pair<List<Category>, List<Category>> {
-
-        val categoriesList = categories.value
-        val checkedList = categoriesOfTask.value
-        val emptyCategory = Category("",-1)
-
-        if (categoriesList == null || checkedList == null )
-            return Pair(listOf(emptyCategory), listOf(emptyCategory))
-
-        return Pair(categoriesList, checkedList.categories)
-    }
+    }.asLiveData()
 
 
     fun onSaveClick() {
@@ -92,11 +71,13 @@ class AddEditTaskViewModel @Inject constructor(
         createCrossRef(newCrossRef)
 
         if (task != null) {
+            // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
             val updatedTask = task.copy(taskName = taskName, important = taskImportance)
             updatedTask(updatedTask)
         } else {
+            // create new task mode
             val newTask = Task(taskName = taskName, important = taskImportance)
             createTask(newTask)
         }
@@ -127,10 +108,5 @@ class AddEditTaskViewModel @Inject constructor(
     sealed class AddEditTaskEvent {
         data class ShowInvalidInputMessage(val msg: String) : AddEditTaskEvent()
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvent()
-    }
-
-    override fun onCleared() {
-        Log.i("viewModel", "cleared")
-        super.onCleared()
     }
 }
