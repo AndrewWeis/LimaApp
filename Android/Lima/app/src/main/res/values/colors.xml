@@ -12,5 +12,6 @@
 
     <color name="mediumGray">#D1D1D1</color>
     <color name="darkGray">#858585</color>
+    <color name="lightGray">#ECECEC</color>
 
 </resources>
