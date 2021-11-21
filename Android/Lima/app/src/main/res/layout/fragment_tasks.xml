@@ -8,55 +8,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.tasks.TasksFragment">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/taskRV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="true"
-            android:paddingBottom="@dimen/spacing_normal">
-
-            <TextView
-                android:id="@+id/tx_welcome"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_normal"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:text="@string/tx_welcome"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tx_organize"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_normal"
-                android:layout_marginTop="@dimen/spacing_little"
-                android:text="@string/tx_subtitle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tx_welcome"
-                tools:ignore="TextContrastCheck" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/taskRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_little"
-                android:padding="@dimen/spacing_little"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tx_organize" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+        android:layout_height="match_parent"
+        android:padding="@dimen/spacing_little" />
 
 
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addTaskFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

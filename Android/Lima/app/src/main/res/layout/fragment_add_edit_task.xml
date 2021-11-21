@@ -12,14 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_normal"
         android:text="@string/important"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/group_priority" />
+        app:layout_constraintTop_toBottomOf="@+id/tx_priority" />
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/titleTIL"
+        android:id="@+id/category_title"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +59,7 @@
         app:boxCornerRadiusTopStart="@dimen/field_radious"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTIL">
+        app:layout_constraintTop_toBottomOf="@+id/category_title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descriptionET"
@@ -84,51 +83,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTIL" />
 
-    <start.up.tracker.ui.addedittask.RadioGridGroup
-        android:id="@+id/group_priority"
+    <TextView
+        android:id="@+id/tx_category_type"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="Category"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_priority">
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxImportant" />
 
-        <TableRow android:layout_marginTop="0dp">
-
-            <RadioButton
-                android:id="@+id/radioButton"
-                style="@style/radio_btn"
-                android:checked="false"
-                android:text="@string/no" />
-
-            <RadioButton
-                android:id="@+id/radioButton2"
-                style="@style/radio_btn"
-                android:checked="false"
-                android:text="@string/high" />
-
-            <RadioButton
-                android:id="@+id/radioButton3"
-                style="@style/radio_btn"
-                android:checked="false"
-                android:text="@string/average" />
-
-        </TableRow>
-
-        <TableRow android:layout_marginTop="16dp">
-
-            <RadioButton
-                android:id="@+id/radioButton4"
-                style="@style/radio_btn"
-                android:checked="false"
-                android:text="@string/low" />
-        </TableRow>
-
-
-    </start.up.tracker.ui.addedittask.RadioGridGroup>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSaveTask"
@@ -141,5 +106,20 @@
         android:src="@drawable/ic_done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipCategoriesGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tx_category_type">
+
+    </com.google.android.material.chip.ChipGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

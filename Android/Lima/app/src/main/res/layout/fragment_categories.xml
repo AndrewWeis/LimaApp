@@ -1,7 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.categories.CategoryFragment"/>
+    tools:context=".ui.categories.CategoriesFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/txProjects"
+            style="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:text="Проекты"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/icInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_inbox"
+                    app:tint="#D0586D" />
+
+                <TextView
+                    android:id="@+id/tvInput"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:text="Inbox"
+                    app:layout_constraintBottom_toBottomOf="@+id/icInput"
+                    app:layout_constraintEnd_toStartOf="@+id/tvInputNum"
+                    app:layout_constraintStart_toEndOf="@+id/icInput"
+                    app:layout_constraintTop_toTopOf="@+id/icInput" />
+
+                <TextView
+                    android:id="@+id/tvInputNum"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvInput"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvInput"
+                    tools:text="12" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/icToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_today"
+                    app:tint="#79BAF6" />
+
+                <TextView
+                    android:id="@+id/tvToday"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:text="Today"
+                    app:layout_constraintBottom_toBottomOf="@+id/icToday"
+                    app:layout_constraintEnd_toStartOf="@+id/tvTodayNum"
+                    app:layout_constraintStart_toEndOf="@+id/icToday"
+                    app:layout_constraintTop_toTopOf="@+id/icToday" />
+
+                <TextView
+                    android:id="@+id/tvTodayNum"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvToday"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvToday"
+                    tools:text="12" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/icUpcoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_date_range"
+                    app:tint="#64D19D" />
+
+                <TextView
+                    android:id="@+id/tvUpcoming"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:text="Upcoming"
+                    app:layout_constraintBottom_toBottomOf="@+id/icUpcoming"
+                    app:layout_constraintEnd_toStartOf="@+id/tvUpcomingNum"
+                    app:layout_constraintStart_toEndOf="@+id/icUpcoming"
+                    app:layout_constraintTop_toTopOf="@+id/icUpcoming" />
+
+                <TextView
+                    android:id="@+id/tvUpcomingNum"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvUpcoming"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvUpcoming"
+                    tools:text="12" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoryRV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txProjects" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addCategoryFAB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:contentDescription="@string/fab"
+        android:layout_gravity="end|bottom"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
