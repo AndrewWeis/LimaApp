@@ -90,7 +90,7 @@ interface TaskDao {
     fun getCategoriesOfTask(taskName: String): Flow<TaskWithCategories?>
 
     @Query("SELECT * FROM category")
-    fun getCategories() : Flow<List<Category>?>
+    fun getCategories() : Flow<List<Category>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)

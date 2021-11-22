@@ -1,18 +1,19 @@
 package start.up.tracker.ui.addedittask
 
+import android.app.Application
+import android.util.Log
 import androidx.hilt.Assisted
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.data.db.models.Category
 import start.up.tracker.data.db.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
@@ -45,8 +46,6 @@ class AddEditTaskViewModel @Inject constructor(
     // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
     val categories = taskDao.getCategories()
 
-    private val categoriesOfTask = taskDao.getCategoriesOfTask(task?.taskName ?: "")
-
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
 
@@ -54,33 +53,31 @@ class AddEditTaskViewModel @Inject constructor(
      * This variable stores all categories and categories of the specific task.
      */
     val combinedCategories = runBlocking {
-        categories.combine(categoriesOfTask) { set, subset ->
-            Pair(set, subset?.categories)
+        categories.combine(listOf(Category(categoryName)).asFlow()) { set, subset ->
+            Pair(set, subset)
         }
     }.asLiveData()
 
 
-    fun onSaveClick() {
+    fun onSaveClick(checkedChip: String) {
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
         }
 
-        // TODO(It can be done better if I could just update CrossRef entity)
-        val newCrossRef = TaskCategoryCrossRef(taskName = taskName, categoryName = categoryName)
-        createCrossRef(newCrossRef)
-
-        if (task != null) {
-            // edit exciting task mode
+        if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
             val updatedTask = task.copy(taskName = taskName, important = taskImportance)
             updatedTask(updatedTask)
-        } else {
-            // create new task mode
+        } else { // create new task mode
             val newTask = Task(taskName = taskName, important = taskImportance)
             createTask(newTask)
         }
+
+        // TODO(It can be done better if I could just update CrossRef entity)
+        val newCrossRef = TaskCategoryCrossRef(taskName = taskName, categoryName = checkedChip)
+        createCrossRef(newCrossRef)
     }
 
     private fun createCrossRef(CrossRef: TaskCategoryCrossRef) = viewModelScope.launch {

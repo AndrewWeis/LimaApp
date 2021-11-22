@@ -90,7 +90,7 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
                             }.show()
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task")
+                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task", categoryName = viewModel.categoryName)
                         findNavController().navigate(action)
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {

@@ -39,6 +39,9 @@ abstract class TaskDatabase: RoomDatabase() {
                 dao.insertCategory(Category("Today"))
                 dao.insertCategory(Category("SomeDay"))
 
+                // DON'T DELETE. IT'S DEFAULT CATEGORY
+                dao.insertCategory(Category("Inbox"))
+
                 dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Wash the dishes", "Today"))
                 dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Do the laundry", "Today"))
                 dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Buy groceries", "Today"))
