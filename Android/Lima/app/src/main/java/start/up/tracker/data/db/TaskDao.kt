@@ -1,6 +1,7 @@
 package start.up.tracker.data.db
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.db.models.Category
@@ -90,7 +91,7 @@ interface TaskDao {
     fun getCategoriesOfTask(taskName: String): Flow<TaskWithCategories?>
 
     @Query("SELECT * FROM category")
-    fun getCategories() : Flow<List<Category>>
+    fun getCategories() : LiveData<List<Category>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
