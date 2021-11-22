@@ -1,6 +1,5 @@
-package start.up.tracker.ui.tasks
+package start.up.tracker.ui.projectstasks
 
-import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
@@ -18,7 +17,7 @@ import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
 
 @HiltViewModel
-class TasksViewModel @Inject constructor(
+class ProjectsTasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val preferencesManager: PreferencesManager,
     @Assisted private val state: SavedStateHandle
@@ -30,17 +29,6 @@ class TasksViewModel @Inject constructor(
 
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
-
-    private val tasksFlow = combine(
-        searchQuery.asFlow(),
-        preferencesFlow
-    ) { query, filterPreferences ->
-        Pair(query, filterPreferences)
-    }.flatMapLatest { (query, filterPreferences) ->
-        taskDao.getTasks(query, filterPreferences.sortOrder, filterPreferences.hideCompleted)
-    }
-
-    val tasks = tasksFlow.asLiveData()
 
     /**
      * Receive specific category either from [SavedStateHandle] in case app killed our app or from [SaveArgs]

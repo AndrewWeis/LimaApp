@@ -3,17 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/tasksFragment">
+    app:startDestination="@id/categoryFragment">
 
-    <fragment
-        android:id="@+id/tasksFragment"
-        android:name="start.up.tracker.ui.tasks.TasksFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_tasks" >
-        <action
-            android:id="@+id/action_tasksFragment_to_addEditTaskFragment"
-            app:destination="@id/addEditTaskFragment" />
-    </fragment>
     <fragment
         android:id="@+id/addEditTaskFragment"
         android:name="start.up.tracker.ui.addedittask.AddEditTaskFragment"
@@ -58,7 +49,7 @@
         android:label="DeleteAllCompletedDialogFragment" /><action android:id="@+id/action_global_deleteAllCompletedDialogFragment" app:destination="@id/deleteAllCompletedDialogFragment"/>
     <fragment
         android:id="@+id/categoryInsideFragment"
-        android:name="start.up.tracker.ui.categoryInside.CategoryInsideFragment"
+        android:name="start.up.tracker.ui.projectstasks.ProjectsTasksFragment"
         android:label="{titleCategory}"
         tools:layout="@layout/fragment_category_inside" >
         <argument

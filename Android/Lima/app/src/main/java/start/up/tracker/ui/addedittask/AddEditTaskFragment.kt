@@ -1,9 +1,11 @@
 package start.up.tracker.ui.addedittask
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -44,7 +46,12 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             fabSaveTask.setOnClickListener {
-                viewModel.onSaveClick()
+                val checkedChip = binding.chipCategoriesGroup.children
+                    .toList()
+                    .filter { (it as Chip).isChecked }
+                    .joinToString { (it as Chip).text }
+
+                viewModel.onSaveClick(checkedChip)
             }
         }
 
@@ -73,17 +80,14 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
          * we need to isChipChecked = true
          */
         viewModel.combinedCategories.observe(viewLifecycleOwner) {
-            val emptyList = listOf(Category("", -1))
-
-            val set = it.first ?: emptyList
-            val subset = it.second ?: emptyList
+            val set = it.first
+            val subset = it.second
 
             set.forEach { category ->
                 var isChipChecked = false
-                if (category in subset) { isChipChecked = true }
+                if (subset.categoryName == category.categoryName) { isChipChecked = true }
                 addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
             }
-
         }
     }
 

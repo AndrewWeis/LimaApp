@@ -1,6 +1,7 @@
 package start.up.tracker.ui.categories
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -47,6 +48,10 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                     }
                 }.exhaustive
             }
+        }
+
+        binding.cardViewInbox.setOnClickListener {
+            viewModel.onCategoryInboxSelected(Category("Inbox"))
         }
 
     }
