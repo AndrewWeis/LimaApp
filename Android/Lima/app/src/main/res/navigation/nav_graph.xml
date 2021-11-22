@@ -27,6 +27,11 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <argument
+            android:name="categoryName"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -35,9 +40,13 @@
         tools:layout="@layout/fragment_analytics" />
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="start.up.tracker.ui.categories.CategoryFragment"
+        android:name="start.up.tracker.ui.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories" />
+        tools:layout="@layout/fragment_categories" >
+        <action
+            android:id="@+id/action_categoryFragment_to_categoryInsideFragment"
+            app:destination="@id/categoryInsideFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="start.up.tracker.ui.settings.SettingsFragment"
@@ -47,4 +56,19 @@
         android:id="@+id/deleteAllCompletedDialogFragment"
         android:name="start.up.tracker.ui.deleteallcompleted.DeleteAllCompletedDialogFragment"
         android:label="DeleteAllCompletedDialogFragment" /><action android:id="@+id/action_global_deleteAllCompletedDialogFragment" app:destination="@id/deleteAllCompletedDialogFragment"/>
+    <fragment
+        android:id="@+id/categoryInsideFragment"
+        android:name="start.up.tracker.ui.categoryInside.CategoryInsideFragment"
+        android:label="{titleCategory}"
+        tools:layout="@layout/fragment_category_inside" >
+        <argument
+            android:name="category"
+            app:argType="start.up.tracker.data.db.models.Category" />
+        <argument
+            android:name="titleCategory"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_categoryInsideFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+    </fragment>
 </navigation>

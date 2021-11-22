@@ -1,13 +1,12 @@
-package start.up.tracker.ui.tasks
+package start.up.tracker.ui.categoryInside
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,12 +22,18 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.db.SortOrder
 import start.up.tracker.data.db.Task
-import start.up.tracker.databinding.FragmentTasksBinding
+import start.up.tracker.databinding.FragmentCategoryInsideBinding
+import start.up.tracker.ui.tasks.TasksAdapter
+import start.up.tracker.ui.tasks.TasksFragmentDirections
+import start.up.tracker.ui.tasks.TasksViewModel
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.onQueryTextChanged
 
+/**
+ * This class uses [TasksViewModel] because it have similiar functionality to [TasksFragment]
+ */
 @AndroidEntryPoint
-class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
+class CategoryInsideFragment : Fragment(R.layout.fragment_category_inside), TasksAdapter.OnItemClickListener{
 
     private val viewModel: TasksViewModel by viewModels()
 
@@ -37,19 +42,19 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = FragmentTasksBinding.bind(view)
+        val binding = FragmentCategoryInsideBinding.bind(view)
 
         val taskAdapter = TasksAdapter(this)
 
         binding.apply {
-            taskRV.apply {
+            categoryInsideRv.apply {
                 adapter = taskAdapter
                 layoutManager = LinearLayoutManager(requireContext())
                 setHasFixedSize(true)
             }
 
             ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
                 override fun onMove(
                     recyclerView: RecyclerView,
                     viewHolder: RecyclerView.ViewHolder,
@@ -62,9 +67,9 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                     val task = taskAdapter.currentList[viewHolder.adapterPosition]
                     viewModel.onTaskSwiped(task)
                 }
-            }).attachToRecyclerView(taskRV)
+            }).attachToRecyclerView(categoryInsideRv)
 
-            addTaskFAB.setOnClickListener {
+            addTaskOfCategoryFAB.setOnClickListener {
                 viewModel.onAddNewTaskClick()
             }
         }
@@ -74,7 +79,7 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
             viewModel.onAddEditResult(result)
         }
 
-        viewModel.tasks.observe(viewLifecycleOwner) {
+        viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
 
@@ -88,11 +93,11 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                             }.show()
                     }
                     is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(title = "Add new task")
+                        val action = CategoryInsideFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task")
                         findNavController().navigate(action)
                     }
                     is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val action = TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(event.task, "Edit task")
+                        val action = CategoryInsideFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(event.task, "Edit task", viewModel.categoryName)
                         findNavController().navigate(action)
                     }
                     is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
@@ -167,4 +172,3 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
         searchView.setOnQueryTextListener(null)
     }
 }
-

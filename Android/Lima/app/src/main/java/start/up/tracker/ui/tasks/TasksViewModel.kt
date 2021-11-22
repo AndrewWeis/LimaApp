@@ -1,18 +1,18 @@
 package start.up.tracker.ui.tasks
 
+import android.util.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.PreferencesManager
 import start.up.tracker.data.db.SortOrder
 import start.up.tracker.data.db.Task
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.data.db.models.Category
+import start.up.tracker.data.db.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
@@ -42,6 +42,27 @@ class TasksViewModel @Inject constructor(
 
     val tasks = tasksFlow.asLiveData()
 
+    /**
+     * Receive specific category either from [SavedStateHandle] in case app killed our app or from [SaveArgs]
+     */
+    val category = state.get<Category>("category")
+    var categoryName = state.get<String>("categoryName") ?: category?.categoryName ?: ""
+        set(value) {
+            field = value
+            state.set("categoryName", value)
+        }
+
+    private val tasksOfCategoryFlow = combine(
+        searchQuery.asFlow(),
+        preferencesFlow
+    ) { query, filterPreferences ->
+        Pair(query, filterPreferences)
+    }.flatMapLatest { (query, filterPreferences) ->
+        taskDao.getTasksOfCategory(query, filterPreferences.sortOrder, filterPreferences.hideCompleted, categoryName)
+    }
+
+    val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
+
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
         preferencesManager.updateSortOrder(sortOrder)
     }
@@ -55,16 +76,19 @@ class TasksViewModel @Inject constructor(
     }
 
     fun onTaskCheckedChanged(task: Task, isChecked: Boolean) = viewModelScope.launch {
-        taskDao.update(task.copy(completed = isChecked))
+        taskDao.updateTask(task.copy(completed = isChecked))
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
-        taskDao.delete(task)
+        taskDao.deleteCrossRefByTaskName(task.taskName)
+        taskDao.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 
     fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
-        taskDao.insert(task)
+        val crossRef = TaskCategoryCrossRef(task.taskName, categoryName)
+        taskDao.insertTaskCategoryCrossRef(crossRef)
+        taskDao.insertTask(task)
     }
 
     fun onAddNewTaskClick() = viewModelScope.launch {
