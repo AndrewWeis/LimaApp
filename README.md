@@ -32,3 +32,11 @@
 3. [Milestones](./Docs/milestones.md)
 4. [Architecture](./Docs/achitecture.md)
 5. [Presentation](./Docs/presentation.pdf)
+
+# Как запустить
+
+1. Скачать Android Studio с официального сайта
+2. Сделать clone этого репозитория
+3. Открыть в Android Studio 
+4. Создать Эмулятор в Android Studio
+5. Запустить проект на эмуляторе
