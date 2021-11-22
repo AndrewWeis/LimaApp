@@ -1,11 +1,9 @@
 package start.up.tracker.ui.categories
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.db.models.Category
@@ -16,13 +14,27 @@ class CategoriesViewModel @Inject constructor(
     private val taskDao: TaskDao,
 ) : ViewModel() {
 
-    val categories = taskDao.getCategories().asLiveData()
+    private val _categories = taskDao.getCategories()
+
+    val categories: LiveData<List<Category>> =
+        Transformations.map(_categories) {
+            val newData: MutableList<Category> = mutableListOf()
+            it.forEach { category ->
+                if (category.categoryName != "Inbox")
+                newData.add(category)
+            }
+            return@map newData
+        }
 
 
     private val categoryEventChannel = Channel<CategoryEvent>()
     val categoryEvent = categoryEventChannel.receiveAsFlow()
 
     fun onCategorySelected(category: Category) = viewModelScope.launch {
+        categoryEventChannel.send(CategoryEvent.NavigateToCategoryInside(category))
+    }
+
+    fun onCategoryInboxSelected(category: Category) = viewModelScope.launch {
         categoryEventChannel.send(CategoryEvent.NavigateToCategoryInside(category))
     }
 

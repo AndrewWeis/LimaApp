@@ -1,4 +1,4 @@
-package start.up.tracker.ui.tasks
+package start.up.tracker.ui.projectstasks
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,7 +15,9 @@ import start.up.tracker.databinding.ItemTaskBinding
  * or single change event. [ListAdapter] can handle this properly because it can calculate the differences between
  * old and new list and automatically dispatch the correct changes. In does all of this in a background thread.
  */
-class TasksAdapter(private val listener: OnItemClickListener) : ListAdapter<Task, TasksAdapter.TasksViewHolder>(DiffCallback()) {
+class ProjectsTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<Task, ProjectsTasksAdapter.TasksViewHolder>(
+    DiffCallback()
+) {
 
     /**
      * Part of RecyclerView adapter, called when RecyclerView need a new [ViewHolder],
