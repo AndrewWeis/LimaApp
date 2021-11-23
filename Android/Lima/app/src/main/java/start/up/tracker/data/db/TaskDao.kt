@@ -52,10 +52,12 @@ interface TaskDao {
 
     @Query("""
         SELECT COUNT(*) 
-        FROM cross_ref 
-        WHERE categoryName = :categoryName
+        FROM task_table 
+        JOIN cross_ref ON task_table.taskName = cross_ref.taskName
+        WHERE categoryName = :categoryName AND
+        (completed != :hideCompleted OR completed = 0)
     """)
-    suspend fun countTasksOfCategory(categoryName: String): Int
+    suspend fun countTasksOfCategory(categoryName: String, hideCompleted: Boolean): Int
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)

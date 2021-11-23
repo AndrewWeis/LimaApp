@@ -32,7 +32,7 @@ class CategoriesViewModel @Inject constructor(
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         categories.value?.forEach {
-            val number = taskDao.countTasksOfCategory(it.categoryName)
+            val number = taskDao.countTasksOfCategory(it.categoryName, true)
             taskDao.updateCategory(it.copy(tasksInside = number))
         }
     }
