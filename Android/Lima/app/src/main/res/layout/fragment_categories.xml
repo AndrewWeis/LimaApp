@@ -35,7 +35,7 @@
                 android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/icInput"
+                    android:id="@+id/icInbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -46,27 +46,27 @@
                     app:tint="#D0586D" />
 
                 <TextView
-                    android:id="@+id/tvInput"
+                    android:id="@+id/tvInbox"
                     style="@style/TextAppearance.MaterialComponents.Body2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:text="Inbox"
-                    app:layout_constraintBottom_toBottomOf="@+id/icInput"
-                    app:layout_constraintEnd_toStartOf="@+id/tvInputNum"
-                    app:layout_constraintStart_toEndOf="@+id/icInput"
-                    app:layout_constraintTop_toTopOf="@+id/icInput" />
+                    app:layout_constraintBottom_toBottomOf="@+id/icInbox"
+                    app:layout_constraintEnd_toStartOf="@+id/tvInboxNum"
+                    app:layout_constraintStart_toEndOf="@+id/icInbox"
+                    app:layout_constraintTop_toTopOf="@+id/icInbox" />
 
                 <TextView
-                    android:id="@+id/tvInputNum"
+                    android:id="@+id/tvInboxNum"
                     style="@style/TextAppearance.MaterialComponents.Body2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/spacing_normal"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvInput"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvInbox"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tvInput"
+                    app:layout_constraintTop_toTopOf="@+id/tvInbox"
                     tools:text="12" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
