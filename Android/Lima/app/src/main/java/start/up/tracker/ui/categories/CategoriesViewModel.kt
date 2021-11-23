@@ -30,17 +30,13 @@ class CategoriesViewModel @Inject constructor(
     private val categoryEventChannel = Channel<CategoryEvent>()
     val categoryEvent = categoryEventChannel.receiveAsFlow()
 
-    val inboxTasks: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>(0)
-    }
+    private val getInboxTasksCountFlow = taskDao.countTasksOfInbox()
+    val getInboxTasksCount = getInboxTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         _categories.value?.forEach {
             val number = taskDao.countTasksOfCategory(it.categoryName, true)
             taskDao.updateCategory(it.copy(tasksInside = number))
-
-            if (it.categoryName == "Inbox")
-                inboxTasks.value = number
         }
     }
 

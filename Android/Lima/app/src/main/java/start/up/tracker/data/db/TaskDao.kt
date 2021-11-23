@@ -59,6 +59,15 @@ interface TaskDao {
     """)
     suspend fun countTasksOfCategory(categoryName: String, hideCompleted: Boolean): Int
 
+    @Query("""
+        SELECT COUNT(*)
+        FROM task_table 
+        JOIN cross_ref ON task_table.taskName = cross_ref.taskName
+        WHERE categoryName = 'Inbox' AND
+        completed = 0
+    """)
+    fun countTasksOfInbox(): Flow<Int>
+
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)
 

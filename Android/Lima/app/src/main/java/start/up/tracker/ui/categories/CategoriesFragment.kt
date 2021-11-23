@@ -73,8 +73,8 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
 
         viewModel.updateNumberOfTasks()
 
-        viewModel.inboxTasks.observe(viewLifecycleOwner) {
-            binding.tvInputNum.text = it.toString()
+        viewModel.getInboxTasksCount.observe(viewLifecycleOwner) {
+            binding.tvInboxNum.text = it.toString()
         }
     }
 
