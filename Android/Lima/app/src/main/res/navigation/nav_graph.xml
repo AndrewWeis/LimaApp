@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_categoryFragment_to_categoryInsideFragment"
             app:destination="@id/categoryInsideFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_addCategoryFragment"
+            app:destination="@id/addCategoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -62,4 +65,9 @@
             android:id="@+id/action_categoryInsideFragment_to_addEditTaskFragment"
             app:destination="@id/addEditTaskFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/addCategoryFragment"
+        android:name="start.up.tracker.ui.addcategory.AddCategoryFragment"
+        android:label="Add new project"
+        tools:layout="@layout/fragment_add_category" />
 </navigation>

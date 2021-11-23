@@ -27,29 +27,9 @@ abstract class TaskDatabase: RoomDatabase() {
             val dao = database.get().taskDao()
 
             applicationScope.launch {
-                dao.insertTask(Task("Wash the dishes"))
-                dao.insertTask(Task("Do the laundry"))
-                dao.insertTask(Task("Buy groceries", important = true))
-                dao.insertTask(Task("Prepare food", completed = true))
-                dao.insertTask(Task("Call mom"))
-                dao.insertTask(Task("Visit grandma", completed = true))
-                dao.insertTask(Task("Repair my bike"))
-                dao.insertTask(Task("Call Elon Musk"))
-
-                dao.insertCategory(Category("Today"))
-                dao.insertCategory(Category("SomeDay"))
-
+                
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
                 dao.insertCategory(Category("Inbox"))
-
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Wash the dishes", "Today"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Do the laundry", "Today"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Buy groceries", "Today"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Prepare food", "Today"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Call mom", "SomeDay"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Visit grandma", "SomeDay"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Repair my bike", "SomeDay"))
-                dao.insertTaskCategoryCrossRef(TaskCategoryCrossRef("Call Elon Musk", "SomeDay"))
             }
         }
     }

@@ -86,7 +86,7 @@ class ProjectsTasksViewModel @Inject constructor(
     fun onAddEditResult(result: Int) {
         when(result) {
             ADD_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task added")
-            EDIT_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task Updated")
+            EDIT_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task updated")
         }
     }
 

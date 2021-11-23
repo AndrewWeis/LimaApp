@@ -79,4 +79,6 @@ dependencies {
     // Data Store
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha02"
 
+    // Color picker
+    implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
 }
