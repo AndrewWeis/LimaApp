@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.db.models.Category
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
+import start.up.tracker.utils.DEFAULT_PROJECT_COLOR
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,12 @@ class AddCategoryViewModel @Inject constructor(
             state.set("categoryName", value)
         }
 
+    var color: Int = state.get<Int>("color") ?: category?.color ?: DEFAULT_PROJECT_COLOR
+        set(value) {
+            field = value
+            state.set("color", value)
+        }
+
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
     val addCategoryEvent = addCategoryEventChannel.receiveAsFlow()
 
@@ -36,7 +43,7 @@ class AddCategoryViewModel @Inject constructor(
             return
         }
 
-        val newCategory = Category(categoryName = categoryName)
+        val newCategory = Category(categoryName = categoryName, color = color)
         createCategory(newCategory)
     }
 

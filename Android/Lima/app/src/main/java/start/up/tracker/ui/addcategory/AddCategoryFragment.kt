@@ -29,8 +29,6 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
         val binding = FragmentAddCategoryBinding.bind(view)
 
-        var currentColor: Int
-
         binding.apply {
             editTextCategoryLabel.setText(viewModel.categoryName)
 
@@ -46,7 +44,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
                 val colorPicker = ColorPicker(activity)
                 colorPicker.setOnFastChooseColorListener(object: ColorPicker.OnFastChooseColorListener {
                     override fun setOnFastChooseColorListener(position: Int, color: Int) {
-                        currentColor = color
+                        viewModel.color = color
                         colorPickerBtn.background.setTint(color)
                     }
 

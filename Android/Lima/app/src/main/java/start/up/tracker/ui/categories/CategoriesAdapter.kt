@@ -41,6 +41,7 @@ class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter
         fun bind(category: Category) {
             binding.apply {
                 textViewCategoryName.text = category.categoryName
+                icCategory.background.setTint(category.color)
             // TODO(Implement the number of tasks inside the category)
             }
         }
