@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
@@ -46,6 +48,13 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                         val action = CategoriesFragmentDirections.actionCategoryFragmentToCategoryInsideFragment(event.category, event.category.categoryName)
                         findNavController().navigate(action)
                     }
+                    CategoriesViewModel.CategoryEvent.NavigateToAddCategoryScreen -> {
+                        val action = CategoriesFragmentDirections.actionCategoryFragmentToAddCategoryFragment()
+                        findNavController().navigate(action)
+                    }
+                    is CategoriesViewModel.CategoryEvent.ShowCategorySavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    }
                 }.exhaustive
             }
         }
@@ -54,6 +63,13 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
             viewModel.onCategoryInboxSelected(Category("Inbox"))
         }
 
+        binding.addCategoryFAB.setOnClickListener {
+            viewModel.onAddNewCategoryClick()
+        }
+
+        setFragmentResultListener("add_request") { _, _ ->
+            viewModel.showCategorySavedConfirmationMessage()
+        }
     }
 
     override fun onItemClick(category: Category) {
