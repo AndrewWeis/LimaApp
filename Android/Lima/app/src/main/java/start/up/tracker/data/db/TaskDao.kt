@@ -21,18 +21,11 @@ import start.up.tracker.data.db.relations.TaskWithCategories
 @Dao
 interface TaskDao {
 
-    fun getTasks(query: String, sortOrder: SortOrder, hideCompleted: Boolean): Flow<List<Task>> =
-        when(sortOrder) {
-            SortOrder.BY_DATE -> getTasksSortedByDateCreated(query, hideCompleted)
-            SortOrder.BY_NAME -> getTasksSortedByName(query, hideCompleted)
-        }
-
     fun getTasksOfCategory(query: String, sortOrder: SortOrder, hideCompleted: Boolean, categoryName: String): Flow<List<Task>> =
         when(sortOrder) {
             SortOrder.BY_DATE -> getTasksOfCategorySortedByDateCreated(query, hideCompleted, categoryName)
             SortOrder.BY_NAME -> getTasksOfCategorySortedByName(query, hideCompleted, categoryName)
         }
-
 
     @Query("""
        SELECT * 
@@ -58,23 +51,11 @@ interface TaskDao {
     fun getTasksOfCategorySortedByDateCreated(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
 
     @Query("""
-       SELECT * 
-       FROM task_table
-       WHERE (completed != :hideCompleted OR completed = 0) AND
-       taskName LIKE '%' || :searchQuery || '%'
-       ORDER BY important
-       DESC, taskName
-       """)
-    fun getTasksSortedByName(searchQuery: String, hideCompleted: Boolean): Flow<List<Task>>
-
-    @Query("""
-       SELECT * 
-       FROM task_table 
-       WHERE (completed != :hideCompleted OR completed = 0) AND 
-       taskName LIKE '%' || :searchQuery || '%' 
-       ORDER BY important 
-       DESC, created""")
-    fun getTasksSortedByDateCreated(searchQuery: String, hideCompleted: Boolean): Flow<List<Task>>
+        SELECT COUNT(*) 
+        FROM cross_ref 
+        WHERE categoryName = :categoryName
+    """)
+    suspend fun countTasksOfCategory(categoryName: String): Int
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)

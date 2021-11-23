@@ -70,6 +70,8 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
         setFragmentResultListener("add_request") { _, _ ->
             viewModel.showCategorySavedConfirmationMessage()
         }
+
+        viewModel.updateNumberOfTasks()
     }
 
     override fun onItemClick(category: Category) {

@@ -11,5 +11,6 @@ import start.up.tracker.utils.DEFAULT_PROJECT_COLOR
 data class Category(
     val categoryName: String,
     val color: Int = DEFAULT_PROJECT_COLOR,
+    val tasksInside: Int = 0,
     @PrimaryKey(autoGenerate = true)  val id: Int = 0
 ) : Parcelable
