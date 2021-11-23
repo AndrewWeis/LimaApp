@@ -72,6 +72,10 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
         }
 
         viewModel.updateNumberOfTasks()
+
+        viewModel.inboxTasks.observe(viewLifecycleOwner) {
+            binding.tvInputNum.text = it.toString()
+        }
     }
 
     override fun onItemClick(category: Category) {
