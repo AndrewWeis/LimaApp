@@ -32,6 +32,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         val binding = FragmentAddEditTaskBinding.bind(view)
 
+        var date = ""
+
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
             checkBoxImportant.isChecked = viewModel.taskImportance
@@ -51,7 +53,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     .filter { (it as Chip).isChecked }
                     .joinToString { (it as Chip).text }
 
-                viewModel.onSaveClick(checkedChip)
+                viewModel.onSaveClick(checkedChip, date)
             }
 
             val today = MaterialDatePicker.todayInUtcMilliseconds()
@@ -66,7 +68,9 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             materialDatePicker.addOnPositiveButtonClickListener {
-                btnDatePicker.text = formatToDate(it)
+                val formattedDate = formatToDate(it)
+                date = formattedDate
+                btnDatePicker.text = formattedDate
             }
         }
 

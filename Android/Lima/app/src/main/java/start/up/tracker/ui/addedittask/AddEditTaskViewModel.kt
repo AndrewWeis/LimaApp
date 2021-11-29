@@ -47,6 +47,8 @@ class AddEditTaskViewModel @Inject constructor(
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
 
+
+
     /**
      * This variable stores all categories and categories of the specific task.
      */
@@ -57,7 +59,7 @@ class AddEditTaskViewModel @Inject constructor(
     }.asLiveData()
 
 
-    fun onSaveClick(checkedChip: String) {
+    fun onSaveClick(checkedChip: String, date: String) {
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
@@ -66,10 +68,10 @@ class AddEditTaskViewModel @Inject constructor(
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
-            val updatedTask = task.copy(taskName = taskName, important = taskImportance)
+            val updatedTask = task.copy(taskName = taskName, important = taskImportance, date = date)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, important = taskImportance)
+            val newTask = Task(taskName = taskName, important = taskImportance, date = date)
             createTask(newTask)
         }
 
