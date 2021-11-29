@@ -16,10 +16,6 @@ class TodayViewModel @Inject constructor(
     private val taskDao: TaskDao,
 ) : ViewModel() {
 
-    /*val current = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-    val formatted = current.format(formatter)*/
-
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
     val currentDate: String = formatter.format(Date())
 

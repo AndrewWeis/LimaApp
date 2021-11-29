@@ -24,5 +24,9 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         val binding = FragmentTodayBinding.bind(view)
 
         viewModel.print()
+
+        viewModel.todayTasks.observe(viewLifecycleOwner) {
+
+        }
     }
 }

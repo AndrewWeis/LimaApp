@@ -13,12 +13,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
+import java.text.SimpleDateFormat
 
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
@@ -50,6 +52,21 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     .joinToString { (it as Chip).text }
 
                 viewModel.onSaveClick(checkedChip)
+            }
+
+            val today = MaterialDatePicker.todayInUtcMilliseconds()
+            val materialDatePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select a date")
+                .setSelection(today)
+                .build()
+
+
+            btnDatePicker.setOnClickListener {
+                materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
+            }
+
+            materialDatePicker.addOnPositiveButtonClickListener {
+                btnDatePicker.text = formatToDate(it)
             }
         }
 
@@ -87,6 +104,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
             }
         }
+    }
+
+    private fun formatToDate(it: Long?): String {
+        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
+        return simpleDateFormat.format(it)
     }
 
     private fun addCategoryChip(chipText: String, chipGroup: ChipGroup, isChipChecked: Boolean) {
