@@ -1,10 +1,10 @@
-package start.up.tracker.data.db.relations
+package start.up.tracker.data.relations
 
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import start.up.tracker.data.db.models.Category
-import start.up.tracker.data.db.Task
+import start.up.tracker.data.models.Category
+import start.up.tracker.data.models.Task
 
 data class CategoryWithTasks (
     @Embedded val category: Category,

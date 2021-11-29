@@ -1,7 +1,5 @@
 package start.up.tracker.ui.addedittask
 
-import android.app.Application
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,10 +9,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import start.up.tracker.data.db.Task
+import start.up.tracker.data.models.Task
 import start.up.tracker.data.db.TaskDao
-import start.up.tracker.data.db.models.Category
-import start.up.tracker.data.db.relations.TaskCategoryCrossRef
+import start.up.tracker.data.models.Category
+import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject

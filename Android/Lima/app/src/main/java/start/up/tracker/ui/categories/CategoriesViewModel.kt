@@ -1,13 +1,12 @@
 package start.up.tracker.ui.categories
 
-import android.util.Log
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.TaskDao
-import start.up.tracker.data.db.models.Category
+import start.up.tracker.data.models.Category
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,9 +55,14 @@ class CategoriesViewModel @Inject constructor(
         categoryEventChannel.send(CategoryEvent.ShowCategorySavedConfirmationMessage("Project added"))
     }
 
+    fun onTodaySelected() = viewModelScope.launch {
+        categoryEventChannel.send(CategoryEvent.NavigateToToday)
+    }
+
     sealed class CategoryEvent {
         data class NavigateToCategoryInside(val category: Category) : CategoryEvent()
         object NavigateToAddCategoryScreen : CategoryEvent()
         data class ShowCategorySavedConfirmationMessage(val msg: String) : CategoryEvent()
+        object NavigateToToday : CategoryEvent()
     }
 }

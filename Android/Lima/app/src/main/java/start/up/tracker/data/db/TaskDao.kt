@@ -1,13 +1,14 @@
 package start.up.tracker.data.db
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import start.up.tracker.data.db.models.Category
-import start.up.tracker.data.db.relations.CategoryWithTasks
-import start.up.tracker.data.db.relations.TaskCategoryCrossRef
-import start.up.tracker.data.db.relations.TaskWithCategories
+import start.up.tracker.data.models.Category
+import start.up.tracker.data.models.Task
+import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.relations.CategoryWithTasks
+import start.up.tracker.data.relations.TaskCategoryCrossRef
+import start.up.tracker.data.relations.TaskWithCategories
 
 /**
  * A suspending function is simply a function that can be paused and resumed at a later time.
@@ -67,6 +68,17 @@ interface TaskDao {
         completed = 0
     """)
     fun countTasksOfInbox(): Flow<Int>
+
+    @Query("""
+        SELECT 
+	        task_table.id, task_table.taskName, task_table.important, task_table.completed, task_table.created, task_table.date,
+	        Category.categoryName, Category.color, Category.tasksInside
+        FROM cross_ref
+        JOIN task_table ON task_table.taskName = cross_ref.taskName
+        JOIN Category ON Category.categoryName = cross_ref.categoryName
+        WHERE task_table.date = :today
+    """)
+    fun getTodayTasks(today: String): Flow<List<TodayTask>>
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)
