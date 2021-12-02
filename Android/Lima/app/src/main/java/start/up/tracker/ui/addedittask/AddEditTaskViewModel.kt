@@ -38,15 +38,18 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskImportance", value)
         }
 
-    //TODO(REPLACE WITH LIST OF CATEGORIES
-    val categoryName = state.get<String>("categoryName") ?: ""
+    var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
+        set(value) {
+            field = value
+            state.set("taskDate", value)
+        }
 
-    // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
+
+    val categoryName = state.get<String>("categoryName") ?: ""
     val categories = taskDao.getCategories()
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
-
 
 
     /**

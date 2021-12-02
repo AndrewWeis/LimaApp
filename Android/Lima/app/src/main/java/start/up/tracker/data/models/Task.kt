@@ -22,12 +22,5 @@ data class Task (
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true)  val id: Int = 0,
-    val date: String = ""
-
-    /*val desc: String,
-    val priority: String,
-    val category: String,
-    val dateAndTime: String,
-    val repeats: String*/
-
+    val date: String = "No date"
 ): Parcelable

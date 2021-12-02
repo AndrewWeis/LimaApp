@@ -47,6 +47,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 viewModel.taskImportance = isChecked
             }
 
+            btnDatePicker.text = viewModel.taskDate
+
             fabSaveTask.setOnClickListener {
                 val checkedChip = binding.chipCategoriesGroup.children
                     .toList()

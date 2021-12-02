@@ -48,7 +48,7 @@
         <item name="strokeColor">@color/lightGray</item>
         <item name="android:stateListAnimator">@null</item>
         <item name="iconTint">@color/black_de</item>
-        <item name="iconGravity">textEnd</item>
+        <item name="iconGravity">end</item>
         <item name="icon">@drawable/ic_date_list</item>
         <item name="android:textColor">@color/black_de</item>
         <item name="backgroundTint">@color/white</item>
