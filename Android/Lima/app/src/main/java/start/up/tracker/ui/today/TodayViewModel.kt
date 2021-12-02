@@ -67,8 +67,8 @@ class TodayViewModel @Inject constructor(
         taskDao.insertTask(task)
     }
 
-    fun onAddNewTaskClick(todayTask: TodayTask) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen(todayTask))
+    fun onAddNewTaskClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
     }
 
     fun onAddEditResult(result: Int) {
@@ -87,7 +87,7 @@ class TodayViewModel @Inject constructor(
     }
 
     sealed class TasksEvent {
-        data class NavigateToAddTaskScreen(val todayTask: TodayTask) : TasksEvent()
+        object NavigateToAddTaskScreen : TasksEvent()
         data class NavigateToEditTaskScreen(val todayTask: TodayTask) : TasksEvent()
         data class ShowUndoDeleteTaskMessage(val todayTask: TodayTask) : TasksEvent()
         data class ShowTaskSavedConfirmationMessage(val msg: String) : TasksEvent()

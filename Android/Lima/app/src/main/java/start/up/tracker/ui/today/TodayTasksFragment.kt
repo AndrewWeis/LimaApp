@@ -59,6 +59,10 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
             }).attachToRecyclerView(todayTaskRV)
         }
 
+        binding.addTaskOfToday.setOnClickListener {
+            viewModel.onAddNewTaskClick()
+        }
+
         viewModel.todayTasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
@@ -79,7 +83,7 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
                             }.show()
                     }
                     is TodayViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TodayTasksFragmentDirections.actionTodayTasksFragmentToAddEditTaskFragment(title = "Add new task", categoryName = event.todayTask.categoryName)
+                        val action = TodayTasksFragmentDirections.actionTodayTasksFragmentToAddEditTaskFragment(title = "Add new task", categoryName = "Inbox")
                         findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.NavigateToEditTaskScreen -> {
