@@ -18,7 +18,7 @@ class TodayViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
-    val currentDate: String = formatter.format(Date())
+    private val currentDate: String = formatter.format(Date())
 
-    val todayTasks: LiveData<List<TodayTask>> = taskDao.getTodayTasks("02.12.2021").asLiveData()
+    val todayTasks: LiveData<List<TodayTask>> = taskDao.getTodayTasks(currentDate).asLiveData()
 }

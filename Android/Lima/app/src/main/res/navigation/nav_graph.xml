@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_categoryFragment_to_todayFragment"
             app:destination="@id/todayFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_todayTasksFragment"
+            app:destination="@id/todayTasksFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -78,4 +81,9 @@
         android:name="start.up.tracker.ui.today.TodayFragment"
         android:label="fragment_today"
         tools:layout="@layout/fragment_today" />
+    <fragment
+        android:id="@+id/todayTasksFragment"
+        android:name="start.up.tracker.ui.today.TodayTasksFragment"
+        android:label="fragment_today_tasks"
+        tools:layout="@layout/fragment_today_tasks" />
 </navigation>

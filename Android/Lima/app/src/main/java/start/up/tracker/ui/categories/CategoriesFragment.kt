@@ -55,7 +55,7 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                     CategoriesViewModel.CategoryEvent.NavigateToToday -> {
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayFragment()
+                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayTasksFragment()
                         findNavController().navigate(action)
                     }
                 }.exhaustive

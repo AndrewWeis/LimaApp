@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks) {
+class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAdapter.OnItemClickListener {
 
     private val viewModel: TodayViewModel by viewModels()
 
@@ -29,5 +29,24 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks) {
         val currentDate: String = formatter.format(Date())
 
         binding.txTaskToday.text = currentDate
+
+        val taskAdapter = TodayTasksAdapter(this)
+        binding.todayTaskRV.apply {
+            adapter = taskAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
+        viewModel.todayTasks.observe(viewLifecycleOwner) {
+            taskAdapter.submitList(it)
+        }
+
+    }
+
+    override fun onItemClick(todayTask: TodayTask) {
+        //   viewModel.onTaskSelected(task)
+    }
+
+    override fun onCheckBoxClick(todayTask: TodayTask, isChecked: Boolean) {
+        // viewModel.onTaskCheckedChanged(task, isChecked)
     }
 }

@@ -22,16 +22,5 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTodayBinding.bind(view)
 
-        binding.apply {
-            val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
-            viewPager2.adapter = adapter
-
-            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-                when(position) {
-                    0 -> tab.text = "Задачи"
-                    1 -> tab.text = "Календарь"
-                }
-            }.attach()
-        }
     }
 }
