@@ -1,5 +1,6 @@
 package start.up.tracker.ui.today
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -52,7 +53,8 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
                 textViewName.paint.isStrikeThruText = todayTask.completed
                 labelPriority.isVisible = todayTask.important
                 textCategoryName.text = todayTask.categoryName
-
+                textCategoryName.setTextColor(todayTask.color)
+                categoryCircle.background.setTint(todayTask.color)
             }
         }
     }

@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tx_task_today"
-        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_normal"
