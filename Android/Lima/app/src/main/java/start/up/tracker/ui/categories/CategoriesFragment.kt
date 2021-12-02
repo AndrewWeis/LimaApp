@@ -15,6 +15,8 @@ import start.up.tracker.R
 import start.up.tracker.data.models.Category
 import start.up.tracker.databinding.FragmentCategoriesBinding
 import start.up.tracker.utils.exhaustive
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdapter.OnItemClickListener{
@@ -55,7 +57,9 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                     CategoriesViewModel.CategoryEvent.NavigateToToday -> {
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayTasksFragment()
+                        val formatter = SimpleDateFormat("dd MMM, EEEE")
+                        val currentDate: String = formatter.format(Date())
+                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayTasksFragment(currentDate)
                         findNavController().navigate(action)
                     }
                 }.exhaustive

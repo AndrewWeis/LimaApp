@@ -84,10 +84,13 @@
     <fragment
         android:id="@+id/todayTasksFragment"
         android:name="start.up.tracker.ui.today.TodayTasksFragment"
-        android:label="Today"
+        android:label="{todayDate}"
         tools:layout="@layout/fragment_today_tasks" >
         <action
             android:id="@+id/action_todayTasksFragment_to_addEditTaskFragment"
             app:destination="@id/addEditTaskFragment" />
+        <argument
+            android:name="todayDate"
+            app:argType="string" />
     </fragment>
 </navigation>

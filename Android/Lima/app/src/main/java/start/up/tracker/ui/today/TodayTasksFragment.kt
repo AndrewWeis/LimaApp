@@ -1,9 +1,10 @@
 package start.up.tracker.ui.today
 
 import android.os.Bundle
-import android.util.Log
-import android.view.*
-import androidx.appcompat.widget.SearchView
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -19,17 +20,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.db.SortOrder
-import start.up.tracker.data.models.Task
 import start.up.tracker.data.models.TodayTask
 import start.up.tracker.databinding.FragmentTodayTasksBinding
 import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
-import start.up.tracker.ui.projectstasks.ProjectsTasksViewModel
 import start.up.tracker.utils.exhaustive
-import start.up.tracker.utils.onQueryTextChanged
 import start.up.tracker.utils.toTask
-import java.text.SimpleDateFormat
-import java.util.*
 
 @AndroidEntryPoint
 class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAdapter.OnItemClickListener {
@@ -39,11 +34,6 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTodayTasksBinding.bind(view)
-
-        val formatter = SimpleDateFormat("dd.MM.yyyy")
-        val currentDate: String = formatter.format(Date())
-
-        binding.txTaskToday.text = currentDate
 
         val taskAdapter = TodayTasksAdapter(this)
         binding.todayTaskRV.apply {
