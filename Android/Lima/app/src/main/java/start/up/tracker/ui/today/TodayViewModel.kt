@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.data.models.Task
 import start.up.tracker.data.models.TodayTask
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,9 +20,5 @@ class TodayViewModel @Inject constructor(
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
     val currentDate: String = formatter.format(Date())
 
-    fun print() {
-        Log.i("date", currentDate)
-    }
-
-    val todayTasks: LiveData<List<TodayTask>> = taskDao.getTodayTasks("").asLiveData()
+    val todayTasks: LiveData<List<TodayTask>> = taskDao.getTodayTasks("02.12.2021").asLiveData()
 }

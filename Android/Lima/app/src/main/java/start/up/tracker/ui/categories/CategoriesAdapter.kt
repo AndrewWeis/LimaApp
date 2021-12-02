@@ -43,7 +43,6 @@ class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter
                 textViewCategoryName.text = category.categoryName
                 icCategory.background.setTint(category.color)
                 textViewTasksNumber.text = category.tasksInside.toString()
-            // TODO(Implement the number of tasks inside the category)
             }
         }
     }

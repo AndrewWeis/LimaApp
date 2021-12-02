@@ -31,6 +31,8 @@ abstract class TaskDatabase: RoomDatabase() {
                 
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
                 dao.insertCategory(Category("Inbox"))
+
+                dao.insertCategory(Category("Eng"))
             }
         }
     }

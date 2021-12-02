@@ -36,6 +36,7 @@
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_add_edit_task.xml" value="0.28901734104046245" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_add_task.xml" value="0.264" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_analytics.xml" value="0.24444444444444444" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_calendar.xml" value="0.1911231884057971" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_categories.xml" value="0.3888888888888889" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_category.xml" value="0.24444444444444444" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_category_inside.xml" value="0.264" />
@@ -44,8 +45,10 @@
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_settings.xml" value="0.24444444444444444" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_tasks.xml" value="0.12790697674418605" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_today.xml" value="0.14027777777777778" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/fragment_today_tasks.xml" value="0.41968911917098445" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/item_category.xml" value="0.49547511312217196" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/item_task.xml" value="0.3789954337899543" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layout/item_task_today.xml" value="0.4" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/menu/bottom_nav_menu.xml" value="0.15151515151515152" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/menu/main_menu.xml" value="0.24444444444444444" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/menu/menu_fragment_tasks.xml" value="0.24444444444444444" />

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentTodayBinding
@@ -17,16 +18,20 @@ import java.time.format.DateTimeFormatter
 @AndroidEntryPoint
 class TodayFragment : Fragment(R.layout.fragment_today) {
 
-    private val viewModel: TodayViewModel by viewModels()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTodayBinding.bind(view)
 
-        viewModel.print()
+        binding.apply {
+            val adapter = ViewPagerAdapter(requireActivity().supportFragmentManager, lifecycle)
+            viewPager2.adapter = adapter
 
-        viewModel.todayTasks.observe(viewLifecycleOwner) {
-
+            TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+                when(position) {
+                    0 -> tab.text = "Задачи"
+                    1 -> tab.text = "Календарь"
+                }
+            }.attach()
         }
     }
 }
