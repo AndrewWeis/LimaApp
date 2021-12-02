@@ -84,6 +84,9 @@
         <argument
             android:name="todayDate"
             app:argType="string" />
+        <action
+            android:id="@+id/action_todayFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/todayTasksFragment"

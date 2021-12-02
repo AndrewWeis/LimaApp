@@ -22,7 +22,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTodayBinding.bind(view)
 
-        val adapter = ViewPagerAdapter(parentFragmentManager, lifecycle)
+        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 
         binding.viewPager2.adapter = adapter
 
