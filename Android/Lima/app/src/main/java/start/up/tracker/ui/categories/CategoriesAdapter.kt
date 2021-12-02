@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.db.models.Category
+import start.up.tracker.data.models.Category
 import start.up.tracker.databinding.ItemCategoryBinding
 
 class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter<Category,
@@ -43,7 +43,6 @@ class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter
                 textViewCategoryName.text = category.categoryName
                 icCategory.background.setTint(category.color)
                 textViewTasksNumber.text = category.tasksInside.toString()
-            // TODO(Implement the number of tasks inside the category)
             }
         }
     }

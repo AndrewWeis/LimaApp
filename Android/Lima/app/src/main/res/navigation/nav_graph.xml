@@ -9,20 +9,20 @@
         android:id="@+id/addEditTaskFragment"
         android:name="start.up.tracker.ui.addedittask.AddEditTaskFragment"
         android:label="{title}"
-        tools:layout="@layout/fragment_add_edit_task" >
+        tools:layout="@layout/fragment_add_edit_task">
         <argument
             android:name="task"
-            app:argType="start.up.tracker.data.db.Task"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:defaultValue="@null"
+            app:argType="start.up.tracker.data.models.Task"
+            app:nullable="true" />
         <argument
             android:name="title"
             app:argType="string" />
         <argument
             android:name="categoryName"
+            android:defaultValue="@null"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -33,13 +33,16 @@
         android:id="@+id/categoryFragment"
         android:name="start.up.tracker.ui.categories.CategoriesFragment"
         android:label="Categories"
-        tools:layout="@layout/fragment_categories" >
+        tools:layout="@layout/fragment_categories">
         <action
             android:id="@+id/action_categoryFragment_to_categoryInsideFragment"
             app:destination="@id/categoryInsideFragment" />
         <action
             android:id="@+id/action_categoryFragment_to_addCategoryFragment"
             app:destination="@id/addCategoryFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_todayFragment"
+            app:destination="@id/todayFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -49,15 +52,18 @@
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
         android:name="start.up.tracker.ui.deleteallcompleted.DeleteAllCompletedDialogFragment"
-        android:label="DeleteAllCompletedDialogFragment" /><action android:id="@+id/action_global_deleteAllCompletedDialogFragment" app:destination="@id/deleteAllCompletedDialogFragment"/>
+        android:label="DeleteAllCompletedDialogFragment" />
+    <action
+        android:id="@+id/action_global_deleteAllCompletedDialogFragment"
+        app:destination="@id/deleteAllCompletedDialogFragment" />
     <fragment
         android:id="@+id/categoryInsideFragment"
         android:name="start.up.tracker.ui.projectstasks.ProjectsTasksFragment"
         android:label="{titleCategory}"
-        tools:layout="@layout/fragment_category_inside" >
+        tools:layout="@layout/fragment_category_inside">
         <argument
             android:name="category"
-            app:argType="start.up.tracker.data.db.models.Category" />
+            app:argType="start.up.tracker.data.models.Category" />
         <argument
             android:name="titleCategory"
             app:argType="string" />
@@ -70,4 +76,25 @@
         android:name="start.up.tracker.ui.addcategory.AddCategoryFragment"
         android:label="Add new project"
         tools:layout="@layout/fragment_add_category" />
+    <fragment
+        android:id="@+id/todayFragment"
+        android:name="start.up.tracker.ui.today.TodayFragment"
+        android:label="{todayDate}"
+        tools:layout="@layout/fragment_today">
+        <argument
+            android:name="todayDate"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_todayFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/todayTasksFragment"
+        android:name="start.up.tracker.ui.today.TodayTasksFragment"
+        android:label="{todayDate}"
+        tools:layout="@layout/fragment_today_tasks">
+        <action
+            android:id="@+id/action_todayTasksFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+    </fragment>
 </navigation>

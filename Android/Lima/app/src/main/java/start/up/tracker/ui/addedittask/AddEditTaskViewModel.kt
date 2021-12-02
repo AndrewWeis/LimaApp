@@ -1,7 +1,5 @@
 package start.up.tracker.ui.addedittask
 
-import android.app.Application
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,10 +9,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import start.up.tracker.data.db.Task
+import start.up.tracker.data.models.Task
 import start.up.tracker.data.db.TaskDao
-import start.up.tracker.data.db.models.Category
-import start.up.tracker.data.db.relations.TaskCategoryCrossRef
+import start.up.tracker.data.models.Category
+import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import javax.inject.Inject
@@ -40,14 +38,19 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskImportance", value)
         }
 
-    //TODO(REPLACE WITH LIST OF CATEGORIES
-    val categoryName = state.get<String>("categoryName") ?: ""
+    var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
+        set(value) {
+            field = value
+            state.set("taskDate", value)
+        }
 
-    // TODO(What will be if we add new category or edit exciting one? Does it replace or just add the new one)
+
+    val categoryName = state.get<String>("categoryName") ?: ""
     val categories = taskDao.getCategories()
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
+
 
     /**
      * This variable stores all categories and categories of the specific task.
@@ -59,7 +62,7 @@ class AddEditTaskViewModel @Inject constructor(
     }.asLiveData()
 
 
-    fun onSaveClick(checkedChip: String) {
+    fun onSaveClick(checkedChip: String, date: String) {
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
@@ -68,10 +71,10 @@ class AddEditTaskViewModel @Inject constructor(
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
-            val updatedTask = task.copy(taskName = taskName, important = taskImportance)
+            val updatedTask = task.copy(taskName = taskName, important = taskImportance, date = date)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, important = taskImportance)
+            val newTask = Task(taskName = taskName, important = taskImportance, date = date)
             createTask(newTask)
         }
 

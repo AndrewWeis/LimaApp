@@ -1,7 +1,6 @@
 package start.up.tracker.ui.categories
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -13,9 +12,11 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.data.db.models.Category
+import start.up.tracker.data.models.Category
 import start.up.tracker.databinding.FragmentCategoriesBinding
 import start.up.tracker.utils.exhaustive
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdapter.OnItemClickListener{
@@ -55,6 +56,13 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                     is CategoriesViewModel.CategoryEvent.ShowCategorySavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
+                    CategoriesViewModel.CategoryEvent.NavigateToToday -> {
+                        val formatter = SimpleDateFormat("dd MMM, EEEE")
+                        val currentDate: String = formatter.format(Date())
+                        //val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayTasksFragment(currentDate)
+                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayFragment(currentDate)
+                        findNavController().navigate(action)
+                    }
                 }.exhaustive
             }
         }
@@ -75,6 +83,14 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
 
         viewModel.getInboxTasksCount.observe(viewLifecycleOwner) {
             binding.tvInboxNum.text = it.toString()
+        }
+
+        viewModel.getTodayTasksCount.observe(viewLifecycleOwner) {
+            binding.tvTodayNum.text = it.toString()
+        }
+
+        binding.cardViewToday.setOnClickListener {
+            viewModel.onTodaySelected()
         }
     }
 

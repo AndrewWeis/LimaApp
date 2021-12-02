@@ -81,4 +81,7 @@ dependencies {
 
     // Color picker
     implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
+
+    // View Pager 2
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 }

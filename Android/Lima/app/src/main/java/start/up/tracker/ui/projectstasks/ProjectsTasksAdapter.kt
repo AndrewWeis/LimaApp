@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.db.Task
+import start.up.tracker.data.models.Task
 import start.up.tracker.databinding.ItemTaskBinding
 
 /**

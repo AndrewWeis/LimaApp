@@ -1,4 +1,4 @@
-package start.up.tracker.data.db.relations
+package start.up.tracker.data.relations
 
 import androidx.room.Entity
 

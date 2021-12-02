@@ -5,8 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import start.up.tracker.data.db.models.Category
-import start.up.tracker.data.db.relations.TaskCategoryCrossRef
+import start.up.tracker.data.models.Category
+import start.up.tracker.data.models.Task
+import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.di.ApplicationScope
 import javax.inject.Inject
 import javax.inject.Provider
@@ -30,6 +31,8 @@ abstract class TaskDatabase: RoomDatabase() {
                 
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
                 dao.insertCategory(Category("Inbox"))
+
+                dao.insertCategory(Category("Eng"))
             }
         }
     }

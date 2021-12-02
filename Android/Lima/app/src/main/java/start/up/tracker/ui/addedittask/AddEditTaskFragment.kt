@@ -1,7 +1,6 @@
 package start.up.tracker.ui.addedittask
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -14,13 +13,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.data.db.models.Category
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
+import java.text.SimpleDateFormat
 
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
@@ -31,6 +31,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentAddEditTaskBinding.bind(view)
+
+        var date = viewModel.taskDate
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
@@ -45,13 +47,35 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 viewModel.taskImportance = isChecked
             }
 
+            btnDatePicker.text = viewModel.taskDate
+            /*btnDatePicker.addTextChangedListener {
+                viewModel.taskDate = it.toString()
+            }*/
+
             fabSaveTask.setOnClickListener {
                 val checkedChip = binding.chipCategoriesGroup.children
                     .toList()
                     .filter { (it as Chip).isChecked }
                     .joinToString { (it as Chip).text }
 
-                viewModel.onSaveClick(checkedChip)
+                viewModel.onSaveClick(checkedChip, date)
+            }
+
+            val today = MaterialDatePicker.todayInUtcMilliseconds()
+            val materialDatePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select a date")
+                .setSelection(today)
+                .build()
+
+
+            btnDatePicker.setOnClickListener {
+                materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
+            }
+
+            materialDatePicker.addOnPositiveButtonClickListener {
+                val formattedDate = formatToDate(it)
+                date = formattedDate
+                btnDatePicker.text = formattedDate
             }
         }
 
@@ -89,6 +113,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
             }
         }
+    }
+
+    private fun formatToDate(it: Long?): String {
+        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
+        return simpleDateFormat.format(it)
     }
 
     private fun addCategoryChip(chipText: String, chipGroup: ChipGroup, isChipChecked: Boolean) {

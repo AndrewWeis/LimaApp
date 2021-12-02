@@ -9,7 +9,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.TaskDao
-import start.up.tracker.data.db.models.Category
+import start.up.tracker.data.models.Category
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.utils.DEFAULT_PROJECT_COLOR
 import javax.inject.Inject
