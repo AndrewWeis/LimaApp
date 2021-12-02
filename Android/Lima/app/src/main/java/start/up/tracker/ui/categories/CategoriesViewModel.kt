@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.models.Category
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +33,13 @@ class CategoriesViewModel @Inject constructor(
 
     private val getInboxTasksCountFlow = taskDao.countTasksOfInbox()
     val getInboxTasksCount = getInboxTasksCountFlow.asLiveData()
+
+
+    private val formatter = SimpleDateFormat("dd.MM.yyyy")
+    private val currentDate: String = formatter.format(Date())
+
+    private val getTodayTasksCountFlow = taskDao.countTodayTasks(currentDate)
+    val getTodayTasksCount = getTodayTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         _categories.value?.forEach {

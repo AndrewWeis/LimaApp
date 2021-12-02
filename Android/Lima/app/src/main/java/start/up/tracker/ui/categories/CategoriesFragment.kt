@@ -80,6 +80,10 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
             binding.tvInboxNum.text = it.toString()
         }
 
+        viewModel.getTodayTasksCount.observe(viewLifecycleOwner) {
+            binding.tvTodayNum.text = it.toString()
+        }
+
         binding.cardViewToday.setOnClickListener {
             viewModel.onTodaySelected()
         }

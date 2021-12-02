@@ -70,6 +70,14 @@ interface TaskDao {
     fun countTasksOfInbox(): Flow<Int>
 
     @Query("""
+        SELECT COUNT(*)
+        FROM task_table
+        WHERE date = :today AND
+        completed = 0
+    """)
+    fun countTodayTasks(today: String): Flow<Int>
+
+    @Query("""
         SELECT 
 	        task_table.id, task_table.taskName, task_table.important, task_table.completed, task_table.created, task_table.date,
 	        Category.categoryName, Category.color, Category.tasksInside
