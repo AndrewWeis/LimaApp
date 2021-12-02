@@ -76,9 +76,10 @@ interface TaskDao {
         FROM cross_ref
         JOIN task_table ON task_table.taskName = cross_ref.taskName
         JOIN Category ON Category.categoryName = cross_ref.categoryName
-        WHERE task_table.date = :today
+        WHERE task_table.date = :today AND
+       (completed != :hideCompleted OR completed = 0)
     """)
-    fun getTodayTasks(today: String): Flow<List<TodayTask>>
+    fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)

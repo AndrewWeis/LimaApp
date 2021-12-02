@@ -7,6 +7,7 @@ import androidx.datastore.preferences.createDataStore
 import androidx.datastore.preferences.edit
 import androidx.datastore.preferences.preferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
@@ -38,6 +39,11 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
             val sortOrder = SortOrder.valueOf(preferences[PreferencesKeys.SORT_ORDER] ?: SortOrder.BY_DATE.name)
             val hideCompleted = preferences[PreferencesKeys.HIDE_COMPLETED] ?: false
             FilterPreferences(sortOrder, hideCompleted)
+        }
+
+    val hideCompleted: Flow<Boolean?>
+        get() = dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.HIDE_COMPLETED]
         }
 
     suspend fun updateSortOrder(sortOrder: SortOrder) {

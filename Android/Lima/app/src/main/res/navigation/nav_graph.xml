@@ -84,6 +84,6 @@
     <fragment
         android:id="@+id/todayTasksFragment"
         android:name="start.up.tracker.ui.today.TodayTasksFragment"
-        android:label="fragment_today_tasks"
+        android:label="Today"
         tools:layout="@layout/fragment_today_tasks" />
 </navigation>
