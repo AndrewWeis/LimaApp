@@ -32,7 +32,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         val binding = FragmentAddEditTaskBinding.bind(view)
 
-        var date = ""
+        var date = viewModel.taskDate
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
@@ -48,6 +48,9 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             btnDatePicker.text = viewModel.taskDate
+            /*btnDatePicker.addTextChangedListener {
+                viewModel.taskDate = it.toString()
+            }*/
 
             fabSaveTask.setOnClickListener {
                 val checkedChip = binding.chipCategoriesGroup.children

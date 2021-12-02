@@ -78,6 +78,8 @@ interface TaskDao {
         JOIN Category ON Category.categoryName = cross_ref.categoryName
         WHERE task_table.date = :today AND
        (completed != :hideCompleted OR completed = 0)
+       ORDER BY important 
+       DESC
     """)
     fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
 
