@@ -43,8 +43,8 @@ class TodayViewModel @Inject constructor(
         preferencesManager.updateHideCompleted(hideCompleted)
     }
 
-    fun onTaskSelected(task: TodayTask) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToEditTaskScreen(task))
+    fun onTaskSelected(todayTask: TodayTask) = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToEditTaskScreen(todayTask))
     }
 
     fun onTaskCheckedChanged(todayTask: TodayTask, isChecked: Boolean) = viewModelScope.launch {
@@ -67,8 +67,8 @@ class TodayViewModel @Inject constructor(
         taskDao.insertTask(task)
     }
 
-    fun onAddNewTaskClick() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
+    fun onAddNewTaskClick(todayTask: TodayTask) = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen(todayTask))
     }
 
     fun onAddEditResult(result: Int) {
@@ -87,7 +87,7 @@ class TodayViewModel @Inject constructor(
     }
 
     sealed class TasksEvent {
-        object NavigateToAddTaskScreen : TasksEvent()
+        data class NavigateToAddTaskScreen(val todayTask: TodayTask) : TasksEvent()
         data class NavigateToEditTaskScreen(val todayTask: TodayTask) : TasksEvent()
         data class ShowUndoDeleteTaskMessage(val todayTask: TodayTask) : TasksEvent()
         data class ShowTaskSavedConfirmationMessage(val msg: String) : TasksEvent()

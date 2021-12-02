@@ -27,6 +27,7 @@ import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
 import start.up.tracker.ui.projectstasks.ProjectsTasksViewModel
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.onQueryTextChanged
+import start.up.tracker.utils.toTask
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -88,12 +89,13 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
                             }.show()
                     }
                     is TodayViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                      //  val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task", categoryName = viewModel.categoryName)
-                       // findNavController().navigate(action)
+                        val action = TodayTasksFragmentDirections.actionTodayTasksFragmentToAddEditTaskFragment(title = "Add new task", categoryName = event.todayTask.categoryName)
+                        findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        //val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(event.todayTask, "Edit task", viewModel.categoryName)
-                        //findNavController().navigate(action)
+                        val task = event.todayTask.toTask()
+                        val action = TodayTasksFragmentDirections.actionTodayTasksFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.todayTask.categoryName, task = task)
+                        findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
