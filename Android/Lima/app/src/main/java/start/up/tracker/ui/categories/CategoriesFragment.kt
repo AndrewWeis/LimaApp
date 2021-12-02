@@ -59,7 +59,8 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                     CategoriesViewModel.CategoryEvent.NavigateToToday -> {
                         val formatter = SimpleDateFormat("dd MMM, EEEE")
                         val currentDate: String = formatter.format(Date())
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayTasksFragment(currentDate)
+                        //val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayTasksFragment(currentDate)
+                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayFragment(currentDate)
                         findNavController().navigate(action)
                     }
                 }.exhaustive
