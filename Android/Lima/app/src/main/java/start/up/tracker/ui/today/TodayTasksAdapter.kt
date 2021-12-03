@@ -2,11 +2,13 @@ package start.up.tracker.ui.today
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import start.up.tracker.R
 import start.up.tracker.data.models.TodayTask
 import start.up.tracker.databinding.ItemTaskTodayBinding
 
@@ -51,10 +53,24 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
                 checkBoxCompleted.isChecked = todayTask.completed
                 textViewName.text = todayTask.taskName
                 textViewName.paint.isStrikeThruText = todayTask.completed
-                labelPriority.isVisible = todayTask.important
                 textCategoryName.text = todayTask.categoryName
                 textCategoryName.setTextColor(todayTask.color)
                 categoryCircle.background.setTint(todayTask.color)
+
+                if (todayTask.priority == 4) {
+                    icPriority.visibility = View.GONE
+                } else {
+                    icPriority.setImageResource(chooseIconDrawable(todayTask.priority))
+                }
+            }
+        }
+
+        private fun chooseIconDrawable(priority: Int): Int {
+            return when(priority) {
+                1 -> R.drawable.ic_priority_1
+                2 -> R.drawable.ic_priority_2
+                3 -> R.drawable.ic_priority_3
+                else -> R.drawable.ic_priority_1 // This should never be reached
             }
         }
     }

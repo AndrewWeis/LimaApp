@@ -9,7 +9,7 @@ val <T> T.exhaustive: T
 
 fun TodayTask.toTask() = Task(
     taskName = taskName,
-    important = important,
+    priority = priority,
     completed = completed,
     created = created,
     id = id,

@@ -32,18 +32,17 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskName", value)
         }
 
-    var taskImportance = state.get<Boolean>("taskImportance") ?: task?.important ?: false
-        set(value) {
-            field = value
-            state.set("taskImportance", value)
-        }
-
     var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
         set(value) {
             field = value
             state.set("taskDate", value)
         }
 
+    var taskPriority = state.get<Int>("taskPriority") ?: task?.priority ?: 1
+        set(value) {
+            field = value
+            state.set("taskPriority", value)
+        }
 
     val categoryName = state.get<String>("categoryName") ?: ""
     val categories = taskDao.getCategories()
@@ -62,7 +61,7 @@ class AddEditTaskViewModel @Inject constructor(
     }.asLiveData()
 
 
-    fun onSaveClick(checkedChip: String, date: String) {
+    fun onSaveClick(checkedChip: String, date: String, priority: Int) {
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
@@ -71,10 +70,10 @@ class AddEditTaskViewModel @Inject constructor(
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
-            val updatedTask = task.copy(taskName = taskName, important = taskImportance, date = date)
+            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, important = taskImportance, date = date)
+            val newTask = Task(taskName = taskName, priority = priority, date = date)
             createTask(newTask)
         }
 

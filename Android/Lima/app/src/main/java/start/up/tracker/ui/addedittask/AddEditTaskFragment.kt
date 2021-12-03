@@ -1,10 +1,12 @@
 package start.up.tracker.ui.addedittask
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.children
+import androidx.core.view.forEach
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -21,6 +23,7 @@ import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
 import java.text.SimpleDateFormat
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
@@ -36,15 +39,10 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
-            checkBoxImportant.isChecked = viewModel.taskImportance
             checkBoxImportant.jumpDrawablesToCurrentState()
 
             editTextTaskLabel.addTextChangedListener {
                 viewModel.taskName = it.toString()
-            }
-
-            checkBoxImportant.setOnCheckedChangeListener { _, isChecked ->
-                viewModel.taskImportance = isChecked
             }
 
             btnDatePicker.text = viewModel.taskDate
@@ -58,8 +56,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     .filter { (it as Chip).isChecked }
                     .joinToString { (it as Chip).text }
 
-                viewModel.onSaveClick(checkedChip, date)
+                // TODO(HARD CODE REDO)
+                viewModel.onSaveClick(checkedChip, date, Random.nextInt(1, 5))
             }
+
+
 
             val today = MaterialDatePicker.todayInUtcMilliseconds()
             val materialDatePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()

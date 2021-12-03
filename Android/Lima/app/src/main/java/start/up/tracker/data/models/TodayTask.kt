@@ -6,7 +6,7 @@ data class TodayTask(
     @PrimaryKey
     val id: Int,
     val taskName: String,
-    val important: Boolean,
+    val priority: Int,
     val completed: Boolean,
     val created: Long,
     val date: String,

@@ -68,7 +68,6 @@ class ProjectsTasksAdapter(private val listener: OnItemClickListener) : ListAdap
                 checkBoxCompleted.isChecked = task.completed
                 textViewName.text = task.taskName
                 textViewName.paint.isStrikeThruText = task.completed
-                labelPriority.isVisible = task.important
             }
         }
     }

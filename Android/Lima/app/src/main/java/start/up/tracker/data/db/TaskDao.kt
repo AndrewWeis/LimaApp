@@ -35,8 +35,8 @@ interface TaskDao {
        WHERE categoryName = :categoryName AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskName LIKE '%' || :searchQuery || '%' 
-       ORDER BY important 
-       DESC, taskName
+       ORDER BY priority 
+       ASC, taskName
        """)
     fun getTasksOfCategorySortedByName(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
 
@@ -47,8 +47,8 @@ interface TaskDao {
        WHERE categoryName = :categoryName AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskName LIKE '%' || :searchQuery || '%' 
-       ORDER BY important 
-       DESC, created""")
+       ORDER BY priority 
+       ASC, created""")
     fun getTasksOfCategorySortedByDateCreated(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
 
     @Query("""
@@ -79,15 +79,15 @@ interface TaskDao {
 
     @Query("""
         SELECT 
-	        task_table.id, task_table.taskName, task_table.important, task_table.completed, task_table.created, task_table.date,
+	        task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.date,
 	        Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
         JOIN task_table ON task_table.taskName = cross_ref.taskName
         JOIN Category ON Category.categoryName = cross_ref.categoryName
         WHERE task_table.date = :today AND
        (completed != :hideCompleted OR completed = 0)
-       ORDER BY important 
-       DESC
+       ORDER BY priority 
+       ASC
     """)
     fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
 
