@@ -14,7 +14,7 @@
         android:layout_marginStart="@dimen/spacing_normal"
         android:text="@string/important"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tx_priority" />
+        app:layout_constraintTop_toBottomOf="@+id/tx_importance" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -82,6 +82,59 @@
         android:text="@string/priority_type"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTIL" />
+
+
+    <TextView
+        android:id="@+id/tx_importance"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="Importance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chipPriorityGroup" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipPriorityGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tx_priority"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No priority"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@drawable/ic_priority_3"
+            app:chipIconTint="#FC3131"
+            android:text="P1"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@drawable/ic_priority_3"
+            app:chipIconTint="#FC8631"
+            android:text="P2"/>
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@drawable/ic_priority_3"
+            app:chipIconTint="#40C686"
+            android:text="P3"/>
+
+    </com.google.android.material.chip.ChipGroup>
 
     <TextView
         android:id="@+id/tx_category_type"
