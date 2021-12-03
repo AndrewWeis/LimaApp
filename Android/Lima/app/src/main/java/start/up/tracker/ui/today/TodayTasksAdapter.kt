@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.R
 import start.up.tracker.data.models.TodayTask
 import start.up.tracker.databinding.ItemTaskTodayBinding
+import start.up.tracker.utils.exhaustive
 
 
 class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<TodayTask,
@@ -70,7 +71,7 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
                 1 -> R.drawable.ic_priority_1
                 2 -> R.drawable.ic_priority_2
                 3 -> R.drawable.ic_priority_3
-                else -> R.drawable.ic_priority_1 // This should never be reached
+                else -> R.drawable.ic_android // This should never be reached
             }
         }
     }
