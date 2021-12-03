@@ -23,11 +23,11 @@ import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
 import java.text.SimpleDateFormat
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
+    //TODO(BUG when tasks have the same name)
     private val viewModel: AddEditTaskViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,9 +46,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             btnDatePicker.text = viewModel.taskDate
-            /*btnDatePicker.addTextChangedListener {
-                viewModel.taskDate = it.toString()
-            }*/
+
 
             fabSaveTask.setOnClickListener {
                 val checkedChip = binding.chipCategoriesGroup.children
@@ -56,10 +54,25 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     .filter { (it as Chip).isChecked }
                     .joinToString { (it as Chip).text }
 
-                // TODO(HARD CODE REDO)
-                viewModel.onSaveClick(checkedChip, date, Random.nextInt(1, 5))
+                val checkedPriority = binding.chipPriorityGroup.children
+                    .toList()
+                    .filter { (it as Chip).isChecked }
+                    .joinToString { (it as Chip).text }
+
+                val priority = viewModel.priorityToInt(checkedPriority)
+
+                viewModel.onSaveClick(checkedChip, date, priority)
             }
 
+            binding.chipPriorityGroup.isSingleSelection = true
+            binding.chipPriorityGroup.isSelectionRequired = true
+            binding.chipPriorityGroup.forEach {
+                val textPriority = (it as Chip).text.toString()
+                val priority = viewModel.priorityToInt(textPriority)
+                if (viewModel.taskPriority == priority) {
+                    it.isChecked = true
+                }
+            }
 
 
             val today = MaterialDatePicker.todayInUtcMilliseconds()
@@ -74,7 +87,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             materialDatePicker.addOnPositiveButtonClickListener {
-                val formattedDate = formatToDate(it)
+                val formattedDate = viewModel.formatToDate(it)
                 date = formattedDate
                 btnDatePicker.text = formattedDate
             }
@@ -116,10 +129,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         }
     }
 
-    private fun formatToDate(it: Long?): String {
-        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
-        return simpleDateFormat.format(it)
-    }
+
 
     private fun addCategoryChip(chipText: String, chipGroup: ChipGroup, isChipChecked: Boolean) {
         val chip = Chip(context)

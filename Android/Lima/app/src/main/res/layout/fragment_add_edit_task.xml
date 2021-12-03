@@ -109,30 +109,37 @@
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No priority"/>
+            android:text="No priority" />
 
         <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="P1"
             app:chipIcon="@drawable/ic_priority_3"
             app:chipIconTint="#FC3131"
-            android:text="P1"/>
+            app:chipIconVisible="true" />
 
         <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="P2"
             app:chipIcon="@drawable/ic_priority_3"
             app:chipIconTint="#FC8631"
-            android:text="P2"/>
+            app:chipIconVisible="true" />
 
         <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="P3"
             app:chipIcon="@drawable/ic_priority_3"
             app:chipIconTint="#40C686"
-            android:text="P3"/>
+            app:chipIconVisible="true" />
 
     </com.google.android.material.chip.ChipGroup>
 

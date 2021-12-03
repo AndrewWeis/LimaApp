@@ -15,6 +15,7 @@ import start.up.tracker.data.models.Category
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +39,7 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskDate", value)
         }
 
-    var taskPriority = state.get<Int>("taskPriority") ?: task?.priority ?: 1
+    var taskPriority = state.get<Int>("taskPriority") ?: task?.priority ?: 4
         set(value) {
             field = value
             state.set("taskPriority", value)
@@ -60,6 +61,21 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }.asLiveData()
 
+
+    fun priorityToInt(checkedPriority: String): Int {
+        return when (checkedPriority) {
+            "P1" -> 1
+            "P2" -> 2
+            "P3" -> 3
+            "No priority" -> 4
+            else -> -1
+        }
+    }
+
+    fun formatToDate(it: Long?): String {
+        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
+        return simpleDateFormat.format(it)
+    }
 
     fun onSaveClick(checkedChip: String, date: String, priority: Int) {
         if (taskName.isBlank()) {
