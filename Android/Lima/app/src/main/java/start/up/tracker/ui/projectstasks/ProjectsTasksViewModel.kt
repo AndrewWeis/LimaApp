@@ -7,7 +7,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.PreferencesManager
-import start.up.tracker.data.db.SortOrder
 import start.up.tracker.data.models.Task
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.models.Category
@@ -25,10 +24,10 @@ class ProjectsTasksViewModel @Inject constructor(
 
     val searchQuery = state.getLiveData("searchQuery", "")
 
-    val preferencesFlow = preferencesManager.preferencesFlow
-
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
+
+    val hideCompleted = preferencesManager.hideCompleted
 
     /**
      * Receive specific category either from [SavedStateHandle] in case app killed our app or from [SaveArgs]
@@ -42,18 +41,14 @@ class ProjectsTasksViewModel @Inject constructor(
 
     private val tasksOfCategoryFlow = combine(
         searchQuery.asFlow(),
-        preferencesFlow
-    ) { query, filterPreferences ->
-        Pair(query, filterPreferences)
-    }.flatMapLatest { (query, filterPreferences) ->
-        taskDao.getTasksOfCategory(query, filterPreferences.sortOrder, filterPreferences.hideCompleted, categoryName)
+        hideCompleted
+    ) { query, hideCompleted ->
+        Pair(query, hideCompleted)
+    }.flatMapLatest { (query, hideCompleted) ->
+        taskDao.getTasksOfCategorySortedByDateCreated(query, hideCompleted ?: false, categoryName)
     }
-
     val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
 
-    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
-        preferencesManager.updateSortOrder(sortOrder)
-    }
 
     fun onHideCompletedClick(hideCompleted: Boolean) = viewModelScope.launch {
         preferencesManager.updateHideCompleted(hideCompleted)

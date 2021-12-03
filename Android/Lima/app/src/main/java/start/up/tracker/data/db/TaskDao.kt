@@ -22,24 +22,6 @@ import start.up.tracker.data.relations.TaskWithCategories
 @Dao
 interface TaskDao {
 
-    fun getTasksOfCategory(query: String, sortOrder: SortOrder, hideCompleted: Boolean, categoryName: String): Flow<List<Task>> =
-        when(sortOrder) {
-            SortOrder.BY_DATE -> getTasksOfCategorySortedByDateCreated(query, hideCompleted, categoryName)
-            SortOrder.BY_NAME -> getTasksOfCategorySortedByName(query, hideCompleted, categoryName)
-        }
-
-    @Query("""
-       SELECT * 
-       FROM task_table 
-       JOIN cross_ref ON task_table.taskName = cross_ref.taskName
-       WHERE categoryName = :categoryName AND
-       (completed != :hideCompleted OR completed = 0) AND 
-       task_table.taskName LIKE '%' || :searchQuery || '%' 
-       ORDER BY priority 
-       ASC, taskName
-       """)
-    fun getTasksOfCategorySortedByName(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
-
     @Query("""
        SELECT * 
        FROM task_table
