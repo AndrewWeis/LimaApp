@@ -10,6 +10,8 @@ data class TodayTask(
     val completed: Boolean,
     val created: Long,
     val date: String,
+    val timeStart: String,
+    val timeEnd: String,
     val categoryName: String,
     val color: Int,
     val tasksInside: Int

@@ -61,7 +61,7 @@ interface TaskDao {
 
     @Query("""
         SELECT 
-	        task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.date,
+	        task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.date, task_table.timeStart, task_table.timeEnd,
 	        Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
         JOIN task_table ON task_table.taskName = cross_ref.taskName

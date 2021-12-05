@@ -22,5 +22,7 @@ data class Task (
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true)  val id: Int = 0,
-    val date: String = "No date"
+    val date: String = "No date",
+    val timeStart: String = "No time",
+    val timeEnd: String = "No time"
 ): Parcelable
