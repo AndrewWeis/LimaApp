@@ -7,5 +7,6 @@
     <dimen name="spacing_little">8dp</dimen>
     <dimen name="spacing_normal">16dp</dimen>
     <dimen name="spacing_large">32dp</dimen>
+    <dimen name="timeSpace">45dp</dimen>
 
 </resources>
