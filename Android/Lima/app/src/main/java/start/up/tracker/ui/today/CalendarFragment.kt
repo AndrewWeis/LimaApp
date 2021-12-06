@@ -1,6 +1,7 @@
 package start.up.tracker.ui.today
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -21,8 +22,9 @@ import start.up.tracker.data.models.TodayTask
 import start.up.tracker.databinding.FragmentCalendarBinding
 import start.up.tracker.databinding.FragmentTodayTasksBinding
 import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
-import start.up.tracker.utils.exhaustive
-import start.up.tracker.utils.toTask
+import start.up.tracker.utils.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdapter.OnItemClickListener {
@@ -48,6 +50,9 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
         viewModel.calendarTasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
+
+        setUpCurrentTimeIndicator(binding)
+
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
             val result = bundle.getInt("add_edit_result")
@@ -85,6 +90,16 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
         }
 
         setHasOptionsMenu(true)
+    }
+
+    private fun setUpCurrentTimeIndicator(binding: FragmentCalendarBinding) {
+        val sdf = SimpleDateFormat("HH:mm")
+        val currentDate = sdf.format(Date())
+        val minutes = timeToMinutes(currentDate)
+
+        val layoutParams: ViewGroup.MarginLayoutParams = binding.currentTime.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.topMargin = convertDpToPx(minutes - TIME_OFFSET)
+        binding.currentTime.requestLayout()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

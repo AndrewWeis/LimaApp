@@ -1,5 +1,6 @@
 package start.up.tracker.utils
 
+import android.content.res.Resources
 import start.up.tracker.data.models.Task
 import start.up.tracker.data.models.TodayTask
 
@@ -32,3 +33,5 @@ fun timeToMinutes(strInitial: String): Int {
 
     return 60 * strHourTime.toInt() + strMinuteTime.toInt()
 }
+
+fun convertDpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()

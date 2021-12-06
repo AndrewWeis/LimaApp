@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.R
 import start.up.tracker.data.models.TodayTask
 import start.up.tracker.databinding.ItemTaskCalendarBinding
+import start.up.tracker.utils.TIME_OFFSET
+import start.up.tracker.utils.convertDpToPx
 
 
 class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<TodayTask,
@@ -76,13 +78,11 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
                     }
                     layoutParams.bottomMargin = convertDpToPx(space)
                     layoutParams.height = convertDpToPx(height)
-                    if (position == 0 && todayTask.timeStartInt > 300) { layoutParams.topMargin = convertDpToPx(todayTask.timeStartInt - 300)}
+                    if (position == 0 && todayTask.timeStartInt > TIME_OFFSET) { layoutParams.topMargin = convertDpToPx(todayTask.timeStartInt - TIME_OFFSET)}
                     binding.cardTaskCalendar.requestLayout()
                 }
             }
         }
-
-        private fun convertDpToPx(dp: Int) = (dp * Resources.getSystem().displayMetrics.density).toInt()
 
         private fun chooseColorPriority(priority: Int): String {
             return when(priority) {

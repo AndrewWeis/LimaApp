@@ -73,6 +73,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     return@setOnClickListener
                 }
 
+                // TODO(check if there are already some task in that time interval)
+
                 // ---------- VALIDATION END ----------
 
 
