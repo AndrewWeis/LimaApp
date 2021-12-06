@@ -22,13 +22,11 @@ fun TodayTask.toTask() = Task(
 
 fun timeToMinutes(strInitial: String): Int {
 
-    val str = strInitial.toList()
-
-    val strHourList = str.takeWhile { it != ':' }
+    val strHourList = strInitial.toList().takeWhile { it != ':' }
     var strHourTime = ""
     strHourList.forEach { strHourTime += it }
 
-    val strMinuteList = str.takeLast(2)
+    val strMinuteList = strInitial.substringAfter(":").toList()
     var strMinuteTime = ""
     strMinuteList.forEach { strMinuteTime += it }
 

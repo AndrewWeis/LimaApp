@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
+import start.up.tracker.utils.timeToMinutes
 import java.text.SimpleDateFormat
 import kotlin.properties.Delegates.notNull
 
@@ -70,6 +71,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     .joinToString { (it as Chip).text }
 
                 val priority = viewModel.priorityToInt(checkedPriority)
+
+                if (timeToMinutes(timeEnd) - timeToMinutes(timeStart) < 30) {
+                    Snackbar.make(requireView(), "The minimum time interval must be >= 30", Snackbar.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
 
                 viewModel.onSaveClick(checkedChip, date, timeStart, timeEnd, priority)
             }
