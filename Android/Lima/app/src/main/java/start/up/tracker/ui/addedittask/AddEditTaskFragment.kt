@@ -39,7 +39,6 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
-            checkBoxImportant.jumpDrawablesToCurrentState()
 
             editTextTaskLabel.addTextChangedListener {
                 viewModel.taskName = it.toString()
