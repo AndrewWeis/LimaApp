@@ -39,6 +39,18 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskDate", value)
         }
 
+    var taskTimeStart = state.get<String>("taskTimeStart") ?: task?.timeStart ?: "No Time"
+        set(value) {
+            field = value
+            state.set("taskTimeStart", value)
+        }
+
+    var taskTimeEnd = state.get<String>("taskTimeEnd") ?: task?.timeEnd ?: "No Time"
+        set(value) {
+            field = value
+            state.set("taskTimeEnd", value)
+        }
+
     var taskPriority = state.get<Int>("taskPriority") ?: task?.priority ?: 4
         set(value) {
             field = value
@@ -77,7 +89,7 @@ class AddEditTaskViewModel @Inject constructor(
         return simpleDateFormat.format(it)
     }
 
-    fun onSaveClick(checkedChip: String, date: String, priority: Int) {
+    fun onSaveClick(checkedChip: String, date: String, timeStart: String, timeEnd: String, priority: Int) {
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
@@ -86,10 +98,10 @@ class AddEditTaskViewModel @Inject constructor(
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
-            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date)
+            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date, timeStart = timeStart, timeEnd = timeEnd)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, priority = priority, date = date)
+            val newTask = Task(taskName = taskName, priority = priority, date = date, timeStart = timeStart, timeEnd = timeEnd)
             createTask(newTask)
         }
 

@@ -1,6 +1,7 @@
 package start.up.tracker.ui.addedittask
 
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -17,6 +18,8 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
@@ -31,6 +34,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     //TODO(BUG when tasks have the same name)
     private val viewModel: AddEditTaskViewModel by viewModels()
     private var date by notNull<String>()
+    private var timeStart by notNull<String>()
+    private var timeEnd by notNull<String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,6 +43,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         val binding = FragmentAddEditTaskBinding.bind(view)
 
         date = viewModel.taskDate
+        timeStart = viewModel.taskTimeStart
+        timeEnd = viewModel.taskTimeEnd
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
@@ -47,6 +54,8 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
             btnDatePicker.text = viewModel.taskDate
+            btnTimeStart.text = viewModel.taskTimeStart
+            btnTimeEnd.text = viewModel.taskTimeEnd
 
 
             fabSaveTask.setOnClickListener {
@@ -62,7 +71,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
                 val priority = viewModel.priorityToInt(checkedPriority)
 
-                viewModel.onSaveClick(checkedChip, date, priority)
+                viewModel.onSaveClick(checkedChip, date, timeStart, timeEnd, priority)
             }
 
 
@@ -80,6 +89,14 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             btnDatePicker.setOnClickListener {
                 openDatePicker(binding)
+            }
+
+            btnTimeStart.setOnClickListener {
+                openTimePicker(binding, "Time Start")
+            }
+
+            btnTimeEnd.setOnClickListener {
+                openTimePicker(binding, "Time End")
             }
 
         }
@@ -118,6 +135,32 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     isChipChecked = true
                 }
                 addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
+            }
+        }
+    }
+
+    private fun openTimePicker(binding: FragmentAddEditTaskBinding, title: String) {
+        val isSystem24Hour = is24HourFormat(requireContext())
+        val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+
+        val picker = MaterialTimePicker.Builder()
+            .setTimeFormat(clockFormat)
+            .setHour(12)
+            .setMinute(0)
+            .setTitleText(title)
+            .build()
+        picker.show(childFragmentManager, "TIME_PICKER")
+
+        picker.addOnPositiveButtonClickListener {
+            val hour = picker.hour
+            val minute = picker.minute
+
+            if (title == "Time Start") {
+                timeStart = "$hour:$minute"
+                binding.btnTimeStart.text = timeStart
+            } else {
+                timeEnd = "$hour:$minute"
+                binding.btnTimeEnd.text = timeEnd
             }
         }
     }

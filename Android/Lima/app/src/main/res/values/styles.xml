@@ -51,6 +51,7 @@
         <item name="iconGravity">end</item>
         <item name="icon">@drawable/ic_date_list</item>
         <item name="android:textColor">@color/black_de</item>
+        <item name="android:textSize">12sp</item>
         <item name="backgroundTint">@color/white</item>
         <item name="boxCornerRadiusBottomEnd">4dp</item>
         <item name="boxCornerRadiusBottomStart">4dp</item>
