@@ -19,28 +19,28 @@
         <TextView
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="5:00 AM" />
 
         <TextView
             android:layout_marginTop="@dimen/timeSpace"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="6:00 AM" />
 
         <TextView
             android:layout_marginTop="@dimen/timeSpace"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="7:00 AM" />
 
         <TextView
             android:layout_marginTop="@dimen/timeSpace"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="8:00 AM" />
 
         <TextView
@@ -61,21 +61,21 @@
             android:layout_marginTop="@dimen/timeSpace"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="11:00 AM" />
 
         <TextView
             android:layout_marginTop="@dimen/timeSpace"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="12:00 AM" />
 
         <TextView
             android:layout_marginTop="@dimen/timeSpace"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/timeTextHeight"
             android:text="13:00 AM" />
 
 
@@ -85,12 +85,13 @@
         android:id="@+id/todayCalendarRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spacing_large"
         android:layout_marginStart="@dimen/spacing_little"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="@dimen/spacing_normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/timesLayout"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/timesLayout"
+        tools:listitem="@layout/item_task_calendar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

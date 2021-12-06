@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardTaskCalendar"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="59dp"
+    android:layout_marginBottom="1dp"
     android:backgroundTint="@color/calendarTask"
-    android:layout_marginBottom="2dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp">
 
@@ -19,9 +19,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_little"
+            android:layout_marginTop="@dimen/spacing_little"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
