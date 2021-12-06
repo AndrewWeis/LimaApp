@@ -23,19 +23,21 @@ import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
 import start.up.tracker.utils.exhaustive
 import java.text.SimpleDateFormat
+import kotlin.properties.Delegates.notNull
 
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
     //TODO(BUG when tasks have the same name)
     private val viewModel: AddEditTaskViewModel by viewModels()
+    private var date by notNull<String>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentAddEditTaskBinding.bind(view)
 
-        var date = viewModel.taskDate
+        date = viewModel.taskDate
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
@@ -63,9 +65,10 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 viewModel.onSaveClick(checkedChip, date, priority)
             }
 
-            binding.chipPriorityGroup.isSingleSelection = true
-            binding.chipPriorityGroup.isSelectionRequired = true
-            binding.chipPriorityGroup.forEach {
+
+            chipPriorityGroup.isSingleSelection = true
+            chipPriorityGroup.isSelectionRequired = true
+            chipPriorityGroup.forEach {
                 val textPriority = (it as Chip).text.toString()
                 val priority = viewModel.priorityToInt(textPriority)
                 if (viewModel.taskPriority == priority) {
@@ -74,27 +77,16 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             }
 
 
-            val today = MaterialDatePicker.todayInUtcMilliseconds()
-            val materialDatePicker: MaterialDatePicker<Long> = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select a date")
-                .setSelection(today)
-                .build()
-
 
             btnDatePicker.setOnClickListener {
-                materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
+                openDatePicker(binding)
             }
 
-            materialDatePicker.addOnPositiveButtonClickListener {
-                val formattedDate = viewModel.formatToDate(it)
-                date = formattedDate
-                btnDatePicker.text = formattedDate
-            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.addEditTaskEvent.collect { event ->
-                when(event) {
+                when (event) {
                     is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
                         binding.editTextTaskLabel.clearFocus()
                         setFragmentResult(
@@ -122,12 +114,30 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             set.forEach { category ->
                 var isChipChecked = false
-                if (subset.categoryName == category.categoryName) { isChipChecked = true }
+                if (subset.categoryName == category.categoryName) {
+                    isChipChecked = true
+                }
                 addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
             }
         }
     }
 
+    private fun openDatePicker(binding: FragmentAddEditTaskBinding) {
+        val today = MaterialDatePicker.todayInUtcMilliseconds()
+        val materialDatePicker: MaterialDatePicker<Long> =
+            MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select a date")
+                .setSelection(today)
+                .build()
+
+        materialDatePicker.addOnPositiveButtonClickListener {
+            val formattedDate = viewModel.formatToDate(it)
+            date = formattedDate
+            binding.btnDatePicker.text = formattedDate
+        }
+
+        materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
+    }
 
 
     private fun addCategoryChip(chipText: String, chipGroup: ChipGroup, isChipChecked: Boolean) {
@@ -138,7 +148,12 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             isChipIconVisible = false
             isCheckedIconVisible = true
             isCloseIconVisible = false
-            checkedIcon = context?.let { ContextCompat.getDrawable(it, R.drawable.ic_mtrl_chip_checked_black) }
+            checkedIcon = context?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.ic_mtrl_chip_checked_black
+                )
+            }
             // TODO(Customise colors later)
             //rippleColor = context?.let { ContextCompat.getColorStateList(it, R.color.mtrl_choice_chip_background_color) }
         }
