@@ -91,13 +91,23 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     fun onSaveClick(checkedChip: String, date: String, timeStart: String, timeEnd: String, priority: Int) {
+
+        // ---------- VALIDATION START ----------
+
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
         }
 
-        val timeStartInt = timeToMinutes(timeStart)
-        val timeEndInt = timeToMinutes(timeEnd)
+        var timeStartInt = 0
+        var timeEndInt = 0
+
+        if (timeStart != "No time") {
+            timeStartInt = timeToMinutes(timeStart)
+            timeEndInt = timeToMinutes(timeEnd)
+        }
+
+        // ---------- VALIDATION END ----------
 
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)

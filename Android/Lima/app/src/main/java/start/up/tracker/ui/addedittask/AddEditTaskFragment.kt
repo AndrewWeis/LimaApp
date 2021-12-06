@@ -60,6 +60,22 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
 
             fabSaveTask.setOnClickListener {
+
+                // ---------- VALIDATION START ----------
+
+                if ((timeStart != "No time" && timeEnd == "No time") || (timeStart == "No time" && timeEnd != "No time")) {
+                    Snackbar.make(requireView(), "You must specify both time intervals", Snackbar.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+
+                if (timeStart != "No time" && timeEnd != "No time" && timeToMinutes(timeEnd) - timeToMinutes(timeStart) < 30) {
+                    Snackbar.make(requireView(), "The minimum time interval must be >= 30", Snackbar.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+
+                // ---------- VALIDATION END ----------
+
+
                 val checkedChip = binding.chipCategoriesGroup.children
                     .toList()
                     .filter { (it as Chip).isChecked }
@@ -71,11 +87,6 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     .joinToString { (it as Chip).text }
 
                 val priority = viewModel.priorityToInt(checkedPriority)
-
-                if (timeToMinutes(timeEnd) - timeToMinutes(timeStart) < 30) {
-                    Snackbar.make(requireView(), "The minimum time interval must be >= 30", Snackbar.LENGTH_LONG).show()
-                    return@setOnClickListener
-                }
 
                 viewModel.onSaveClick(checkedChip, date, timeStart, timeEnd, priority)
             }
@@ -105,6 +116,15 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 openTimePicker(binding, "Time End")
             }
 
+            btnClear.setOnClickListener {
+                date = "No date"
+                timeStart = "No time"
+                timeEnd = "No time"
+
+                btnDatePicker.text = date
+                btnTimeStart.text = timeStart
+                btnTimeEnd.text = timeEnd
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
