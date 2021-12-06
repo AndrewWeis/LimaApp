@@ -56,17 +56,18 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
                 if (todayTask.priority == 4) {
                     icPriority.visibility = View.GONE
                 } else {
-                    icPriority.setBackgroundColor(Color.parseColor("#ff2211"))
+                    val color = chooseColorPriority(todayTask.priority)
+                    icPriority.setBackgroundColor(Color.parseColor(color))
                 }
             }
         }
 
-        private fun chooseIconDrawable(priority: Int): Int {
+        private fun chooseColorPriority(priority: Int): String {
             return when(priority) {
-                1 -> R.drawable.ic_priority_1
-                2 -> R.drawable.ic_priority_2
-                3 -> R.drawable.ic_priority_3
-                else -> R.drawable.ic_android // This should never be reached
+                1 -> "#FC3131"
+                2 -> "#FC8631"
+                3 -> "#40C686"
+                else -> "#000000" // This should never be reached
             }
         }
     }
