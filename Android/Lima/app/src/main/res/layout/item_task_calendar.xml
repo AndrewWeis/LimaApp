@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:backgroundTint="@color/calendarTask"
+    android:layout_marginBottom="2dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp">
 

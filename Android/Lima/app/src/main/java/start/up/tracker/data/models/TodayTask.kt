@@ -12,6 +12,8 @@ data class TodayTask(
     val date: String,
     val timeStart: String,
     val timeEnd: String,
+    val timeStartInt: Int,
+    val timeEndInt: Int,
     val categoryName: String,
     val color: Int,
     val tasksInside: Int

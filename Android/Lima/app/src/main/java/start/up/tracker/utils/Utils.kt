@@ -13,5 +13,9 @@ fun TodayTask.toTask() = Task(
     completed = completed,
     created = created,
     id = id,
-    date = date
+    date = date,
+    timeStart = timeStart,
+    timeEnd = timeEnd,
+    timeStartInt = timeStartInt,
+    timeEndInt = timeEndInt
 )

@@ -45,7 +45,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
             viewModel.onAddNewTaskClick()
         }*/
 
-        viewModel.todayTasks.observe(viewLifecycleOwner) {
+        viewModel.calendarTasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
 
