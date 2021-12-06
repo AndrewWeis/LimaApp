@@ -34,8 +34,10 @@ class AddCategoryViewModel @Inject constructor(
             state.set("color", value)
         }
 
+
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
     val addCategoryEvent = addCategoryEventChannel.receiveAsFlow()
+
 
     fun onSaveClick() {
         if (categoryName.isBlank()) {
@@ -49,16 +51,12 @@ class AddCategoryViewModel @Inject constructor(
 
     private fun createCategory(category: Category) = viewModelScope.launch {
         taskDao.insertCategory(category)
-        addCategoryEventChannel.send(
-            AddCategoryEvent.NavigateBackWithResult(
-                ADD_TASK_RESULT_OK
-            ))
+        addCategoryEventChannel.send(AddCategoryEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 
     private fun showInvalidInputMessage(text: String) = viewModelScope.launch {
         addCategoryEventChannel.send(AddCategoryEvent.ShowInvalidInputMessage(text))
     }
-
 
     sealed class AddCategoryEvent {
         data class ShowInvalidInputMessage(val msg: String) : AddCategoryEvent()

@@ -18,9 +18,13 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "task_table")
 data class Task (
     val taskName: String,
-    val important: Boolean = false,
+    val priority: Int = 1,
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true)  val id: Int = 0,
-    val date: String = "No date"
+    val date: String = "No date",
+    val timeStart: String = "No time",
+    val timeEnd: String = "No time",
+    val timeStartInt: Int = 0,
+    val timeEndInt: Int = 0
 ): Parcelable

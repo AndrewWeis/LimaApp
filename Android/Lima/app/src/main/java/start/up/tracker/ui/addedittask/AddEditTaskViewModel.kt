@@ -15,6 +15,8 @@ import start.up.tracker.data.models.Category
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
+import start.up.tracker.utils.timeToMinutes
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,18 +34,29 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskName", value)
         }
 
-    var taskImportance = state.get<Boolean>("taskImportance") ?: task?.important ?: false
-        set(value) {
-            field = value
-            state.set("taskImportance", value)
-        }
-
     var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
         set(value) {
             field = value
             state.set("taskDate", value)
         }
 
+    var taskTimeStart = state.get<String>("taskTimeStart") ?: task?.timeStart ?: "No Time"
+        set(value) {
+            field = value
+            state.set("taskTimeStart", value)
+        }
+
+    var taskTimeEnd = state.get<String>("taskTimeEnd") ?: task?.timeEnd ?: "No Time"
+        set(value) {
+            field = value
+            state.set("taskTimeEnd", value)
+        }
+
+    var taskPriority = state.get<Int>("taskPriority") ?: task?.priority ?: 4
+        set(value) {
+            field = value
+            state.set("taskPriority", value)
+        }
 
     val categoryName = state.get<String>("categoryName") ?: ""
     val categories = taskDao.getCategories()
@@ -62,19 +75,47 @@ class AddEditTaskViewModel @Inject constructor(
     }.asLiveData()
 
 
-    fun onSaveClick(checkedChip: String, date: String) {
+    fun priorityToInt(checkedPriority: String): Int {
+        return when (checkedPriority) {
+            "P1" -> 1
+            "P2" -> 2
+            "P3" -> 3
+            "No priority" -> 4
+            else -> -1
+        }
+    }
+
+    fun formatToDate(it: Long?): String {
+        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
+        return simpleDateFormat.format(it)
+    }
+
+    fun onSaveClick(checkedChip: String, date: String, timeStart: String, timeEnd: String, priority: Int) {
+
+        // ---------- VALIDATION START ----------
+
         if (taskName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return
         }
 
+        var timeStartInt = 0
+        var timeEndInt = 0
+
+        if (timeStart != "No time") {
+            timeStartInt = timeToMinutes(timeStart)
+            timeEndInt = timeToMinutes(timeEnd)
+        }
+
+        // ---------- VALIDATION END ----------
+
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskName)
 
-            val updatedTask = task.copy(taskName = taskName, important = taskImportance, date = date)
+            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, important = taskImportance, date = date)
+            val newTask = Task(taskName = taskName, priority = priority, date = date, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             createTask(newTask)
         }
 

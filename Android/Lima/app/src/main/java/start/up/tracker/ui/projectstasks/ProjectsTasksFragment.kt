@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.db.SortOrder
 import start.up.tracker.data.models.Task
 import start.up.tracker.databinding.FragmentCategoryInsideBinding
 import start.up.tracker.utils.exhaustive
@@ -137,20 +136,12 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.preferencesFlow.first().hideCompleted
+                viewModel.hideCompleted.first() ?: false
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.action_sort_by_name -> {
-                viewModel.onSortOrderSelected(SortOrder.BY_NAME)
-                true
-            }
-            R.id.action_sort_by_date_created -> {
-                viewModel.onSortOrderSelected(SortOrder.BY_DATE)
-                true
-            }
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
                 viewModel.onHideCompletedClick(item.isChecked)

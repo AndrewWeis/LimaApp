@@ -35,6 +35,13 @@ class TodayViewModel @Inject constructor(
     }
     val todayTasks = todayTasksFlow.asLiveData()
 
+
+    private val calendarTasksFlow = hideCompleted.flatMapLatest {
+        taskDao.getCalendarTasks(currentDate, it ?: false)
+    }
+    val calendarTasks = calendarTasksFlow.asLiveData()
+
+
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
