@@ -26,7 +26,7 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
         val currentItem = getItem(position)
         val nextItem: TodayTask? = if (position + 1 < itemCount) { getItem(position + 1) } else { null }
-        holder.bind(currentItem, nextItem)
+        holder.bind(currentItem, nextItem, position)
     }
 
     inner class TasksViewHolder(private val binding: ItemTaskCalendarBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -51,7 +51,7 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
             }
         }
 
-        fun bind(todayTask: TodayTask, nextTask: TodayTask?) {
+        fun bind(todayTask: TodayTask, nextTask: TodayTask?, position: Int) {
             binding.apply {
                 checkBoxCompleted.isChecked = todayTask.completed
                 textViewName.text = todayTask.taskName
@@ -63,19 +63,24 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
                     icPriority.setBackgroundColor(Color.parseColor(color))
                 }
                 // TODO(Fix top margin if the element not the fist one)
-                val layoutParams: ViewGroup.MarginLayoutParams = binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
-                var space = 0
-                var height = (todayTask.timeEndInt - todayTask.timeStartInt) * 31
-                if (nextTask != null) {
-                    space = (nextTask.timeStartInt - todayTask.timeEndInt) * 30
-                    if (space == 0) {
-                        space = 2
-                        height -= 4
+                if (todayTask.timeStart != "No time" && todayTask.timeEnd != "No time") {
+                    val layoutParams: ViewGroup.MarginLayoutParams = binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
+                    var space = 0
+                    var height = todayTask.timeEndInt - todayTask.timeStartInt
+                    if (nextTask != null) {
+                        space = nextTask.timeStartInt - todayTask.timeEndInt
+                        if (space == 0) {
+                            space = 2
+                            height -= 4
+                        }
                     }
+                    Log.i("marginsSpace", space.toString())
+                    Log.i("marginsHeight", height.toString())
+                    layoutParams.bottomMargin = convertDpToPx(space)
+                    layoutParams.height = convertDpToPx(height)
+                    if (position == 0 && todayTask.timeStartInt > 300) { layoutParams.topMargin = convertDpToPx(todayTask.timeStartInt - 300)}
+                    binding.cardTaskCalendar.requestLayout()
                 }
-                layoutParams.bottomMargin = convertDpToPx(space)
-                layoutParams.height = convertDpToPx(height)
-                binding.cardTaskCalendar.requestLayout()
             }
         }
 

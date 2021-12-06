@@ -152,8 +152,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         picker.show(childFragmentManager, "TIME_PICKER")
 
         picker.addOnPositiveButtonClickListener {
-            val hour = picker.hour
-            val minute = picker.minute
+            var hour = picker.hour.toString()
+            var minute = picker.minute.toString()
+
+            if (hour == "0") hour = "00"
+            if (minute == "0") minute = "00"
 
             if (title == "Time Start") {
                 timeStart = "$hour:$minute"

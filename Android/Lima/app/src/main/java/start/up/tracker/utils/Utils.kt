@@ -19,3 +19,18 @@ fun TodayTask.toTask() = Task(
     timeStartInt = timeStartInt,
     timeEndInt = timeEndInt
 )
+
+fun timeToMinutes(strInitial: String): Int {
+
+    val str = strInitial.toList()
+
+    val strHourList = str.takeWhile { it != ':' }
+    var strHourTime = ""
+    strHourList.forEach { strHourTime += it }
+
+    val strMinuteList = str.takeLast(2)
+    var strMinuteTime = ""
+    strMinuteList.forEach { strMinuteTime += it }
+
+    return 60 * strHourTime.toInt() + strMinuteTime.toInt()
+}
