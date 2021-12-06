@@ -62,14 +62,18 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
                     val color = chooseColorPriority(todayTask.priority)
                     icPriority.setBackgroundColor(Color.parseColor(color))
                 }
-
+                // TODO(Fix top margin if the element not the fist one)
                 val layoutParams: ViewGroup.MarginLayoutParams = binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
-                var space = 1
+                var space = 0
+                var height = (todayTask.timeEndInt - todayTask.timeStartInt) * 31
                 if (nextTask != null) {
                     space = (nextTask.timeStartInt - todayTask.timeEndInt) * 30
+                    if (space == 0) {
+                        space = 2
+                        height -= 4
+                    }
                 }
                 layoutParams.bottomMargin = convertDpToPx(space)
-                val height = (todayTask.timeEndInt - todayTask.timeStartInt) * 30 - 1
                 layoutParams.height = convertDpToPx(height)
                 binding.cardTaskCalendar.requestLayout()
             }
