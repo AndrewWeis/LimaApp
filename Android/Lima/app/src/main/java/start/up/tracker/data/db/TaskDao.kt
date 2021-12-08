@@ -90,6 +90,20 @@ interface TaskDao {
     """)
     fun getCalendarTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
 
+    @Query("""
+        SELECT
+            task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
+            Category.categoryName, Category.color, Category.tasksInside
+        FROM cross_ref
+        JOIN task_table ON task_table.taskName = cross_ref.taskName
+        JOIN Category ON Category.categoryName = cross_ref.categoryName
+        WHERE task_table.dateLong > :today AND
+        (completed != :hideCompleted OR completed = 0)
+        ORDER BY dateLong
+        ASC
+        """)
+    fun getUpcomingTasks(today: Long, hideCompleted: Boolean) : Flow<List<Task>>
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)
