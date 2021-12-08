@@ -68,10 +68,15 @@ class CategoriesViewModel @Inject constructor(
         categoryEventChannel.send(CategoryEvent.NavigateToToday)
     }
 
+    fun onUpcomingSelected() = viewModelScope.launch {
+        categoryEventChannel.send(CategoryEvent.NavigateToUpcoming)
+    }
+
     sealed class CategoryEvent {
         data class NavigateToCategoryInside(val category: Category) : CategoryEvent()
         object NavigateToAddCategoryScreen : CategoryEvent()
         data class ShowCategorySavedConfirmationMessage(val msg: String) : CategoryEvent()
         object NavigateToToday : CategoryEvent()
+        object NavigateToUpcoming : CategoryEvent()
     }
 }
