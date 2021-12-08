@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentUpcomingBinding
-import start.up.tracker.ui.today.TodayViewModel
 
 @AndroidEntryPoint
 class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
