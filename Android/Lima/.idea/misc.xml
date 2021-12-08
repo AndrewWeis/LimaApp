@@ -78,6 +78,15 @@
         <entry key="..\:/Tracker/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Tracker/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Tracker/app/src/main/res/menu/selector.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_categories.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_today_tasks.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_upcoming.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_task_calendar.xml" value="0.1762917933130699" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_task_extended.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_task_today.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_child.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_parent.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_section.xml" value="0.17592592592592593" />
       </map>
     </option>
   </component>

@@ -35,6 +35,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
     //TODO(BUG when tasks have the same name)
     private val viewModel: AddEditTaskViewModel by viewModels()
     private var date by notNull<String>()
+    private var dateLong by notNull<Long>()
     private var timeStart by notNull<String>()
     private var timeEnd by notNull<String>()
 
@@ -44,6 +45,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
         val binding = FragmentAddEditTaskBinding.bind(view)
 
         date = viewModel.taskDate
+        dateLong = viewModel.taskDateLong
         timeStart = viewModel.taskTimeStart
         timeEnd = viewModel.taskTimeEnd
 
@@ -90,7 +92,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
                 val priority = viewModel.priorityToInt(checkedPriority)
 
-                viewModel.onSaveClick(checkedChip, date, timeStart, timeEnd, priority)
+                viewModel.onSaveClick(checkedChip, date, dateLong, timeStart, timeEnd, priority)
             }
 
 
@@ -120,6 +122,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             btnClear.setOnClickListener {
                 date = "No date"
+                dateLong = 0
                 timeStart = "No time"
                 timeEnd = "No time"
 
@@ -205,6 +208,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 .build()
 
         materialDatePicker.addOnPositiveButtonClickListener {
+            dateLong = it
             val formattedDate = viewModel.formatToDate(it)
             date = formattedDate
             binding.btnDatePicker.text = formattedDate

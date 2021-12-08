@@ -1,4 +1,4 @@
-package start.up.tracker.ui.today
+package start.up.tracker.ui.upcoming
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,46 +6,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.R
 import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.ItemTaskExtendedBinding
 import start.up.tracker.utils.chooseIconDrawable
 
 
-class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<ExtendedTask,
-        TodayTasksAdapter.TasksViewHolder>(DiffCallback()) {
+class UpcomingSectionAdapter : ListAdapter<ExtendedTask,
+        UpcomingSectionAdapter.SectionsViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionsViewHolder {
         val binding = ItemTaskExtendedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TasksViewHolder(binding)
+        return SectionsViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SectionsViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    inner class TasksViewHolder(private val binding: ItemTaskExtendedBinding) : RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.apply {
-                root.setOnClickListener {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        val todayTask = getItem(position)
-                        listener.onItemClick(todayTask)
-                    }
-                }
-
-                checkBoxCompleted.setOnClickListener {
-                    val position = adapterPosition
-                    if (position != RecyclerView.NO_POSITION) {
-                        val todayTask = getItem(position)
-                        listener.onCheckBoxClick(todayTask, checkBoxCompleted.isChecked)
-                    }
-                }
-            }
-        }
+    inner class SectionsViewHolder(private val binding: ItemTaskExtendedBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(extendedTask: ExtendedTask) {
             binding.apply {
@@ -63,11 +42,7 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
                 }
             }
         }
-    }
 
-    interface OnItemClickListener {
-        fun onItemClick(extendedTask: ExtendedTask)
-        fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<ExtendedTask>() {

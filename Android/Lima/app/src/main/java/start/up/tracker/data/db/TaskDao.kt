@@ -1,11 +1,10 @@
 package start.up.tracker.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.models.Category
 import start.up.tracker.data.models.Task
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.relations.CategoryWithTasks
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.data.relations.TaskWithCategories
@@ -61,7 +60,7 @@ interface TaskDao {
 
     @Query("""
         SELECT 
-	        task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, 
+	        task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
 	        Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
@@ -72,24 +71,39 @@ interface TaskDao {
        ORDER BY priority 
        ASC
     """)
-    fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
+    fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
     @Query("""
        SELECT 
-            task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, 
+            task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
 	        Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
         JOIN task_table ON task_table.taskName = cross_ref.taskName
         JOIN Category ON Category.categoryName = cross_ref.categoryName
-        
        WHERE task_table.date = :today AND
+       task_table.timeStart != "No time" AND
+       task_table.timeEnd != "No time" AND
        (completed != :hideCompleted OR completed = 0)
        ORDER BY task_table.timeEndInt
        ASC
     """)
-    fun getCalendarTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
+    fun getCalendarTasks(today: String, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
+    @Query("""
+        SELECT
+            task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
+            Category.categoryName, Category.color, Category.tasksInside
+        FROM cross_ref
+        JOIN task_table ON task_table.taskName = cross_ref.taskName
+        JOIN Category ON Category.categoryName = cross_ref.categoryName
+        WHERE task_table.dateLong > :today AND
+        (completed != :hideCompleted OR completed = 0)
+        ORDER BY dateLong
+        ASC
+        """)
+    fun getUpcomingTasks(today: Long, hideCompleted: Boolean) : Flow<List<ExtendedTask>>
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)

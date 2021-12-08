@@ -20,8 +20,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.FragmentTodayTasksBinding
+import start.up.tracker.ui.base.BaseViewModel
 import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.toTask
@@ -76,25 +77,25 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is TodayViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    is BaseViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
-                                viewModel.onUndoDeleteClick(event.todayTask)
+                                viewModel.onUndoDeleteClick(event.extendedTask)
                             }.show()
                     }
-                    is TodayViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                    is BaseViewModel.TasksEvent.NavigateToAddTaskScreen -> {
                         val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Add new task", categoryName = "Inbox")
                         findNavController().navigate(action)
                     }
-                    is TodayViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val task = event.todayTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.todayTask.categoryName, task = task)
+                    is BaseViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                        val task = event.extendedTask.toTask()
+                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.extendedTask.categoryName, task = task)
                         findNavController().navigate(action)
                     }
-                    is TodayViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
-                    is TodayViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                    is BaseViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
                         findNavController().navigate(action)
                     }
@@ -129,11 +130,11 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
         }
     }
 
-    override fun onItemClick(todayTask: TodayTask) {
-           viewModel.onTaskSelected(todayTask)
+    override fun onItemClick(extendedTask: ExtendedTask) {
+           viewModel.onTaskSelected(extendedTask)
     }
 
-    override fun onCheckBoxClick(todayTask: TodayTask, isChecked: Boolean) {
-         viewModel.onTaskCheckedChanged(todayTask, isChecked)
+    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
+         viewModel.onTaskCheckedChanged(extendedTask, isChecked)
     }
 }

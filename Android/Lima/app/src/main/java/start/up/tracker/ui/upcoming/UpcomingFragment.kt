@@ -1,7 +1,10 @@
-package start.up.tracker.ui.today
+package start.up.tracker.ui.upcoming
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -15,46 +18,43 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.models.ExtendedTask
-import start.up.tracker.databinding.FragmentCalendarBinding
+import start.up.tracker.data.models.UpcomingSection
+import start.up.tracker.databinding.FragmentUpcomingBinding
 import start.up.tracker.ui.base.BaseViewModel
 import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
-import start.up.tracker.utils.*
-import java.text.SimpleDateFormat
-import java.util.*
+import start.up.tracker.ui.today.TodayFragmentDirections
+import start.up.tracker.utils.exhaustive
+import start.up.tracker.utils.toTask
 
 @AndroidEntryPoint
-class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdapter.OnItemClickListener {
+class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
 
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: UpcomingViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentCalendarBinding.bind(view)
+        val binding = FragmentUpcomingBinding.bind(view)
 
-        val taskAdapter = CalendarTasksAdapter(this)
-        binding.todayCalendarRV.apply {
-            itemAnimator = null
-            adapter = taskAdapter
+        val upcomingAdapter = UpcomingAdapter()
+
+        binding.upcomingRV.apply {
+            adapter = upcomingAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
         }
 
-        /*binding.addTaskOfToday.setOnClickListener {
-            viewModel.onAddNewTaskClick()
-        }*/
 
-        viewModel.calendarTasks.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
+        viewModel.upcomingTasks.observe(viewLifecycleOwner) { tasks ->
+            separateDataAndSubmit(tasks, upcomingAdapter)
         }
-
-        setUpCurrentTimeIndicator(binding)
-
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
             val result = bundle.getInt("add_edit_result")
             viewModel.onAddEditResult(result)
         }
 
+        binding.addTask.setOnClickListener {
+            viewModel.onAddNewTaskClick()
+        }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
@@ -66,12 +66,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
                             }.show()
                     }
                     is BaseViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Add new task", categoryName = "Inbox")
+                        val action = UpcomingFragmentDirections.actionUpcomingFragmentToAddEditTaskFragment(title = "Add new task", categoryName = "Inbox")
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.NavigateToEditTaskScreen -> {
                         val task = event.extendedTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.extendedTask.categoryName, task = task)
+                        val action = UpcomingFragmentDirections.actionUpcomingFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.extendedTask.categoryName, task = task)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
@@ -88,14 +88,19 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
         setHasOptionsMenu(true)
     }
 
-    private fun setUpCurrentTimeIndicator(binding: FragmentCalendarBinding) {
-        val sdf = SimpleDateFormat("HH:mm")
-        val currentDate = sdf.format(Date())
-        val minutes = timeToMinutes(currentDate)
+    private fun separateDataAndSubmit(tasks: List<ExtendedTask>, adapter: UpcomingAdapter) {
+        val sectionsList: MutableList<UpcomingSection> = mutableListOf()
+        val tasksList: MutableList<ExtendedTask> = mutableListOf()
 
-        val layoutParams: ViewGroup.MarginLayoutParams = binding.currentTime.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.topMargin = convertDpToPx(minutes - TIME_OFFSET)
-        binding.currentTime.requestLayout()
+        for (i in tasks.indices) {
+            tasksList.add(tasks[i])
+            if (i+1 == tasks.size || tasks[i].dateLong != tasks[i+1].dateLong) {
+                sectionsList.add(UpcomingSection(tasks[i].date, tasksList.toList()))
+                tasksList.clear()
+            }
+        }
+
+        adapter.submitList(sectionsList.toList())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -120,13 +125,5 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onItemClick(extendedTask: ExtendedTask) {
-        viewModel.onTaskSelected(extendedTask)
-    }
-
-    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-        viewModel.onTaskCheckedChanged(extendedTask, isChecked)
     }
 }
