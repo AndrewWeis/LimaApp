@@ -10,6 +10,7 @@ data class ExtendedTask(
     val completed: Boolean,
     val created: Long,
     val date: String,
+    val dateLong: Long,
     val timeStart: String,
     val timeEnd: String,
     val timeStartInt: Int,

@@ -8,14 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.R
 import start.up.tracker.data.models.ExtendedTask
-import start.up.tracker.databinding.ItemTaskTodayBinding
+import start.up.tracker.databinding.ItemTaskExtendedBinding
+import start.up.tracker.utils.chooseIconDrawable
 
 
 class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<ExtendedTask,
         TodayTasksAdapter.TasksViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
-        val binding = ItemTaskTodayBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemTaskExtendedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TasksViewHolder(binding)
     }
 
@@ -24,7 +25,7 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
         holder.bind(currentItem)
     }
 
-    inner class TasksViewHolder(private val binding: ItemTaskTodayBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TasksViewHolder(private val binding: ItemTaskExtendedBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.apply {
@@ -60,15 +61,6 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
                 } else {
                     icPriority.setImageResource(chooseIconDrawable(extendedTask.priority))
                 }
-            }
-        }
-
-        private fun chooseIconDrawable(priority: Int): Int {
-            return when(priority) {
-                1 -> R.drawable.ic_priority_1
-                2 -> R.drawable.ic_priority_2
-                3 -> R.drawable.ic_priority_3
-                else -> R.drawable.ic_android // This should never be reached
             }
         }
     }

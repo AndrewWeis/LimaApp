@@ -3,6 +3,7 @@ package start.up.tracker.ui.upcoming
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.data.models.UpcomingSection
@@ -10,24 +11,31 @@ import start.up.tracker.databinding.ItemUpcomingSectionBinding
 
 
 class UpcomingAdapter : ListAdapter<UpcomingSection,
-        UpcomingAdapter.SectionsViewHolder>(DiffCallback()) {
+        UpcomingAdapter.UpcomingViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpcomingViewHolder {
         val binding = ItemUpcomingSectionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SectionsViewHolder(binding)
+        return UpcomingViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: SectionsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UpcomingViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    inner class SectionsViewHolder(private val binding: ItemUpcomingSectionBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class UpcomingViewHolder(private val binding: ItemUpcomingSectionBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(upcomingSection: UpcomingSection) {
             binding.apply {
-               sectionTitle.text = upcomingSection.section
+                sectionTitle.text = upcomingSection.section
 
+                val sectionAdapter = UpcomingSectionAdapter()
+                sectionRV.apply {
+                   adapter = sectionAdapter
+                   layoutManager = LinearLayoutManager(context)
+                }
+
+                sectionAdapter.submitList(upcomingSection.tasksList)
             }
         }
 
