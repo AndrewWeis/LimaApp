@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.FragmentTodayTasksBinding
 import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
 import start.up.tracker.utils.exhaustive
@@ -79,7 +79,7 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
                     is TodayViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
-                                viewModel.onUndoDeleteClick(event.todayTask)
+                                viewModel.onUndoDeleteClick(event.extendedTask)
                             }.show()
                     }
                     is TodayViewModel.TasksEvent.NavigateToAddTaskScreen -> {
@@ -87,8 +87,8 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
                         findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val task = event.todayTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.todayTask.categoryName, task = task)
+                        val task = event.extendedTask.toTask()
+                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.extendedTask.categoryName, task = task)
                         findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
@@ -129,11 +129,11 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
         }
     }
 
-    override fun onItemClick(todayTask: TodayTask) {
-           viewModel.onTaskSelected(todayTask)
+    override fun onItemClick(extendedTask: ExtendedTask) {
+           viewModel.onTaskSelected(extendedTask)
     }
 
-    override fun onCheckBoxClick(todayTask: TodayTask, isChecked: Boolean) {
-         viewModel.onTaskCheckedChanged(todayTask, isChecked)
+    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
+         viewModel.onTaskCheckedChanged(extendedTask, isChecked)
     }
 }

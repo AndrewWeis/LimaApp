@@ -1,26 +1,21 @@
 package start.up.tracker.ui.today
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_today_tasks.view.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.FragmentCalendarBinding
-import start.up.tracker.databinding.FragmentTodayTasksBinding
 import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
 import start.up.tracker.utils.*
 import java.text.SimpleDateFormat
@@ -66,7 +61,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
                     is TodayViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
-                                viewModel.onUndoDeleteClick(event.todayTask)
+                                viewModel.onUndoDeleteClick(event.extendedTask)
                             }.show()
                     }
                     is TodayViewModel.TasksEvent.NavigateToAddTaskScreen -> {
@@ -74,8 +69,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
                         findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val task = event.todayTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.todayTask.categoryName, task = task)
+                        val task = event.extendedTask.toTask()
+                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.extendedTask.categoryName, task = task)
                         findNavController().navigate(action)
                     }
                     is TodayViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
@@ -126,11 +121,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
         }
     }
 
-    override fun onItemClick(todayTask: TodayTask) {
-        viewModel.onTaskSelected(todayTask)
+    override fun onItemClick(extendedTask: ExtendedTask) {
+        viewModel.onTaskSelected(extendedTask)
     }
 
-    override fun onCheckBoxClick(todayTask: TodayTask, isChecked: Boolean) {
-        viewModel.onTaskCheckedChanged(todayTask, isChecked)
+    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
+        viewModel.onTaskCheckedChanged(extendedTask, isChecked)
     }
 }

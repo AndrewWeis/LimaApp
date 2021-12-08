@@ -1,23 +1,19 @@
 package start.up.tracker.ui.today
 
-import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.R
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.ItemTaskCalendarBinding
 import start.up.tracker.utils.TIME_OFFSET
 import start.up.tracker.utils.convertDpToPx
 
 
-class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<TodayTask,
+class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdapter<ExtendedTask,
         CalendarTasksAdapter.TasksViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
@@ -27,7 +23,7 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
 
     override fun onBindViewHolder(holder: TasksViewHolder, position: Int) {
         val currentItem = getItem(position)
-        val nextItem: TodayTask? = if (position + 1 < itemCount) { getItem(position + 1) } else { null }
+        val nextItem: ExtendedTask? = if (position + 1 < itemCount) { getItem(position + 1) } else { null }
         holder.bind(currentItem, nextItem, position)
     }
 
@@ -53,24 +49,24 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
             }
         }
 
-        fun bind(todayTask: TodayTask, nextTask: TodayTask?, position: Int) {
+        fun bind(extendedTask: ExtendedTask, nextTask: ExtendedTask?, position: Int) {
             binding.apply {
-                checkBoxCompleted.isChecked = todayTask.completed
-                textViewName.text = todayTask.taskName
-                textViewName.paint.isStrikeThruText = todayTask.completed
-                if (todayTask.priority == 4) {
+                checkBoxCompleted.isChecked = extendedTask.completed
+                textViewName.text = extendedTask.taskName
+                textViewName.paint.isStrikeThruText = extendedTask.completed
+                if (extendedTask.priority == 4) {
                     icPriority.visibility = View.GONE
                 } else {
-                    val color = chooseColorPriority(todayTask.priority)
+                    val color = chooseColorPriority(extendedTask.priority)
                     icPriority.setBackgroundColor(Color.parseColor(color))
                 }
 
-                if (todayTask.timeStart != "No time" && todayTask.timeEnd != "No time") {
+                if (extendedTask.timeStart != "No time" && extendedTask.timeEnd != "No time") {
                     val layoutParams: ViewGroup.MarginLayoutParams = binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
                     var space = 0
-                    var height = todayTask.timeEndInt - todayTask.timeStartInt
+                    var height = extendedTask.timeEndInt - extendedTask.timeStartInt
                     if (nextTask != null) {
-                        space = nextTask.timeStartInt - todayTask.timeEndInt
+                        space = nextTask.timeStartInt - extendedTask.timeEndInt
                         if (space == 0) {
                             space = 2
                             height -= 4
@@ -78,7 +74,7 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
                     }
                     layoutParams.bottomMargin = convertDpToPx(space)
                     layoutParams.height = convertDpToPx(height)
-                    if (position == 0 && todayTask.timeStartInt > TIME_OFFSET) { layoutParams.topMargin = convertDpToPx(todayTask.timeStartInt - TIME_OFFSET)}
+                    if (position == 0 && extendedTask.timeStartInt > TIME_OFFSET) { layoutParams.topMargin = convertDpToPx(extendedTask.timeStartInt - TIME_OFFSET)}
                     binding.cardTaskCalendar.requestLayout()
                 }
             }
@@ -95,15 +91,15 @@ class CalendarTasksAdapter(private val listener: OnItemClickListener) : ListAdap
     }
 
     interface OnItemClickListener {
-        fun onItemClick(todayTask: TodayTask)
-        fun onCheckBoxClick(todayTask: TodayTask, isChecked: Boolean)
+        fun onItemClick(extendedTask: ExtendedTask)
+        fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean)
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<TodayTask>() {
-        override fun areItemsTheSame(oldItem: TodayTask, newItem: TodayTask) =
+    class DiffCallback : DiffUtil.ItemCallback<ExtendedTask>() {
+        override fun areItemsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: TodayTask, newItem: TodayTask) =
+        override fun areContentsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
             oldItem == newItem
     }
 }

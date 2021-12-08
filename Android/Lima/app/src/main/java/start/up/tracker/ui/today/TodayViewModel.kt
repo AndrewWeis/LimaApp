@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.PreferencesManager
 import start.up.tracker.data.db.TaskDao
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
@@ -50,25 +50,25 @@ class TodayViewModel @Inject constructor(
         preferencesManager.updateHideCompleted(hideCompleted)
     }
 
-    fun onTaskSelected(todayTask: TodayTask) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToEditTaskScreen(todayTask))
+    fun onTaskSelected(extendedTask: ExtendedTask) = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToEditTaskScreen(extendedTask))
     }
 
-    fun onTaskCheckedChanged(todayTask: TodayTask, isChecked: Boolean) = viewModelScope.launch {
-        val task = todayTask.toTask()
+    fun onTaskCheckedChanged(extendedTask: ExtendedTask, isChecked: Boolean) = viewModelScope.launch {
+        val task = extendedTask.toTask()
         taskDao.updateTask(task.copy(completed = isChecked))
     }
 
-    fun onTaskSwiped(todayTask: TodayTask) = viewModelScope.launch {
-        val task = todayTask.toTask()
+    fun onTaskSwiped(extendedTask: ExtendedTask) = viewModelScope.launch {
+        val task = extendedTask.toTask()
         taskDao.deleteCrossRefByTaskName(task.taskName)
         taskDao.deleteTask(task)
-        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(todayTask))
+        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(extendedTask))
     }
 
-    fun onUndoDeleteClick(todayTask: TodayTask) = viewModelScope.launch {
-        val categoryName = todayTask.categoryName
-        val task = todayTask.toTask()
+    fun onUndoDeleteClick(extendedTask: ExtendedTask) = viewModelScope.launch {
+        val categoryName = extendedTask.categoryName
+        val task = extendedTask.toTask()
         val crossRef = TaskCategoryCrossRef(task.taskName, categoryName)
         taskDao.insertTaskCategoryCrossRef(crossRef)
         taskDao.insertTask(task)
@@ -95,8 +95,8 @@ class TodayViewModel @Inject constructor(
 
     sealed class TasksEvent {
         object NavigateToAddTaskScreen : TasksEvent()
-        data class NavigateToEditTaskScreen(val todayTask: TodayTask) : TasksEvent()
-        data class ShowUndoDeleteTaskMessage(val todayTask: TodayTask) : TasksEvent()
+        data class NavigateToEditTaskScreen(val extendedTask: ExtendedTask) : TasksEvent()
+        data class ShowUndoDeleteTaskMessage(val extendedTask: ExtendedTask) : TasksEvent()
         data class ShowTaskSavedConfirmationMessage(val msg: String) : TasksEvent()
         object NavigateToDeleteAllCompletedScreen : TasksEvent()
     }

@@ -2,7 +2,7 @@ package start.up.tracker.data.models
 
 import androidx.room.PrimaryKey
 
-data class TodayTask(
+data class ExtendedTask(
     @PrimaryKey
     val id: Int,
     val taskName: String,

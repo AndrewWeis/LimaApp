@@ -2,13 +2,13 @@ package start.up.tracker.utils
 
 import android.content.res.Resources
 import start.up.tracker.data.models.Task
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 
 val <T> T.exhaustive: T
     get() = this
 
 
-fun TodayTask.toTask() = Task(
+fun ExtendedTask.toTask() = Task(
     taskName = taskName,
     priority = priority,
     completed = completed,

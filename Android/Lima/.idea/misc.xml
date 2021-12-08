@@ -82,6 +82,8 @@
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_today_tasks.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_upcoming.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_task_calendar.xml" value="0.1762917933130699" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_task_today.xml" value="0.3625" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_child.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_parent.xml" value="0.3625" />
       </map>
     </option>

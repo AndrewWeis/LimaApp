@@ -1,11 +1,10 @@
 package start.up.tracker.data.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.models.Category
 import start.up.tracker.data.models.Task
-import start.up.tracker.data.models.TodayTask
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.relations.CategoryWithTasks
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.data.relations.TaskWithCategories
@@ -72,7 +71,7 @@ interface TaskDao {
        ORDER BY priority 
        ASC
     """)
-    fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
+    fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
     @Query("""
        SELECT 
@@ -88,7 +87,7 @@ interface TaskDao {
        ORDER BY task_table.timeEndInt
        ASC
     """)
-    fun getCalendarTasks(today: String, hideCompleted: Boolean): Flow<List<TodayTask>>
+    fun getCalendarTasks(today: String, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
     @Query("""
         SELECT
