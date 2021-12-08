@@ -102,7 +102,7 @@ interface TaskDao {
         ORDER BY dateLong
         ASC
         """)
-    fun getUpcomingTasks(today: Long, hideCompleted: Boolean) : Flow<List<Task>>
+    fun getUpcomingTasks(today: Long, hideCompleted: Boolean) : Flow<List<ExtendedTask>>
 
     @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
     suspend fun deleteCrossRefByTaskName(taskName: String?)
