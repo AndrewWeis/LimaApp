@@ -23,6 +23,7 @@ data class Task (
     val created: Long = System.currentTimeMillis(),
     @PrimaryKey(autoGenerate = true)  val id: Int = 0,
     val date: String = "No date",
+    val dateLong: Long = 0,
     val timeStart: String = "No time",
     val timeEnd: String = "No time",
     val timeStartInt: Int = 0,
