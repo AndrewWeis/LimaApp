@@ -81,8 +81,9 @@ interface TaskDao {
         FROM cross_ref
         JOIN task_table ON task_table.taskName = cross_ref.taskName
         JOIN Category ON Category.categoryName = cross_ref.categoryName
-        
        WHERE task_table.date = :today AND
+       task_table.timeStart != "No time" AND
+       task_table.timeEnd != "No time" AND
        (completed != :hideCompleted OR completed = 0)
        ORDER BY task_table.timeEndInt
        ASC

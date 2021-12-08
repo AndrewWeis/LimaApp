@@ -46,13 +46,13 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskDateLong", value)
         }
 
-    var taskTimeStart = state.get<String>("taskTimeStart") ?: task?.timeStart ?: "No Time"
+    var taskTimeStart = state.get<String>("taskTimeStart") ?: task?.timeStart ?: "No time"
         set(value) {
             field = value
             state.set("taskTimeStart", value)
         }
 
-    var taskTimeEnd = state.get<String>("taskTimeEnd") ?: task?.timeEnd ?: "No Time"
+    var taskTimeEnd = state.get<String>("taskTimeEnd") ?: task?.timeEnd ?: "No time"
         set(value) {
             field = value
             state.set("taskTimeEnd", value)
