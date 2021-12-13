@@ -47,7 +47,7 @@ class UpcomingSectionAdapter : ListAdapter<ExtendedTask,
 
     class DiffCallback : DiffUtil.ItemCallback<ExtendedTask>() {
         override fun areItemsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
-            oldItem.id == newItem.id
+            oldItem.taskId == newItem.taskId
 
         override fun areContentsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
             oldItem == newItem

@@ -26,7 +26,7 @@ import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.onQueryTextChanged
 
 /**
- * This class uses [ProjectsTasksViewModel] because it have similiar functionality to [TasksFragment]
+ * This class uses [ProjectsTasksViewModel] because it have similar functionality as [TasksFragment]
  */
 @AndroidEntryPoint
 class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), ProjectsTasksAdapter.OnItemClickListener{
@@ -89,11 +89,11 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
                             }.show()
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task", categoryName = viewModel.categoryName)
+                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task", categoryId = viewModel.categoryId)
                         findNavController().navigate(action)
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(event.task, "Edit task", viewModel.categoryName)
+                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(event.task, "Edit task", viewModel.categoryId)
                         findNavController().navigate(action)
                     }
                     is ProjectsTasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {

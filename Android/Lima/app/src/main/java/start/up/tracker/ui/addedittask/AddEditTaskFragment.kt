@@ -32,7 +32,6 @@ import kotlin.properties.Delegates.notNull
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
-    //TODO(BUG when tasks have the same name)
     private val viewModel: AddEditTaskViewModel by viewModels()
     private var date by notNull<String>()
     private var dateLong by notNull<Long>()
@@ -74,6 +73,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     Snackbar.make(requireView(), "The minimum time interval must be >= 30", Snackbar.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
+
 
                 // TODO(check if there are already some task in that time interval)
 
@@ -162,7 +162,7 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             set.forEach { category ->
                 var isChipChecked = false
-                if (subset.categoryName == category.categoryName) {
+                if (subset.categoryId == category.categoryId) {
                     isChipChecked = true
                 }
                 addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)

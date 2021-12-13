@@ -33,10 +33,10 @@ class ProjectsTasksViewModel @Inject constructor(
      * Receive specific category either from [SavedStateHandle] in case app killed our app or from [SaveArgs]
      */
     val category = state.get<Category>("category")
-    var categoryName = state.get<String>("categoryName") ?: category?.categoryName ?: ""
+    var categoryId = state.get<Int>("categoryId") ?: category?.categoryId ?: -1
         set(value) {
             field = value
-            state.set("categoryName", value)
+            state.set("categoryId", value)
         }
 
     private val tasksOfCategoryFlow = combine(
@@ -45,7 +45,7 @@ class ProjectsTasksViewModel @Inject constructor(
     ) { query, hideCompleted ->
         Pair(query, hideCompleted)
     }.flatMapLatest { (query, hideCompleted) ->
-        taskDao.getTasksOfCategorySortedByDateCreated(query, hideCompleted ?: false, categoryName)
+        taskDao.getTasksOfCategory(query, hideCompleted ?: false, categoryId)
     }
     val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
 
@@ -63,13 +63,13 @@ class ProjectsTasksViewModel @Inject constructor(
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
-        taskDao.deleteCrossRefByTaskName(task.taskName)
+        taskDao.deleteCrossRefByTaskId(task.taskId)
         taskDao.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 
     fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
-        val crossRef = TaskCategoryCrossRef(task.taskName, categoryName)
+        val crossRef = TaskCategoryCrossRef(task.taskId, categoryId)
         taskDao.insertTaskCategoryCrossRef(crossRef)
         taskDao.insertTask(task)
     }

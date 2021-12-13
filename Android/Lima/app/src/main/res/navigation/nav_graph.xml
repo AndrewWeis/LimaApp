@@ -19,10 +19,9 @@
             android:name="title"
             app:argType="string" />
         <argument
-            android:name="categoryName"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
+            android:name="categoryId"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -68,11 +67,14 @@
             android:name="category"
             app:argType="start.up.tracker.data.models.Category" />
         <argument
-            android:name="titleCategory"
-            app:argType="string" />
+            android:name="categoryId"
+            app:argType="integer" />
         <action
             android:id="@+id/action_categoryInsideFragment_to_addEditTaskFragment"
             app:destination="@id/addEditTaskFragment" />
+        <argument
+            android:name="titleCategory"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"

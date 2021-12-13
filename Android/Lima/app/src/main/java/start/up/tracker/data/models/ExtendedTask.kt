@@ -1,10 +1,7 @@
 package start.up.tracker.data.models
 
-import androidx.room.PrimaryKey
-
 data class ExtendedTask(
-    @PrimaryKey
-    val id: Int,
+    val taskId: Int,
     val taskName: String,
     val priority: Int,
     val completed: Boolean,
@@ -15,6 +12,7 @@ data class ExtendedTask(
     val timeEnd: String,
     val timeStartInt: Int,
     val timeEndInt: Int,
+    val categoryId: Int,
     val categoryName: String,
     val color: Int,
     val tasksInside: Int
