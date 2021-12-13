@@ -9,7 +9,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 android {
     compileSdk 31
 
-    defaultConfig {
+   defaultConfig {
         applicationId "start.up.tracker"
         minSdk 21
         targetSdk 31
@@ -84,4 +84,8 @@ dependencies {
 
     // View Pager 2
     implementation("androidx.viewpager2:viewpager2:1.0.0")
+
+    // Graphics
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+
 }
