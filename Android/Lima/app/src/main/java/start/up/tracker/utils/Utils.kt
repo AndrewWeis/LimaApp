@@ -11,6 +11,7 @@ val <T> T.exhaustive: T
 
 fun ExtendedTask.toTask() = Task(
     taskName = taskName,
+    taskDesc = taskDesc,
     priority = priority,
     completed = completed,
     created = created,

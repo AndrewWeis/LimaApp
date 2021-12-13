@@ -35,6 +35,12 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskName", value)
         }
 
+    var taskDesc = state.get<String>("taskDesc") ?: task?.taskDesc ?: ""
+        set(value) {
+            field = value
+            state.set("taskDesc", value)
+        }
+
     var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
         set(value) {
             field = value
@@ -117,10 +123,10 @@ class AddEditTaskViewModel @Inject constructor(
         // ---------- VALIDATION END ----------
 
         if (task != null) { // edit exciting task mode
-            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            val updatedTask = task.copy(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            val newTask = Task(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             createTask(newTask, checkedChip)
         }
 

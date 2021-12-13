@@ -73,7 +73,7 @@ interface TaskDao {
     @Query(
         """
         SELECT 
-	        task_table.taskId, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+	        task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
 	        Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
@@ -90,7 +90,7 @@ interface TaskDao {
     @Query(
         """
        SELECT 
-            task_table.taskId, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+            task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
 	        Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
@@ -110,7 +110,7 @@ interface TaskDao {
     @Query(
         """
         SELECT
-            task_table.taskId, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+            task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
             Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref

@@ -50,9 +50,14 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
         binding.apply {
             editTextTaskLabel.setText(viewModel.taskName)
+            descriptionET.setText(viewModel.taskDesc)
 
             editTextTaskLabel.addTextChangedListener {
                 viewModel.taskName = it.toString()
+            }
+
+            descriptionET.addTextChangedListener {
+                viewModel.taskDesc = it.toString()
             }
 
             btnDatePicker.text = viewModel.taskDate

@@ -3,6 +3,7 @@ package start.up.tracker.data.models
 data class ExtendedTask(
     val taskId: Int,
     val taskName: String,
+    val taskDesc: String,
     val priority: Int,
     val completed: Boolean,
     val created: Long,
