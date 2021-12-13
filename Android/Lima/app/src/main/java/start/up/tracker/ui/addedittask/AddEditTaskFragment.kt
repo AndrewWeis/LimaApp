@@ -74,6 +74,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                     return@setOnClickListener
                 }
 
+                if (timeStart != "No time" && timeEnd != "No time" && date == "No date") {
+                    Snackbar.make(requireView(), "You must specify date if you choose time interval", Snackbar.LENGTH_LONG).show()
+                    return@setOnClickListener
+                }
+
 
                 // TODO(check if there are already some task in that time interval)
 

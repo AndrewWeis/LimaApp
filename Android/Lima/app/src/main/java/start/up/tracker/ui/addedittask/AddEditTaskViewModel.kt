@@ -117,8 +117,6 @@ class AddEditTaskViewModel @Inject constructor(
         // ---------- VALIDATION END ----------
 
         if (task != null) { // edit exciting task mode
-            deleteCrossRefByTaskName(task.taskId)
-
             val updatedTask = task.copy(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             updatedTask(updatedTask)
         } else { // create new task mode
@@ -138,9 +136,7 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {
         val categoryId = taskDao.getCategoryIdByName(categoryName)
-        Log.i("test", categoryId.toString())
         val taskId = taskDao.getTaskMaxId() ?: 0
-        Log.i("testT", taskId.toString())
         val newCrossRef = TaskCategoryCrossRef(taskId = taskId+1, categoryId = categoryId)
 
         taskDao.insertTask(task.copy(taskId = taskId+1))
