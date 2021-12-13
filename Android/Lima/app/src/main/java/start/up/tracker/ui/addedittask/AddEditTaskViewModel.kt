@@ -1,5 +1,6 @@
 package start.up.tracker.ui.addedittask
 
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,12 +33,6 @@ class AddEditTaskViewModel @Inject constructor(
         set(value) {
             field = value
             state.set("taskName", value)
-        }
-
-    var taskId = state.get<Int>("taskId") ?: task?.taskId ?: -1
-        set(value) {
-            field = value
-            state.set("taskId", value)
         }
 
     var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
@@ -124,20 +119,13 @@ class AddEditTaskViewModel @Inject constructor(
         if (task != null) { // edit exciting task mode
             deleteCrossRefByTaskName(task.taskId)
 
-            val updatedTask = task.copy(taskName = taskName, taskId = taskId, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, taskId = taskId, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
-            createTask(newTask)
+            val newTask = Task(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            createTask(newTask, checkedChip)
         }
 
-        getCategoryIdByName(checkedChip)
-    }
-
-    private fun getCategoryIdByName(categoryName: String) = viewModelScope.launch {
-        val categoryId = taskDao.getCategoryIdByName(categoryName)
-        val newCrossRef = TaskCategoryCrossRef(taskId = taskId, categoryId = categoryId)
-        createCrossRef(newCrossRef)
     }
 
     private fun createCrossRef(CrossRef: TaskCategoryCrossRef) = viewModelScope.launch {
@@ -148,8 +136,16 @@ class AddEditTaskViewModel @Inject constructor(
         taskDao.deleteCrossRefByTaskId(taskId)
     }
 
-    private fun createTask(task: Task) = viewModelScope.launch {
-        taskDao.insertTask(task)
+    private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {
+        val categoryId = taskDao.getCategoryIdByName(categoryName)
+        Log.i("test", categoryId.toString())
+        val taskId = taskDao.getTaskMaxId() ?: 0
+        Log.i("testT", taskId.toString())
+        val newCrossRef = TaskCategoryCrossRef(taskId = taskId+1, categoryId = categoryId)
+
+        taskDao.insertTask(task.copy(taskId = taskId+1))
+        createCrossRef(newCrossRef)
+
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 

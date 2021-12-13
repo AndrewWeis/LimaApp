@@ -21,7 +21,7 @@ data class Task (
     val priority: Int = 1,
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
-    @PrimaryKey(autoGenerate = true)  val taskId: Int = 0,
+    @PrimaryKey(autoGenerate = false)  val taskId: Int = 0,
     val date: String = "No date",
     val dateLong: Long = 0,
     val timeStart: String = "No time",

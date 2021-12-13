@@ -154,6 +154,9 @@ interface TaskDao {
     @Query("SELECT categoryId FROM category WHERE categoryName =:categoryName")
     suspend fun getCategoryIdByName(categoryName: String): Int
 
+    @Query("SELECT MAX(taskId) FROM task_table")
+    suspend fun getTaskMaxId(): Int?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
 

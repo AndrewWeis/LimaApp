@@ -43,7 +43,7 @@ class CategoriesViewModel @Inject constructor(
     val todayTasksCount = todayTasksCountFlow.asLiveData()
 
     private val upcomingTasksCountFlow = taskDao.countUpcomingTasks(currentDateLong)
-    val upcomingTasksCount = todayTasksCountFlow.asLiveData()
+    val upcomingTasksCount = upcomingTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         _categories.value?.forEach {
