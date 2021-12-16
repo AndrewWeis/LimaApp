@@ -21,106 +21,141 @@ import start.up.tracker.data.relations.TaskWithCategories
 @Dao
 interface TaskDao {
 
-    @Query("""
+    @Query(
+        """
        SELECT * 
        FROM task_table
-       JOIN cross_ref ON task_table.taskName = cross_ref.taskName
-       WHERE categoryName = :categoryName AND
+       JOIN cross_ref ON task_table.taskId = cross_ref.taskId
+       WHERE categoryId = :categoryId AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskName LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
-       ASC, created""")
-    fun getTasksOfCategorySortedByDateCreated(searchQuery: String, hideCompleted: Boolean, categoryName: String): Flow<List<Task>>
+       ASC, created"""
+    )
+    fun getTasksOfCategory(
+        searchQuery: String,
+        hideCompleted: Boolean,
+        categoryId: Int
+    ): Flow<List<Task>>
 
-    @Query("""
+    @Query(
+        """
         SELECT COUNT(*) 
         FROM task_table 
-        JOIN cross_ref ON task_table.taskName = cross_ref.taskName
-        WHERE categoryName = :categoryName AND
+        JOIN cross_ref ON task_table.taskId = cross_ref.taskId
+        WHERE categoryId = :categoryId AND
         (completed != :hideCompleted OR completed = 0)
-    """)
-    suspend fun countTasksOfCategory(categoryName: String, hideCompleted: Boolean): Int
+    """
+    )
+    suspend fun countTasksOfCategory(categoryId: Int, hideCompleted: Boolean): Int
 
-    @Query("""
+    @Query(
+        """
         SELECT COUNT(*)
         FROM task_table 
-        JOIN cross_ref ON task_table.taskName = cross_ref.taskName
-        WHERE categoryName = 'Inbox' AND
+        JOIN cross_ref ON task_table.taskId = cross_ref.taskId
+        WHERE categoryId = 1 AND
         completed = 0
-    """)
+    """
+    )
     fun countTasksOfInbox(): Flow<Int>
 
-    @Query("""
+    @Query(
+        """
         SELECT COUNT(*)
         FROM task_table
         WHERE date = :today AND
         completed = 0
-    """)
+    """
+    )
     fun countTodayTasks(today: String): Flow<Int>
 
-    @Query("""
+    @Query(
+        """
         SELECT 
-	        task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+	        task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
-	        Category.categoryName, Category.color, Category.tasksInside
+	        Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
-        JOIN task_table ON task_table.taskName = cross_ref.taskName
-        JOIN Category ON Category.categoryName = cross_ref.categoryName
+        JOIN task_table ON task_table.taskId = cross_ref.taskId
+        JOIN Category ON Category.categoryId = cross_ref.categoryId
         WHERE task_table.date = :today AND
        (completed != :hideCompleted OR completed = 0)
        ORDER BY priority 
        ASC
-    """)
+    """
+    )
     fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
-    @Query("""
+    @Query(
+        """
        SELECT 
-            task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+            task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
-	        Category.categoryName, Category.color, Category.tasksInside
+	        Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
-        JOIN task_table ON task_table.taskName = cross_ref.taskName
-        JOIN Category ON Category.categoryName = cross_ref.categoryName
+        JOIN task_table ON task_table.taskId = cross_ref.taskId
+        JOIN Category ON Category.categoryId = cross_ref.categoryId
        WHERE task_table.date = :today AND
        task_table.timeStart != "No time" AND
        task_table.timeEnd != "No time" AND
        (completed != :hideCompleted OR completed = 0)
        ORDER BY task_table.timeEndInt
        ASC
-    """)
+    """
+    )
+
     fun getCalendarTasks(today: String, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
-    @Query("""
+    @Query(
+        """
         SELECT
-            task_table.id, task_table.taskName, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
+            task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
             task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
-            Category.categoryName, Category.color, Category.tasksInside
+            Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
-        JOIN task_table ON task_table.taskName = cross_ref.taskName
-        JOIN Category ON Category.categoryName = cross_ref.categoryName
+        JOIN task_table ON task_table.taskId = cross_ref.taskId
+        JOIN Category ON Category.categoryId = cross_ref.categoryId
         WHERE task_table.dateLong > :today AND
         (completed != :hideCompleted OR completed = 0)
         ORDER BY dateLong
         ASC
-        """)
-    fun getUpcomingTasks(today: Long, hideCompleted: Boolean) : Flow<List<ExtendedTask>>
+        """
+    )
+    fun getUpcomingTasks(today: Long, hideCompleted: Boolean): Flow<List<ExtendedTask>>
 
-    @Query("DELETE FROM cross_ref WHERE taskName = :taskName")
-    suspend fun deleteCrossRefByTaskName(taskName: String?)
+    @Query(
+        """
+        SELECT COUNT(*)
+        FROM task_table
+        WHERE dateLong > :today AND
+        completed = 0
+    """
+    )
+    fun countUpcomingTasks(today: Long): Flow<Int>
 
-    @Query("SELECT * FROM cross_ref WHERE taskName = :taskName")
-    suspend fun getCrossRefByTaskName(taskName: String?): TaskCategoryCrossRef
+    @Query("DELETE FROM cross_ref WHERE taskId = :taskId")
+    suspend fun deleteCrossRefByTaskId(taskId: Int?)
+
+    @Query("SELECT * FROM cross_ref WHERE taskId = :taskId")
+    suspend fun getCrossRefByTaskId(taskId: Int?): TaskCategoryCrossRef
 
     @Transaction
-    @Query("SELECT * FROM category WHERE categoryName = :categoryName")
-    suspend fun getTasksOfCategory(categoryName: String): List<CategoryWithTasks>
+    @Query("SELECT * FROM category WHERE categoryId = :categoryId")
+    suspend fun getTasksOfCategory(categoryId: Int): List<CategoryWithTasks>
 
     @Transaction
-    @Query("SELECT * FROM task_table WHERE taskName = :taskName")
-    fun getCategoriesOfTask(taskName: String): Flow<TaskWithCategories?>
+    @Query("SELECT * FROM task_table WHERE taskId = :taskId")
+    fun getCategoriesOfTask(taskId: Int): Flow<TaskWithCategories?>
 
     @Query("SELECT * FROM category")
-    fun getCategories() : Flow<List<Category>>
+    fun getCategories(): Flow<List<Category>>
+
+    @Query("SELECT categoryId FROM category WHERE categoryName =:categoryName")
+    suspend fun getCategoryIdByName(categoryName: String): Int
+
+    @Query("SELECT MAX(taskId) FROM task_table")
+    suspend fun getTaskMaxId(): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)

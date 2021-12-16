@@ -2,8 +2,8 @@ package start.up.tracker.data.relations
 
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["taskName", "categoryName"], tableName = "cross_ref")
+@Entity(primaryKeys = ["taskId", "categoryId"], tableName = "cross_ref")
 data class TaskCategoryCrossRef(
-    val taskName: String,
-    val categoryName: String
+    val taskId: Int,
+    val categoryId: Int
 )

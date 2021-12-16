@@ -1,5 +1,6 @@
 package start.up.tracker.ui.addedittask
 
+import android.util.Log
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,6 +35,12 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskName", value)
         }
 
+    var taskDesc = state.get<String>("taskDesc") ?: task?.taskDesc ?: ""
+        set(value) {
+            field = value
+            state.set("taskDesc", value)
+        }
+
     var taskDate = state.get<String>("taskDate") ?: task?.date ?: "No date"
         set(value) {
             field = value
@@ -64,7 +71,7 @@ class AddEditTaskViewModel @Inject constructor(
             state.set("taskPriority", value)
         }
 
-    val categoryName = state.get<String>("categoryName") ?: ""
+    val categoryId = state.get<Int>("categoryId") ?: -1
     val categories = taskDao.getCategories()
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
@@ -75,7 +82,7 @@ class AddEditTaskViewModel @Inject constructor(
      * This variable stores all categories and categories of the specific task.
      */
     val combinedCategories = runBlocking {
-        categories.combine(listOf(Category(categoryName)).asFlow()) { set, subset ->
+        categories.combine(listOf(Category(categoryId = categoryId)).asFlow()) { set, subset ->
             Pair(set, subset)
         }
     }.asLiveData()
@@ -116,30 +123,31 @@ class AddEditTaskViewModel @Inject constructor(
         // ---------- VALIDATION END ----------
 
         if (task != null) { // edit exciting task mode
-            deleteCrossRefByTaskName(task.taskName)
-
-            val updatedTask = task.copy(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            val updatedTask = task.copy(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             updatedTask(updatedTask)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
-            createTask(newTask)
+            val newTask = Task(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            createTask(newTask, checkedChip)
         }
 
-        // TODO(It can be done better if I could just update CrossRef entity)
-        val newCrossRef = TaskCategoryCrossRef(taskName = taskName, categoryName = checkedChip)
-        createCrossRef(newCrossRef)
     }
 
     private fun createCrossRef(CrossRef: TaskCategoryCrossRef) = viewModelScope.launch {
         taskDao.insertTaskCategoryCrossRef(CrossRef)
     }
 
-    private fun deleteCrossRefByTaskName(taskName: String) = viewModelScope.launch {
-        taskDao.deleteCrossRefByTaskName(taskName)
+    private fun deleteCrossRefByTaskName(taskId: Int) = viewModelScope.launch {
+        taskDao.deleteCrossRefByTaskId(taskId)
     }
 
-    private fun createTask(task: Task) = viewModelScope.launch {
-        taskDao.insertTask(task)
+    private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {
+        val categoryId = taskDao.getCategoryIdByName(categoryName)
+        val taskId = taskDao.getTaskMaxId() ?: 0
+        val newCrossRef = TaskCategoryCrossRef(taskId = taskId+1, categoryId = categoryId)
+
+        taskDao.insertTask(task.copy(taskId = taskId+1))
+        createCrossRef(newCrossRef)
+
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 

@@ -84,12 +84,12 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
                             }.show()
                     }
                     is BaseViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Add new task", categoryName = "Inbox")
+                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Add new task", categoryId = 1)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.NavigateToEditTaskScreen -> {
                         val task = event.extendedTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryName = event.extendedTask.categoryName, task = task)
+                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {

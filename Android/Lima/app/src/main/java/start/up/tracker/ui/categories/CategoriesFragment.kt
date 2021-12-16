@@ -46,7 +46,7 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
             viewModel.categoryEvent.collect { event ->
                 when(event) {
                     is CategoriesViewModel.CategoryEvent.NavigateToCategoryInside -> {
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToCategoryInsideFragment(event.category, event.category.categoryName)
+                        val action = CategoriesFragmentDirections.actionCategoryFragmentToCategoryInsideFragment(event.category, event.category.categoryId, event.category.categoryName)
                         findNavController().navigate(action)
                     }
                     CategoriesViewModel.CategoryEvent.NavigateToAddCategoryScreen -> {
@@ -71,7 +71,7 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
         }
 
         binding.cardViewInbox.setOnClickListener {
-            viewModel.onCategoryInboxSelected(Category("Inbox"))
+            viewModel.onCategoryInboxSelected(Category(categoryName = "Inbox", categoryId = 1))
         }
 
         binding.addCategoryFAB.setOnClickListener {
@@ -88,8 +88,12 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
             binding.tvInboxNum.text = it.toString()
         }
 
-        viewModel.getTodayTasksCount.observe(viewLifecycleOwner) {
+        viewModel.todayTasksCount.observe(viewLifecycleOwner) {
             binding.tvTodayNum.text = it.toString()
+        }
+
+        viewModel.upcomingTasksCount.observe(viewLifecycleOwner) {
+            binding.tvUpcomingNum.text = it.toString()
         }
 
         binding.cardViewToday.setOnClickListener {

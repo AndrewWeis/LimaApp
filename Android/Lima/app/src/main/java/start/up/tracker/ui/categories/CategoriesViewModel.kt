@@ -37,13 +37,17 @@ class CategoriesViewModel @Inject constructor(
 
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
     private val currentDate: String = formatter.format(Date())
+    private val currentDateLong = Date().time
 
-    private val getTodayTasksCountFlow = taskDao.countTodayTasks(currentDate)
-    val getTodayTasksCount = getTodayTasksCountFlow.asLiveData()
+    private val todayTasksCountFlow = taskDao.countTodayTasks(currentDate)
+    val todayTasksCount = todayTasksCountFlow.asLiveData()
+
+    private val upcomingTasksCountFlow = taskDao.countUpcomingTasks(currentDateLong)
+    val upcomingTasksCount = upcomingTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         _categories.value?.forEach {
-            val number = taskDao.countTasksOfCategory(it.categoryName, true)
+            val number = taskDao.countTasksOfCategory(it.categoryId, true)
             taskDao.updateCategory(it.copy(tasksInside = number))
         }
     }

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.R
 import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.ItemTaskExtendedBinding
 import start.up.tracker.utils.chooseIconDrawable
@@ -72,7 +71,7 @@ class TodayTasksAdapter(private val listener: OnItemClickListener) : ListAdapter
 
     class DiffCallback : DiffUtil.ItemCallback<ExtendedTask>() {
         override fun areItemsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
-            oldItem.id == newItem.id
+            oldItem.taskId == newItem.taskId
 
         override fun areContentsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
             oldItem == newItem

@@ -2,7 +2,6 @@ package start.up.tracker.ui.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -13,7 +12,6 @@ import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import start.up.tracker.utils.toTask
-import javax.inject.Inject
 
 abstract class BaseViewModel(
     private val taskDao: TaskDao,
@@ -40,15 +38,15 @@ abstract class BaseViewModel(
 
     fun onTaskSwiped(extendedTask: ExtendedTask) = viewModelScope.launch {
         val task = extendedTask.toTask()
-        taskDao.deleteCrossRefByTaskName(task.taskName)
+        taskDao.deleteCrossRefByTaskId(task.taskId)
         taskDao.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(extendedTask))
     }
 
     fun onUndoDeleteClick(extendedTask: ExtendedTask) = viewModelScope.launch {
-        val categoryName = extendedTask.categoryName
+        val categoryId = extendedTask.categoryId
         val task = extendedTask.toTask()
-        val crossRef = TaskCategoryCrossRef(task.taskName, categoryName)
+        val crossRef = TaskCategoryCrossRef(task.taskId, categoryId)
         taskDao.insertTaskCategoryCrossRef(crossRef)
         taskDao.insertTask(task)
     }

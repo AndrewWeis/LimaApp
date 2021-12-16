@@ -12,8 +12,8 @@ import start.up.tracker.data.models.Task
 data class TaskWithCategories (
     @Embedded val task: Task,
     @Relation(
-        parentColumn = "taskName",
-        entityColumn = "categoryName",
+        parentColumn = "taskId",
+        entityColumn = "categoryId",
         associateBy = Junction(TaskCategoryCrossRef::class)
     )
     val categories: List<Category>

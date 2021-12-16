@@ -3,7 +3,6 @@ package start.up.tracker.ui.projectstasks
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -96,7 +95,7 @@ class ProjectsTasksAdapter(private val listener: OnItemClickListener) : ListAdap
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.id == newItem.id
+            oldItem.taskId == newItem.taskId
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem == newItem
