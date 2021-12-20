@@ -116,10 +116,6 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
 
     override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
         viewModel.onTaskCheckedChanged(task, isChecked)
-
-        if (isChecked && !task.wasCompleted) {
-            viewModel.addTaskToStat()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

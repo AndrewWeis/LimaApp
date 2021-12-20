@@ -66,6 +66,9 @@ class ProjectsTasksViewModel @Inject constructor(
     }
 
     fun onTaskCheckedChanged(task: Task, isChecked: Boolean) = viewModelScope.launch {
+        if (isChecked && !task.wasCompleted) {
+            addTaskToStat()
+        }
         taskDao.updateTask(task.copy(completed = isChecked, wasCompleted = true))
     }
 
@@ -100,7 +103,7 @@ class ProjectsTasksViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompletedScreen)
     }
 
-    fun addTaskToStat() = viewModelScope.launch {
+    private fun addTaskToStat() = viewModelScope.launch {
         var dayStat: DayStat? = taskDao.getStatDay(currentYear, currentMonth, currentDay)
 
         if (dayStat == null) {

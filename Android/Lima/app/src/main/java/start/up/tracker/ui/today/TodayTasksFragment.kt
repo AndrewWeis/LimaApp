@@ -135,6 +135,6 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
     }
 
     override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-         viewModel.onTaskCheckedChanged(extendedTask, isChecked)
+        viewModel.onTaskCheckedChanged(extendedTask, isChecked)
     }
 }

@@ -7,16 +7,23 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.db.PreferencesManager
 import start.up.tracker.data.db.TaskDao
+import start.up.tracker.data.models.DayStat
 import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import start.up.tracker.utils.toTask
+import java.util.*
 
 abstract class BaseViewModel(
     private val taskDao: TaskDao,
     private val preferencesManager: PreferencesManager,
 ) : ViewModel() {
+
+    private val calendar = Calendar.getInstance()
+    private val currentYear: Int = calendar.get(Calendar.YEAR)
+    private val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+    private val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
     private val tasksEventChannel = Channel<TasksEvent>()
     val tasksEventBase = tasksEventChannel.receiveAsFlow()
@@ -33,7 +40,22 @@ abstract class BaseViewModel(
 
     fun onTaskCheckedChanged(extendedTask: ExtendedTask, isChecked: Boolean) = viewModelScope.launch {
         val task = extendedTask.toTask()
-        taskDao.updateTask(task.copy(completed = isChecked))
+        if (isChecked && !task.wasCompleted) {
+            addTaskToStat()
+        }
+        taskDao.updateTask(task.copy(completed = isChecked, wasCompleted = true))
+    }
+
+    private fun addTaskToStat() = viewModelScope.launch {
+        var dayStat: DayStat? = taskDao.getStatDay(currentYear, currentMonth, currentDay)
+
+        if (dayStat == null) {
+            dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear)
+            taskDao.insertDayStat(dayStat)
+        } else {
+            val newDayStat = dayStat.copy(completedTasks = dayStat.completedTasks + 1)
+            taskDao.updateDayStat(newDayStat)
+        }
     }
 
     fun onTaskSwiped(extendedTask: ExtendedTask) = viewModelScope.launch {
