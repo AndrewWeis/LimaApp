@@ -10,9 +10,11 @@ import start.up.tracker.data.db.PreferencesManager
 import start.up.tracker.data.models.Task
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.models.Category
+import start.up.tracker.data.models.DayStat
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,6 +30,11 @@ class ProjectsTasksViewModel @Inject constructor(
     val tasksEvent = tasksEventChannel.receiveAsFlow()
 
     val hideCompleted = preferencesManager.hideCompleted
+
+    private val calendar = Calendar.getInstance()
+    private val currentYear: Int = calendar.get(Calendar.YEAR)
+    private val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+    private val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
     /**
      * Receive specific category either from [SavedStateHandle] in case app killed our app or from [SaveArgs]
@@ -59,7 +66,10 @@ class ProjectsTasksViewModel @Inject constructor(
     }
 
     fun onTaskCheckedChanged(task: Task, isChecked: Boolean) = viewModelScope.launch {
-        taskDao.updateTask(task.copy(completed = isChecked))
+        if (isChecked && !task.wasCompleted) {
+            addTaskToStat()
+        }
+        taskDao.updateTask(task.copy(completed = isChecked, wasCompleted = true))
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
@@ -91,6 +101,18 @@ class ProjectsTasksViewModel @Inject constructor(
 
     fun onDeleteAllCompletedClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompletedScreen)
+    }
+
+    private fun addTaskToStat() = viewModelScope.launch {
+        var dayStat: DayStat? = taskDao.getStatDay(currentYear, currentMonth, currentDay)
+
+        if (dayStat == null) {
+            dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear)
+            taskDao.insertDayStat(dayStat)
+        } else {
+            val newDayStat = dayStat.copy(completedTasks = dayStat.completedTasks + 1)
+            taskDao.updateDayStat(newDayStat)
+        }
     }
 
     sealed class TasksEvent {

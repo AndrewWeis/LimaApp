@@ -16,5 +16,6 @@ data class ExtendedTask(
     val categoryId: Int,
     val categoryName: String,
     val color: Int,
-    val tasksInside: Int
+    val tasksInside: Int,
+    val wasCompleted: Boolean
 )

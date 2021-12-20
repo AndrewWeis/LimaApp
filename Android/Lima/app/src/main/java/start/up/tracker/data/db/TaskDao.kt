@@ -3,6 +3,7 @@ package start.up.tracker.data.db
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.models.Category
+import start.up.tracker.data.models.DayStat
 import start.up.tracker.data.models.Task
 import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.relations.CategoryWithTasks
@@ -74,7 +75,7 @@ interface TaskDao {
         """
         SELECT 
 	        task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
-            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
+            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt, task_table.wasCompleted,
 	        Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
         JOIN task_table ON task_table.taskId = cross_ref.taskId
@@ -91,7 +92,7 @@ interface TaskDao {
         """
        SELECT 
             task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
-            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
+            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt, task_table.wasCompleted,
 	        Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
         JOIN task_table ON task_table.taskId = cross_ref.taskId
@@ -111,7 +112,7 @@ interface TaskDao {
         """
         SELECT
             task_table.taskId, task_table.taskName, task_table.taskDesc, task_table.priority, task_table.completed, task_table.created, task_table.dateLong,
-            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt,
+            task_table.date, task_table.timeStart, task_table.timeEnd, task_table.timeStartInt, task_table.timeEndInt, task_table.wasCompleted,
             Category.categoryId, Category.categoryName, Category.color, Category.tasksInside
         FROM cross_ref
         JOIN task_table ON task_table.taskId = cross_ref.taskId
@@ -133,6 +134,7 @@ interface TaskDao {
     """
     )
     fun countUpcomingTasks(today: Long): Flow<Int>
+
 
     @Query("DELETE FROM cross_ref WHERE taskId = :taskId")
     suspend fun deleteCrossRefByTaskId(taskId: Int?)
@@ -183,4 +185,25 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE completed = 1")
     suspend fun deleteCompletedTasks()
+
+
+    // ---------- Statistics ----------
+
+    @Query("SELECT * FROM daystat WHERE year =:year AND month =:month")
+    suspend fun getStatMonth(year: Int, month: Int): List<DayStat>
+
+    @Query("SELECT * FROM daystat WHERE year =:year")
+    suspend fun getStatYear(year: Int): List<DayStat>
+
+    @Query("SELECT * FROM daystat WHERE year =:year AND month =:month AND day =:day")
+    suspend fun getStatDay(year: Int, month: Int, day: Int): DayStat
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDayStat(dayStat: DayStat)
+
+    @Update
+    suspend fun updateDayStat(dayStat: DayStat)
+
+    @Delete
+    suspend fun deleteDayStat(dayStat: DayStat)
 }
