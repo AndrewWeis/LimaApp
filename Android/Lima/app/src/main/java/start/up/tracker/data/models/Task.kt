@@ -28,5 +28,6 @@ data class Task (
     val timeStart: String = "No time",
     val timeEnd: String = "No time",
     val timeStartInt: Int = 0,
-    val timeEndInt: Int = 0
+    val timeEndInt: Int = 0,
+    val wasCompleted: Boolean = false
 ): Parcelable

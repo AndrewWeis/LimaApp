@@ -6,9 +6,9 @@ import androidx.room.PrimaryKey
 @Entity
 data class DayStat (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int = 0,
     val day: Int,
     val month: Int,
     val year: Int,
-    val completedTasks: Int
+    val completedTasks: Int = 1
 )
