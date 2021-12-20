@@ -5,8 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.anychart.AnyChart
-import com.anychart.chart.common.dataentry.DataEntry
-import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode
 import com.anychart.enums.Position
@@ -14,8 +12,6 @@ import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAnalyticsYearBinding
-import start.up.tracker.ui.addedittask.AddEditTaskViewModel
-import java.util.*
 
 @AndroidEntryPoint
 class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
@@ -37,8 +33,8 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
     }
 
     private fun initTasksChart() {
-        val cartesian = AnyChart.column()
-        val column = cartesian.column(viewModel.data)
+        val chart = AnyChart.column()
+        val column = chart.column(viewModel.data)
 
         column.tooltip()
             .titleFormat("{%X}")
@@ -46,23 +42,23 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
             .anchor(Anchor.CENTER_BOTTOM)
             .offsetX(5.0)
             .offsetY(5.0)
-            .format("Tasks: {%Value}{groupsSeparator: }");
+            .format("Tasks: {%Value}{groupsSeparator: }")
 
+        chart.xAxis(0).labels().fontSize(10)
+        chart.xAxis(0).title(viewModel.currentYear);
 
-        cartesian.xAxis(0).title(viewModel.currentYear);
+        chart.yScale().minimumGap(1)
+        chart.yAxis(0).labels().fontSize(10)
 
-        cartesian.title("Completed tasks")
-        cartesian.title().fontSize(12)
-        cartesian.title().fontColor("#858585")
+        chart.title("Completed tasks")
+        chart.title().fontSize(12)
+        chart.title().fontColor("#858585")
 
+        chart.animation(true)
 
-        cartesian.animation(true)
-        cartesian.yScale().maximumGap(1)
+        chart.tooltip().positionMode(TooltipPositionMode.POINT)
+        chart.interactivity().hoverMode(HoverMode.BY_X)
 
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
-        cartesian.interactivity().hoverMode(HoverMode.BY_X)
-
-        binding.lineChartYear.setChart(cartesian)
+        binding.lineChartYear.setChart(chart)
     }
 }

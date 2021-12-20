@@ -24,7 +24,7 @@ class AnalyticsFragment : Fragment(R.layout.fragment_analytics) {
             when(position) {
                 0 -> { tab.text = "Month" }
                 1 -> { tab.text = "Year" }
-                2 -> { tab.text = "Week" }
+                /*2 -> { tab.text = "Week" }*/
             }
         }.attach()
     }

@@ -56,18 +56,18 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
 
-        data.add(ValueDataEntry("Ja", yearList[1]))
-        data.add(ValueDataEntry("Fe", yearList[2]))
-        data.add(ValueDataEntry("Ma", yearList[3]))
-        data.add(ValueDataEntry("Ap", yearList[4]))
-        data.add(ValueDataEntry("Ma", yearList[5]))
-        data.add(ValueDataEntry("Jn", yearList[6]))
-        data.add(ValueDataEntry("Jl", yearList[7]))
-        data.add(ValueDataEntry("Au", yearList[8]))
-        data.add(ValueDataEntry("Se", yearList[9]))
-        data.add(ValueDataEntry("Oc", yearList[10]))
-        data.add(ValueDataEntry("No", yearList[11]))
-        data.add(ValueDataEntry("De", yearList[12]))
+        data.add(ValueDataEntry("Jan", yearList[1]))
+        data.add(ValueDataEntry("Feb", yearList[2]))
+        data.add(ValueDataEntry("Mar", yearList[3]))
+        data.add(ValueDataEntry("Apr", yearList[4]))
+        data.add(ValueDataEntry("May", yearList[5]))
+        data.add(ValueDataEntry("Jun", yearList[6]))
+        data.add(ValueDataEntry("Jul", yearList[7]))
+        data.add(ValueDataEntry("Aug", yearList[8]))
+        data.add(ValueDataEntry("Sep", yearList[9]))
+        data.add(ValueDataEntry("Oct", yearList[10]))
+        data.add(ValueDataEntry("Nov", yearList[11]))
+        data.add(ValueDataEntry("Dec", yearList[12]))
 
         _statYear.value = true
     }
