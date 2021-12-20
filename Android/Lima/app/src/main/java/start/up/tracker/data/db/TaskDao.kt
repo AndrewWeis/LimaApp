@@ -3,6 +3,7 @@ package start.up.tracker.data.db
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.models.Category
+import start.up.tracker.data.models.DayStat
 import start.up.tracker.data.models.Task
 import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.relations.CategoryWithTasks
@@ -134,6 +135,7 @@ interface TaskDao {
     )
     fun countUpcomingTasks(today: Long): Flow<Int>
 
+
     @Query("DELETE FROM cross_ref WHERE taskId = :taskId")
     suspend fun deleteCrossRefByTaskId(taskId: Int?)
 
@@ -183,4 +185,16 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE completed = 1")
     suspend fun deleteCompletedTasks()
+
+
+    // ---------- Statistics ----------
+
+    @Query("SELECT * FROM daystat WHERE year =:year")
+    suspend fun getStatYear(year: Int): List<DayStat>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDayStat(dayStat: DayStat)
+
+    @Delete
+    suspend fun deleteDayStat(dayStat: DayStat)
 }
