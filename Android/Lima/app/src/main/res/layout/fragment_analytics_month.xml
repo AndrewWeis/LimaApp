@@ -10,7 +10,7 @@
 
 
     <com.anychart.AnyChartView
-        android:id="@+id/LineChart"
+        android:id="@+id/line_chart_month"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginTop="@dimen/spacing_normal"

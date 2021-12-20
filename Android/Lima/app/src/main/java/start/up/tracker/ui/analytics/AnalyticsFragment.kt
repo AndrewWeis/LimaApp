@@ -22,9 +22,9 @@ class AnalyticsFragment : Fragment(R.layout.fragment_analytics) {
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
             when(position) {
-                0 -> { tab.text = "Week" }
-                1 -> { tab.text = "Month" }
-                2 -> { tab.text = "Year" }
+                0 -> { tab.text = "Month" }
+                1 -> { tab.text = "Year" }
+                2 -> { tab.text = "Week" }
             }
         }.attach()
     }

@@ -1,8 +1,10 @@
 package start.up.tracker.ui.analytics.month
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.anychart.AnyChart
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
@@ -17,21 +19,27 @@ import java.util.*
 
 @AndroidEntryPoint
 class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
+
+    private val viewModel: AnalyticsMonthViewModel by viewModels()
+    private lateinit var binding: FragmentAnalyticsMonthBinding
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentAnalyticsMonthBinding.bind(view)
+        binding = FragmentAnalyticsMonthBinding.bind(view)
 
-        binding.LineChart.setProgressBar(binding.progressBar)
+        binding.lineChartMonth.setProgressBar(binding.progressBar)
+
+        viewModel.statMonth.observe(viewLifecycleOwner) {
+            if (it == true) {
+                initTasksChart()
+            }
+        }
+    }
+
+    private fun initTasksChart() {
 
         val cartesian = AnyChart.column()
-
-        val data: MutableList<DataEntry> = ArrayList()
-        data.add(ValueDataEntry("01-07", 44))
-        data.add(ValueDataEntry("08-14", 50))
-        data.add(ValueDataEntry("15-22", 47))
-        data.add(ValueDataEntry("23-30", 55))
-
-        val column = cartesian.column(data)
+        val column = cartesian.column(viewModel.data)
 
         column.tooltip()
             .titleFormat("{%X}")
@@ -42,7 +50,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             .format("Tasks: {%Value}{groupsSeparator: }");
 
 
-        cartesian.xAxis(0).title("December");
+        cartesian.xAxis(0).title(viewModel.currentMonthName);
 
         cartesian.title("Completed tasks")
         cartesian.title().fontSize(12)
@@ -50,12 +58,12 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
 
         cartesian.animation(true)
-        cartesian.yScale().maximumGap(1)
+        cartesian.yScale().minimumGap(1)
 
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
         cartesian.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding.LineChart.setChart(cartesian)
+        binding.lineChartMonth.setChart(cartesian)
     }
 }

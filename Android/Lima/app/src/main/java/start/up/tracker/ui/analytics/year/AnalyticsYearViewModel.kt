@@ -1,7 +1,9 @@
 package start.up.tracker.ui.analytics.year
 
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +13,12 @@ import start.up.tracker.data.models.DayStat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
+import kotlin.collections.forEach
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 @HiltViewModel
 class AnalyticsYearViewModel @Inject constructor(
@@ -32,7 +39,6 @@ class AnalyticsYearViewModel @Inject constructor(
 
     private fun loadStatYear() = viewModelScope.launch {
         val stats = taskDao.getStatYear(currentYear.toInt())
-
         initYearData(stats)
     }
 

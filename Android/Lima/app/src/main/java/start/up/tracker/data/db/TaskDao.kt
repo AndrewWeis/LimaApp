@@ -189,6 +189,9 @@ interface TaskDao {
 
     // ---------- Statistics ----------
 
+    @Query("SELECT * FROM daystat WHERE year =:year AND month =:month")
+    suspend fun getStatMonth(year: Int, month: Int): List<DayStat>
+
     @Query("SELECT * FROM daystat WHERE year =:year")
     suspend fun getStatYear(year: Int): List<DayStat>
 

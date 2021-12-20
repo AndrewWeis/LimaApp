@@ -27,7 +27,7 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAnalyticsYearBinding.bind(view)
 
-        binding.LineChart.setProgressBar(binding.progressBar)
+        binding.lineChartYear.setProgressBar(binding.progressBar)
 
         viewModel.statYear.observe(viewLifecycleOwner) {
             if (it == true) {
@@ -38,7 +38,6 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
 
     private fun initTasksChart() {
         val cartesian = AnyChart.column()
-
         val column = cartesian.column(viewModel.data)
 
         column.tooltip()
@@ -64,6 +63,6 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
         cartesian.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding.LineChart.setChart(cartesian)
+        binding.lineChartYear.setChart(cartesian)
     }
 }

@@ -15,9 +15,9 @@ class AnalyticsViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lif
 
     override fun createFragment(position: Int): Fragment {
         return when(position){
-            0 -> { AnalyticsWeekFragment() }
-            1 -> { AnalyticsMonthFragment() }
-            2 -> { AnalyticsYearFragment() }
+            0 -> { AnalyticsMonthFragment() }
+            1 -> { AnalyticsYearFragment()}
+            2 -> { AnalyticsWeekFragment() }
             else -> { Fragment() }
         }
     }

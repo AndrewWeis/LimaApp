@@ -17,13 +17,19 @@ import java.util.*
 
 @AndroidEntryPoint
 class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
+
+    private lateinit var binding: FragmentAnalyticsWeekBinding
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentAnalyticsWeekBinding.bind(view)
+        binding = FragmentAnalyticsWeekBinding.bind(view)
 
-        binding.LineChart.setProgressBar(binding.progressBar)
+        binding.lineChartWeek.setProgressBar(binding.progressBar)
 
-        val cartesian = AnyChart.column()
+        initTasksChart()
+    }
+
+    private fun initTasksChart() {
 
         val data: MutableList<DataEntry> = ArrayList()
         data.add(ValueDataEntry("Mon", 7))
@@ -34,6 +40,7 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
         data.add(ValueDataEntry("Sat", 4))
         data.add(ValueDataEntry("Sun", 2))
 
+        val cartesian = AnyChart.column()
         val column = cartesian.column(data)
 
         column.tooltip()
@@ -57,6 +64,6 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
         cartesian.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding.LineChart.setChart(cartesian)
+        binding.lineChartWeek.setChart(cartesian)
     }
 }
