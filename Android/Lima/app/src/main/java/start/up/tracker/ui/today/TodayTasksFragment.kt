@@ -68,11 +68,6 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks), TodayTasksAd
             taskAdapter.submitList(it)
         }
 
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(result)
-        }
-
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->

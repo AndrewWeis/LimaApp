@@ -50,11 +50,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
         setUpCurrentTimeIndicator(binding)
 
 
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(result)
-        }
-
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
