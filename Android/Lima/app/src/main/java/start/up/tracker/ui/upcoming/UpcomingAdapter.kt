@@ -2,15 +2,12 @@ package start.up.tracker.ui.upcoming
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import start.up.tracker.data.models.UpcomingSection
 import start.up.tracker.databinding.ItemUpcomingSectionBinding
 
 
-class UpcomingAdapter : ListAdapter<UpcomingSection,
+class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSection,
         UpcomingAdapter.UpcomingViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpcomingViewHolder {
@@ -33,6 +30,22 @@ class UpcomingAdapter : ListAdapter<UpcomingSection,
                 sectionRV.apply {
                    adapter = sectionAdapter
                    layoutManager = LinearLayoutManager(context)
+
+                    ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                        override fun onMove(
+                            recyclerView: RecyclerView,
+                            viewHolder: RecyclerView.ViewHolder,
+                            target: RecyclerView.ViewHolder
+                        ): Boolean {
+                            return false
+                        }
+
+                        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                            val task = sectionAdapter.currentList[viewHolder.adapterPosition]
+                            viewModel.onTaskSwiped(task)
+                        }
+                    }).attachToRecyclerView(sectionRV)
                 }
 
                 sectionAdapter.submitList(upcomingSection.tasksList)
