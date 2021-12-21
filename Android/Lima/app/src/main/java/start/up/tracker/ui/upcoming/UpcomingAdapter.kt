@@ -3,6 +3,7 @@ package start.up.tracker.ui.upcoming
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
+import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.data.models.UpcomingSection
 import start.up.tracker.databinding.ItemUpcomingSectionBinding
 
@@ -20,13 +21,13 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
         holder.bind(currentItem)
     }
 
-    inner class UpcomingViewHolder(private val binding: ItemUpcomingSectionBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class UpcomingViewHolder(private val binding: ItemUpcomingSectionBinding) : RecyclerView.ViewHolder(binding.root), UpcomingSectionAdapter.OnItemClickListener {
 
         fun bind(upcomingSection: UpcomingSection) {
             binding.apply {
                 sectionTitle.text = upcomingSection.section
 
-                val sectionAdapter = UpcomingSectionAdapter()
+                val sectionAdapter = UpcomingSectionAdapter(this@UpcomingViewHolder)
                 sectionRV.apply {
                    adapter = sectionAdapter
                    layoutManager = LinearLayoutManager(context)
@@ -50,6 +51,14 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
 
                 sectionAdapter.submitList(upcomingSection.tasksList)
             }
+        }
+
+        override fun onItemClick(extendedTask: ExtendedTask) {
+            viewModel.onTaskSelected(extendedTask)
+        }
+
+        override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
+            viewModel.onTaskCheckedChanged(extendedTask, isChecked)
         }
 
     }
