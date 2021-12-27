@@ -1,6 +1,5 @@
 package start.up.tracker.ui.addedittask
 
-import android.util.Log
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,13 +12,11 @@ import kotlinx.coroutines.runBlocking
 import start.up.tracker.data.models.Task
 import start.up.tracker.data.db.TaskDao
 import start.up.tracker.data.models.Category
-import start.up.tracker.data.models.DayStat
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.ui.ADD_TASK_RESULT_OK
 import start.up.tracker.ui.EDIT_TASK_RESULT_OK
 import start.up.tracker.utils.timeToMinutes
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -126,7 +123,7 @@ class AddEditTaskViewModel @Inject constructor(
 
         if (task != null) { // edit exciting task mode
             val updatedTask = task.copy(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
-            updatedTask(updatedTask)
+            updatedTask(updatedTask, checkedChip)
         } else { // create new task mode
             val newTask = Task(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
             createTask(newTask, checkedChip)
@@ -138,7 +135,7 @@ class AddEditTaskViewModel @Inject constructor(
         taskDao.insertTaskCategoryCrossRef(CrossRef)
     }
 
-    private fun deleteCrossRefByTaskName(taskId: Int) = viewModelScope.launch {
+    private fun deleteCrossRefByTaskId(taskId: Int) = viewModelScope.launch {
         taskDao.deleteCrossRefByTaskId(taskId)
     }
 
@@ -153,7 +150,18 @@ class AddEditTaskViewModel @Inject constructor(
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 
-    private fun updatedTask(task: Task) = viewModelScope.launch {
+    private fun updatedTask(task: Task, categoryName: String) = viewModelScope.launch {
+
+        val crossRef = taskDao.getCrossRefByTaskId(task.taskId)
+        val currCategoryId = taskDao.getCategoryIdByName(categoryName)
+
+        // if category has changed
+        if (crossRef.categoryId != currCategoryId) {
+            deleteCrossRefByTaskId(task.taskId)
+            val newCrossRef = TaskCategoryCrossRef(taskId = task.taskId, categoryId = currCategoryId)
+            createCrossRef(newCrossRef)
+        }
+
         taskDao.updateTask(task)
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
     }

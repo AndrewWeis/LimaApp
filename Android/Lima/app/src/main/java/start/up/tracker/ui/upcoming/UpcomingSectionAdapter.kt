@@ -8,10 +8,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.data.models.ExtendedTask
 import start.up.tracker.databinding.ItemTaskExtendedBinding
+import start.up.tracker.ui.today.TodayTasksAdapter
 import start.up.tracker.utils.chooseIconDrawable
 
 
-class UpcomingSectionAdapter : ListAdapter<ExtendedTask,
+class UpcomingSectionAdapter(private val listener: OnItemClickListener) : ListAdapter<ExtendedTask,
         UpcomingSectionAdapter.SectionsViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionsViewHolder {
@@ -25,6 +26,26 @@ class UpcomingSectionAdapter : ListAdapter<ExtendedTask,
     }
 
     inner class SectionsViewHolder(private val binding: ItemTaskExtendedBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.apply {
+                root.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val task = getItem(position)
+                        listener.onItemClick(task)
+                    }
+                }
+
+                checkBoxCompleted.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val task = getItem(position)
+                        listener.onCheckBoxClick(task, checkBoxCompleted.isChecked)
+                    }
+                }
+            }
+        }
 
         fun bind(extendedTask: ExtendedTask) {
             binding.apply {
@@ -51,5 +72,10 @@ class UpcomingSectionAdapter : ListAdapter<ExtendedTask,
 
         override fun areContentsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
             oldItem == newItem
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(extendedTask: ExtendedTask)
+        fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean)
     }
 }

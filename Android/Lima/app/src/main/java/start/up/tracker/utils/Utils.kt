@@ -17,10 +17,12 @@ fun ExtendedTask.toTask() = Task(
     created = created,
     taskId = taskId,
     date = date,
+    dateLong = dateLong,
     timeStart = timeStart,
     timeEnd = timeEnd,
     timeStartInt = timeStartInt,
-    timeEndInt = timeEndInt
+    timeEndInt = timeEndInt,
+    wasCompleted = wasCompleted
 )
 
 fun timeToMinutes(strInitial: String): Int {

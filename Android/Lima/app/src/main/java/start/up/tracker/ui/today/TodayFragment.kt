@@ -6,21 +6,47 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentTodayBinding
+import start.up.tracker.ui.base.BaseViewModel
+import start.up.tracker.ui.projectstasks.ProjectsTasksFragmentDirections
 import start.up.tracker.ui.projectstasks.ProjectsTasksViewModel
+import start.up.tracker.utils.exhaustive
+import start.up.tracker.utils.toTask
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class TodayFragment : Fragment(R.layout.fragment_today) {
 
+    private val viewModel: TodayViewModel by viewModels()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTodayBinding.bind(view)
+
+        setFragmentResultListener("add_edit_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_result")
+            viewModel.onAddEditResult(result)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.tasksEvent.collect { event ->
+                when (event) {
+                    is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
 
         val adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
 

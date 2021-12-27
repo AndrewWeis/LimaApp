@@ -1,5 +1,6 @@
 package start.up.tracker.ui.base
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
@@ -68,6 +69,7 @@ abstract class BaseViewModel(
     fun onUndoDeleteClick(extendedTask: ExtendedTask) = viewModelScope.launch {
         val categoryId = extendedTask.categoryId
         val task = extendedTask.toTask()
+        Log.i("onUndoTask", task.toString())
         val crossRef = TaskCategoryCrossRef(task.taskId, categoryId)
         taskDao.insertTaskCategoryCrossRef(crossRef)
         taskDao.insertTask(task)

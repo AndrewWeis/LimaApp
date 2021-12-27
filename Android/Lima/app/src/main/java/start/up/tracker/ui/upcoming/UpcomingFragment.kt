@@ -35,13 +35,12 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentUpcomingBinding.bind(view)
 
-        val upcomingAdapter = UpcomingAdapter()
+        val upcomingAdapter = UpcomingAdapter(viewModel)
 
         binding.upcomingRV.apply {
             adapter = upcomingAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-
 
         viewModel.upcomingTasks.observe(viewLifecycleOwner) { tasks ->
             separateDataAndSubmit(tasks, upcomingAdapter)
