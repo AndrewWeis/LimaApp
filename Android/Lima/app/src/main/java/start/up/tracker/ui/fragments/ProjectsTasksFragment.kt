@@ -91,18 +91,18 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
                             }.show()
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(title = "Add new task", categoryId = viewModel.categoryId)
+                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(title = "Add new task", categoryId = viewModel.categoryId)
                         findNavController().navigate(action)
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideFragmentToAddEditTaskFragment(event.task, "Edit task", viewModel.categoryId)
+                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(event.task, "Edit task", viewModel.categoryId)
                         findNavController().navigate(action)
                     }
                     is ProjectsTasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                     is ProjectsTasksViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
+                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
                 }.exhaustive

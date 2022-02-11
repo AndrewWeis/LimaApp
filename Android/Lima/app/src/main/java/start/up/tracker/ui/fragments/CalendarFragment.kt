@@ -62,19 +62,19 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
                             }.show()
                     }
                     is BaseViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Add new task", categoryId = 1)
+                        val action = TodayFragmentDirections.actionTodayToAddEditTask(title = "Add new task", categoryId = 1)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.NavigateToEditTaskScreen -> {
                         val task = event.extendedTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayFragmentToAddEditTaskFragment(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
+                        val action = TodayFragmentDirections.actionTodayToAddEditTask(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                     is BaseViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
+                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
                 }.exhaustive

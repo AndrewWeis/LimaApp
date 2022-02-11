@@ -65,19 +65,19 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
                             }.show()
                     }
                     is BaseViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = UpcomingFragmentDirections.actionUpcomingFragmentToAddEditTaskFragment(title = "Add new task", categoryId = 1)
+                        val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(title = "Add new task", categoryId = 1)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.NavigateToEditTaskScreen -> {
                         val task = event.extendedTask.toTask()
-                        val action = UpcomingFragmentDirections.actionUpcomingFragmentToAddEditTaskFragment(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
+                        val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
                         findNavController().navigate(action)
                     }
                     is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                     is BaseViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
+                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
                 }.exhaustive

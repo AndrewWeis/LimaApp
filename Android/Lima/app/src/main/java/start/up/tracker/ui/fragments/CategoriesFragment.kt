@@ -48,11 +48,11 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
             viewModel.categoryEvent.collect { event ->
                 when(event) {
                     is CategoriesViewModel.CategoryEvent.NavigateToCategoryInside -> {
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToCategoryInsideFragment(event.category, event.category.categoryId, event.category.categoryName)
+                        val action = CategoriesFragmentDirections.actionCategoryToCategoryInside(event.category, event.category.categoryId, event.category.categoryName)
                         findNavController().navigate(action)
                     }
                     CategoriesViewModel.CategoryEvent.NavigateToAddCategoryScreen -> {
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToAddCategoryFragment()
+                        val action = CategoriesFragmentDirections.actionCategoryToAddCategory()
                         findNavController().navigate(action)
                     }
                     is CategoriesViewModel.CategoryEvent.ShowCategorySavedConfirmationMessage -> {
@@ -61,11 +61,11 @@ class CategoriesFragment: Fragment(R.layout.fragment_categories), CategoriesAdap
                     CategoriesViewModel.CategoryEvent.NavigateToToday -> {
                         val formatter = SimpleDateFormat("dd MMM, EEEE")
                         val currentDate: String = formatter.format(Date())
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToTodayFragment(currentDate)
+                        val action = CategoriesFragmentDirections.actionCategoryToToday(currentDate)
                         findNavController().navigate(action)
                     }
                     CategoriesViewModel.CategoryEvent.NavigateToUpcoming -> {
-                        val action = CategoriesFragmentDirections.actionCategoryFragmentToUpcomingFragment()
+                        val action = CategoriesFragmentDirections.actionCategoryToUpcoming()
                         findNavController().navigate(action)
                     }
                 }.exhaustive
