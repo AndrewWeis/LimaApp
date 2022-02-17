@@ -28,10 +28,9 @@
 # Other usefull links
 
 1. [Design in figma](https://www.figma.com/file/0Z7BmaQy8rl5xGbKXvzAMT/Lima:-Life-manager?node-id=0%3A1)
-2. [Trello board](https://trello.com/b/KMLbj2KN/lima-app)
-3. [Milestones](./Docs/Milestones.pdf)
-4. [Architecture](./Docs/achitecture.md)
-5. [Presentation](./Docs/presentation.pdf)
+2. [Milestones](./Docs/Milestones.pdf)
+3. [Architecture](./Docs/achitecture.md)
+4. [Presentation](./Docs/presentation.pdf)
 
 # Как запустить
 
