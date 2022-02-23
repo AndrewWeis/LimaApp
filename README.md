@@ -29,7 +29,7 @@
 
 1. [Design in figma](https://www.figma.com/file/0Z7BmaQy8rl5xGbKXvzAMT/Lima:-Life-manager?node-id=0%3A1)
 2. [Milestones](./Docs/Milestones.pdf)
-3. [Architecture](./Docs/Achitecture.pdf)
+3. [Architecture](./Docs/Architecture.pdf)
 4. [Presentation](./Docs/presentation.pdf)
 
 # Как запустить
