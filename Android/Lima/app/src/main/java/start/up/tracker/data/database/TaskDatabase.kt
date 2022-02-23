@@ -40,7 +40,8 @@ abstract class TaskDatabase : RoomDatabase() {
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
                 taskDao.insertCategory(Category("Inbox"))
 
-                articlesDao.insertArticle(Article(0, "my article", "", ""))
+                val articles = ArticleStorage.getArticles().toTypedArray()
+                articlesDao.insertAllArticles(*articles)
             }
         }
     }
