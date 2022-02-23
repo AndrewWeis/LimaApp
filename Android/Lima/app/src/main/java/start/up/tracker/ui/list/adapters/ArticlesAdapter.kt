@@ -1,5 +1,6 @@
 package start.up.tracker.ui.list.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -27,12 +28,14 @@ class ArticlesAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(article: Article) {
-            binding.articleTitleText.text = article.title
-            binding.articleDescriptionText.text = article.body
-            binding.articleReadTimeText.text = article.timeToRead
+            binding.apply {
+                articleTitleText.text = article.title
+                articleDescriptionText.text = article.body
+                articleReadTimeText.text = article.timeToRead
 
-            binding.root.setOnClickListener {
-                listener.onArticleClick(article)
+                root.setOnClickListener {
+                    listener.onArticleClick(article)
+                }
             }
         }
     }

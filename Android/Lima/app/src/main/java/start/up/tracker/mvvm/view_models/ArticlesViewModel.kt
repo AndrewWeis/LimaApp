@@ -1,6 +1,9 @@
 package start.up.tracker.mvvm.view_models
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.data.database.dao.ArticlesDao
@@ -21,7 +24,7 @@ class ArticlesViewModel @Inject constructor(
     }
 
     private fun loadArticlesFromDb() = viewModelScope.launch {
-        val articlesList = articlesDao.getArticlesList().asLiveData().value ?: listOf()
+        val articlesList = articlesDao.getArticlesList()
         _articles.postValue(articlesList)
     }
 }
