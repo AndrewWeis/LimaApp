@@ -1,5 +1,6 @@
 package start.up.tracker.data.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import start.up.tracker.data.entities.Article
 
@@ -16,5 +17,5 @@ interface ArticlesDao {
     suspend fun updateArticle(article: Article)
 
     @Query("SELECT * FROM article")
-    suspend fun getArticlesList(): List<Article>
+    suspend fun getArticlesList(): LiveData<List<Article>>
 }
