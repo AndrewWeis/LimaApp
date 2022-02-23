@@ -21,7 +21,7 @@ class ArticlesViewModel @Inject constructor(
     }
 
     private fun loadArticlesFromDb() = viewModelScope.launch {
-        val articlesList = articlesDao.getArticlesList().value ?: listOf()
+        val articlesList = articlesDao.getArticlesList().asLiveData().value ?: listOf()
         _articles.postValue(articlesList)
     }
 }

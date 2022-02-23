@@ -50,7 +50,11 @@
         android:id="@+id/settingsFragment"
         android:name="start.up.tracker.ui.fragments.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settings_to_articles"
+            app:destination="@id/articlesFragment" />
+    </fragment>
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
         android:name="start.up.tracker.ui.fragments.DeleteAllCompletedDialogFragment"
@@ -111,4 +115,9 @@
             android:id="@+id/action_upcoming_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/articlesFragment"
+        android:name="start.up.tracker.ui.fragments.ArticlesFragment"
+        android:label="Articles"
+        tools:layout="@layout/fragment_articles" />
 </navigation>

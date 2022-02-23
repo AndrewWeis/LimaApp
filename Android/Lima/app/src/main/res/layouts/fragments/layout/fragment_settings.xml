@@ -36,5 +36,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tx_darkMode" />
 
+    <View
+        android:id="@+id/articles_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/articles_image"
+        app:layout_constraintBottom_toBottomOf="@id/articles_image"/>
+
+    <ImageView
+        android:id="@+id/articles_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_darkMode"
+        app:srcCompat="@drawable/ic_articles" />
+
+    <TextView
+        android:id="@+id/articles_title_text"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:text="Articles"
+        app:layout_constraintBottom_toBottomOf="@+id/articles_image"
+        app:layout_constraintStart_toEndOf="@+id/articles_image"
+        app:layout_constraintTop_toTopOf="@+id/articles_image" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
