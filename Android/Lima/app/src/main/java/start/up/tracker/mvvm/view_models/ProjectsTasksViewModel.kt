@@ -1,25 +1,27 @@
 package start.up.tracker.mvvm.view_models
 
-import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
+import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
 import start.up.tracker.data.database.PreferencesManager
-import start.up.tracker.data.entities.Task
+import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
 import start.up.tracker.data.entities.DayStat
+import start.up.tracker.data.entities.Task
 import start.up.tracker.data.relations.TaskCategoryCrossRef
-import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
-import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class ProjectsTasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val analyticsDao: AnalyticsDao,
     private val preferencesManager: PreferencesManager,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
@@ -55,7 +57,6 @@ class ProjectsTasksViewModel @Inject constructor(
         taskDao.getTasksOfCategory(query, hideCompleted ?: false, categoryId)
     }
     val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
-
 
     fun onHideCompletedClick(hideCompleted: Boolean) = viewModelScope.launch {
         preferencesManager.updateHideCompleted(hideCompleted)
@@ -104,14 +105,14 @@ class ProjectsTasksViewModel @Inject constructor(
     }
 
     private fun addTaskToStat() = viewModelScope.launch {
-        var dayStat: DayStat? = taskDao.getStatDay(currentYear, currentMonth, currentDay)
+        var dayStat: DayStat? = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
 
         if (dayStat == null) {
             dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear)
-            taskDao.insertDayStat(dayStat)
+            analyticsDao.insertDayStat(dayStat)
         } else {
             val newDayStat = dayStat.copy(completedTasks = dayStat.completedTasks + 1)
-            taskDao.updateDayStat(newDayStat)
+            analyticsDao.updateDayStat(newDayStat)
         }
     }
 

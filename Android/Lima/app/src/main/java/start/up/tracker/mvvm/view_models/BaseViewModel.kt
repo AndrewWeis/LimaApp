@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
 import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
 import start.up.tracker.data.database.PreferencesManager
+import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.DayStat
 import start.up.tracker.data.entities.ExtendedTask
@@ -18,6 +19,7 @@ import java.util.*
 
 abstract class BaseViewModel(
     private val taskDao: TaskDao,
+    private val analyticsDao: AnalyticsDao,
     private val preferencesManager: PreferencesManager,
 ) : ViewModel() {
 
@@ -48,14 +50,14 @@ abstract class BaseViewModel(
     }
 
     private fun addTaskToStat() = viewModelScope.launch {
-        var dayStat: DayStat? = taskDao.getStatDay(currentYear, currentMonth, currentDay)
+        var dayStat: DayStat? = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
 
         if (dayStat == null) {
             dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear)
-            taskDao.insertDayStat(dayStat)
+            analyticsDao.insertDayStat(dayStat)
         } else {
             val newDayStat = dayStat.copy(completedTasks = dayStat.completedTasks + 1)
-            taskDao.updateDayStat(newDayStat)
+            analyticsDao.updateDayStat(newDayStat)
         }
     }
 

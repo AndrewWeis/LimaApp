@@ -8,16 +8,15 @@ import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.TaskDao
+import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.entities.DayStat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-
 @HiltViewModel
 class AnalyticsMonthViewModel @Inject constructor(
-    private val taskDao: TaskDao
+    private val dao: AnalyticsDao
 ) : ViewModel() {
 
     val data: MutableList<DataEntry> = ArrayList()
@@ -36,7 +35,7 @@ class AnalyticsMonthViewModel @Inject constructor(
     }
 
     private fun loadStatMonth() = viewModelScope.launch {
-        val stats = taskDao.getStatMonth(currentYear, currentMonth)
+        val stats = dao.getStatMonth(currentYear, currentMonth)
         initMonthData(stats)
     }
 
@@ -61,5 +60,4 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         _statMonth.value = true
     }
-
 }

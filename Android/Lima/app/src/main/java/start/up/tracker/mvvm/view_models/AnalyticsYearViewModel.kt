@@ -8,22 +8,17 @@ import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.TaskDao
+import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.entities.DayStat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
-import kotlin.collections.forEach
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
 @HiltViewModel
 class AnalyticsYearViewModel @Inject constructor(
-    private val taskDao: TaskDao
-) :ViewModel() {
+    private val dao: AnalyticsDao
+) : ViewModel() {
 
     val data: MutableList<DataEntry> = ArrayList()
 
@@ -38,7 +33,7 @@ class AnalyticsYearViewModel @Inject constructor(
     }
 
     private fun loadStatYear() = viewModelScope.launch {
-        val stats = taskDao.getStatYear(currentYear.toInt())
+        val stats = dao.getStatYear(currentYear.toInt())
         initYearData(stats)
     }
 
@@ -55,7 +50,6 @@ class AnalyticsYearViewModel @Inject constructor(
             yearList[it.month] = currentValue!! + it.completedTasks
         }
 
-
         data.add(ValueDataEntry("Jan", yearList[1]))
         data.add(ValueDataEntry("Feb", yearList[2]))
         data.add(ValueDataEntry("Mar", yearList[3]))
@@ -71,5 +65,4 @@ class AnalyticsYearViewModel @Inject constructor(
 
         _statYear.value = true
     }
-
 }

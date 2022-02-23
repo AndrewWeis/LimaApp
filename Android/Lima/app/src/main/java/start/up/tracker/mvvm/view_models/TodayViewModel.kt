@@ -4,6 +4,7 @@ import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flatMapLatest
 import start.up.tracker.data.database.PreferencesManager
+import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.database.dao.TaskDao
 import java.text.SimpleDateFormat
 import java.util.*
@@ -12,8 +13,9 @@ import javax.inject.Inject
 @HiltViewModel
 class TodayViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val analyticsDao: AnalyticsDao,
     private val preferencesManager: PreferencesManager,
-) : BaseViewModel(taskDao, preferencesManager) {
+) : BaseViewModel(taskDao, analyticsDao, preferencesManager) {
 
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
     private val currentDate: String = formatter.format(Date())
@@ -25,7 +27,6 @@ class TodayViewModel @Inject constructor(
         taskDao.getTodayTasks(currentDate, it ?: false)
     }
     val todayTasks = todayTasksFlow.asLiveData()
-
 
     private val calendarTasksFlow = hideCompleted.flatMapLatest {
         taskDao.getCalendarTasks(currentDate, it ?: false)
