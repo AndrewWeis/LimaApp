@@ -25,7 +25,7 @@
 - Каждую задачу можно настроить: заголовок, описание, приоритет, категория, дату выполнения и повтор.
 - Можно посмотреть задачи в 2-х видах - список и календарь (на день, неделю, месяц или год)
 
-# Other usefull links
+# Usefull links
 
 1. [Design in figma](https://www.figma.com/file/0Z7BmaQy8rl5xGbKXvzAMT/Lima:-Life-manager?node-id=0%3A1)
 2. [Milestones](./Docs/Milestones.pdf)
