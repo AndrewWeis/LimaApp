@@ -31,6 +31,7 @@
 2. [Milestones](./Docs/Milestones.pdf)
 3. [Architecture](./Docs/Architecture.pdf)
 4. [Presentation](./Docs/presentation.pdf)
+5. [Winter presentation](./Docs/winter_demonstration_animations.pptx)
 
 # Как запустить
 
