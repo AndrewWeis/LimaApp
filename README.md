@@ -33,7 +33,7 @@
 4. [Presentation](./Docs/presentation.pdf)
 5. [Winter presentation](./Docs/winter_demonstration_animations.pptx)
 
-# Как запустить
+# How to launch
 
 1. Скачать Android Studio с официального сайта
 2. Сделать clone этого репозитория
