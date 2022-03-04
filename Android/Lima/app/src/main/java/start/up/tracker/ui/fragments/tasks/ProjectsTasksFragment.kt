@@ -6,15 +6,12 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -24,14 +21,14 @@ import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.FragmentCategoryInsideBinding
 import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
+import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.ProjectsTasksAdapter
 import start.up.tracker.utils.onQueryTextChanged
 
-/**
- * This class uses [ProjectsTasksViewModel] because it have similar functionality as [TasksFragment]
- */
 @AndroidEntryPoint
-class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), ProjectsTasksAdapter.OnItemClickListener{
+class ProjectsTasksFragment :
+    BaseTasksFragment(R.layout.fragment_category_inside),
+    ProjectsTasksAdapter.OnItemClickListener {
 
     private val viewModel: ProjectsTasksViewModel by viewModels()
 
@@ -85,25 +82,25 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
             viewModel.tasksEvent.collect { event ->
                 when (event) {
                     is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                        Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
-                            .setAction("UNDO") {
-                                viewModel.onUndoDeleteTaskClick(event.task)
-                            }.show()
+                        showUndoDeleteSnackbar() { viewModel.onUndoDeleteTaskClick(event.task) }
                     }
                     is TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(title = "Add new task", categoryId = viewModel.categoryId)
-                        findNavController().navigate(action)
+                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(
+                            title = "Add new task",
+                            categoryId = viewModel.categoryId
+                        )
+                        navigateTo(action)
                     }
                     is TasksEvent.NavigateToEditTaskScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(event.task, "Edit task", viewModel.categoryId)
-                        findNavController().navigate(action)
+                        navigateTo(action)
                     }
                     is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+                        showTaskSavedMessage(event.msg)
                     }
                     is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
-                        findNavController().navigate(action)
+                        navigateTo(action)
                     }
                 }
             }
