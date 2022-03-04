@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import start.up.tracker.ui.fragments.calendar.CalendarFragment
+import start.up.tracker.ui.fragments.calendar.CalendarTasksFragment
 import start.up.tracker.ui.fragments.today.TodayTasksFragment
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -15,7 +15,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): 
     override fun createFragment(position: Int): Fragment {
         return   when(position){
             0->{ TodayTasksFragment() }
-            1->{ CalendarFragment() }
+            1->{ CalendarTasksFragment() }
             else->{ Fragment() }
         }
     }
