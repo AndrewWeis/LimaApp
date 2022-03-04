@@ -16,15 +16,17 @@ import start.up.tracker.R
 import start.up.tracker.data.constants.TIME_OFFSET
 import start.up.tracker.data.entities.ExtendedTask
 import start.up.tracker.databinding.FragmentCalendarBinding
-import start.up.tracker.mvvm.view_models.tasks.TasksViewModel
 import start.up.tracker.ui.list.adapters.CalendarTasksAdapter
 import start.up.tracker.mvvm.view_models.today.TodayViewModel
+import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.utils.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdapter.OnItemClickListener {
+class CalendarFragment :
+    Fragment(R.layout.fragment_calendar),
+    CalendarTasksAdapter.OnItemClickListener {
 
     private val viewModel: TodayViewModel by viewModels()
 
@@ -40,44 +42,46 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
             setHasFixedSize(true)
         }
 
-        /*binding.addTaskOfToday.setOnClickListener {
-            viewModel.onAddNewTaskClick()
-        }*/
-
         viewModel.calendarTasks.observe(viewLifecycleOwner) {
             taskAdapter.submitList(it)
         }
 
         setUpCurrentTimeIndicator(binding)
 
-
-
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
-                                viewModel.onUndoDeleteClick(event.extendedTask)
+                                viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask)
                             }.show()
                     }
-                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = TodayFragmentDirections.actionTodayToAddEditTask(title = "Add new task", categoryId = 1)
+                    is TasksEvent.NavigateToAddTaskScreen -> {
+                        val action = TodayFragmentDirections.actionTodayToAddEditTask(
+                            title = "Add new task",
+                            categoryId = 1
+                        )
                         findNavController().navigate(action)
                     }
-                    is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                    is TasksEvent.NavigateToEditExtendedTaskScreen -> {
                         val task = event.extendedTask.toTask()
-                        val action = TodayFragmentDirections.actionTodayToAddEditTask(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
+                        val action = TodayFragmentDirections.actionTodayToAddEditTask(
+                            title = "Edit task",
+                            categoryId = event.extendedTask.categoryId,
+                            task = task
+                        )
                         findNavController().navigate(action)
                     }
-                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    is TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
-                    is TasksViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                        val action =
+                            ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
-                }.exhaustive
+                }
             }
         }
 
@@ -89,7 +93,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
         val currentDate = sdf.format(Date())
         val minutes = timeToMinutes(currentDate)
 
-        val layoutParams: ViewGroup.MarginLayoutParams = binding.currentTime.layoutParams as ViewGroup.MarginLayoutParams
+        val layoutParams: ViewGroup.MarginLayoutParams =
+            binding.currentTime.layoutParams as ViewGroup.MarginLayoutParams
         layoutParams.topMargin = convertDpToPx(minutes - TIME_OFFSET)
         binding.currentTime.requestLayout()
     }
@@ -104,7 +109,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
                 viewModel.onHideCompletedClick(item.isChecked)
@@ -119,10 +124,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar), CalendarTasksAdap
     }
 
     override fun onItemClick(extendedTask: ExtendedTask) {
-        viewModel.onTaskSelected(extendedTask)
+        viewModel.onExtendedTaskSelected(extendedTask)
     }
 
     override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-        viewModel.onTaskCheckedChanged(extendedTask, isChecked)
+        viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
     }
 }

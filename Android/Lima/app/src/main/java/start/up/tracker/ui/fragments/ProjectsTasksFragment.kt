@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,8 +23,8 @@ import start.up.tracker.R
 import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.FragmentCategoryInsideBinding
 import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
+import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.list.adapters.ProjectsTasksAdapter
-import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.onQueryTextChanged
 
 /**
@@ -84,28 +84,28 @@ class ProjectsTasksFragment : Fragment(R.layout.fragment_category_inside), Proje
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is ProjectsTasksViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    is TasksEvent.ShowUndoDeleteTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
-                                viewModel.onUndoDeleteClick(event.task)
+                                viewModel.onUndoDeleteTaskClick(event.task)
                             }.show()
                     }
-                    is ProjectsTasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                    is TasksEvent.NavigateToAddTaskScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(title = "Add new task", categoryId = viewModel.categoryId)
                         findNavController().navigate(action)
                     }
-                    is ProjectsTasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                    is TasksEvent.NavigateToEditTaskScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(event.task, "Edit task", viewModel.categoryId)
                         findNavController().navigate(action)
                     }
-                    is ProjectsTasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    is TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
-                    is ProjectsTasksViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                    is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
-                }.exhaustive
+                }
             }
         }
 

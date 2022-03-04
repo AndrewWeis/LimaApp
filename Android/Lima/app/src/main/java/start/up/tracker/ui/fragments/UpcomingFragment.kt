@@ -20,10 +20,9 @@ import start.up.tracker.R
 import start.up.tracker.data.entities.ExtendedTask
 import start.up.tracker.data.entities.UpcomingSection
 import start.up.tracker.databinding.FragmentUpcomingBinding
-import start.up.tracker.mvvm.view_models.tasks.TasksViewModel
-import start.up.tracker.ui.list.adapters.UpcomingAdapter
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
-import start.up.tracker.utils.exhaustive
+import start.up.tracker.ui.data.entities.TasksEvent
+import start.up.tracker.ui.list.adapters.UpcomingAdapter
 import start.up.tracker.utils.toTask
 
 @AndroidEntryPoint
@@ -58,29 +57,29 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
-                                viewModel.onUndoDeleteClick(event.extendedTask)
+                                viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask)
                             }.show()
                     }
-                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                    is TasksEvent.NavigateToAddTaskScreen -> {
                         val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(title = "Add new task", categoryId = 1)
                         findNavController().navigate(action)
                     }
-                    is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                    is TasksEvent.NavigateToEditExtendedTaskScreen -> {
                         val task = event.extendedTask.toTask()
                         val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
                         findNavController().navigate(action)
                     }
-                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    is TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
-                    is TasksViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                    is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
-                }.exhaustive
+                }
             }
         }
 

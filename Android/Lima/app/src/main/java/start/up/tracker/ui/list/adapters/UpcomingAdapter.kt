@@ -46,7 +46,7 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                             val task = sectionAdapter.currentList[viewHolder.adapterPosition]
-                            viewModel.onTaskSwiped(task)
+                            viewModel.onExtendedTaskSwiped(task)
                         }
                     }).attachToRecyclerView(sectionRV)
                 }
@@ -56,11 +56,11 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
         }
 
         override fun onItemClick(extendedTask: ExtendedTask) {
-            viewModel.onTaskSelected(extendedTask)
+            viewModel.onExtendedTaskSelected(extendedTask)
         }
 
         override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-            viewModel.onTaskCheckedChanged(extendedTask, isChecked)
+            viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
         }
 
     }
