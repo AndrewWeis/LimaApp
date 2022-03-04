@@ -32,81 +32,26 @@ class ProjectsTasksFragment :
 
     private val viewModel: ProjectsTasksViewModel by viewModels()
 
+    private var binding: FragmentCategoryInsideBinding? = null
+    private lateinit var taskAdapter: ProjectsTasksAdapter
+
     private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentCategoryInsideBinding.bind(view)
 
-        val binding = FragmentCategoryInsideBinding.bind(view)
-
-        val taskAdapter = ProjectsTasksAdapter(this)
-
-        binding.apply {
-            categoryInsideRv.apply {
-                adapter = taskAdapter
-                layoutManager = LinearLayoutManager(requireContext())
-                setHasFixedSize(true)
-            }
-
-            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val task = taskAdapter.currentList[viewHolder.adapterPosition]
-                    viewModel.onTaskSwiped(task)
-                }
-            }).attachToRecyclerView(categoryInsideRv)
-
-            addTaskOfCategoryFAB.setOnClickListener {
-                viewModel.onAddNewTaskClick()
-            }
-        }
-
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(result)
-        }
-
-        viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
-        }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-            viewModel.tasksEvent.collect { event ->
-                when (event) {
-                    is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                        showUndoDeleteSnackbar() { viewModel.onUndoDeleteTaskClick(event.task) }
-                    }
-                    is TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(
-                            title = "Add new task",
-                            categoryId = viewModel.categoryId
-                        )
-                        navigateTo(action)
-                    }
-                    is TasksEvent.NavigateToEditTaskScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(event.task, "Edit task", viewModel.categoryId)
-                        navigateTo(action)
-                    }
-                    is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                        showTaskSavedMessage(event.msg)
-                    }
-                    is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
-                        navigateTo(action)
-                    }
-                }
-            }
-        }
+        initAdapter()
+        initListeners()
+        initTaskEventListener()
 
         setHasOptionsMenu(true)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
+        binding = null
     }
 
     override fun onItemClick(task: Task) {
@@ -126,7 +71,7 @@ class ProjectsTasksFragment :
         val pendingQuery = viewModel.searchQuery.value
         if (pendingQuery != null && pendingQuery.isNotEmpty()) {
             searchItem.expandActionView()
-            searchView.setQuery(pendingQuery, false )
+            searchView.setQuery(pendingQuery, false)
         }
 
         searchView.onQueryTextChanged {
@@ -140,7 +85,7 @@ class ProjectsTasksFragment :
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
                 viewModel.onHideCompletedClick(item.isChecked)
@@ -154,8 +99,89 @@ class ProjectsTasksFragment :
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        searchView.setOnQueryTextListener(null)
+    private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewModel.tasksEvent.collect { event ->
+            when (event) {
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar() { viewModel.onUndoDeleteTaskClick(event.task) }
+                }
+
+                is TasksEvent.NavigateToAddTaskScreen -> {
+                    val action =
+                        ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(
+                            title = "Add new task",
+                            categoryId = viewModel.categoryId
+                        )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.NavigateToEditTaskScreen -> {
+                    val action =
+                        ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(
+                            event.task,
+                            "Edit task",
+                            viewModel.categoryId
+                        )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    showTaskSavedMessage(event.msg)
+                }
+
+                is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                    val action =
+                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    navigateTo(action)
+                }
+            }
+        }
+    }
+
+    private fun initListeners() {
+        binding?.addTaskOfCategoryFAB?.setOnClickListener {
+            viewModel.onAddNewTaskClick()
+        }
+
+        setFragmentResultListener("add_edit_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_result")
+            viewModel.onAddEditResult(result)
+        }
+
+        viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
+            taskAdapter.submitList(it)
+        }
+    }
+
+    private fun initAdapter() {
+        taskAdapter = ProjectsTasksAdapter(this)
+
+        binding?.categoryInsideRv?.apply {
+            adapter = taskAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
+
+        attachSwipeToAdapter()
+    }
+
+    private fun attachSwipeToAdapter() {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val task = taskAdapter.currentList[viewHolder.adapterPosition]
+                viewModel.onTaskSwiped(task)
+            }
+        }).attachToRecyclerView(binding?.categoryInsideRv)
     }
 }

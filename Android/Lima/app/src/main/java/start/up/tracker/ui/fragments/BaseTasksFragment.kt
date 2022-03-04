@@ -6,12 +6,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 
 open class BaseTasksFragment(
-    val layoutResId: Int
+    private val layoutResId: Int
 ) : Fragment(layoutResId) {
 
     fun showUndoDeleteSnackbar(action: () -> Unit) {
         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
-            .setAction("UNDO") { action }
+            .setAction("UNDO") { action() }
             .show()
     }
 
