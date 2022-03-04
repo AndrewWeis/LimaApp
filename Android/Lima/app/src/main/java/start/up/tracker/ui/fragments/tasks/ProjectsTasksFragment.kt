@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments
+package start.up.tracker.ui.fragments.tasks
 
 import android.os.Bundle
 import android.view.Menu

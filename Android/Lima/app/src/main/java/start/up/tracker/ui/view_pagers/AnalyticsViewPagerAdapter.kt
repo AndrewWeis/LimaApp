@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import start.up.tracker.ui.fragments.AnalyticsYearFragment
-import start.up.tracker.ui.fragments.AnalyticsMonthFragment
+import start.up.tracker.ui.fragments.analytics.AnalyticsYearFragment
+import start.up.tracker.ui.fragments.analytics.AnalyticsMonthFragment
 
 class AnalyticsViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {

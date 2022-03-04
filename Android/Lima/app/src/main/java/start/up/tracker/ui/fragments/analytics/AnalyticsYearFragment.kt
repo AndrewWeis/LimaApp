@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments
+package start.up.tracker.ui.fragments.analytics
 
 import android.os.Bundle
 import android.view.View
@@ -11,22 +11,22 @@ import com.anychart.enums.Position
 import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
-import start.up.tracker.databinding.FragmentAnalyticsMonthBinding
-import start.up.tracker.mvvm.view_models.analytics.AnalyticsMonthViewModel
+import start.up.tracker.databinding.FragmentAnalyticsYearBinding
+import start.up.tracker.mvvm.view_models.analytics.AnalyticsYearViewModel
 
 @AndroidEntryPoint
-class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
+class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
 
-    private val viewModel: AnalyticsMonthViewModel by viewModels()
-    private lateinit var binding: FragmentAnalyticsMonthBinding
+    private val viewModel: AnalyticsYearViewModel by viewModels()
+    private lateinit var binding: FragmentAnalyticsYearBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAnalyticsMonthBinding.bind(view)
+        binding = FragmentAnalyticsYearBinding.bind(view)
 
-        binding.lineChartMonth.setProgressBar(binding.progressBar)
+        binding.lineChartYear.setProgressBar(binding.progressBar)
 
-        viewModel.statMonth.observe(viewLifecycleOwner) {
+        viewModel.statYear.observe(viewLifecycleOwner) {
             if (it == true) {
                 initTasksChart()
             }
@@ -34,7 +34,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     }
 
     private fun initTasksChart() {
-
         val chart = AnyChart.column()
         val column = chart.column(viewModel.data)
 
@@ -44,10 +43,10 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             .anchor(Anchor.CENTER_BOTTOM)
             .offsetX(5.0)
             .offsetY(5.0)
-            .format("Tasks: {%Value}{groupsSeparator: }");
+            .format("Tasks: {%Value}{groupsSeparator: }")
 
         chart.xAxis(0).labels().fontSize(10)
-        chart.xAxis(0).title(viewModel.currentMonthName)
+        chart.xAxis(0).title(viewModel.currentYear);
 
         chart.yScale().minimumGap(1)
         chart.yAxis(0).labels().fontSize(10)
@@ -61,6 +60,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chart.tooltip().positionMode(TooltipPositionMode.POINT)
         chart.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding.lineChartMonth.setChart(chart)
+        binding.lineChartYear.setChart(chart)
     }
 }

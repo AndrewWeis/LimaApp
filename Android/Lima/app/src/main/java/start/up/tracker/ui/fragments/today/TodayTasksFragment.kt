@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments
+package start.up.tracker.ui.fragments.today
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,52 +6,70 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_today_tasks.view.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.entities.ExtendedTask
-import start.up.tracker.data.entities.UpcomingSection
-import start.up.tracker.databinding.FragmentUpcomingBinding
-import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
+import start.up.tracker.databinding.FragmentTodayTasksBinding
+import start.up.tracker.mvvm.view_models.today.TodayViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
-import start.up.tracker.ui.list.adapters.UpcomingAdapter
+import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
+import start.up.tracker.ui.list.adapters.TodayTasksAdapter
 import start.up.tracker.utils.toTask
 
 @AndroidEntryPoint
-class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
+class TodayTasksFragment :
+    Fragment(R.layout.fragment_today_tasks),
+    TodayTasksAdapter.OnItemClickListener {
 
-    private val viewModel: UpcomingViewModel by viewModels()
+    private val viewModel: TodayViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentUpcomingBinding.bind(view)
+        val binding = FragmentTodayTasksBinding.bind(view)
 
-        val upcomingAdapter = UpcomingAdapter(viewModel)
-
-        binding.upcomingRV.apply {
-            adapter = upcomingAdapter
+        val taskAdapter = TodayTasksAdapter(this)
+        binding.todayTaskRV.apply {
+            itemAnimator = null
+            adapter = taskAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val todayTask = taskAdapter.currentList[viewHolder.adapterPosition]
+                    viewModel.onExtendedTaskSwiped(todayTask)
+                }
+            }).attachToRecyclerView(todayTaskRV)
         }
 
-        viewModel.upcomingTasks.observe(viewLifecycleOwner) { tasks ->
-            separateDataAndSubmit(tasks, upcomingAdapter)
-        }
-
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(result)
-        }
-
-        binding.addTask.setOnClickListener {
+        binding.addTaskOfToday.setOnClickListener {
             viewModel.onAddNewTaskClick()
+        }
+
+        viewModel.todayTasks.observe(viewLifecycleOwner) {
+            taskAdapter.submitList(it)
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -64,19 +82,27 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
                             }.show()
                     }
                     is TasksEvent.NavigateToAddTaskScreen -> {
-                        val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(title = "Add new task", categoryId = 1)
+                        val action = TodayFragmentDirections.actionTodayToAddEditTask(
+                            title = "Add new task",
+                            categoryId = 1
+                        )
                         findNavController().navigate(action)
                     }
                     is TasksEvent.NavigateToEditExtendedTaskScreen -> {
                         val task = event.extendedTask.toTask()
-                        val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
+                        val action = TodayFragmentDirections.actionTodayToAddEditTask(
+                            title = "Edit task",
+                            categoryId = event.extendedTask.categoryId,
+                            task = task
+                        )
                         findNavController().navigate(action)
                     }
                     is TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                     is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                        val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                        val action =
+                            ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }
                 }
@@ -84,21 +110,6 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
         }
 
         setHasOptionsMenu(true)
-    }
-
-    private fun separateDataAndSubmit(tasks: List<ExtendedTask>, adapter: UpcomingAdapter) {
-        val sectionsList: MutableList<UpcomingSection> = mutableListOf()
-        val tasksList: MutableList<ExtendedTask> = mutableListOf()
-
-        for (i in tasks.indices) {
-            tasksList.add(tasks[i])
-            if (i+1 == tasks.size || tasks[i].dateLong != tasks[i+1].dateLong) {
-                sectionsList.add(UpcomingSection(tasks[i].date, tasksList.toList()))
-                tasksList.clear()
-            }
-        }
-
-        adapter.submitList(sectionsList.toList())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -111,7 +122,7 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_hide_completed_tasks -> {
                 item.isChecked = !item.isChecked
                 viewModel.onHideCompletedClick(item.isChecked)
@@ -123,5 +134,13 @@ class UpcomingFragment : Fragment(R.layout.fragment_upcoming) {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onItemClick(extendedTask: ExtendedTask) {
+        viewModel.onExtendedTaskSelected(extendedTask)
+    }
+
+    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
+        viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
     }
 }
