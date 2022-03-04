@@ -35,6 +35,21 @@ object AppModule {
     @Provides
     fun provideAnalyticsDao(db: TaskDatabase) = db.analyticsDao()
 
+    @Provides
+    fun provideCategoriesDao(db: TaskDatabase) = db.categoriesDao()
+
+    @Provides
+    fun provideTodayTasksDao(db: TaskDatabase) = db.todayTasksDao()
+
+    @Provides
+    fun provideCalendarTasksDao(db: TaskDatabase) = db.calendarTasksDao()
+
+    @Provides
+    fun provideUpcomingTasksDao(db: TaskDatabase) = db.upcomingTasksDao()
+
+    @Provides
+    fun provideCrossRefDao(db: TaskDatabase) = db.crossRefDao()
+
     @ApplicationScope
     @Provides
     @Singleton

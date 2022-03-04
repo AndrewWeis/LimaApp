@@ -5,9 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.ArticlesDao
-import start.up.tracker.data.database.dao.AnalyticsDao
-import start.up.tracker.data.database.dao.TaskDao
+import start.up.tracker.data.database.dao.*
 import start.up.tracker.data.entities.Article
 import start.up.tracker.data.entities.Category
 import start.up.tracker.data.entities.DayStat
@@ -26,6 +24,11 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
     abstract fun articlesDao(): ArticlesDao
     abstract fun analyticsDao(): AnalyticsDao
+    abstract fun categoriesDao(): CategoriesDao
+    abstract fun todayTasksDao(): TodayTasksDao
+    abstract fun calendarTasksDao(): CalendarTasksDao
+    abstract fun upcomingTasksDao(): UpcomingTasksDao
+    abstract fun crossRefDao(): CrossRefDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,
@@ -34,13 +37,13 @@ abstract class TaskDatabase : RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
 
-            val taskDao = database.get().taskDao()
+            val categoriesDao = database.get().categoriesDao()
             val articlesDao = database.get().articlesDao()
 
             applicationScope.launch {
 
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
-                taskDao.insertCategory(Category("Inbox"))
+                categoriesDao.insertCategory(Category("Inbox"))
 
                 val articles = ArticleStorage.getArticles().toTypedArray()
                 articlesDao.insertAllArticles(*articles)

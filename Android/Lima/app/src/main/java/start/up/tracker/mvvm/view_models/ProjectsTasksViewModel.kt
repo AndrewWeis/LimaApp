@@ -10,6 +10,7 @@ import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
 import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
 import start.up.tracker.data.database.PreferencesManager
 import start.up.tracker.data.database.dao.AnalyticsDao
+import start.up.tracker.data.database.dao.CrossRefDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
 import start.up.tracker.data.entities.DayStat
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class ProjectsTasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val analyticsDao: AnalyticsDao,
+    private val crossRefDao: CrossRefDao,
     private val preferencesManager: PreferencesManager,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
@@ -74,14 +76,14 @@ class ProjectsTasksViewModel @Inject constructor(
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
-        taskDao.deleteCrossRefByTaskId(task.taskId)
+        crossRefDao.deleteCrossRefByTaskId(task.taskId)
         taskDao.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 
     fun onUndoDeleteClick(task: Task) = viewModelScope.launch {
         val crossRef = TaskCategoryCrossRef(task.taskId, categoryId)
-        taskDao.insertTaskCategoryCrossRef(crossRef)
+        crossRefDao.insertTaskCategoryCrossRef(crossRef)
         taskDao.insertTask(task)
     }
 

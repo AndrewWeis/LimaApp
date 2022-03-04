@@ -9,14 +9,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
+import start.up.tracker.data.constants.DEFAULT_PROJECT_COLOR
+import start.up.tracker.data.database.dao.CategoriesDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
-import start.up.tracker.data.constants.DEFAULT_PROJECT_COLOR
 import javax.inject.Inject
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val categoriesDao: CategoriesDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
@@ -34,10 +36,8 @@ class AddCategoryViewModel @Inject constructor(
             state.set("color", value)
         }
 
-
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
     val addCategoryEvent = addCategoryEventChannel.receiveAsFlow()
-
 
     fun onSaveClick() {
         if (categoryName.isBlank()) {
@@ -50,7 +50,7 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     private fun createCategory(category: Category) = viewModelScope.launch {
-        taskDao.insertCategory(category)
+        categoriesDao.insertCategory(category)
         addCategoryEventChannel.send(AddCategoryEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 

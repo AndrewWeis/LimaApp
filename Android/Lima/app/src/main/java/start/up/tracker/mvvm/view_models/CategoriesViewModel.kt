@@ -5,7 +5,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import start.up.tracker.data.database.dao.CategoriesDao
 import start.up.tracker.data.database.dao.TaskDao
+import start.up.tracker.data.database.dao.TodayTasksDao
+import start.up.tracker.data.database.dao.UpcomingTasksDao
 import start.up.tracker.data.entities.Category
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,9 +17,12 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val categoriesDao: CategoriesDao,
+    private val todayTasksDao: TodayTasksDao,
+    private val upcomingTasksDao: UpcomingTasksDao
 ) : ViewModel() {
 
-    private val _categories = taskDao.getCategories().asLiveData()
+    private val _categories = categoriesDao.getCategories().asLiveData()
 
     val categories: LiveData<List<Category>> =
         Transformations.map(_categories) {
@@ -34,21 +40,20 @@ class CategoriesViewModel @Inject constructor(
     private val getInboxTasksCountFlow = taskDao.countTasksOfInbox()
     val getInboxTasksCount = getInboxTasksCountFlow.asLiveData()
 
-
     private val formatter = SimpleDateFormat("dd.MM.yyyy")
     private val currentDate: String = formatter.format(Date())
     private val currentDateLong = Date().time
 
-    private val todayTasksCountFlow = taskDao.countTodayTasks(currentDate)
+    private val todayTasksCountFlow = todayTasksDao.countTodayTasks(currentDate)
     val todayTasksCount = todayTasksCountFlow.asLiveData()
 
-    private val upcomingTasksCountFlow = taskDao.countUpcomingTasks(currentDateLong)
+    private val upcomingTasksCountFlow = upcomingTasksDao.countUpcomingTasks(currentDateLong)
     val upcomingTasksCount = upcomingTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         _categories.value?.forEach {
             val number = taskDao.countTasksOfCategory(it.categoryId, true)
-            taskDao.updateCategory(it.copy(tasksInside = number))
+            categoriesDao.updateCategory(it.copy(tasksInside = number))
         }
     }
 

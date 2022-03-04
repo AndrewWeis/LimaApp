@@ -5,6 +5,7 @@ import start.up.tracker.data.entities.DayStat
 
 @Dao
 interface AnalyticsDao {
+
     @Query("SELECT * FROM daystat WHERE year =:year AND month =:month")
     suspend fun getStatMonth(year: Int, month: Int): List<DayStat>
 

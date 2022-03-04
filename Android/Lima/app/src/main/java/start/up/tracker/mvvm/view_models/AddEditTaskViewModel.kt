@@ -1,7 +1,10 @@
 package start.up.tracker.mvvm.view_models
 
 import androidx.hilt.Assisted
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.asFlow
@@ -11,9 +14,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
 import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
-import start.up.tracker.data.entities.Task
+import start.up.tracker.data.database.dao.CategoriesDao
+import start.up.tracker.data.database.dao.CrossRefDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
+import start.up.tracker.data.entities.Task
 import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.utils.timeToMinutes
 import java.text.SimpleDateFormat
@@ -22,6 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val categoriesDao: CategoriesDao,
+    private val crossRefDao: CrossRefDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
@@ -71,11 +78,10 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
     val categoryId = state.get<Int>("categoryId") ?: -1
-    val categories = taskDao.getCategories()
+    val categories = categoriesDao.getCategories()
 
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
-
 
     /**
      * This variable stores all categories and categories of the specific task.
@@ -85,7 +91,6 @@ class AddEditTaskViewModel @Inject constructor(
             Pair(set, subset)
         }
     }.asLiveData()
-
 
     fun priorityToInt(checkedPriority: String): Int {
         return when (checkedPriority) {
@@ -102,7 +107,14 @@ class AddEditTaskViewModel @Inject constructor(
         return simpleDateFormat.format(it)
     }
 
-    fun onSaveClick(checkedChip: String, date: String, dateLong: Long, timeStart: String, timeEnd: String, priority: Int) {
+    fun onSaveClick(
+        checkedChip: String,
+        date: String,
+        dateLong: Long,
+        timeStart: String,
+        timeEnd: String,
+        priority: Int
+    ) {
 
         // ---------- VALIDATION START ----------
 
@@ -122,29 +134,48 @@ class AddEditTaskViewModel @Inject constructor(
         // ---------- VALIDATION END ----------
 
         if (task != null) { // edit exciting task mode
-            val updatedTask = task.copy(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            val updatedTask = task.copy(
+                taskName = taskName,
+                taskDesc = taskDesc,
+                priority = priority,
+                date = date,
+                dateLong = dateLong,
+                timeStart = timeStart,
+                timeEnd = timeEnd,
+                timeStartInt = timeStartInt,
+                timeEndInt = timeEndInt
+            )
             updatedTask(updatedTask, checkedChip)
         } else { // create new task mode
-            val newTask = Task(taskName = taskName, taskDesc = taskDesc, priority = priority, date = date, dateLong = dateLong, timeStart = timeStart, timeEnd = timeEnd, timeStartInt = timeStartInt, timeEndInt = timeEndInt)
+            val newTask = Task(
+                taskName = taskName,
+                taskDesc = taskDesc,
+                priority = priority,
+                date = date,
+                dateLong = dateLong,
+                timeStart = timeStart,
+                timeEnd = timeEnd,
+                timeStartInt = timeStartInt,
+                timeEndInt = timeEndInt
+            )
             createTask(newTask, checkedChip)
         }
-
     }
 
-    private fun createCrossRef(CrossRef: TaskCategoryCrossRef) = viewModelScope.launch {
-        taskDao.insertTaskCategoryCrossRef(CrossRef)
+    private fun createCrossRef(crossRef: TaskCategoryCrossRef) = viewModelScope.launch {
+        crossRefDao.insertTaskCategoryCrossRef(crossRef)
     }
 
     private fun deleteCrossRefByTaskId(taskId: Int) = viewModelScope.launch {
-        taskDao.deleteCrossRefByTaskId(taskId)
+        crossRefDao.deleteCrossRefByTaskId(taskId)
     }
 
     private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {
-        val categoryId = taskDao.getCategoryIdByName(categoryName)
+        val categoryId = categoriesDao.getCategoryIdByName(categoryName)
         val taskId = taskDao.getTaskMaxId() ?: 0
-        val newCrossRef = TaskCategoryCrossRef(taskId = taskId+1, categoryId = categoryId)
+        val newCrossRef = TaskCategoryCrossRef(taskId = taskId + 1, categoryId = categoryId)
 
-        taskDao.insertTask(task.copy(taskId = taskId+1))
+        taskDao.insertTask(task.copy(taskId = taskId + 1))
         createCrossRef(newCrossRef)
 
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
@@ -152,13 +183,14 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun updatedTask(task: Task, categoryName: String) = viewModelScope.launch {
 
-        val crossRef = taskDao.getCrossRefByTaskId(task.taskId)
-        val currCategoryId = taskDao.getCategoryIdByName(categoryName)
+        val crossRef = crossRefDao.getCrossRefByTaskId(task.taskId)
+        val currCategoryId = categoriesDao.getCategoryIdByName(categoryName)
 
         // if category has changed
         if (crossRef.categoryId != currCategoryId) {
             deleteCrossRefByTaskId(task.taskId)
-            val newCrossRef = TaskCategoryCrossRef(taskId = task.taskId, categoryId = currCategoryId)
+            val newCrossRef =
+                TaskCategoryCrossRef(taskId = task.taskId, categoryId = currCategoryId)
             createCrossRef(newCrossRef)
         }
 
