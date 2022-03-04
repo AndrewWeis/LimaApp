@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models
+package start.up.tracker.mvvm.view_models.categories
 
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel

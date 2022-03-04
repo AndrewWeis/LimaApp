@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.*
 import start.up.tracker.data.entities.ExtendedTask
 import start.up.tracker.data.entities.UpcomingSection
 import start.up.tracker.databinding.ItemUpcomingSectionBinding
-import start.up.tracker.mvvm.view_models.UpcomingViewModel
+import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 
 
 class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSection,

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.collect
 import petrov.kristiyan.colorpicker.ColorPicker
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddCategoryBinding
-import start.up.tracker.mvvm.view_models.AddCategoryViewModel
+import start.up.tracker.mvvm.view_models.categories.AddCategoryViewModel
 import start.up.tracker.utils.exhaustive
 
 @AndroidEntryPoint

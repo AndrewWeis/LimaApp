@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models
+package start.up.tracker.mvvm.view_models.analytics
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

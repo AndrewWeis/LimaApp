@@ -21,9 +21,9 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.entities.ExtendedTask
 import start.up.tracker.databinding.FragmentTodayTasksBinding
-import start.up.tracker.mvvm.view_models.BaseViewModel
+import start.up.tracker.mvvm.view_models.tasks.TasksViewModel
 import start.up.tracker.ui.list.adapters.TodayTasksAdapter
-import start.up.tracker.mvvm.view_models.TodayViewModel
+import start.up.tracker.mvvm.view_models.today.TodayViewModel
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.toTask
 
@@ -73,25 +73,25 @@ class TodayTasksFragment : Fragment(R.layout.fragment_today_tasks),
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is BaseViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    is TasksViewModel.TasksEvent.ShowUndoDeleteTaskMessage -> {
                         Snackbar.make(requireView(), "Task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
                                 viewModel.onUndoDeleteClick(event.extendedTask)
                             }.show()
                     }
-                    is BaseViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                    is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
                         val action = TodayFragmentDirections.actionTodayToAddEditTask(title = "Add new task", categoryId = 1)
                         findNavController().navigate(action)
                     }
-                    is BaseViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                    is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
                         val task = event.extendedTask.toTask()
                         val action = TodayFragmentDirections.actionTodayToAddEditTask(title = "Edit task", categoryId = event.extendedTask.categoryId, task = task)
                         findNavController().navigate(action)
                     }
-                    is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
-                    is BaseViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
+                    is TasksViewModel.TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                         val action = ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                         findNavController().navigate(action)
                     }

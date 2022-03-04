@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models
+package start.up.tracker.mvvm.view_models.tasks
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -18,7 +18,7 @@ import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.utils.toTask
 import java.util.*
 
-abstract class BaseViewModel(
+abstract class TasksViewModel(
     private val taskDao: TaskDao,
     private val crossRefDao: CrossRefDao,
     private val analyticsDao: AnalyticsDao,

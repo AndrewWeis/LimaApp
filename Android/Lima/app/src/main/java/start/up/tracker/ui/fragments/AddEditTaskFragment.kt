@@ -23,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAddEditTaskBinding
-import start.up.tracker.mvvm.view_models.AddEditTaskViewModel
+import start.up.tracker.mvvm.view_models.tasks.AddEditTaskViewModel
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.timeToMinutes
 import kotlin.properties.Delegates.notNull

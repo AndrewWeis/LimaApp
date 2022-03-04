@@ -6,7 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import start.up.tracker.mvvm.view_models.DeleteAllCompletedViewModel
+import start.up.tracker.mvvm.view_models.tasks.DeleteAllCompletedViewModel
 
 @AndroidEntryPoint
 class DeleteAllCompletedDialogFragment : DialogFragment() {

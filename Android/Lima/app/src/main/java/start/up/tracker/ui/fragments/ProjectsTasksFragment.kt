@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.FragmentCategoryInsideBinding
-import start.up.tracker.mvvm.view_models.ProjectsTasksViewModel
+import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
 import start.up.tracker.ui.list.adapters.ProjectsTasksAdapter
 import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.onQueryTextChanged

@@ -1,7 +1,6 @@
 package start.up.tracker.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -10,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.data.entities.Article
 import start.up.tracker.databinding.FragmentArticlesBinding
-import start.up.tracker.mvvm.view_models.ArticlesViewModel
+import start.up.tracker.mvvm.view_models.articles.ArticlesViewModel
 import start.up.tracker.ui.list.adapters.ArticlesAdapter
 
 @AndroidEntryPoint

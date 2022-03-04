@@ -12,7 +12,7 @@ import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAnalyticsMonthBinding
-import start.up.tracker.mvvm.view_models.AnalyticsMonthViewModel
+import start.up.tracker.mvvm.view_models.analytics.AnalyticsMonthViewModel
 
 @AndroidEntryPoint
 class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {

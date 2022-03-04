@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models
+package start.up.tracker.mvvm.view_models.tasks
 
 import androidx.hilt.Assisted
 import androidx.lifecycle.SavedStateHandle

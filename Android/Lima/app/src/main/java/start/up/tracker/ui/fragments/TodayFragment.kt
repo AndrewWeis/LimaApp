@@ -12,8 +12,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentTodayBinding
-import start.up.tracker.mvvm.view_models.BaseViewModel
-import start.up.tracker.mvvm.view_models.TodayViewModel
+import start.up.tracker.mvvm.view_models.tasks.TasksViewModel
+import start.up.tracker.mvvm.view_models.today.TodayViewModel
 import start.up.tracker.ui.view_pagers.ViewPagerAdapter
 
 @AndroidEntryPoint
@@ -33,7 +33,7 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
-                    is BaseViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
+                    is TasksViewModel.TasksEvent.ShowTaskSavedConfirmationMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                 }

@@ -12,7 +12,7 @@ import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentAnalyticsYearBinding
-import start.up.tracker.mvvm.view_models.AnalyticsYearViewModel
+import start.up.tracker.mvvm.view_models.analytics.AnalyticsYearViewModel
 
 @AndroidEntryPoint
 class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
