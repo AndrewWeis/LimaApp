@@ -3,7 +3,7 @@
     package="start.up.tracker">
 
     <application
-        android:name=".MVVMApplication"
+        android:name=".application.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/TrackerTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
 

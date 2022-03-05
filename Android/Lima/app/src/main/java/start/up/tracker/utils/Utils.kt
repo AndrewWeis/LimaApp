@@ -2,8 +2,8 @@ package start.up.tracker.utils
 
 import android.content.res.Resources
 import start.up.tracker.R
-import start.up.tracker.data.models.Task
-import start.up.tracker.data.models.ExtendedTask
+import start.up.tracker.data.entities.Task
+import start.up.tracker.data.entities.ExtendedTask
 
 val <T> T.exhaustive: T
     get() = this

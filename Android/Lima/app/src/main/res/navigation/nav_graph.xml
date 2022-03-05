@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/addEditTaskFragment"
-        android:name="start.up.tracker.ui.addedittask.AddEditTaskFragment"
+        android:name="start.up.tracker.ui.fragments.tasks.AddEditTaskFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_add_edit_task">
         <argument
             android:name="task"
             android:defaultValue="@null"
-            app:argType="start.up.tracker.data.models.Task"
+            app:argType="start.up.tracker.data.entities.Task"
             app:nullable="true" />
         <argument
             android:name="title"
@@ -25,52 +25,56 @@
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
-        android:name="start.up.tracker.ui.analytics.AnalyticsFragment"
+        android:name="start.up.tracker.ui.fragments.analytics.AnalyticsFragment"
         android:label="Analytics"
         tools:layout="@layout/fragment_analytics" />
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="start.up.tracker.ui.categories.CategoriesFragment"
+        android:name="start.up.tracker.ui.fragments.categories.CategoriesFragment"
         android:label="Home"
         tools:layout="@layout/fragment_categories">
         <action
-            android:id="@+id/action_categoryFragment_to_categoryInsideFragment"
+            android:id="@+id/action_category_to_categoryInside"
             app:destination="@id/categoryInsideFragment" />
         <action
-            android:id="@+id/action_categoryFragment_to_addCategoryFragment"
+            android:id="@+id/action_category_to_addCategory"
             app:destination="@id/addCategoryFragment" />
         <action
-            android:id="@+id/action_categoryFragment_to_todayFragment"
+            android:id="@+id/action_category_to_today"
             app:destination="@id/todayFragment" />
         <action
-            android:id="@+id/action_categoryFragment_to_upcomingFragment"
+            android:id="@+id/action_category_to_upcoming"
             app:destination="@id/upcomingFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="start.up.tracker.ui.settings.SettingsFragment"
+        android:name="start.up.tracker.ui.fragments.settings.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settings_to_articles"
+            app:destination="@id/articlesFragment" />
+    </fragment>
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
-        android:name="start.up.tracker.ui.deleteallcompleted.DeleteAllCompletedDialogFragment"
+        android:name="start.up.tracker.ui.fragments.DeleteAllCompletedDialogFragment"
         android:label="DeleteAllCompletedDialogFragment" />
     <action
-        android:id="@+id/action_global_deleteAllCompletedDialogFragment"
+        android:id="@+id/action_global_deleteAllCompletedDialog"
         app:destination="@id/deleteAllCompletedDialogFragment" />
     <fragment
         android:id="@+id/categoryInsideFragment"
-        android:name="start.up.tracker.ui.projectstasks.ProjectsTasksFragment"
+        android:name="start.up.tracker.ui.fragments.tasks.ProjectsTasksFragment"
         android:label="{titleCategory}"
         tools:layout="@layout/fragment_category_inside">
         <argument
             android:name="category"
-            app:argType="start.up.tracker.data.models.Category" />
+            app:argType="start.up.tracker.data.entities.Category" />
         <argument
             android:name="categoryId"
             app:argType="integer" />
         <action
-            android:id="@+id/action_categoryInsideFragment_to_addEditTaskFragment"
+            android:id="@+id/action_categoryInside_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
         <argument
             android:name="titleCategory"
@@ -78,37 +82,42 @@
     </fragment>
     <fragment
         android:id="@+id/addCategoryFragment"
-        android:name="start.up.tracker.ui.addcategory.AddCategoryFragment"
+        android:name="start.up.tracker.ui.fragments.categories.AddCategoryFragment"
         android:label="Add new project"
         tools:layout="@layout/fragment_add_category" />
     <fragment
         android:id="@+id/todayFragment"
-        android:name="start.up.tracker.ui.today.TodayFragment"
+        android:name="start.up.tracker.ui.fragments.today.TodayFragment"
         android:label="{todayDate}"
         tools:layout="@layout/fragment_today">
         <argument
             android:name="todayDate"
             app:argType="string" />
         <action
-            android:id="@+id/action_todayFragment_to_addEditTaskFragment"
+            android:id="@+id/action_today_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/todayTasksFragment"
-        android:name="start.up.tracker.ui.today.TodayTasksFragment"
+        android:name="start.up.tracker.ui.fragments.today.TodayTasksFragment"
         android:label="{todayDate}"
         tools:layout="@layout/fragment_today_tasks">
         <action
-            android:id="@+id/action_todayTasksFragment_to_addEditTaskFragment"
+            android:id="@+id/action_todayTasks_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/upcomingFragment"
-        android:name="start.up.tracker.ui.upcoming.UpcomingFragment"
+        android:name="start.up.tracker.ui.fragments.upcoming.UpcomingFragment"
         android:label="Upcoming"
         tools:layout="@layout/fragment_upcoming" >
         <action
-            android:id="@+id/action_upcomingFragment_to_addEditTaskFragment"
+            android:id="@+id/action_upcoming_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/articlesFragment"
+        android:name="start.up.tracker.ui.fragments.articles.ArticlesFragment"
+        android:label="Articles"
+        tools:layout="@layout/fragment_articles" />
 </navigation>
