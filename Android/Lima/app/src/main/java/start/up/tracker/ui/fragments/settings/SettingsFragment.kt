@@ -10,23 +10,39 @@ import start.up.tracker.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
+    // todo (recode using adapter)
+
+    private var binding: FragmentSettingsBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentSettingsBinding.bind(view)
 
-        val binding = FragmentSettingsBinding.bind(view)
+        initListeners()
+        initAppTheme()
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    // todo(It doesn't work)
+    private fun initAppTheme() {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-            binding.switchMode.isChecked = true
+            binding?.switchMode?.isChecked = true
 
-        binding.switchMode.setOnCheckedChangeListener { _, isChecked ->
+        binding?.switchMode?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
         }
+    }
 
-        binding.articlesView.setOnClickListener {
+    private fun initListeners() {
+        binding?.articlesView?.setOnClickListener {
             val action = SettingsFragmentDirections.actionSettingsToArticles()
             findNavController().navigate(action)
         }
