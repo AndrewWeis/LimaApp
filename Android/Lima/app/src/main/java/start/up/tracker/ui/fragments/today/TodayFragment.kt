@@ -21,15 +21,35 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
 
     private val viewModel: TodayViewModel by viewModels()
 
+    private var binding: FragmentTodayBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentTodayBinding.bind(view)
+        binding = FragmentTodayBinding.bind(view)
 
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(result)
-        }
+        initResultListener()
+        initTaskEventListener()
+        initAdapter()
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun initAdapter() {
+        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
+        binding?.viewPager2?.adapter = adapter
+
+        TabLayoutMediator(binding!!.tabLayout, binding!!.viewPager2) { tab, position ->
+            when (position) {
+                0 -> { tab.text = "Tasks" }
+                1 -> { tab.text = "Calendar" }
+            }
+        }.attach()
+    }
+
+    private fun initTaskEventListener() {
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
@@ -40,14 +60,12 @@ class TodayFragment : Fragment(R.layout.fragment_today) {
             }
         }
 
-        val adapter = ViewPagerAdapter(childFragmentManager, lifecycle)
-        binding.viewPager2.adapter = adapter
+    }
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
-            when (position) {
-                0 -> { tab.text = "Tasks" }
-                1 -> { tab.text = "Calendar" }
-            }
-        }.attach()
+    private fun initResultListener() {
+        setFragmentResultListener("add_edit_request") { _, bundle ->
+            val result = bundle.getInt("add_edit_result")
+            viewModel.onAddEditResult(result)
+        }
     }
 }
