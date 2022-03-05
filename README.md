@@ -32,11 +32,3 @@
 3. [Architecture](./Docs/Architecture.pdf)
 4. [Presentation](./Docs/presentation.pdf)
 5. [Winter presentation](./Docs/winter_demonstration_animations.pptx)
-
-# How to launch
-
-1. Скачать Android Studio с официального сайта
-2. Сделать clone этого репозитория
-3. Открыть в Android Studio 
-4. Создать Эмулятор в Android Studio
-5. Запустить проект на эмуляторе
