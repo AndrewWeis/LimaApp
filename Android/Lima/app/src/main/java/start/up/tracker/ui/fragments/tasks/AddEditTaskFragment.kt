@@ -28,10 +28,15 @@ import start.up.tracker.utils.exhaustive
 import start.up.tracker.utils.timeToMinutes
 import kotlin.properties.Delegates.notNull
 
+// todo (RECODE WHOLE F*CKING CLASS. IT LOOKS LIKE SHIT!!!)
+
 @AndroidEntryPoint
 class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
     private val viewModel: AddEditTaskViewModel by viewModels()
+
+    private var binding: FragmentAddEditTaskBinding? = null
+
     private var date by notNull<String>()
     private var dateLong by notNull<Long>()
     private var timeStart by notNull<String>()
@@ -39,126 +44,84 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAddEditTaskBinding.bind(view)
 
-        val binding = FragmentAddEditTaskBinding.bind(view)
+        initVariables()
+        initTextListeners()
+        initListeners()
+        initTaskEventListener()
+    }
 
-        date = viewModel.taskDate
-        dateLong = viewModel.taskDateLong
-        timeStart = viewModel.taskTimeStart
-        timeEnd = viewModel.taskTimeEnd
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
-        binding.apply {
-            editTextTaskLabel.setText(viewModel.taskName)
-            descriptionET.setText(viewModel.taskDesc)
-
-            editTextTaskLabel.addTextChangedListener {
-                viewModel.taskName = it.toString()
-            }
-
-            descriptionET.addTextChangedListener {
-                viewModel.taskDesc = it.toString()
-            }
-
-            btnDatePicker.text = viewModel.taskDate
-            btnTimeStart.text = viewModel.taskTimeStart
-            btnTimeEnd.text = viewModel.taskTimeEnd
-
-
-            fabSaveTask.setOnClickListener {
-
-                // ---------- VALIDATION START ----------
-
-                if ((timeStart != "No time" && timeEnd == "No time") || (timeStart == "No time" && timeEnd != "No time")) {
-                    Snackbar.make(requireView(), "You must specify both time intervals", Snackbar.LENGTH_LONG).show()
-                    return@setOnClickListener
+    private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewModel.addEditTaskEvent.collect { event ->
+            when (event) {
+                is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
+                    binding?.editTextTaskLabel?.clearFocus()
+                    setFragmentResult(
+                        "add_edit_request",
+                        bundleOf("add_edit_result" to event.result)
+                    )
+                    findNavController().popBackStack()
                 }
-
-                if (timeStart != "No time" && timeEnd != "No time" && timeToMinutes(timeEnd) - timeToMinutes(timeStart) < 30) {
-                    Snackbar.make(requireView(), "The minimum time interval must be >= 30", Snackbar.LENGTH_LONG).show()
-                    return@setOnClickListener
+                is AddEditTaskViewModel.AddEditTaskEvent.ShowInvalidInputMessage -> {
+                    Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                 }
+            }.exhaustive
+        }
+    }
 
-                if (timeStart != "No time" && timeEnd != "No time" && date == "No date") {
-                    Snackbar.make(requireView(), "You must specify date if you choose time interval", Snackbar.LENGTH_LONG).show()
-                    return@setOnClickListener
-                }
+    private fun initListeners() {
+        binding?.fabSaveTask?.setOnClickListener {
 
-
-                // TODO(check if there are already some task in that time interval)
-
-                // ---------- VALIDATION END ----------
-
-
-                val checkedChip = binding.chipCategoriesGroup.children
-                    .toList()
-                    .filter { (it as Chip).isChecked }
-                    .joinToString { (it as Chip).text }
-
-                val checkedPriority = binding.chipPriorityGroup.children
-                    .toList()
-                    .filter { (it as Chip).isChecked }
-                    .joinToString { (it as Chip).text }
-
-                val priority = viewModel.priorityToInt(checkedPriority)
-
-                viewModel.onSaveClick(checkedChip, date, dateLong, timeStart, timeEnd, priority)
+            if (!isDataValid()) {
+                return@setOnClickListener
             }
 
+            // todo (Think how to separate. Recode.)
+            val checkedChip = binding?.chipCategoriesGroup?.children
+                ?.toList()
+                ?.filter { (it as Chip).isChecked }
+                ?.joinToString { (it as Chip).text }
 
-            chipPriorityGroup.isSingleSelection = true
-            chipPriorityGroup.isSelectionRequired = true
-            chipPriorityGroup.forEach {
-                val textPriority = (it as Chip).text.toString()
-                val priority = viewModel.priorityToInt(textPriority)
-                if (viewModel.taskPriority == priority) {
-                    it.isChecked = true
-                }
-            }
+            val checkedPriority = binding?.chipPriorityGroup?.children
+                ?.toList()
+                ?.filter { (it as Chip).isChecked }
+                ?.joinToString { (it as Chip).text }
 
+            val priority = viewModel.priorityToInt(checkedPriority!!)
 
+            viewModel.onSaveClick(checkedChip!!, date, dateLong, timeStart, timeEnd, priority)
+        }
 
-            btnDatePicker.setOnClickListener {
-                openDatePicker(binding)
-            }
+        binding?.btnDatePicker?.setOnClickListener {
+            openDatePicker()
+        }
 
-            btnTimeStart.setOnClickListener {
-                openTimePicker(binding, "Time Start")
-            }
+        binding?.btnTimeStart?.setOnClickListener {
+            openTimePicker("Time Start")
+        }
 
-            btnTimeEnd.setOnClickListener {
-                openTimePicker(binding, "Time End")
-            }
+        binding?.btnTimeEnd?.setOnClickListener {
+            openTimePicker("Time End")
+        }
 
-            btnClear.setOnClickListener {
-                date = "No date"
-                dateLong = 0
-                timeStart = "No time"
-                timeEnd = "No time"
+        binding?.btnClear?.setOnClickListener {
+            date = "No date"
+            dateLong = 0
+            timeStart = "No time"
+            timeEnd = "No time"
 
+            binding?.apply {
                 btnDatePicker.text = date
                 btnTimeStart.text = timeStart
                 btnTimeEnd.text = timeEnd
             }
         }
-
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-            viewModel.addEditTaskEvent.collect { event ->
-                when (event) {
-                    is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
-                        binding.editTextTaskLabel.clearFocus()
-                        setFragmentResult(
-                            "add_edit_request",
-                            bundleOf("add_edit_result" to event.result)
-                        )
-                        findNavController().popBackStack()
-                    }
-                    is AddEditTaskViewModel.AddEditTaskEvent.ShowInvalidInputMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
-                    }
-                }.exhaustive
-            }
-        }
-
 
         /**
          * Dynamically add chips into [ChipGroup]. It checks if the name of category from all categories is in
@@ -174,12 +137,84 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
                 if (subset.categoryId == category.categoryId) {
                     isChipChecked = true
                 }
-                addCategoryChip(category.categoryName, binding.chipCategoriesGroup, isChipChecked)
+                addCategoryChip(category.categoryName, binding!!.chipCategoriesGroup, isChipChecked)
             }
         }
     }
 
-    private fun openTimePicker(binding: FragmentAddEditTaskBinding, title: String) {
+    // todo (Move to separate class for validation logic)
+    private fun isDataValid(): Boolean {
+        if ((timeStart != "No time" && timeEnd == "No time") || (timeStart == "No time" && timeEnd != "No time")) {
+            Snackbar.make(
+                requireView(),
+                "You must specify both time intervals",
+                Snackbar.LENGTH_LONG
+            ).show()
+            return false
+        }
+
+        if (timeStart != "No time" && timeEnd != "No time" && timeToMinutes(timeEnd) - timeToMinutes(
+                timeStart
+            ) < 30
+        ) {
+            Snackbar.make(
+                requireView(),
+                "The minimum time interval must be >= 30",
+                Snackbar.LENGTH_LONG
+            ).show()
+            return false
+        }
+
+        if (timeStart != "No time" && timeEnd != "No time" && date == "No date") {
+            Snackbar.make(
+                requireView(),
+                "You must specify date if you choose time interval",
+                Snackbar.LENGTH_LONG
+            ).show()
+            return false
+        }
+        // TODO(check if there are already some task in that time interval)
+        return true
+    }
+
+    private fun initTextListeners() {
+        binding?.editTextTaskLabel?.addTextChangedListener {
+            viewModel.taskName = it.toString()
+        }
+
+        binding?.descriptionET?.addTextChangedListener {
+            viewModel.taskDesc = it.toString()
+        }
+    }
+
+    // todo (wrong use of ViewModel. Recode.)
+    private fun initVariables() {
+        date = viewModel.taskDate
+        dateLong = viewModel.taskDateLong
+        timeStart = viewModel.taskTimeStart
+        timeEnd = viewModel.taskTimeEnd
+
+        binding?.apply {
+            btnDatePicker.text = viewModel.taskDate
+            btnTimeStart.text = viewModel.taskTimeStart
+            btnTimeEnd.text = viewModel.taskTimeEnd
+
+            editTextTaskLabel.setText(viewModel.taskName)
+            descriptionET.setText(viewModel.taskDesc)
+
+            chipPriorityGroup.isSingleSelection = true
+            chipPriorityGroup.isSelectionRequired = true
+            chipPriorityGroup.forEach {
+                val textPriority = (it as Chip).text.toString()
+                val priority = viewModel.priorityToInt(textPriority)
+                if (viewModel.taskPriority == priority) {
+                    it.isChecked = true
+                }
+            }
+        }
+    }
+
+    private fun openTimePicker(title: String) {
         val isSystem24Hour = is24HourFormat(requireContext())
         val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
 
@@ -200,15 +235,15 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
 
             if (title == "Time Start") {
                 timeStart = "$hour:$minute"
-                binding.btnTimeStart.text = timeStart
+                binding?.btnTimeStart?.text = timeStart
             } else {
                 timeEnd = "$hour:$minute"
-                binding.btnTimeEnd.text = timeEnd
+                binding?.btnTimeEnd?.text = timeEnd
             }
         }
     }
 
-    private fun openDatePicker(binding: FragmentAddEditTaskBinding) {
+    private fun openDatePicker() {
         val today = MaterialDatePicker.todayInUtcMilliseconds()
         val materialDatePicker: MaterialDatePicker<Long> =
             MaterialDatePicker.Builder.datePicker()
@@ -220,12 +255,11 @@ class AddEditTaskFragment : Fragment(R.layout.fragment_add_edit_task) {
             dateLong = it
             val formattedDate = viewModel.formatToDate(it)
             date = formattedDate
-            binding.btnDatePicker.text = formattedDate
+            binding?.btnDatePicker?.text = formattedDate
         }
 
         materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
     }
-
 
     private fun addCategoryChip(chipText: String, chipGroup: ChipGroup, isChipChecked: Boolean) {
         val chip = Chip(context)
