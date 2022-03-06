@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
-import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
+import start.up.tracker.data.constants.ADD_RESULT_OK
+import start.up.tracker.data.constants.EDIT_RESULT_OK
 import start.up.tracker.data.database.dao.CategoriesDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
@@ -162,13 +162,13 @@ class AddEditTaskViewModel @Inject constructor(
     private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {
         val categoryId = categoriesDao.getCategoryIdByName(categoryName)
         taskDao.insertTask(task.copy(categoryId = categoryId))
-        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
+        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }
 
     private fun updatedTask(task: Task, categoryName: String) = viewModelScope.launch {
         val currCategoryId = categoriesDao.getCategoryIdByName(categoryName)
         taskDao.updateTask(task.copy(categoryId = currCategoryId))
-        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
+        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }
 
     private fun showInvalidInputMessage(text: String) = viewModelScope.launch {

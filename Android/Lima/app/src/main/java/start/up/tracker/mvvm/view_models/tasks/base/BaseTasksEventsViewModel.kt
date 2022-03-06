@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
-import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
+import start.up.tracker.data.constants.ADD_RESULT_OK
+import start.up.tracker.data.constants.EDIT_RESULT_OK
 import start.up.tracker.data.database.PreferencesManager
 import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.entities.DayStat
@@ -36,8 +36,8 @@ abstract class BaseTasksEventsViewModel(
 
     fun onAddEditResult(result: Int) {
         when (result) {
-            ADD_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task added")
-            EDIT_TASK_RESULT_OK -> showTaskSavedConfirmationMessage("Task updated")
+            ADD_RESULT_OK -> showTaskSavedConfirmationMessage("Task added")
+            EDIT_RESULT_OK -> showTaskSavedConfirmationMessage("Task updated")
         }
     }
 
