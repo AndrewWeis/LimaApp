@@ -47,9 +47,6 @@ object AppModule {
     @Provides
     fun provideUpcomingTasksDao(db: TaskDatabase) = db.upcomingTasksDao()
 
-    @Provides
-    fun provideCrossRefDao(db: TaskDatabase) = db.crossRefDao()
-
     @ApplicationScope
     @Provides
     @Singleton

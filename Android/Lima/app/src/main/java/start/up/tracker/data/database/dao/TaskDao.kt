@@ -3,8 +3,6 @@ package start.up.tracker.data.database.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.data.entities.Task
-import start.up.tracker.data.relations.CategoryWithTasks
-import start.up.tracker.data.relations.TaskWithCategories
 
 /**
  * A suspending function is simply a function that can be paused and resumed at a later time.
@@ -22,8 +20,8 @@ interface TaskDao {
         """
        SELECT * 
        FROM task_table
-       JOIN cross_ref ON task_table.taskId = cross_ref.taskId
-       WHERE categoryId = :categoryId AND
+       JOIN categories_table ON task_table.categoryId = categories_table.categoryId
+       WHERE categories_table.categoryId = :categoryId AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskName LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
@@ -35,8 +33,8 @@ interface TaskDao {
         """
         SELECT COUNT(*) 
         FROM task_table 
-        JOIN cross_ref ON task_table.taskId = cross_ref.taskId
-        WHERE categoryId = :categoryId AND
+        JOIN categories_table ON task_table.categoryId = categories_table.categoryId
+        WHERE categories_table.categoryId = :categoryId AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
@@ -46,20 +44,12 @@ interface TaskDao {
         """
         SELECT COUNT(*)
         FROM task_table 
-        JOIN cross_ref ON task_table.taskId = cross_ref.taskId
-        WHERE categoryId = 1 AND
+        JOIN categories_table ON task_table.categoryId = categories_table.categoryId
+        WHERE categories_table.categoryId = 1 AND
         completed = 0
     """
     )
     fun countTasksOfInbox(): Flow<Int>
-
-    @Transaction
-    @Query("SELECT * FROM category WHERE categoryId = :categoryId")
-    suspend fun getTasksOfCategory(categoryId: Int): List<CategoryWithTasks>
-
-    @Transaction
-    @Query("SELECT * FROM task_table WHERE taskId = :taskId")
-    fun getCategoriesOfTask(taskId: Int): Flow<TaskWithCategories?>
 
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?

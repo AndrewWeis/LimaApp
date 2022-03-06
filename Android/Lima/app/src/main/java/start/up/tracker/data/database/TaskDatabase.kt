@@ -10,13 +10,12 @@ import start.up.tracker.data.entities.Article
 import start.up.tracker.data.entities.Category
 import start.up.tracker.data.entities.DayStat
 import start.up.tracker.data.entities.Task
-import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.di.ApplicationScope
 import javax.inject.Inject
 import javax.inject.Provider
 
 @Database(
-    entities = [Task::class, Category::class, TaskCategoryCrossRef::class, DayStat::class, Article::class],
+    entities = [Task::class, Category::class, DayStat::class, Article::class],
     version = 1
 )
 abstract class TaskDatabase : RoomDatabase() {
@@ -28,7 +27,6 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun todayTasksDao(): TodayTasksDao
     abstract fun calendarTasksDao(): CalendarTasksDao
     abstract fun upcomingTasksDao(): UpcomingTasksDao
-    abstract fun crossRefDao(): CrossRefDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,
@@ -43,7 +41,7 @@ abstract class TaskDatabase : RoomDatabase() {
             applicationScope.launch {
 
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
-                categoriesDao.insertCategory(Category("Inbox"))
+                categoriesDao.insertCategory(Category(categoryName = "Inbox"))
 
                 val articles = ArticleStorage.getArticles().toTypedArray()
                 articlesDao.insertAllArticles(*articles)

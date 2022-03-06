@@ -7,10 +7,10 @@ import start.up.tracker.data.entities.Category
 @Dao
 interface CategoriesDao {
 
-    @Query("SELECT * FROM category")
+    @Query("SELECT * FROM categories_table")
     fun getCategories(): Flow<List<Category>>
 
-    @Query("SELECT categoryId FROM category WHERE categoryName =:categoryName")
+    @Query("SELECT categoryId FROM categories_table WHERE categoryName =:categoryName")
     suspend fun getCategoryIdByName(categoryName: String): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

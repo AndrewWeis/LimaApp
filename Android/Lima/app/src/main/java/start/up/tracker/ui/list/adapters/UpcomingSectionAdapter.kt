@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.entities.ExtendedTask
+import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.ItemTaskExtendedBinding
 import start.up.tracker.utils.chooseIconDrawable
 
 
-class UpcomingSectionAdapter(private val listener: OnItemClickListener) : ListAdapter<ExtendedTask,
-        UpcomingSectionAdapter.SectionsViewHolder>(DiffCallback()) {
+class UpcomingSectionAdapter(
+    private val listener: OnItemClickListener
+) : ListAdapter<Task, UpcomingSectionAdapter.SectionsViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SectionsViewHolder {
         val binding = ItemTaskExtendedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -46,35 +47,37 @@ class UpcomingSectionAdapter(private val listener: OnItemClickListener) : ListAd
             }
         }
 
-        fun bind(extendedTask: ExtendedTask) {
+        fun bind(task: Task) {
             binding.apply {
-                checkBoxCompleted.isChecked = extendedTask.completed
-                textViewName.text = extendedTask.taskName
-                textViewName.paint.isStrikeThruText = extendedTask.completed
-                textCategoryName.text = extendedTask.categoryName
-                textCategoryName.setTextColor(extendedTask.color)
-                categoryCircle.background.setTint(extendedTask.color)
+                checkBoxCompleted.isChecked = task.completed
+                textViewName.text = task.taskName
+                textViewName.paint.isStrikeThruText = task.completed
 
-                if (extendedTask.priority == 4) {
+                // todo(get category separatly from tasks)
+                /*textCategoryName.text = task.categoryName
+                textCategoryName.setTextColor(task.color)
+                categoryCircle.background.setTint(task.color)*/
+
+                if (task.priority == 4) {
                     icPriority.visibility = View.GONE
                 } else {
-                    icPriority.setImageResource(chooseIconDrawable(extendedTask.priority))
+                    icPriority.setImageResource(chooseIconDrawable(task.priority))
                 }
             }
         }
 
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<ExtendedTask>() {
-        override fun areItemsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
+    class DiffCallback : DiffUtil.ItemCallback<Task>() {
+        override fun areItemsTheSame(oldItem: Task, newItem: Task) =
             oldItem.taskId == newItem.taskId
 
-        override fun areContentsTheSame(oldItem: ExtendedTask, newItem: ExtendedTask) =
+        override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem == newItem
     }
 
     interface OnItemClickListener {
-        fun onItemClick(extendedTask: ExtendedTask)
-        fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean)
+        fun onItemClick(task: Task)
+        fun onCheckBoxClick(task: Task, isChecked: Boolean)
     }
 }

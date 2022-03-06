@@ -15,11 +15,9 @@ import kotlinx.coroutines.runBlocking
 import start.up.tracker.data.constants.ADD_TASK_RESULT_OK
 import start.up.tracker.data.constants.EDIT_TASK_RESULT_OK
 import start.up.tracker.data.database.dao.CategoriesDao
-import start.up.tracker.data.database.dao.CrossRefDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
 import start.up.tracker.data.entities.Task
-import start.up.tracker.data.relations.TaskCategoryCrossRef
 import start.up.tracker.utils.timeToMinutes
 import java.text.SimpleDateFormat
 import javax.inject.Inject
@@ -28,7 +26,6 @@ import javax.inject.Inject
 class AddEditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val categoriesDao: CategoriesDao,
-    private val crossRefDao: CrossRefDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
@@ -162,39 +159,15 @@ class AddEditTaskViewModel @Inject constructor(
         }
     }
 
-    private fun createCrossRef(crossRef: TaskCategoryCrossRef) = viewModelScope.launch {
-        crossRefDao.insertTaskCategoryCrossRef(crossRef)
-    }
-
-    private fun deleteCrossRefByTaskId(taskId: Int) = viewModelScope.launch {
-        crossRefDao.deleteCrossRefByTaskId(taskId)
-    }
-
     private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {
         val categoryId = categoriesDao.getCategoryIdByName(categoryName)
-        val taskId = taskDao.getTaskMaxId() ?: 0
-        val newCrossRef = TaskCategoryCrossRef(taskId = taskId + 1, categoryId = categoryId)
-
-        taskDao.insertTask(task.copy(taskId = taskId + 1))
-        createCrossRef(newCrossRef)
-
+        taskDao.insertTask(task.copy(categoryId = categoryId))
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_TASK_RESULT_OK))
     }
 
     private fun updatedTask(task: Task, categoryName: String) = viewModelScope.launch {
-
-        val crossRef = crossRefDao.getCrossRefByTaskId(task.taskId)
         val currCategoryId = categoriesDao.getCategoryIdByName(categoryName)
-
-        // if category has changed
-        if (crossRef.categoryId != currCategoryId) {
-            deleteCrossRefByTaskId(task.taskId)
-            val newCrossRef =
-                TaskCategoryCrossRef(taskId = task.taskId, categoryId = currCategoryId)
-            createCrossRef(newCrossRef)
-        }
-
-        taskDao.updateTask(task)
+        taskDao.updateTask(task.copy(categoryId = currCategoryId))
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_TASK_RESULT_OK))
     }
 

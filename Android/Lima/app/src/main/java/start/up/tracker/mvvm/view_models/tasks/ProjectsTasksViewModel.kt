@@ -4,15 +4,11 @@ import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import start.up.tracker.data.database.PreferencesManager
 import start.up.tracker.data.database.dao.AnalyticsDao
-import start.up.tracker.data.database.dao.CrossRefDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
-import start.up.tracker.data.entities.Task
-import start.up.tracker.data.relations.TaskCategoryCrossRef
-import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksViewModel
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import java.util.*
 import javax.inject.Inject
 
@@ -20,10 +16,9 @@ import javax.inject.Inject
 class ProjectsTasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val analyticsDao: AnalyticsDao,
-    private val crossRefDao: CrossRefDao,
     private val preferencesManager: PreferencesManager,
     @Assisted private val state: SavedStateHandle
-) : BaseTasksViewModel(taskDao, crossRefDao, analyticsDao, preferencesManager) {
+) : BaseTasksOperationsViewModel(taskDao, analyticsDao, preferencesManager) {
 
     val searchQuery = state.getLiveData("searchQuery", "")
 
@@ -46,10 +41,4 @@ class ProjectsTasksViewModel @Inject constructor(
         taskDao.getTasksOfCategory(query, hideCompleted ?: false, categoryId)
     }
     val tasksOfCategory = tasksOfCategoryFlow.asLiveData()
-
-    fun onUndoDeleteTaskClick(task: Task) = viewModelScope.launch {
-        val crossRef = TaskCategoryCrossRef(task.taskId, categoryId)
-        crossRefDao.insertTaskCategoryCrossRef(crossRef)
-        taskDao.insertTask(task)
-    }
 }

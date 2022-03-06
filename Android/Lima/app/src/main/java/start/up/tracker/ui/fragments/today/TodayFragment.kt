@@ -12,14 +12,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.FragmentTodayBinding
-import start.up.tracker.mvvm.view_models.today.TodayViewModel
+import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.view_pagers.ViewPagerAdapter
 
 @AndroidEntryPoint
 class TodayFragment : Fragment(R.layout.fragment_today) {
 
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: TodayTasksViewModel by viewModels()
 
     private var binding: FragmentTodayBinding? = null
 

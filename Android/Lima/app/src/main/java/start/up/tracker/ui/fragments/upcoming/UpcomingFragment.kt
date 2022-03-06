@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.entities.ExtendedTask
+import start.up.tracker.data.entities.Task
 import start.up.tracker.data.entities.UpcomingSection
 import start.up.tracker.databinding.FragmentUpcomingBinding
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
@@ -22,7 +22,6 @@ import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.UpcomingAdapter
-import start.up.tracker.utils.toTask
 
 @AndroidEntryPoint
 class UpcomingFragment :
@@ -78,8 +77,8 @@ class UpcomingFragment :
     private fun initTaskEventListeners() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask) }
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
@@ -88,11 +87,11 @@ class UpcomingFragment :
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.NavigateToEditExtendedTaskScreen -> {
-                    val task = event.extendedTask.toTask()
+                is TasksEvent.NavigateToEditTaskScreen -> {
+                    val task = event.task
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
                         title = "Edit task",
-                        categoryId = event.extendedTask.categoryId,
+                        categoryId = event.task.categoryId,
                         task = task
                     )
                     navigateTo(action)
@@ -137,14 +136,14 @@ class UpcomingFragment :
         }
     }
 
-    private fun separateDataAndSubmit(tasks: List<ExtendedTask>, adapter: UpcomingAdapter) {
+    private fun separateDataAndSubmit(tasks: List<Task>, adapter: UpcomingAdapter) {
         val sectionsList: MutableList<UpcomingSection> = mutableListOf()
-        val tasksList: MutableList<ExtendedTask> = mutableListOf()
+        val tasksList: MutableList<Task> = mutableListOf()
 
         for (i in tasks.indices) {
             tasksList.add(tasks[i])
             if (i + 1 == tasks.size || tasks[i].dateLong != tasks[i + 1].dateLong) {
-                sectionsList.add(UpcomingSection(tasks[i].date, tasksList.toList()))
+                sectionsList.add(UpcomingSection(tasks[i].date!!, tasksList.toList()))
                 tasksList.clear()
             }
         }

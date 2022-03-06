@@ -11,9 +11,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.data.constants.TIME_OFFSET
-import start.up.tracker.data.entities.ExtendedTask
+import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.FragmentCalendarTasksBinding
-import start.up.tracker.mvvm.view_models.today.TodayViewModel
+import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
+import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
@@ -21,7 +22,6 @@ import start.up.tracker.ui.fragments.today.TodayFragmentDirections
 import start.up.tracker.ui.list.adapters.CalendarTasksAdapter
 import start.up.tracker.utils.convertDpToPx
 import start.up.tracker.utils.timeToMinutes
-import start.up.tracker.utils.toTask
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,7 +30,7 @@ class CalendarTasksFragment :
     BaseTasksFragment(R.layout.fragment_calendar_tasks),
     CalendarTasksAdapter.OnItemClickListener {
 
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: CalendarTasksViewModel by viewModels()
 
     private var binding: FragmentCalendarTasksBinding? = null
     private lateinit var taskAdapter: CalendarTasksAdapter
@@ -52,12 +52,12 @@ class CalendarTasksFragment :
         binding = null
     }
 
-    override fun onItemClick(extendedTask: ExtendedTask) {
-        viewModel.onExtendedTaskSelected(extendedTask)
+    override fun onItemClick(task: Task) {
+        viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-        viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
+    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+        viewModel.onTaskCheckedChanged(task, isChecked)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -87,8 +87,8 @@ class CalendarTasksFragment :
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask) }
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
@@ -97,11 +97,11 @@ class CalendarTasksFragment :
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.NavigateToEditExtendedTaskScreen -> {
-                    val task = event.extendedTask.toTask()
+                is TasksEvent.NavigateToEditTaskScreen -> {
+                    val task = event.task
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Edit task",
-                        categoryId = event.extendedTask.categoryId,
+                        categoryId = event.task.categoryId,
                         task = task
                     )
                     navigateTo(action)

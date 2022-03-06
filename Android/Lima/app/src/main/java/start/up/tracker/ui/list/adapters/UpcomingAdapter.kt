@@ -3,17 +3,18 @@ package start.up.tracker.ui.list.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
-import start.up.tracker.data.entities.ExtendedTask
+import start.up.tracker.data.entities.Task
 import start.up.tracker.data.entities.UpcomingSection
 import start.up.tracker.databinding.ItemUpcomingSectionBinding
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 
-
-class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSection,
-        UpcomingAdapter.UpcomingViewHolder>(DiffCallback()) {
+class UpcomingAdapter(
+    val viewModel: UpcomingViewModel
+) : ListAdapter<UpcomingSection, UpcomingAdapter.UpcomingViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UpcomingViewHolder {
-        val binding = ItemUpcomingSectionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemUpcomingSectionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return UpcomingViewHolder(binding)
     }
 
@@ -22,7 +23,8 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
         holder.bind(currentItem)
     }
 
-    inner class UpcomingViewHolder(private val binding: ItemUpcomingSectionBinding) : RecyclerView.ViewHolder(binding.root),
+    inner class UpcomingViewHolder(private val binding: ItemUpcomingSectionBinding) :
+        RecyclerView.ViewHolder(binding.root),
         UpcomingSectionAdapter.OnItemClickListener {
 
         fun bind(upcomingSection: UpcomingSection) {
@@ -31,11 +33,13 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
 
                 val sectionAdapter = UpcomingSectionAdapter(this@UpcomingViewHolder)
                 sectionRV.apply {
-                   adapter = sectionAdapter
-                   layoutManager = LinearLayoutManager(context)
+                    adapter = sectionAdapter
+                    layoutManager = LinearLayoutManager(context)
 
-                    ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                    ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                        0,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                    ) {
                         override fun onMove(
                             recyclerView: RecyclerView,
                             viewHolder: RecyclerView.ViewHolder,
@@ -46,7 +50,7 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
 
                         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                             val task = sectionAdapter.currentList[viewHolder.adapterPosition]
-                            viewModel.onExtendedTaskSwiped(task)
+                            viewModel.onTaskSwiped(task)
                         }
                     }).attachToRecyclerView(sectionRV)
                 }
@@ -55,14 +59,13 @@ class UpcomingAdapter(val viewModel: UpcomingViewModel) : ListAdapter<UpcomingSe
             }
         }
 
-        override fun onItemClick(extendedTask: ExtendedTask) {
-            viewModel.onExtendedTaskSelected(extendedTask)
+        override fun onItemClick(task: Task) {
+            viewModel.onTaskSelected(task)
         }
 
-        override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-            viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
+        override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+            viewModel.onTaskCheckedChanged(task, isChecked)
         }
-
     }
 
     class DiffCallback : DiffUtil.ItemCallback<UpcomingSection>() {

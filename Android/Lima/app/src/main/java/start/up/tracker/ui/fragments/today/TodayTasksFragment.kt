@@ -15,21 +15,20 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.entities.ExtendedTask
+import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.FragmentTodayTasksBinding
-import start.up.tracker.mvvm.view_models.today.TodayViewModel
+import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.TodayTasksAdapter
-import start.up.tracker.utils.toTask
 
 @AndroidEntryPoint
 class TodayTasksFragment :
     BaseTasksFragment(R.layout.fragment_today_tasks),
     TodayTasksAdapter.OnItemClickListener {
 
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: TodayTasksViewModel by viewModels()
 
     private var binding: FragmentTodayTasksBinding? = null
     private lateinit var taskAdapter: TodayTasksAdapter
@@ -50,12 +49,12 @@ class TodayTasksFragment :
         binding = null
     }
 
-    override fun onItemClick(extendedTask: ExtendedTask) {
-        viewModel.onExtendedTaskSelected(extendedTask)
+    override fun onItemClick(task: Task) {
+        viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-        viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
+    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
+        viewModel.onTaskCheckedChanged(task, isChecked)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -85,8 +84,8 @@ class TodayTasksFragment :
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask) }
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
@@ -95,11 +94,11 @@ class TodayTasksFragment :
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.NavigateToEditExtendedTaskScreen -> {
-                    val task = event.extendedTask.toTask()
+                is TasksEvent.NavigateToEditTaskScreen -> {
+                    val task = event.task
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Edit task",
-                        categoryId = event.extendedTask.categoryId,
+                        categoryId = event.task.categoryId,
                         task = task
                     )
                     navigateTo(action)
@@ -154,7 +153,7 @@ class TodayTasksFragment :
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val todayTask = taskAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.onExtendedTaskSwiped(todayTask)
+                viewModel.onTaskSwiped(todayTask)
             }
         }).attachToRecyclerView(binding?.todayTaskRV)
     }

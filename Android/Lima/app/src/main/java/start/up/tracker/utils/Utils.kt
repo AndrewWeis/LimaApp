@@ -2,28 +2,9 @@ package start.up.tracker.utils
 
 import android.content.res.Resources
 import start.up.tracker.R
-import start.up.tracker.data.entities.Task
-import start.up.tracker.data.entities.ExtendedTask
 
 val <T> T.exhaustive: T
     get() = this
-
-
-fun ExtendedTask.toTask() = Task(
-    taskName = taskName,
-    taskDesc = taskDesc,
-    priority = priority,
-    completed = completed,
-    created = created,
-    taskId = taskId,
-    date = date,
-    dateLong = dateLong,
-    timeStart = timeStart,
-    timeEnd = timeEnd,
-    timeStartInt = timeStartInt,
-    timeEndInt = timeEndInt,
-    wasCompleted = wasCompleted
-)
 
 fun timeToMinutes(strInitial: String): Int {
 
