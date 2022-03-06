@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.constants.TIME_OFFSET
+import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.ItemTaskCalendarBinding
 import start.up.tracker.utils.convertDpToPx

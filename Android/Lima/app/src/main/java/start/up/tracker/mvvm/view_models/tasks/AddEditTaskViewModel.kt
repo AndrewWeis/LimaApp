@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import start.up.tracker.data.constants.ADD_RESULT_OK
-import start.up.tracker.data.constants.EDIT_RESULT_OK
+import start.up.tracker.ui.data.constants.ADD_RESULT_OK
+import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.data.database.dao.CategoriesDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category

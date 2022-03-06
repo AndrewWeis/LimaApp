@@ -1,4 +1,4 @@
-package start.up.tracker.data.constants
+package start.up.tracker.ui.data.constants
 
 import android.app.Activity
 

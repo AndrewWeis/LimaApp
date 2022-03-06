@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
-import start.up.tracker.data.constants.DEFAULT_PROJECT_COLOR
+import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
 
 @Parcelize
 @Entity(tableName = "categories_table")
