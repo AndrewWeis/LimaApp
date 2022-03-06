@@ -19,24 +19,39 @@ class ArticlesFragment :
 
     private val viewModel: ArticlesViewModel by viewModels()
 
+    private lateinit var articlesAdapter: ArticlesAdapter
+    private var binding: FragmentArticlesBinding? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentArticlesBinding.bind(view)
 
-        val binding = FragmentArticlesBinding.bind(view)
-        val articlesAdapter = ArticlesAdapter(this)
+        initAdapter()
+        initObservers()
+    }
 
-        binding.articlesList.apply {
-            adapter = articlesAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
+    override fun onArticleClick(article: Article) {
+        // navigate to article
+    }
+
+    private fun initObservers() {
         viewModel.articles.observe(viewLifecycleOwner) {
             articlesAdapter.submitList(it)
         }
     }
 
-    override fun onArticleClick(article: Article) {
-        // navigate to article
+    private fun initAdapter() {
+        articlesAdapter = ArticlesAdapter(this)
+
+        binding?.articlesList?.apply {
+            adapter = articlesAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
+        }
     }
 }
