@@ -21,18 +21,8 @@ class AddCategoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val category = state.get<Category>("category")
-
-    var categoryName = state.get<String>("categoryName") ?: category?.categoryName ?: ""
-        set(value) {
-            field = value
-            state.set("categoryName", value)
-        }
-
-    var color: Int = state.get<Int>("color") ?: category?.color ?: DEFAULT_PROJECT_COLOR
-        set(value) {
-            field = value
-            state.set("color", value)
-        }
+    var categoryName = category?.categoryName ?: ""
+    var color = category?.color ?: DEFAULT_PROJECT_COLOR
 
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
     val addCategoryEvent = addCategoryEventChannel.receiveAsFlow()
@@ -48,10 +38,10 @@ class AddCategoryViewModel @Inject constructor(
     private fun isValidationSucceed(): Boolean {
         if (categoryName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
-            return true
+            return false
         }
 
-        return false
+        return true
     }
 
     private fun createCategory() = viewModelScope.launch {
