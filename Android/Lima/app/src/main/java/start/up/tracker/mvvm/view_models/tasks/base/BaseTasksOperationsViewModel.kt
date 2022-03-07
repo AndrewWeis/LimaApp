@@ -2,17 +2,17 @@ package start.up.tracker.mvvm.view_models.tasks.base
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import start.up.tracker.data.analytics.Analytics
 import start.up.tracker.data.database.PreferencesManager
-import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Task
 import start.up.tracker.ui.data.entities.TasksEvent
 
 abstract class BaseTasksOperationsViewModel(
     private val taskDao: TaskDao,
-    private val analyticsDao: AnalyticsDao,
     private val preferencesManager: PreferencesManager,
-) : BaseTasksEventsViewModel(analyticsDao, preferencesManager) {
+    private val analytics: Analytics
+) : BaseTasksEventsViewModel(preferencesManager) {
 
     fun onUndoDeleteTaskClick(task: Task) = viewModelScope.launch {
         taskDao.insertTask(task)
@@ -27,7 +27,7 @@ abstract class BaseTasksOperationsViewModel(
         isChecked: Boolean
     ) = viewModelScope.launch {
         if (isChecked && !task.wasCompleted) {
-            addTaskToStat()
+            analytics.addTaskToStatistic()
         }
         taskDao.updateTask(task.copy(completed = isChecked, wasCompleted = true))
     }

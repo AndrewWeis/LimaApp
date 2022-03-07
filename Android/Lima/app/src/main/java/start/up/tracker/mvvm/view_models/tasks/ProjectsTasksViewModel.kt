@@ -4,8 +4,8 @@ import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import start.up.tracker.data.analytics.Analytics
 import start.up.tracker.data.database.PreferencesManager
-import start.up.tracker.data.database.dao.AnalyticsDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
@@ -15,10 +15,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ProjectsTasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
-    private val analyticsDao: AnalyticsDao,
     private val preferencesManager: PreferencesManager,
+    private val analytics: Analytics,
     @Assisted private val state: SavedStateHandle
-) : BaseTasksOperationsViewModel(taskDao, analyticsDao, preferencesManager) {
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     val searchQuery = state.getLiveData("searchQuery", "")
 
