@@ -1,4 +1,4 @@
-package start.up.tracker.data.analytics
+package start.up.tracker.analytics
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

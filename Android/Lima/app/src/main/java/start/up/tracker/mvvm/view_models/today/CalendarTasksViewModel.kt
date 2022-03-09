@@ -3,7 +3,7 @@ package start.up.tracker.mvvm.view_models.today
 import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.flatMapLatest
-import start.up.tracker.data.analytics.Analytics
+import start.up.tracker.analytics.Analytics
 import start.up.tracker.data.database.PreferencesManager
 import start.up.tracker.data.database.dao.*
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel

@@ -4,7 +4,7 @@ import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import start.up.tracker.data.analytics.Analytics
+import start.up.tracker.analytics.Analytics
 import start.up.tracker.data.database.PreferencesManager
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.entities.Category
