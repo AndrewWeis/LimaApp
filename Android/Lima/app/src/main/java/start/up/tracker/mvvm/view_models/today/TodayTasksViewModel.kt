@@ -9,9 +9,9 @@ import start.up.tracker.data.database.PreferencesManager
 import start.up.tracker.data.database.dao.CategoriesDao
 import start.up.tracker.data.database.dao.TaskDao
 import start.up.tracker.data.database.dao.TodayTasksDao
-import start.up.tracker.data.entities.Category
 import start.up.tracker.data.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
+import start.up.tracker.utils.ExtendedTasksMergeFlows.mergeFlowsForExtendedTask
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -35,32 +35,8 @@ class TodayTasksViewModel @Inject constructor(
         hideCompleted,
         todayTasksFlow,
         categoriesFlow,
-        ::mergeTodayFlows
+        ::mergeFlowsForExtendedTask
     )
 
     val todayTasks = tasksFlow.asLiveData()
-
-    private fun mergeTodayFlows(
-        hideCompleted: Boolean,
-        tasks: List<Task>,
-        categories: List<Category>
-    ): List<Task> {
-        val tasksWithCategoryData: MutableList<Task> = mutableListOf()
-
-        tasks
-            .filter { task ->
-                task.completed == hideCompleted
-            }
-            .forEach { task ->
-                categories.forEach { category ->
-                    if (category.categoryId == task.categoryId) {
-                        tasksWithCategoryData.add(
-                            task.copy(categoryName = category.categoryName, color = category.color)
-                        )
-                    }
-                }
-            }
-
-        return tasksWithCategoryData
-    }
 }

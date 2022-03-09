@@ -53,10 +53,9 @@ class UpcomingSectionAdapter(
                 textViewName.text = task.taskName
                 textViewName.paint.isStrikeThruText = task.completed
 
-                // todo(get category separatly from tasks)
-                /*textCategoryName.text = task.categoryName
-                textCategoryName.setTextColor(task.color)
-                categoryCircle.background.setTint(task.color)*/
+                textCategoryName.text = task.categoryName
+                textCategoryName.setTextColor(task.color!!)
+                categoryCircle.background.setTint(task.color)
 
                 if (task.priority == 4) {
                     icPriority.visibility = View.GONE

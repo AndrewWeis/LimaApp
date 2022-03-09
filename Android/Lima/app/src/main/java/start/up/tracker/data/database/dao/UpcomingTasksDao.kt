@@ -13,13 +13,12 @@ interface UpcomingTasksDao {
         SELECT *
         FROM task_table
         JOIN categories_table ON task_table.categoryId = categories_table.categoryId
-        WHERE task_table.dateLong > :today AND
-        (completed != :hideCompleted OR completed = 0)
+        WHERE task_table.dateLong > :today
         ORDER BY dateLong
         ASC
         """
     )
-    fun getUpcomingTasks(today: Long, hideCompleted: Boolean): Flow<List<Task>>
+    fun getUpcomingTasks(today: Long): Flow<List<Task>>
 
     @Query(
         """
