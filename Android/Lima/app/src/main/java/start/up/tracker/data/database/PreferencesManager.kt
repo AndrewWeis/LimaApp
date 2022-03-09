@@ -10,15 +10,14 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext context: Context) {
 
     private val dataStore = context.createDataStore("user_preferences")
 
-    val hideCompleted: Flow<Boolean?>
+    val hideCompleted: Flow<Boolean>
         get() = dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.HIDE_COMPLETED]
+            preferences[PreferencesKeys.HIDE_COMPLETED] ?: false
         }
 
     suspend fun updateHideCompleted(hideCompleted: Boolean) {

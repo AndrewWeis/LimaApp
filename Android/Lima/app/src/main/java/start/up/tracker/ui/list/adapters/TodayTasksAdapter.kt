@@ -10,13 +10,13 @@ import start.up.tracker.data.entities.Task
 import start.up.tracker.databinding.ItemTaskExtendedBinding
 import start.up.tracker.utils.chooseIconDrawable
 
-
 class TodayTasksAdapter(
     private val listener: OnItemClickListener
 ) : ListAdapter<Task, TodayTasksAdapter.TasksViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
-        val binding = ItemTaskExtendedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemTaskExtendedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TasksViewHolder(binding)
     }
 
@@ -25,7 +25,8 @@ class TodayTasksAdapter(
         holder.bind(currentItem)
     }
 
-    inner class TasksViewHolder(private val binding: ItemTaskExtendedBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TasksViewHolder(private val binding: ItemTaskExtendedBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.apply {
@@ -53,10 +54,9 @@ class TodayTasksAdapter(
                 textViewName.text = task.taskName
                 textViewName.paint.isStrikeThruText = task.completed
 
-                // todo(get category separatly from tasks)
-                /*textCategoryName.text = task.categoryName
-                textCategoryName.setTextColor(task.color)
-                categoryCircle.background.setTint(task.color)*/
+                textCategoryName.text = task.categoryName
+                textCategoryName.setTextColor(task.color!!)
+                categoryCircle.background.setTint(task.color)
 
                 if (task.priority == 4) {
                     icPriority.visibility = View.GONE

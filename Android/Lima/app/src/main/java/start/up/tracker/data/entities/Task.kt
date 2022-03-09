@@ -31,5 +31,8 @@ data class Task(
     val categoryId: Int = 0, // 0 - inbox
 
     // todo (maybe add task id to day stat)
-    val wasCompleted: Boolean = false
+    val wasCompleted: Boolean = false,
+
+    val categoryName: String? = null,
+    val color: Int? = null,
 ) : Parcelable

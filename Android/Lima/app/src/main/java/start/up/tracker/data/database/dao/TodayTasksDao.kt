@@ -23,11 +23,10 @@ interface TodayTasksDao {
         SELECT *
         FROM task_table
         JOIN categories_table ON task_table.categoryId = categories_table.categoryId
-        WHERE task_table.date = :today AND
-       (completed != :hideCompleted OR completed = 0)
-       ORDER BY priority 
-       ASC
+        WHERE task_table.date = :today
+        ORDER BY priority 
+        ASC
     """
     )
-    fun getTodayTasks(today: String, hideCompleted: Boolean): Flow<List<Task>>
+    fun getTodayTasks(today: String): Flow<List<Task>>
 }
