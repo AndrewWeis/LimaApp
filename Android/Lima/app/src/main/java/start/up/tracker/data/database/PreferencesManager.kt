@@ -17,7 +17,7 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
 
     val hideCompleted: Flow<Boolean>
         get() = dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.HIDE_COMPLETED] ?: false
+            preferences[PreferencesKeys.HIDE_COMPLETED] ?: true
         }
 
     suspend fun updateHideCompleted(hideCompleted: Boolean) {
