@@ -1,7 +1,7 @@
 package start.up.tracker.utils
 
-import start.up.tracker.data.entities.Category
-import start.up.tracker.data.entities.Task
+import start.up.tracker.entities.Category
+import start.up.tracker.entities.Task
 
 object ExtendedTasksMergeFlows {
 

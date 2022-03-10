@@ -5,9 +5,9 @@ import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import start.up.tracker.analytics.Analytics
-import start.up.tracker.data.database.PreferencesManager
-import start.up.tracker.data.database.dao.TaskDao
-import start.up.tracker.data.entities.Category
+import start.up.tracker.database.PreferencesManager
+import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.entities.Category
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import java.util.*
 import javax.inject.Inject

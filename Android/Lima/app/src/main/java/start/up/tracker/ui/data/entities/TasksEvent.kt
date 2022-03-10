@@ -1,6 +1,6 @@
 package start.up.tracker.ui.data.entities
 
-import start.up.tracker.data.entities.Task
+import start.up.tracker.entities.Task
 
 sealed class TasksEvent {
     object NavigateToAddTaskScreen : TasksEvent()

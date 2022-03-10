@@ -2,8 +2,8 @@ package start.up.tracker.analytics
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import start.up.tracker.data.database.dao.AnalyticsDao
-import start.up.tracker.data.entities.DayStat
+import start.up.tracker.database.dao.AnalyticsDao
+import start.up.tracker.entities.DayStat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

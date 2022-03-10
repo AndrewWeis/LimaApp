@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Tracker</string>
 
+    <string name="task_title">Title</string>
+    <string name="task_description">Description</string>
+
     <string name="action_search">Search</string>
     <string name="success_delete">Success delete task</string>
     <string name="success_clear">Success clear all tasks</string>

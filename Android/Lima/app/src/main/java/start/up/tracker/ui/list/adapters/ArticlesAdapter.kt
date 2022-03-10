@@ -1,12 +1,11 @@
 package start.up.tracker.ui.list.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.entities.Article
+import start.up.tracker.entities.Article
 import start.up.tracker.databinding.ItemArticleBinding
 
 class ArticlesAdapter(

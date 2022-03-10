@@ -5,11 +5,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.CategoriesDao
-import start.up.tracker.data.database.dao.TaskDao
-import start.up.tracker.data.database.dao.TodayTasksDao
-import start.up.tracker.data.database.dao.UpcomingTasksDao
-import start.up.tracker.data.entities.Category
+import start.up.tracker.database.dao.CategoriesDao
+import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.database.dao.TodayTasksDao
+import start.up.tracker.database.dao.UpcomingTasksDao
+import start.up.tracker.entities.Category
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -44,10 +44,10 @@ class CategoriesViewModel @Inject constructor(
     private val currentDate: String = formatter.format(Date())
     private val currentDateLong = Date().time
 
-    private val todayTasksCountFlow = todayTasksDao.countTodayTasks(currentDate)
+    private val todayTasksCountFlow = todayTasksDao.countTodayTasks()
     val todayTasksCount = todayTasksCountFlow.asLiveData()
 
-    private val upcomingTasksCountFlow = upcomingTasksDao.countUpcomingTasks(currentDateLong)
+    private val upcomingTasksCountFlow = upcomingTasksDao.countUpcomingTasks()
     val upcomingTasksCount = upcomingTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {

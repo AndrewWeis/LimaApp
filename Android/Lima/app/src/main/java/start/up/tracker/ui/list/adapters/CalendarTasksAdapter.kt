@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import start.up.tracker.ui.data.constants.TIME_OFFSET
-import start.up.tracker.data.entities.Task
+import start.up.tracker.entities.Task
 import start.up.tracker.databinding.ItemTaskCalendarBinding
 import start.up.tracker.utils.convertDpToPx
 
@@ -58,7 +58,7 @@ class CalendarTasksAdapter(
         fun bind(task: Task, nextTask: Task?, position: Int) {
             binding.apply {
                 checkBoxCompleted.isChecked = task.completed
-                textViewName.text = task.taskName
+                textViewName.text = task.title
                 textViewName.paint.isStrikeThruText = task.completed
                 if (task.priority == 4) {
                     icPriority.visibility = View.GONE
@@ -67,7 +67,7 @@ class CalendarTasksAdapter(
                     icPriority.setBackgroundColor(Color.parseColor(color))
                 }
 
-                if (task.timeStart != null && task.timeEnd != null) {
+                /*if (task.timeStart != null && task.timeEnd != null) {
                     val layoutParams: ViewGroup.MarginLayoutParams =
                         binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
                     var space = 0
@@ -85,7 +85,7 @@ class CalendarTasksAdapter(
                         layoutParams.topMargin = convertDpToPx(task.timeStartInt - TIME_OFFSET)
                     }
                     binding.cardTaskCalendar.requestLayout()
-                }
+                }*/
             }
         }
 
@@ -106,7 +106,7 @@ class CalendarTasksAdapter(
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.taskId == newItem.taskId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem == newItem

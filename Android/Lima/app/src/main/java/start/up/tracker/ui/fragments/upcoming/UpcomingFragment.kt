@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.entities.Task
-import start.up.tracker.data.entities.UpcomingSection
+import start.up.tracker.entities.Task
+import start.up.tracker.entities.UpcomingSection
 import start.up.tracker.databinding.FragmentUpcomingBinding
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
@@ -139,14 +139,14 @@ class UpcomingFragment :
     private fun separateDataAndSubmit(tasks: List<Task>, adapter: UpcomingAdapter) {
         val sectionsList: MutableList<UpcomingSection> = mutableListOf()
         val tasksList: MutableList<Task> = mutableListOf()
-
+/*
         for (i in tasks.indices) {
             tasksList.add(tasks[i])
             if (i + 1 == tasks.size || tasks[i].dateLong != tasks[i + 1].dateLong) {
                 sectionsList.add(UpcomingSection(tasks[i].date!!, tasksList.toList()))
                 tasksList.clear()
             }
-        }
+        }*/
 
         adapter.submitList(sectionsList.toList())
     }

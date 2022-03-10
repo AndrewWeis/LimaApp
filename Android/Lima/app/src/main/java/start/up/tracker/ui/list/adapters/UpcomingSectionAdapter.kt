@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.entities.Task
+import start.up.tracker.entities.Task
 import start.up.tracker.databinding.ItemTaskExtendedBinding
 import start.up.tracker.utils.chooseIconDrawable
 
@@ -50,7 +50,7 @@ class UpcomingSectionAdapter(
         fun bind(task: Task) {
             binding.apply {
                 checkBoxCompleted.isChecked = task.completed
-                textViewName.text = task.taskName
+                textViewName.text = task.title
                 textViewName.paint.isStrikeThruText = task.completed
 
                 textCategoryName.text = task.categoryName
@@ -69,7 +69,7 @@ class UpcomingSectionAdapter(
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.taskId == newItem.taskId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem == newItem

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.ui.data.constants.TIME_OFFSET
-import start.up.tracker.data.entities.Task
+import start.up.tracker.entities.Task
 import start.up.tracker.databinding.FragmentCalendarTasksBinding
 import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent

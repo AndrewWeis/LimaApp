@@ -8,7 +8,7 @@ import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.AnalyticsDao
+import start.up.tracker.database.dao.AnalyticsDao
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject

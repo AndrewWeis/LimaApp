@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.ArticlesDao
-import start.up.tracker.data.entities.Article
+import start.up.tracker.database.dao.ArticlesDao
+import start.up.tracker.entities.Article
 import javax.inject.Inject
 
 @HiltViewModel

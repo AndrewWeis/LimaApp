@@ -3,8 +3,8 @@ package start.up.tracker.ui.list.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
-import start.up.tracker.data.entities.Task
-import start.up.tracker.data.entities.UpcomingSection
+import start.up.tracker.entities.Task
+import start.up.tracker.entities.UpcomingSection
 import start.up.tracker.databinding.ItemUpcomingSectionBinding
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 

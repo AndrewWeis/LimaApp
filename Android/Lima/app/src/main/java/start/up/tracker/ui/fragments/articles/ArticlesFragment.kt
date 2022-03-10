@@ -7,7 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
-import start.up.tracker.data.entities.Article
+import start.up.tracker.entities.Article
 import start.up.tracker.databinding.FragmentArticlesBinding
 import start.up.tracker.mvvm.view_models.articles.ArticlesViewModel
 import start.up.tracker.ui.list.adapters.ArticlesAdapter

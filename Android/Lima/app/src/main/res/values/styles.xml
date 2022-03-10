@@ -42,7 +42,7 @@
         <item name="android:fontFamily">@font/ibm_regular</item>
         <item name="android:gravity">center</item>
     </style>
-    
+
     <style name="date_picker_btn">
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/lightGray</item>

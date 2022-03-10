@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.PreferencesManager
+import start.up.tracker.database.PreferencesManager
 import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.ui.data.entities.TasksEvent

@@ -3,9 +3,9 @@ package start.up.tracker.mvvm.view_models.tasks.base
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import start.up.tracker.analytics.Analytics
-import start.up.tracker.data.database.PreferencesManager
-import start.up.tracker.data.database.dao.TaskDao
-import start.up.tracker.data.entities.Task
+import start.up.tracker.database.PreferencesManager
+import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.entities.TasksEvent
 
 abstract class BaseTasksOperationsViewModel(

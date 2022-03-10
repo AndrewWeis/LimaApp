@@ -8,10 +8,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import start.up.tracker.database.dao.CategoriesDao
+import start.up.tracker.entities.Category
 import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
-import start.up.tracker.data.database.dao.CategoriesDao
-import start.up.tracker.data.entities.Category
 import javax.inject.Inject
 
 @HiltViewModel

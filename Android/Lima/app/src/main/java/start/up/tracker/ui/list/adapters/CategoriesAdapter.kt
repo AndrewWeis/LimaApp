@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.data.entities.Category
+import start.up.tracker.entities.Category
 import start.up.tracker.databinding.ItemCategoryBinding
 
 class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter<Category,

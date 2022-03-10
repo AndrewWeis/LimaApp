@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.data.entities.Category
+import start.up.tracker.entities.Category
 import start.up.tracker.databinding.FragmentCategoriesBinding
 import start.up.tracker.mvvm.view_models.categories.CategoriesViewModel
 import start.up.tracker.ui.list.adapters.CategoriesAdapter
