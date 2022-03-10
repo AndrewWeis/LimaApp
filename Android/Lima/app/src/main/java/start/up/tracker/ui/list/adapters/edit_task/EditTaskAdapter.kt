@@ -2,19 +2,19 @@ package start.up.tracker.ui.list.adapters.edit_task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
+import start.up.tracker.ui.list.view_holders.forms.BaseInputView
 import start.up.tracker.ui.list.view_holders.forms.TextInputViewHolder
 import start.up.tracker.ui.list.view_holders.headers.HeaderViewHolder
 
 class EditTaskAdapter(
     layoutInflater: LayoutInflater,
-    /*private val textInputListener: TextInputListener,
-    private val textInputSelectionListener: TextInputSelectionListener*/
+    private val textInputListener: BaseInputView.TextInputListener,
+    // private val textInputSelectionListener: TextInputSelectionListener
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {

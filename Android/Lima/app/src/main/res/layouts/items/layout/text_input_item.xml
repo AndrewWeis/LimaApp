@@ -21,7 +21,7 @@
         tools:hint="Подсказка">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_input_form_edit"
+            android:id="@+id/text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences|textMultiLine"
@@ -31,7 +31,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
-        android:id="@+id/erase_icon_button"
+        android:id="@+id/end_icon_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_centerVertical="true"
