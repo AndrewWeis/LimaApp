@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 data class ListItem(
     var id: String? = null,
     var type: ListItemTypes? = null,
-    var data: Any,
+    var data: Any?,
     var settings: Settings = Settings(),
     var error: Error = Error()
 )
@@ -21,6 +21,7 @@ class Settings(
     var inputType: Int? = null,
     var maxLines: Int? = null,
     var editable: Boolean = true,
+    var changeErrorAfterChangingText: Boolean = true,
 
     @DrawableRes
     var icon: Int? = null

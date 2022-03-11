@@ -1,4 +1,4 @@
-package start.up.tracker.ui.list.view_holders.forms
+package start.up.tracker.ui.views.forms.base
 
 import android.text.Editable
 import android.view.View
@@ -8,11 +8,11 @@ import start.up.tracker.ui.data.entities.forms.Error
 import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.Settings
 
-class BaseInputView(
+open class BaseInputView(
     private val binding: TextInputItemBinding
 ) {
 
-    fun bind(listItem: ListItem, settings: Settings?, listener: TextInputListener?) {
+    open fun bind(listItem: ListItem, settings: Settings?, listener: TextInputListener) {
         showText(listItem.data as String)
 
         settings?.let {
@@ -78,7 +78,7 @@ class BaseInputView(
 
     private fun showName(name: String?) {
         name?.let {
-            binding.textInputLayout.hint = it
+            binding.fieldNameText.text = it
         }
     }
 

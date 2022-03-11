@@ -21,9 +21,9 @@ class AddEditTaskViewModel @Inject constructor(
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
-    private val task = state.get<Task>("task") ?: Task()
+    private var task = state.get<Task>("task") ?: Task()
 
-    private val _taskLiveData = MutableLiveData<Task>(task)
+    private val _taskLiveData = MutableLiveData(task)
     val taskLiveData: LiveData<Task>
         get() = _taskLiveData
 
@@ -32,13 +32,47 @@ class AddEditTaskViewModel @Inject constructor(
     private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
     val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
 
-    fun formatToDate(it: Long?): String {
-        val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy")
-        return simpleDateFormat.format(it)
-    }
-
     fun onSaveClick() {
 
+    }
+
+    /**
+     * Выставляет значение task в taskLiveData
+     */
+    fun setTaskLiveDataValue() {
+        _taskLiveData.postValue(task)
+    }
+
+    /**
+     * Заголовок задачи был изменен
+     *
+     * @param title заголовок
+     */
+    fun onTaskTitleHasBeenChanged(title: String) {
+        task = task.copy(title = title)
+    }
+
+    /**
+     * Описание задачи было изменено
+     *
+     * @param description описание
+     */
+    fun onTaskDescriptionHasBeenChanged(description: String) {
+        task = task.copy(description = description)
+    }
+
+    /**
+     * Заголовок задачи был очищен
+     */
+    fun onTaskTitleClearClick() {
+        task = task.copy(title = "")
+    }
+
+    /**
+     * Описание задачи было очищено
+     */
+    fun onTaskDescriptionClearClick() {
+        task = task.copy(description = "")
     }
 
     private fun createTask(task: Task, categoryName: String) = viewModelScope.launch {

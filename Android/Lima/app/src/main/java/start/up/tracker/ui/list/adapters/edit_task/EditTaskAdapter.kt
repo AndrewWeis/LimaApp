@@ -7,9 +7,9 @@ import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
-import start.up.tracker.ui.list.view_holders.forms.BaseInputView
 import start.up.tracker.ui.list.view_holders.forms.TextInputViewHolder
 import start.up.tracker.ui.list.view_holders.headers.HeaderViewHolder
+import start.up.tracker.ui.views.forms.base.BaseInputView
 
 class EditTaskAdapter(
     layoutInflater: LayoutInflater,
@@ -41,7 +41,7 @@ class EditTaskAdapter(
             ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
                 (holder as HeaderViewHolder).bind(item)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
-                (holder as TextInputViewHolder).bind(item, /*textInputListener*/)
+                (holder as TextInputViewHolder).bind(item, textInputListener)
             /*ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
             ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
                 (holder as SelectInputViewHolder).bind(item, textInputListener)

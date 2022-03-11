@@ -110,7 +110,7 @@ class EditTaskInfoGenerator {
      *
      * @param id        идентификатор элемента
      * @param type      тип элемента
-     * @param data     значение
+     * @param data      значение
      * @param settings  настройки
      * @return элемент списка
      */
