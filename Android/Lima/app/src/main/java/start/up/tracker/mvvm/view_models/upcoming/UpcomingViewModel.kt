@@ -12,7 +12,7 @@ import start.up.tracker.database.dao.UpcomingTasksDao
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.utils.ExtendedTasksMergeFlows
-import java.util.*
+import start.up.tracker.utils.TimeHelper
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,9 +24,9 @@ class UpcomingViewModel @Inject constructor(
     upcomingTasksDao: UpcomingTasksDao,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
-    private val currentDate = Date().time
-
-    private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks()
+    private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(
+        TimeHelper.getCurrentDayInMillisecond()
+    )
     private val categoriesFlow = categoriesDao.getCategories()
 
     private val tasksFlow: Flow<List<Task>> = combine(
