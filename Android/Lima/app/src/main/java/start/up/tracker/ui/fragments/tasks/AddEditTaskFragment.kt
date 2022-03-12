@@ -2,9 +2,16 @@ package start.up.tracker.ui.fragments.tasks
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
+import start.up.tracker.data.fields.Field
 import start.up.tracker.databinding.EditTaskFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.AddEditTaskViewModel
@@ -34,14 +41,20 @@ class AddEditTaskFragment :
         binding = EditTaskFragmentBinding.bind(view)
 
         initAdapter()
+        initListeners()
         initObservers()
+        initEventsListener()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onFinishedEditingTask()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
         listExtension = null
-        viewModel.setTaskLiveDataValue()
     }
 
     override fun onTextInputDataChange(listItem: ListItem) {
@@ -76,6 +89,23 @@ class AddEditTaskFragment :
         hideKeyboard()
     }
 
+    private fun showTitleField(field: Field<String>) {
+        val listItem: ListItem = generator.createTitleListItem(field)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setTitleItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setTitleItem(listItem)
+        }
+    }
+
+    private fun showEditableTaskInfo(task: Task?) {
+        adapter.addListItems(generator.createListItems(task))
+    }
+
     private fun initAdapter() {
         adapter = EditTaskAdapter(
             layoutInflater = layoutInflater,
@@ -88,12 +118,32 @@ class AddEditTaskFragment :
     }
 
     private fun initObservers() {
-        viewModel.taskLiveData.observe(viewLifecycleOwner) { task ->
-            showFields(task)
+        viewModel.taskInfoLiveData.observe(viewLifecycleOwner) { task ->
+            showEditableTaskInfo(task)
+        }
+
+        viewModel.titleField.observe(viewLifecycleOwner) { field ->
+            showTitleField(field)
         }
     }
 
-    private fun showFields(task: Task?) {
-        adapter.addListItems(generator.createListItems(task))
+    private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewModel.addEditTaskEvent.collect { event ->
+            when (event) {
+                is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
+                    setFragmentResult(
+                        "add_edit_request",
+                        bundleOf("add_edit_result" to event.result)
+                    )
+                    findNavController().popBackStack()
+                }
+            }
+        }
+    }
+
+    private fun initListeners() {
+        binding?.doneButton?.setOnClickListener {
+            viewModel.onSaveClick()
+        }
     }
 }

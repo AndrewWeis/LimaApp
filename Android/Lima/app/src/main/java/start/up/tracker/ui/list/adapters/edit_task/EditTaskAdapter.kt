@@ -14,12 +14,11 @@ import start.up.tracker.ui.views.forms.base.BaseInputView
 class EditTaskAdapter(
     layoutInflater: LayoutInflater,
     private val textInputListener: BaseInputView.TextInputListener,
-    // private val textInputSelectionListener: TextInputSelectionListener
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            ITEM_TASK_DATA_HEADER, ITEM_PRIORITY_HEADER, ITEM_CATEGORY_HEADER,
+            ITEM_PRIORITY_HEADER, ITEM_CATEGORY_HEADER,
             ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
                 return HeaderViewHolder(layoutInflater, parent)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
@@ -37,7 +36,7 @@ class EditTaskAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
-            ITEM_TASK_DATA_HEADER, ITEM_PRIORITY_HEADER, ITEM_CATEGORY_HEADER,
+            ITEM_PRIORITY_HEADER, ITEM_CATEGORY_HEADER,
             ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
                 (holder as HeaderViewHolder).bind(item)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
@@ -63,7 +62,6 @@ class EditTaskAdapter(
     }
 
     override fun getTypeSequence() = intArrayOf(
-        ITEM_TASK_DATA_HEADER,
         ITEM_INPUT_TITLE,
         ITEM_INPUT_DESCRIPTION,
         ITEM_PRIORITY_HEADER,
@@ -80,6 +78,10 @@ class EditTaskAdapter(
 
     fun addListItems(listItems: List<ListItem>) {
         updateItems(listItems)
+    }
+
+    fun setTitleItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_INPUT_TITLE)
     }
 
     private fun getInputTextItemViewTime(item: ListItem): Int {
@@ -110,7 +112,6 @@ class EditTaskAdapter(
 
     private fun getHeaderItemViewType(item: ListItem): Int {
         return when (item.id) {
-            ListItemIds.TASK_DATA_HEADER -> ITEM_TASK_DATA_HEADER
             ListItemIds.TASK_PRIORITY_HEADER -> ITEM_PRIORITY_HEADER
             ListItemIds.TASK_CATEGORY_HEADER -> ITEM_CATEGORY_HEADER
             ListItemIds.TASK_TIME_HEADER -> ITEM_TIME_HEADER
@@ -120,18 +121,17 @@ class EditTaskAdapter(
     }
 
     private companion object {
-        const val ITEM_TASK_DATA_HEADER = 0
-        const val ITEM_INPUT_TITLE = 1
-        const val ITEM_INPUT_DESCRIPTION = 2
-        const val ITEM_PRIORITY_HEADER = 3
-        const val ITEM_PRIORITIES_LIST = 4
-        const val ITEM_CATEGORY_HEADER = 5
-        const val ITEM_CATEGORIES_LIST = 6
-        const val ITEM_TIME_HEADER = 7
-        const val ITEM_SELECTION_TIME_START = 8
-        const val ITEM_SELECTION_TIME_END = 9
-        const val ITEM_DATE_HEADER = 10
-        const val ITEM_SELECTION_DATE = 11
-        const val ITEM_SELECTION_REPEAT = 12
+        const val ITEM_INPUT_TITLE = 0
+        const val ITEM_INPUT_DESCRIPTION = 1
+        const val ITEM_PRIORITY_HEADER = 2
+        const val ITEM_PRIORITIES_LIST = 3
+        const val ITEM_CATEGORY_HEADER = 4
+        const val ITEM_CATEGORIES_LIST = 5
+        const val ITEM_TIME_HEADER = 6
+        const val ITEM_SELECTION_TIME_START = 7
+        const val ITEM_SELECTION_TIME_END = 8
+        const val ITEM_DATE_HEADER = 9
+        const val ITEM_SELECTION_DATE = 10
+        const val ITEM_SELECTION_REPEAT = 11
     }
 }

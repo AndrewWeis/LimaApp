@@ -3,12 +3,15 @@ package start.up.tracker.ui.list.generators.tasks
 import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import start.up.tracker.R
+import start.up.tracker.data.fields.Field
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.Header
+import start.up.tracker.ui.data.entities.forms.Error
 import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.ListItemTypes
 import start.up.tracker.ui.data.entities.forms.Settings
+import start.up.tracker.ui.extensions.ValidationMessages
 import start.up.tracker.utils.resources.ResourcesUtils
 
 class EditTaskInfoGenerator {
@@ -27,12 +30,42 @@ class EditTaskInfoGenerator {
         val list: MutableList<ListItem> = mutableListOf()
 
         list.add(getHeader(ListItemIds.TASK_DATA_HEADER, R.string.title_task_data))
-        list.add(getTaskTitle(task.title))
         list.add(getTaskDescription(task.description))
 
         list.add(getHeader(ListItemIds.TASK_PRIORITY_HEADER, R.string.title_task_priority))
 
         return list
+    }
+
+    /**
+     * Получить listItem с заголовком задачи
+     *
+     * @param field содержит заголовок задачи
+     * @return listItem с заголовком задачи
+     */
+    fun createTitleListItem(field: Field<String>): ListItem {
+        val title = field.getValue() ?: ""
+
+        val setting = Settings(
+            inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
+            imeOption = EditorInfo.IME_ACTION_NEXT,
+            editable = field.isEditable(),
+            name = ResourcesUtils.getString(R.string.task_title),
+            hint = getHint()
+        )
+
+        val validationMessages = ValidationMessages(field)
+        val error = Error(
+            message = validationMessages.getMessage()
+        )
+
+        return ListItem(
+            id = ListItemIds.TASK_TITLE,
+            type = ListItemTypes.INPUT_TEXT,
+            data = title,
+            settings = setting,
+            error = error
+        )
     }
 
     /**
@@ -49,28 +82,6 @@ class EditTaskInfoGenerator {
             id = id,
             type = ListItemTypes.HEADER,
             data = header
-        )
-    }
-
-    /**
-     * Получить listItem с заголовком задачи
-     *
-     * @param title заголовок задачи
-     * @return listItem с заголовком задачи
-     */
-    private fun getTaskTitle(title: String): ListItem {
-        val settings = Settings(
-            inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
-            imeOption = EditorInfo.IME_ACTION_NEXT,
-            hint = getHint(),
-            name = ResourcesUtils.getString(R.string.task_title),
-        )
-
-        return createListItem(
-            id = ListItemIds.TASK_TITLE,
-            type = ListItemTypes.INPUT_TEXT,
-            data = title,
-            settings = settings
         )
     }
 
