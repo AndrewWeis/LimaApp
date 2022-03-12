@@ -67,13 +67,13 @@ class CalendarTasksAdapter(
                     icPriority.setBackgroundColor(Color.parseColor(color))
                 }
 
-                /*if (task.timeStart != null && task.timeEnd != null) {
+                if (task.startTimeInMinutes != null && task.endTimeInMinutes != null) {
                     val layoutParams: ViewGroup.MarginLayoutParams =
                         binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
                     var space = 0
-                    var height = task.timeEndInt!! - task.timeStartInt!!
+                    var height = task.endTimeInMinutes - task.startTimeInMinutes
                     if (nextTask != null) {
-                        space = nextTask.timeStartInt!! - task.timeEndInt
+                        space = nextTask.startTimeInMinutes!! - task.endTimeInMinutes
                         if (space == 0) {
                             space = 2
                             height -= 4
@@ -81,11 +81,11 @@ class CalendarTasksAdapter(
                     }
                     layoutParams.bottomMargin = convertDpToPx(space)
                     layoutParams.height = convertDpToPx(height)
-                    if (position == 0 && task.timeStartInt > TIME_OFFSET) {
-                        layoutParams.topMargin = convertDpToPx(task.timeStartInt - TIME_OFFSET)
+                    if (position == 0 && task.startTimeInMinutes > TIME_OFFSET) {
+                        layoutParams.topMargin = convertDpToPx(task.startTimeInMinutes - TIME_OFFSET)
                     }
                     binding.cardTaskCalendar.requestLayout()
-                }*/
+                }
             }
         }
 

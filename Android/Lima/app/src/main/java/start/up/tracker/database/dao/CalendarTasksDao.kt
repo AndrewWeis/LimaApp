@@ -13,8 +13,13 @@ interface CalendarTasksDao {
        SELECT *
        FROM task_table
        JOIN categories_table ON task_table.categoryId = categories_table.categoryId
-       WHERE (completed != :hideCompleted OR completed = 0)
+       WHERE (completed != :hideCompleted OR completed = 0) AND
+       task_table.date = :today AND
+       task_table.startTimeInMinutes != null AND
+       task_table.endTimeInMinutes != null
+       ORDER BY task_table.endTimeInMinutes
+       ASC
     """
     )
-    fun getCalendarTasks(hideCompleted: Boolean): Flow<List<Task>>
+    fun getCalendarTasks(today: Long, hideCompleted: Boolean): Flow<List<Task>>
 }
