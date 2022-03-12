@@ -10,7 +10,7 @@ import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TodayTasksDao
 import start.up.tracker.database.dao.UpcomingTasksDao
 import start.up.tracker.entities.Category
-import java.text.SimpleDateFormat
+import start.up.tracker.utils.TimeHelper
 import java.util.*
 import javax.inject.Inject
 
@@ -18,8 +18,8 @@ import javax.inject.Inject
 class CategoriesViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val categoriesDao: CategoriesDao,
-    private val todayTasksDao: TodayTasksDao,
-    private val upcomingTasksDao: UpcomingTasksDao
+    todayTasksDao: TodayTasksDao,
+    upcomingTasksDao: UpcomingTasksDao
 ) : ViewModel() {
 
     private val _categories = categoriesDao.getCategories().asLiveData()
@@ -40,11 +40,9 @@ class CategoriesViewModel @Inject constructor(
     private val getInboxTasksCountFlow = taskDao.countTasksOfInbox()
     val getInboxTasksCount = getInboxTasksCountFlow.asLiveData()
 
-    private val formatter = SimpleDateFormat("dd.MM.yyyy")
-    private val currentDate: String = formatter.format(Date())
-    private val currentDateLong = Date().time
-
-    private val todayTasksCountFlow = todayTasksDao.countTodayTasks()
+    private val todayTasksCountFlow = todayTasksDao.countTodayTasks(
+        TimeHelper.getCurrentDayInMillisecond()
+    )
     val todayTasksCount = todayTasksCountFlow.asLiveData()
 
     private val upcomingTasksCountFlow = upcomingTasksDao.countUpcomingTasks()

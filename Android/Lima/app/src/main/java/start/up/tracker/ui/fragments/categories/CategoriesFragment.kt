@@ -12,11 +12,10 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.entities.Category
 import start.up.tracker.databinding.FragmentCategoriesBinding
+import start.up.tracker.entities.Category
 import start.up.tracker.mvvm.view_models.categories.CategoriesViewModel
 import start.up.tracker.ui.list.adapters.CategoriesAdapter
-import start.up.tracker.utils.exhaustive
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,7 +77,7 @@ class CategoriesFragment :
                     val action = CategoriesFragmentDirections.actionCategoryToUpcoming()
                     findNavController().navigate(action)
                 }
-            }.exhaustive
+            }
         }
     }
 

@@ -12,17 +12,21 @@ interface TodayTasksDao {
         """
         SELECT COUNT(*)
         FROM task_table
-        WHERE completed = 0
+        WHERE date = :today AND
+        completed = 0
     """
     )
-    fun countTodayTasks(): Flow<Int>
+    fun countTodayTasks(today: Long): Flow<Int>
 
     @Query(
         """
         SELECT *
         FROM task_table
         JOIN categories_table ON task_table.categoryId = categories_table.categoryId
+        WHERE task_table.date = :today
+        ORDER BY priority 
+        ASC
     """
     )
-    fun getTodayTasks(): Flow<List<Task>>
+    fun getTodayTasks(today: Long): Flow<List<Task>>
 }

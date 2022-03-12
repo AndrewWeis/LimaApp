@@ -22,13 +22,14 @@ data class Task(
     val priority: Int = 1,
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
-    val startTime: Long? = null,
-    val endTime: Long? = null,
+    val startTimeInMinutes: Int? = null,
+    val endTimeInMinutes: Int? = null,
+    val date: Long? = null,
 
     // todo (maybe add task id to day stat)
     val wasCompleted: Boolean = false,
 
-    val categoryId: Int = 0, // 0 - inbox
+    val categoryId: Int = 1, // 1 - inbox
     val categoryName: String? = null,
     val color: Int? = null,
 ) : Parcelable

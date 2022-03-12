@@ -12,8 +12,7 @@ import start.up.tracker.database.dao.TodayTasksDao
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.utils.ExtendedTasksMergeFlows.mergeFlowsForExtendedTask
-import java.text.SimpleDateFormat
-import java.util.*
+import start.up.tracker.utils.TimeHelper
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,10 +24,9 @@ class TodayTasksViewModel @Inject constructor(
     categoriesDao: CategoriesDao
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
-    private val formatter = SimpleDateFormat("dd.MM.yyyy")
-    private val currentDate: String = formatter.format(Date())
-
-    private val todayTasksFlow = todayTasksDao.getTodayTasks()
+    private val todayTasksFlow = todayTasksDao.getTodayTasks(
+        TimeHelper.getCurrentDayInMillisecond()
+    )
     private val categoriesFlow = categoriesDao.getCategories()
 
     private val tasksFlow: Flow<List<Task>> = combine(
