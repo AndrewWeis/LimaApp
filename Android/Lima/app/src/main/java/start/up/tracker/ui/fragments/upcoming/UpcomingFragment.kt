@@ -22,6 +22,7 @@ import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.UpcomingAdapter
+import start.up.tracker.utils.TimeHelper
 
 @AndroidEntryPoint
 class UpcomingFragment :
@@ -139,14 +140,22 @@ class UpcomingFragment :
     private fun separateDataAndSubmit(tasks: List<Task>, adapter: UpcomingAdapter) {
         val sectionsList: MutableList<UpcomingSection> = mutableListOf()
         val tasksList: MutableList<Task> = mutableListOf()
-/*
+
         for (i in tasks.indices) {
             tasksList.add(tasks[i])
-            if (i + 1 == tasks.size || tasks[i].dateLong != tasks[i + 1].dateLong) {
-                sectionsList.add(UpcomingSection(tasks[i].date!!, tasksList.toList()))
+            if (i + 1 == tasks.size || tasks[i].date != tasks[i + 1].date) {
+                sectionsList.add(
+                    UpcomingSection(
+                        section = TimeHelper.formatMillisecondToDate(
+                            tasks[i].date,
+                            TimeHelper.DateFormats.DD_MMMM
+                        ),
+                        tasksList = tasksList.toList()
+                    )
+                )
                 tasksList.clear()
             }
-        }*/
+        }
 
         adapter.submitList(sectionsList.toList())
     }

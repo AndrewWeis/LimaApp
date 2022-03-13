@@ -14,7 +14,7 @@ object ExtendedTasksMergeFlows {
 
         tasks
             .filter { task ->
-                task.completed == hideCompleted
+                task.completed != hideCompleted || !task.completed
             }
             .forEach { task ->
                 categories.forEach { category ->

@@ -46,10 +46,10 @@ interface TaskDao {
         FROM task_table 
         JOIN categories_table ON task_table.categoryId = categories_table.categoryId
         WHERE categories_table.categoryId = 1 AND
-        completed = 0
+        (completed != :hideCompleted OR completed = 0)
     """
     )
-    fun countTasksOfInbox(): Flow<Int>
+    fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
 
     @Query("SELECT MAX(id) FROM task_table")
     suspend fun getTaskMaxId(): Int?

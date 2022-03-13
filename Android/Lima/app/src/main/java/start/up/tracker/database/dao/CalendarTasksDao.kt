@@ -15,8 +15,8 @@ interface CalendarTasksDao {
        JOIN categories_table ON task_table.categoryId = categories_table.categoryId
        WHERE (completed != :hideCompleted OR completed = 0) AND
        task_table.date = :today AND
-       task_table.startTimeInMinutes != null AND
-       task_table.endTimeInMinutes != null
+       task_table.startTimeInMinutes is not NULL AND
+       task_table.endTimeInMinutes is not NULL
        ORDER BY task_table.endTimeInMinutes
        ASC
     """

@@ -24,8 +24,9 @@ interface UpcomingTasksDao {
         """
         SELECT COUNT(*)
         FROM task_table
-        WHERE date > :today
+        WHERE date > :today AND
+        (completed != :hideCompleted OR completed = 0)
     """
     )
-    fun countUpcomingTasks(today: Long): Flow<Int>
+    fun countUpcomingTasks(today: Long, hideCompleted: Boolean): Flow<Int>
 }

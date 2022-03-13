@@ -13,10 +13,10 @@ interface TodayTasksDao {
         SELECT COUNT(*)
         FROM task_table
         WHERE date = :today AND
-        completed = 0
+        (completed != :hideCompleted OR completed = 0)
     """
     )
-    fun countTodayTasks(today: Long): Flow<Int>
+    fun countTodayTasks(today: Long, hideCompleted: Boolean): Flow<Int>
 
     @Query(
         """

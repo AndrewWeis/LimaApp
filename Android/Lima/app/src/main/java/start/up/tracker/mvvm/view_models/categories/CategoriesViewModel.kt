@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.CategoriesDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TodayTasksDao
@@ -19,7 +20,8 @@ class CategoriesViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val categoriesDao: CategoriesDao,
     todayTasksDao: TodayTasksDao,
-    upcomingTasksDao: UpcomingTasksDao
+    upcomingTasksDao: UpcomingTasksDao,
+    preferencesManager: PreferencesManager,
 ) : ViewModel() {
 
     private val _categories = categoriesDao.getCategories().asLiveData()
@@ -37,17 +39,28 @@ class CategoriesViewModel @Inject constructor(
     private val categoryEventChannel = Channel<CategoryEvent>()
     val categoryEvent = categoryEventChannel.receiveAsFlow()
 
-    private val getInboxTasksCountFlow = taskDao.countTasksOfInbox()
+    private val getInboxTasksCountFlow =
+        preferencesManager.hideCompleted.flatMapLatest { hideCompleted ->
+            taskDao.countTasksOfInbox(hideCompleted = hideCompleted)
+        }
     val getInboxTasksCount = getInboxTasksCountFlow.asLiveData()
 
-    private val todayTasksCountFlow = todayTasksDao.countTodayTasks(
-        TimeHelper.getCurrentDayInMilliseconds()
-    )
+    private val todayTasksCountFlow =
+        preferencesManager.hideCompleted.flatMapLatest { hideCompleted ->
+            todayTasksDao.countTodayTasks(
+                today = TimeHelper.getCurrentDayInMilliseconds(),
+                hideCompleted = hideCompleted
+            )
+        }
     val todayTasksCount = todayTasksCountFlow.asLiveData()
 
-    private val upcomingTasksCountFlow = upcomingTasksDao.countUpcomingTasks(
-        TimeHelper.getCurrentDayInMilliseconds()
-    )
+    private val upcomingTasksCountFlow =
+        preferencesManager.hideCompleted.flatMapLatest { hideCompleted ->
+            upcomingTasksDao.countUpcomingTasks(
+                today = TimeHelper.getCurrentDayInMilliseconds(),
+                hideCompleted = hideCompleted
+            )
+        }
     val upcomingTasksCount = upcomingTasksCountFlow.asLiveData()
 
     fun updateNumberOfTasks() = viewModelScope.launch {
