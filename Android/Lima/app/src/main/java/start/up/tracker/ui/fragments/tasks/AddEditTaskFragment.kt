@@ -1,13 +1,14 @@
 package start.up.tracker.ui.fragments.tasks
 
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.TimePicker
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
@@ -23,12 +24,15 @@ import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.tasks.EditTaskInfoGenerator
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
+import start.up.tracker.utils.TimeHelper
+import java.util.*
 
 @AndroidEntryPoint
 class AddEditTaskFragment :
     BaseFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
-    SelectInputViewHolder.TextInputSelectionListener {
+    SelectInputViewHolder.TextInputSelectionListener,
+    TimePickerDialog.OnTimeSetListener {
 
     private val viewModel: AddEditTaskViewModel by viewModels()
 
@@ -92,7 +96,29 @@ class AddEditTaskFragment :
     }
 
     override fun onTextInputSelectionClick(listItem: ListItem) {
-        TODO("Not yet implemented")
+        when (listItem.id) {
+            ListItemIds.TASK_TIME_START, ListItemIds.TASK_TIME_END ->
+                openTimePicker(listItem.data as Long?)
+        }
+    }
+
+    override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
+
+    }
+
+    private fun openTimePicker(milliseconds: Long?) {
+        val calendar = Calendar.getInstance()
+
+        if (milliseconds != null) {
+            calendar.timeInMillis = milliseconds
+        }
+
+        val timePickerDialog = TimePickerDialog(
+            requireContext(), R.style.DatePicker, this,
+            calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], TimeHelper.isSystem24Hour
+        )
+
+        timePickerDialog.show()
     }
 
     private fun showTitleField(field: Field<String>) {
