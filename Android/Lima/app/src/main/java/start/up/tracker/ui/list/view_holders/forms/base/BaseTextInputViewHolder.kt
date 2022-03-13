@@ -19,10 +19,6 @@ abstract class BaseTextInputViewHolder(inflater: LayoutInflater, parent: ViewGro
     private val baseTextInputView: BaseTextInputView = BaseTextInputView(binding)
 
     fun bind(listItem: ListItem, listener: BaseInputView.TextInputListener) {
-        baseTextInputView.bind(listItem, listItem.settings, listener)
-    }
-
-    fun onBindError(listItem: ListItem) {
-        baseTextInputView.onBindError(listItem)
+        baseTextInputView.bind(listItem, listener)
     }
 }

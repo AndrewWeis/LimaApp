@@ -35,4 +35,8 @@
     <string name="sort_by_date_created">Sort by date created</string>
     <string name="delete_all_completed">Delete all completed</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="task_time_start">Start time</string>
+    <string name="task_time_end">End time</string>
+    <string name="task_date">Date</string>
 </resources>

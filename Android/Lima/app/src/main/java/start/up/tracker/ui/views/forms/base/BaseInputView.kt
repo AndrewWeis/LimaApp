@@ -6,16 +6,15 @@ import androidx.annotation.DrawableRes
 import start.up.tracker.databinding.TextInputItemBinding
 import start.up.tracker.ui.data.entities.forms.Error
 import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.Settings
 
 open class BaseInputView(
     private val binding: TextInputItemBinding
 ) {
 
-    open fun bind(listItem: ListItem, settings: Settings?, listener: TextInputListener) {
-        showText(listItem.data as String)
+    open fun bind(listItem: ListItem, listener: TextInputListener) {
+        showText(listItem.data as String?)
 
-        settings?.let {
+        listItem.settings.let { settings ->
             showHint(settings.hint)
             showName(settings.name)
             showInputLayoutError(listItem.error)
@@ -40,6 +39,10 @@ open class BaseInputView(
         error.message?.let {
             binding.textInputLayout.error = it
         }
+    }
+
+    fun setTextInputEditTextOnClickListener(onClickListener: View.OnClickListener?) {
+        binding.textInputEditText.setOnClickListener(onClickListener)
     }
 
     protected fun setEndIconBtnClick(onClickListener: View.OnClickListener?) {

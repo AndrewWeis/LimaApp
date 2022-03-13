@@ -21,12 +21,14 @@ import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.tasks.EditTaskInfoGenerator
+import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
 
 @AndroidEntryPoint
 class AddEditTaskFragment :
     BaseFragment(R.layout.edit_task_fragment),
-    BaseInputView.TextInputListener {
+    BaseInputView.TextInputListener,
+    SelectInputViewHolder.TextInputSelectionListener {
 
     private val viewModel: AddEditTaskViewModel by viewModels()
 
@@ -89,6 +91,10 @@ class AddEditTaskFragment :
         hideKeyboard()
     }
 
+    override fun onTextInputSelectionClick(listItem: ListItem) {
+        TODO("Not yet implemented")
+    }
+
     private fun showTitleField(field: Field<String>) {
         val listItem: ListItem = generator.createTitleListItem(field)
 
@@ -109,7 +115,8 @@ class AddEditTaskFragment :
     private fun initAdapter() {
         adapter = EditTaskAdapter(
             layoutInflater = layoutInflater,
-            textInputListener = this
+            textInputListener = this,
+            textInputSelectionListener = this
         )
 
         listExtension = ListExtension(binding?.editTasksList)

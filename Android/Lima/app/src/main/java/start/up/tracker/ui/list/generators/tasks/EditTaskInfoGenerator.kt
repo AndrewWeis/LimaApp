@@ -12,6 +12,7 @@ import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.ListItemTypes
 import start.up.tracker.ui.data.entities.forms.Settings
 import start.up.tracker.ui.extensions.ValidationMessages
+import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
 
 class EditTaskInfoGenerator {
@@ -29,12 +30,90 @@ class EditTaskInfoGenerator {
 
         val list: MutableList<ListItem> = mutableListOf()
 
-        list.add(getHeader(ListItemIds.TASK_DATA_HEADER, R.string.title_task_data))
         list.add(getTaskDescription(task.description))
 
-        list.add(getHeader(ListItemIds.TASK_PRIORITY_HEADER, R.string.title_task_priority))
+        // list.add(getHeader(ListItemIds.TASK_PRIORITY_HEADER, R.string.title_task_priority))
+        list.add(getTaskStartTime(task.startTimeInMinutes))
+        list.add(getTaskEndTime(task.endTimeInMinutes))
+        list.add(getTaskDate(task.date))
 
         return list
+    }
+
+    /**
+     * Получить listItem с временем начала задачи в минутах
+     *
+     * @param startTimeInMinutes минуты
+     * @return listItem с временем начала задачи в минутах
+     */
+    private fun getTaskStartTime(startTimeInMinutes: Int?): ListItem {
+        val settings = Settings(
+            hint = getHint(),
+            name = ResourcesUtils.getString(R.string.task_time_start),
+            icon = R.drawable.ic_time
+        )
+
+        return createListItem(
+            id = ListItemIds.TASK_TIME_START,
+            type = ListItemTypes.SELECT,
+            data = getFormattedTimeStart(startTimeInMinutes),
+            settings = settings
+        )
+    }
+
+    /**
+     * Получить listItem с временем окончания задачи в минутах
+     *
+     * @param endTimeInMinutes минуты
+     * @return listItem с временем окончания задачи в минутах
+     */
+    private fun getTaskEndTime(endTimeInMinutes: Int?): ListItem {
+        val settings = Settings(
+            hint = getHint(),
+            name = ResourcesUtils.getString(R.string.task_time_end),
+            icon = R.drawable.ic_time
+        )
+
+        return createListItem(
+            id = ListItemIds.TASK_TIME_END,
+            type = ListItemTypes.SELECT,
+            data = getFormattedTimeStart(endTimeInMinutes),
+            settings = settings
+        )
+    }
+
+    /**
+     * Получить listItem с датой задачи
+     *
+     * @param milliseconds миллисекунды
+     * @return listItem с датой окончания задачи
+     */
+    private fun getTaskDate(milliseconds: Long?): ListItem {
+        val settings = Settings(
+            hint = getHint(),
+            name = ResourcesUtils.getString(R.string.task_date),
+            icon = R.drawable.ic_calendar
+        )
+
+        val formattedDate =
+            TimeHelper.formatMillisecondToDate(milliseconds, TimeHelper.DateFormats.DD_MM)
+
+        return createListItem(
+            id = ListItemIds.TASK_DATE,
+            type = ListItemTypes.SELECT,
+            data = formattedDate,
+            settings = settings
+        )
+    }
+
+    /**
+     * Получить отформатированное время начала/окончания задачи
+     *
+     * @param time время начала в минутах
+     * @return отформатировання время начала/окончания задачи
+     */
+    private fun getFormattedTimeStart(time: Int?): String? {
+        return TimeHelper.formatMinutesOfCurrentDay(time)
     }
 
     /**
@@ -100,10 +179,10 @@ class EditTaskInfoGenerator {
         )
 
         return createListItem(
-            ListItemIds.TASK_DESCRIPTION,
-            ListItemTypes.INPUT_TEXT,
-            description,
-            settings
+            id = ListItemIds.TASK_DESCRIPTION,
+            type = ListItemTypes.INPUT_TEXT,
+            data = description,
+            settings = settings
         )
     }
 
@@ -125,7 +204,7 @@ class EditTaskInfoGenerator {
      * @param settings  настройки
      * @return элемент списка
      */
-    private fun createListItem(id: String, type: ListItemTypes, data: Any, settings: Settings): ListItem {
+    private fun createListItem(id: String, type: ListItemTypes, data: Any?, settings: Settings): ListItem {
         val listItem: ListItem = createListItem(id, type, data)
         return listItem.copy(settings = settings)
     }
@@ -138,7 +217,7 @@ class EditTaskInfoGenerator {
      * @param data     значение
      * @return элемент списка
      */
-    private fun createListItem(id: String, type: ListItemTypes, data: Any): ListItem {
+    private fun createListItem(id: String, type: ListItemTypes, data: Any?): ListItem {
         return ListItem(
             id = id,
             type = type,

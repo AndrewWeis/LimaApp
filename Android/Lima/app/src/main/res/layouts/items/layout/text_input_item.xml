@@ -28,7 +28,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:errorEnabled="true"
         app:errorIconDrawable="@null"
         app:layout_constraintTop_toBottomOf="@id/field_name_text"
         tools:hint="Подсказка">
@@ -48,11 +47,11 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_centerVertical="true"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/text_input_layout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/text_input_layout"
         tools:src="@drawable/ic_clear" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,9 +16,9 @@ open class BaseTextInputView(
 
     private var textWatcher: TextWatcher? = null
 
-    override fun bind(listItem: ListItem, settings: Settings?, listener: TextInputListener) {
+    override fun bind(listItem: ListItem, listener: TextInputListener) {
         removeTextChangedListener(textWatcher)
-        super.bind(listItem, settings, listener)
+        super.bind(listItem, listener)
         setEndIconState(listItem)
         initTextWatcher(listItem, listener)
         setListeners(listItem, listener)
