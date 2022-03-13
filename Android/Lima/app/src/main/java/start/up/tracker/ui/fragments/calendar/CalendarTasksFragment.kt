@@ -19,6 +19,7 @@ import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
 import start.up.tracker.ui.list.adapters.CalendarTasksAdapter
+import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.convertDpToPx
 import start.up.tracker.utils.timeToMinutes
 import java.text.SimpleDateFormat
@@ -135,13 +136,9 @@ class CalendarTasksFragment :
     }
 
     private fun initCurrentTimeIndicator() {
-        val sdf = SimpleDateFormat("HH:mm")
-        val currentDate = sdf.format(Date())
-        val minutes = timeToMinutes(currentDate)
-
         val layoutParams: ViewGroup.MarginLayoutParams =
             binding?.currentTime?.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.topMargin = convertDpToPx(minutes - TIME_OFFSET)
+        layoutParams.topMargin = convertDpToPx(TimeHelper.getMinutesOfCurrentDay() - TIME_OFFSET)
         binding?.currentTime?.requestLayout()
     }
 }
