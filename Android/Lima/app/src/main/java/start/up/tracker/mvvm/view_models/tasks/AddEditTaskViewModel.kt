@@ -75,7 +75,7 @@ class AddEditTaskViewModel @Inject constructor(
      *
      * @param title заголовок
      */
-    fun onTaskTitleHasBeenChanged(title: String) {
+    fun onTaskTitleChanged(title: String) {
         fieldSet.onTitleChange(title.trim())
     }
 
@@ -84,7 +84,7 @@ class AddEditTaskViewModel @Inject constructor(
      *
      * @param description описание
      */
-    fun onTaskDescriptionHasBeenChanged(description: String) {
+    fun onTaskDescriptionChanged(description: String) {
         task = task.copy(description = description.trim())
     }
 
@@ -100,6 +100,26 @@ class AddEditTaskViewModel @Inject constructor(
      */
     fun onTaskDescriptionClearClick() {
         task = task.copy(description = "")
+    }
+
+    /**
+     * Время начала задачи было изменено
+     *
+     * @param minutes минуты
+     */
+    fun onTaskStartTimeChanged(minutes: Int) {
+        task = task.copy(startTimeInMinutes = minutes)
+        showFields()
+    }
+
+    /**
+     * Время окончания задачи было изменено
+     *
+     * @param minutes минуты
+     */
+    fun onTaskEndTimeChanged(minutes: Int) {
+        task = task.copy(endTimeInMinutes = minutes)
+        showFields()
     }
 
     private fun showFields() {

@@ -42,6 +42,9 @@ class AddEditTaskFragment :
     private var listExtension: ListExtension? = null
     private val generator: EditTaskInfoGenerator = EditTaskInfoGenerator()
 
+    // todo(костыльное решение, подумать как можно сделать по-другому)
+    private var isTaskTimeTypeStart = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = EditTaskFragmentBinding.bind(view)
@@ -66,8 +69,8 @@ class AddEditTaskFragment :
     override fun onTextInputDataChange(listItem: ListItem) {
         val value = listItem.data as String
         when (listItem.id) {
-            ListItemIds.TASK_TITLE -> viewModel.onTaskTitleHasBeenChanged(value)
-            ListItemIds.TASK_DESCRIPTION -> viewModel.onTaskDescriptionHasBeenChanged(value)
+            ListItemIds.TASK_TITLE -> viewModel.onTaskTitleChanged(value)
+            ListItemIds.TASK_DESCRIPTION -> viewModel.onTaskDescriptionChanged(value)
         }
     }
 
@@ -97,25 +100,31 @@ class AddEditTaskFragment :
 
     override fun onTextInputSelectionClick(listItem: ListItem) {
         when (listItem.id) {
-            ListItemIds.TASK_TIME_START, ListItemIds.TASK_TIME_END ->
-                openTimePicker(listItem.data as Long?)
+            ListItemIds.TASK_TIME_START -> {
+                isTaskTimeTypeStart = true
+                openTimePicker()
+            }
+            ListItemIds.TASK_TIME_END -> {
+                isTaskTimeTypeStart = false
+                openTimePicker()
+            }
         }
     }
 
-    override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
-
+    override fun onTimeSet(timePicker: TimePicker, hours: Int, minutes: Int) {
+        if (isTaskTimeTypeStart) {
+            viewModel.onTaskStartTimeChanged(hours * 60 + minutes)
+        } else {
+            viewModel.onTaskEndTimeChanged(hours * 60 + minutes)
+        }
     }
 
-    private fun openTimePicker(milliseconds: Long?) {
+    private fun openTimePicker() {
         val calendar = Calendar.getInstance()
-
-        if (milliseconds != null) {
-            calendar.timeInMillis = milliseconds
-        }
 
         val timePickerDialog = TimePickerDialog(
             requireContext(), R.style.DatePicker, this,
-            calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], TimeHelper.isSystem24Hour
+            calendar[Calendar.HOUR], calendar[Calendar.MINUTE], TimeHelper.isSystem24Hour
         )
 
         timePickerDialog.show()

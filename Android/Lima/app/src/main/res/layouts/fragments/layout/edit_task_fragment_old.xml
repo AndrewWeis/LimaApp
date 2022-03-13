@@ -184,7 +184,6 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_date_picker"
-                style="@style/date_picker_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
@@ -198,7 +197,6 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_time_start"
-                style="@style/date_picker_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_normal"
@@ -212,7 +210,6 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_time_end"
-                style="@style/date_picker_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
