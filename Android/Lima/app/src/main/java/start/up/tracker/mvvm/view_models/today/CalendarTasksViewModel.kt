@@ -22,7 +22,7 @@ class CalendarTasksViewModel @Inject constructor(
     private val calendarTasksFlow = hideCompleted.flatMapLatest {
         calendarTasksDao.getCalendarTasks(
             hideCompleted = it,
-            today = TimeHelper.getCurrentDayInMillisecond()
+            today = TimeHelper.getCurrentDayInMilliseconds()
         )
     }
     val calendarTasks = calendarTasksFlow.asLiveData()

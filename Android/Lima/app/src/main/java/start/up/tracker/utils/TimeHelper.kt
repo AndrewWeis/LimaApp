@@ -1,7 +1,6 @@
 package start.up.tracker.utils
 
 import android.text.format.DateFormat.is24HourFormat
-import com.google.android.material.datepicker.MaterialDatePicker
 import start.up.tracker.application.App
 import java.text.SimpleDateFormat
 import java.util.*
@@ -11,12 +10,35 @@ object TimeHelper {
     val isSystem24Hour = is24HourFormat(App.context)
 
     /**
-     * Получить текущую дату
+     * Получить текущую дату в миллисекундах
      *
      * @return милисекунды
      */
-    fun getCurrentDayInMillisecond(): Long {
-        return MaterialDatePicker.todayInUtcMilliseconds()
+    fun getCurrentDayInMilliseconds(): Long {
+        val calendar = Calendar.getInstance()
+        val year = calendar[Calendar.YEAR]
+        val month = calendar[Calendar.MONTH]
+        val dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
+        calendar.clear()
+        calendar.set(year, month, dayOfMonth)
+        return calendar.timeInMillis
+    }
+
+    /**
+     * Получить дату в миллисекундах
+     *
+     * @param year год
+     * @param month месяц
+     * @param dayOfMonth день месяца
+     * @return милисекунды
+     */
+    fun getDateInMilliseconds(year: Int, month: Int, dayOfMonth: Int): Long {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar[Calendar.YEAR] = year
+        calendar[Calendar.MONTH] = month
+        calendar[Calendar.DAY_OF_MONTH] = dayOfMonth
+        return calendar.timeInMillis
     }
 
     /**
@@ -24,7 +46,7 @@ object TimeHelper {
      *
      * @return милисекунды
      */
-    fun getCurrentTimeInMillisecond(): Long {
+    fun getCurrentTimeInMilliseconds(): Long {
         return Calendar.getInstance().timeInMillis
     }
 
@@ -93,6 +115,6 @@ object TimeHelper {
     }
 
     object DateFormats {
-        const val DD_MM: String = "dd-MM"
+        const val DD_MMMM: String = "dd-MMMM"
     }
 }

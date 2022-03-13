@@ -122,6 +122,16 @@ class AddEditTaskViewModel @Inject constructor(
         showFields()
     }
 
+    /**
+     * Дата окончания задачи была изменена
+     *
+     * @param milliseconds дата в миллисекунды
+     */
+    fun onTaskDateChanged(milliseconds: Long) {
+        task = task.copy(date = milliseconds)
+        showFields()
+    }
+
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()

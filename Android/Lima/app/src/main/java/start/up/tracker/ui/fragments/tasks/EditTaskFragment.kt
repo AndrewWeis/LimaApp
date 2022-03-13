@@ -1,8 +1,10 @@
 package start.up.tracker.ui.fragments.tasks
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
+import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
@@ -32,7 +34,8 @@ class EditTaskFragment :
     BaseFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
     SelectInputViewHolder.TextInputSelectionListener,
-    TimePickerDialog.OnTimeSetListener {
+    TimePickerDialog.OnTimeSetListener,
+    DatePickerDialog.OnDateSetListener {
 
     private val viewModel: AddEditTaskViewModel by viewModels()
 
@@ -108,6 +111,8 @@ class EditTaskFragment :
                 isTaskTimeTypeStart = false
                 openTimePicker()
             }
+            ListItemIds.TASK_DATE ->
+                openDatePicker()
         }
     }
 
@@ -117,6 +122,24 @@ class EditTaskFragment :
         } else {
             viewModel.onTaskEndTimeChanged(hours * 60 + minutes)
         }
+    }
+
+    override fun onDateSet(datePicker: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        val milliseconds = TimeHelper.getDateInMilliseconds(year, month, dayOfMonth)
+        viewModel.onTaskDateChanged(milliseconds)
+    }
+
+    private fun openDatePicker() {
+        val calendar = Calendar.getInstance()
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(), R.style.DatePicker, this,
+            calendar[Calendar.YEAR], calendar[Calendar.MONTH], calendar[Calendar.DAY_OF_MONTH]
+        )
+
+        datePickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
+
+        datePickerDialog.show()
     }
 
     private fun openTimePicker() {

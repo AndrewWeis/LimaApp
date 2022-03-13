@@ -25,7 +25,7 @@ class UpcomingViewModel @Inject constructor(
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(
-        TimeHelper.getCurrentDayInMillisecond()
+        TimeHelper.getCurrentDayInMilliseconds()
     )
     private val categoriesFlow = categoriesDao.getCategories()
 

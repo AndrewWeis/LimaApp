@@ -96,7 +96,7 @@ class EditTaskInfoGenerator {
         )
 
         val formattedDate =
-            TimeHelper.formatMillisecondToDate(milliseconds, TimeHelper.DateFormats.DD_MM)
+            TimeHelper.formatMillisecondToDate(milliseconds, TimeHelper.DateFormats.DD_MMMM)
 
         return createListItem(
             id = ListItemIds.TASK_DATE,

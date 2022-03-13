@@ -25,7 +25,7 @@ class TodayTasksViewModel @Inject constructor(
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private val todayTasksFlow = todayTasksDao.getTodayTasks(
-        TimeHelper.getCurrentDayInMillisecond()
+        TimeHelper.getCurrentDayInMilliseconds()
     )
     private val categoriesFlow = categoriesDao.getCategories()
 

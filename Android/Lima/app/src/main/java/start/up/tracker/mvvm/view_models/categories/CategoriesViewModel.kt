@@ -41,12 +41,12 @@ class CategoriesViewModel @Inject constructor(
     val getInboxTasksCount = getInboxTasksCountFlow.asLiveData()
 
     private val todayTasksCountFlow = todayTasksDao.countTodayTasks(
-        TimeHelper.getCurrentDayInMillisecond()
+        TimeHelper.getCurrentDayInMilliseconds()
     )
     val todayTasksCount = todayTasksCountFlow.asLiveData()
 
     private val upcomingTasksCountFlow = upcomingTasksDao.countUpcomingTasks(
-        TimeHelper.getCurrentDayInMillisecond()
+        TimeHelper.getCurrentDayInMilliseconds()
     )
     val upcomingTasksCount = upcomingTasksCountFlow.asLiveData()
 
