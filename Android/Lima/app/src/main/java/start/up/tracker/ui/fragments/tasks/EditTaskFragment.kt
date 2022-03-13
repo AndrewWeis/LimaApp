@@ -28,7 +28,7 @@ import start.up.tracker.utils.TimeHelper
 import java.util.*
 
 @AndroidEntryPoint
-class AddEditTaskFragment :
+class EditTaskFragment :
     BaseFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
     SelectInputViewHolder.TextInputSelectionListener,

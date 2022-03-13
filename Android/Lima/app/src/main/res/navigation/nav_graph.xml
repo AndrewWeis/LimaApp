@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/addEditTaskFragment"
-        android:name="start.up.tracker.ui.fragments.tasks.AddEditTaskFragment"
+        android:name="start.up.tracker.ui.fragments.tasks.EditTaskFragment"
         android:label="{title}"
         tools:layout="@layout/edit_task_fragment_old">
         <argument

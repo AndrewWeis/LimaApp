@@ -7,7 +7,7 @@
     android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.tasks.AddEditTaskFragment">
+    tools:context=".ui.fragments.tasks.EditTaskFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/edit_tasks_list"
