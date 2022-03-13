@@ -88,13 +88,28 @@ object TimeHelper {
      * @return форматированное время
      */
     fun formatMinutesOfCurrentDay(minutesOfDay: Int?): String? {
-        minutesOfDay?.let {
-            val hours = it / 60
-            val minutes = it - hours * 60
-            return "$hours:$minutes"
+        if (minutesOfDay == null) {
+            return null
         }
 
-        return null
+        // если значение от 0 до 9, нужно добавить нолик слева
+        var minutes = (minutesOfDay % 60).toString()
+        if (minutesOfDay % 60 / 10 == 0) {
+            minutes = "0$minutes"
+        }
+
+        return if (isSystem24Hour) {
+            val hours = minutesOfDay / 60
+            "$hours:$minutes"
+        } else {
+            if (minutesOfDay > 720) {
+                val hours = (minutesOfDay - 720) / 60
+                "$hours:$minutes pm"
+            } else {
+                val hours = minutesOfDay / 60
+                "$hours:$minutes am"
+            }
+        }
     }
 
     /**

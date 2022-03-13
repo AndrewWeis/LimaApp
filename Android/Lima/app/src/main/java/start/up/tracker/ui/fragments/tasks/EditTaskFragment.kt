@@ -147,7 +147,7 @@ class EditTaskFragment :
 
         val timePickerDialog = TimePickerDialog(
             requireContext(), R.style.DatePicker, this,
-            calendar[Calendar.HOUR], calendar[Calendar.MINUTE], TimeHelper.isSystem24Hour
+            calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], TimeHelper.isSystem24Hour
         )
 
         timePickerDialog.show()
