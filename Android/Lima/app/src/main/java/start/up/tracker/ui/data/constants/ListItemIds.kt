@@ -15,4 +15,7 @@ object ListItemIds {
     const val TASK_TIME_END = "task_time_end"
     const val TASK_DATE = "task_date"
     const val TASK_REPEAT = "task_repeat"
+
+    const val TASK = "task"
+    const val SUBTASK = "subtask"
 }

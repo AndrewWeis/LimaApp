@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <CheckBox
-        android:id="@+id/check_box_completed"
+        android:id="@+id/task_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_little"
@@ -18,7 +18,7 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
-        android:id="@+id/text_view_name"
+        android:id="@+id/task_title_text"
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -26,21 +26,21 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/check_box_completed"
-        app:layout_constraintEnd_toStartOf="@+id/ic_priority"
-        app:layout_constraintStart_toEndOf="@+id/check_box_completed"
-        app:layout_constraintTop_toTopOf="@+id/check_box_completed"
+        app:layout_constraintBottom_toBottomOf="@+id/task_check_box"
+        app:layout_constraintEnd_toStartOf="@+id/priority_image"
+        app:layout_constraintStart_toEndOf="@+id/task_check_box"
+        app:layout_constraintTop_toTopOf="@+id/task_check_box"
         tools:text="Some task we need to complete or we are going to suffer" />
 
     <ImageView
-        android:id="@+id/ic_priority"
+        android:id="@+id/priority_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_normal"
         android:contentDescription="@string/importance_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_name"
+        app:layout_constraintBottom_toBottomOf="@+id/task_title_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_view_name"
+        app:layout_constraintTop_toTopOf="@+id/task_title_text"
         app:srcCompat="@drawable/ic_priority_3" />
 
     <ImageView
@@ -49,8 +49,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_category_color_small"
         android:layout_marginTop="@dimen/spacing_little"
-        app:layout_constraintStart_toStartOf="@+id/text_view_name"
-        app:layout_constraintTop_toBottomOf="@id/text_view_name" />
+        app:layout_constraintStart_toStartOf="@+id/task_title_text"
+        app:layout_constraintTop_toBottomOf="@id/task_title_text" />
 
     <TextView
         android:id="@+id/text_category_name"
@@ -61,7 +61,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@+id/category_circle"
-        app:layout_constraintEnd_toStartOf="@+id/ic_priority"
+        app:layout_constraintEnd_toStartOf="@+id/priority_image"
         app:layout_constraintStart_toEndOf="@+id/category_circle"
         app:layout_constraintTop_toTopOf="@+id/category_circle"
         tools:text="English" />

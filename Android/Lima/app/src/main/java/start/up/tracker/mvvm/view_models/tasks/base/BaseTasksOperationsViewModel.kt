@@ -24,12 +24,11 @@ abstract class BaseTasksOperationsViewModel(
 
     fun onTaskCheckedChanged(
         task: Task,
-        isChecked: Boolean
     ) = viewModelScope.launch {
-        if (isChecked && !task.wasCompleted) {
+        if (task.completed && !task.wasCompleted) {
             analytics.addTaskToStatistic()
         }
-        taskDao.updateTask(task.copy(completed = isChecked, wasCompleted = true))
+        taskDao.updateTask(task.copy(wasCompleted = true))
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {

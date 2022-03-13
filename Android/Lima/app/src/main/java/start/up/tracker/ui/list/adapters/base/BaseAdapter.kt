@@ -27,7 +27,7 @@ abstract class BaseAdapter<ItemClass, VH : BaseViewHolder>(
         onBindViewHolder(holder, item)
     }
 
-    fun updateItems(items: List<ItemClass>) {
+    open fun updateItems(items: List<ItemClass>) {
         this.items = items.toMutableList()
         notifyDataSetChanged()
     }
@@ -92,7 +92,7 @@ abstract class BaseAdapter<ItemClass, VH : BaseViewHolder>(
 
     protected fun getItem(position: Int) = items[position]
 
-    protected fun getItems() = items
+    fun getItems() = items
 
     protected companion object {
         const val NOT_FOUND = -1;

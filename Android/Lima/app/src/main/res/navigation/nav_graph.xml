@@ -64,9 +64,9 @@
         app:destination="@id/deleteAllCompletedDialogFragment" />
     <fragment
         android:id="@+id/categoryInsideFragment"
-        android:name="start.up.tracker.ui.fragments.tasks.ProjectsTasksFragment"
+        android:name="start.up.tracker.ui.fragments.tasks.ProjectTasksFragment"
         android:label="{titleCategory}"
-        tools:layout="@layout/fragment_category_inside">
+        tools:layout="@layout/project_tasks_fragment">
         <argument
             android:name="category"
             app:argType="start.up.tracker.entities.Category" />

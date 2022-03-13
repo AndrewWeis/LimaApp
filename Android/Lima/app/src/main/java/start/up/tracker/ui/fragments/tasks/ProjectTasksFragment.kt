@@ -17,32 +17,34 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
+import start.up.tracker.databinding.ProjectTasksFragmentBinding
 import start.up.tracker.entities.Task
-import start.up.tracker.databinding.FragmentCategoryInsideBinding
 import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.list.adapters.ProjectsTasksAdapter
+import start.up.tracker.ui.list.adapters.tasks.ProjectsTasksAdapter
+import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.utils.onQueryTextChanged
 
 @AndroidEntryPoint
-class ProjectsTasksFragment :
-    BaseTasksFragment(R.layout.fragment_category_inside),
-    ProjectsTasksAdapter.OnItemClickListener {
+class ProjectTasksFragment :
+    BaseTasksFragment(R.layout.project_tasks_fragment),
+    OnTaskClickListener {
 
     private val viewModel: ProjectsTasksViewModel by viewModels()
 
-    private var binding: FragmentCategoryInsideBinding? = null
+    private var binding: ProjectTasksFragmentBinding? = null
     private lateinit var taskAdapter: ProjectsTasksAdapter
 
     private lateinit var searchView: SearchView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentCategoryInsideBinding.bind(view)
+        binding = ProjectTasksFragmentBinding.bind(view)
 
         initAdapter()
         initListeners()
+        initObservers()
         initTaskEventListener()
 
         setHasOptionsMenu(true)
@@ -54,12 +56,12 @@ class ProjectsTasksFragment :
         binding = null
     }
 
-    override fun onItemClick(task: Task) {
+    override fun onTaskClick(task: Task) {
         viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
-        viewModel.onTaskCheckedChanged(task, isChecked)
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -108,7 +110,7 @@ class ProjectsTasksFragment :
 
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action =
-                        ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(
+                        ProjectTasksFragmentDirections.actionCategoryInsideToAddEditTask(
                             title = "Add new task",
                             categoryId = viewModel.categoryId
                         )
@@ -117,7 +119,7 @@ class ProjectsTasksFragment :
 
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action =
-                        ProjectsTasksFragmentDirections.actionCategoryInsideToAddEditTask(
+                        ProjectTasksFragmentDirections.actionCategoryInsideToAddEditTask(
                             event.task,
                             "Edit task",
                             viewModel.categoryId
@@ -131,7 +133,7 @@ class ProjectsTasksFragment :
 
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                        ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }
@@ -139,7 +141,7 @@ class ProjectsTasksFragment :
     }
 
     private fun initListeners() {
-        binding?.addTaskOfCategoryFAB?.setOnClickListener {
+        binding?.editTaskFab?.setOnClickListener {
             viewModel.onAddNewTaskClick()
         }
 
@@ -147,16 +149,18 @@ class ProjectsTasksFragment :
             val result = bundle.getInt("add_edit_result")
             viewModel.onAddEditResult(result)
         }
+    }
 
+    private fun initObservers() {
         viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
+            // taskAdapter.submitList(it)
         }
     }
 
     private fun initAdapter() {
-        taskAdapter = ProjectsTasksAdapter(this)
+        taskAdapter = ProjectsTasksAdapter(layoutInflater, this)
 
-        binding?.categoryInsideRv?.apply {
+        binding?.projectTasksList?.apply {
             adapter = taskAdapter
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
@@ -179,9 +183,9 @@ class ProjectsTasksFragment :
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val task = taskAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.onTaskSwiped(task)
+                val listItem = taskAdapter.getItems().elementAt(viewHolder.adapterPosition)
+                viewModel.onTaskSwiped(listItem.data as Task)
             }
-        }).attachToRecyclerView(binding?.categoryInsideRv)
+        }).attachToRecyclerView(binding?.projectTasksList)
     }
 }

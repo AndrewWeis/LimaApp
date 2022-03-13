@@ -39,4 +39,7 @@ enum class ListItemTypes {
 
     // ListItem с Switch элементом
     SWITCH,
+
+    // ListItem со сложным элементом
+    ITEM,
 }

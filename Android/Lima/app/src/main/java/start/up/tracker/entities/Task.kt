@@ -19,7 +19,7 @@ data class Task(
     val id: Int = 0,
     val title: String = "",
     val description: String = "",
-    val priority: Int = 1,
+    val priority: Int = 0,
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     val startTimeInMinutes: Int? = null,

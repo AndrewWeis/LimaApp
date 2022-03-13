@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <CheckBox
-            android:id="@+id/check_box_completed"
+            android:id="@+id/task_check_box"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_little"
@@ -27,7 +27,7 @@
             tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
-            android:id="@+id/text_view_name"
+            android:id="@+id/task_title_text"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -36,14 +36,14 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/secondaryTextColor"
-            app:layout_constraintBottom_toBottomOf="@+id/check_box_completed"
-            app:layout_constraintEnd_toStartOf="@+id/ic_priority"
-            app:layout_constraintStart_toEndOf="@+id/check_box_completed"
-            app:layout_constraintTop_toTopOf="@+id/check_box_completed"
+            app:layout_constraintBottom_toBottomOf="@+id/task_check_box"
+            app:layout_constraintEnd_toStartOf="@+id/priority_image"
+            app:layout_constraintStart_toEndOf="@+id/task_check_box"
+            app:layout_constraintTop_toTopOf="@+id/task_check_box"
             tools:text="Some task we need to complete or we are going to suffer" />
 
         <View
-            android:id="@+id/ic_priority"
+            android:id="@+id/priority_image"
             android:layout_width="8dp"
             android:layout_height="wrap_content"
             android:background="@color/primaryColor"
