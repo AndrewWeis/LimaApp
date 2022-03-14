@@ -12,10 +12,11 @@ import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.ListItemTypes
 import start.up.tracker.ui.data.entities.forms.Settings
 import start.up.tracker.ui.extensions.ValidationMessages
+import start.up.tracker.ui.list.generators.base.BaseGenerator
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
 
-class EditTaskInfoGenerator {
+class EditTaskInfoGenerator : BaseGenerator() {
 
     /**
      * Получить список с информацией о задаче
@@ -193,35 +194,5 @@ class EditTaskInfoGenerator {
      */
     private fun getHint(): String {
         return ResourcesUtils.getString(R.string.hint_not_indicated)
-    }
-
-    /**
-     * Создает [элемент списка][ListItem]
-     *
-     * @param id        идентификатор элемента
-     * @param type      тип элемента
-     * @param data      значение
-     * @param settings  настройки
-     * @return элемент списка
-     */
-    private fun createListItem(id: String, type: ListItemTypes, data: Any?, settings: Settings): ListItem {
-        val listItem: ListItem = createListItem(id, type, data)
-        return listItem.copy(settings = settings)
-    }
-
-    /**
-     * Создает [элемент списка][ListItem]
-     *
-     * @param id        идентификатор элемента
-     * @param type      тип элемента
-     * @param data     значение
-     * @return элемент списка
-     */
-    private fun createListItem(id: String, type: ListItemTypes, data: Any?): ListItem {
-        return ListItem(
-            id = id,
-            type = type,
-            data = data
-        )
     }
 }

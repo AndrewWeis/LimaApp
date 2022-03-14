@@ -45,6 +45,10 @@ class ProjectsTasksAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    fun addListItems(listItems: List<ListItem>) {
+        updateItems(listItems)
+    }
+
     private companion object {
         const val TYPE_TASK = 0
         const val TYPE_SUBTASK = 1

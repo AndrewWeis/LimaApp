@@ -153,8 +153,12 @@ class ProjectTasksFragment :
 
     private fun initObservers() {
         viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
-            // taskAdapter.submitList(it)
+            showTasks(it)
         }
+    }
+
+    private fun showTasks(tasks: List<Task>) {
+        adapter.addListItems(generator.createListItems(tasks))
     }
 
     private fun initAdapter() {
