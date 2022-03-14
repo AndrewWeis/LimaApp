@@ -5,18 +5,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 
-/**
- * We made properties immutable by using val because later when we need to update the task
- * instead of changing the existing task object we will create a completely new one and use
- * this one to update our database. We need it to easily find bugs if they occur.
- * Our app may not recognise the changes if we modify exciting item.
- * We crate new items rather than changing existing items
- */
 @Parcelize
 @Entity(tableName = "task_table")
 data class Task(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val taskId: Int = 0,
     val title: String = "",
     val description: String = "",
     val priority: Int = 0,

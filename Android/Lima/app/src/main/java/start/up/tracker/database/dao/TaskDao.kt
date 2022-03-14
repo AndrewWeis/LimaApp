@@ -51,7 +51,7 @@ interface TaskDao {
     )
     fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
 
-    @Query("SELECT MAX(id) FROM task_table")
+    @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

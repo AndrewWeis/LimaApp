@@ -70,7 +70,7 @@ class UpcomingSectionAdapter(
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {
         override fun areItemsTheSame(oldItem: Task, newItem: Task) =
-            oldItem.id == newItem.id
+            oldItem.taskId == newItem.taskId
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task) =
             oldItem == newItem

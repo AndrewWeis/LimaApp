@@ -15,7 +15,7 @@ class TaskDiffUtils(
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val oldTask = oldList[oldItemPosition].data as Task
         val newTask = newList[newItemPosition].data as Task
-        return oldTask.id == newTask.id
+        return oldTask.taskId == newTask.taskId
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
