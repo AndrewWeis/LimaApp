@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 
 open class BaseTasksFragment(
-    private val layoutResId: Int
+    layoutResId: Int
 ) : Fragment(layoutResId) {
 
     fun showUndoDeleteSnackbar(action: () -> Unit) {

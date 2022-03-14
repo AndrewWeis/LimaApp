@@ -5,4 +5,7 @@
     <string name="title_task_category">Category</string>
     <string name="title_task_time">Time</string>
     <string name="title_task_date">Date</string>
+
+    <string name="title_add_task">Add task</string>
+    <string name="title_edit_task">Edit task</string>
 </resources>

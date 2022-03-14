@@ -27,6 +27,8 @@ import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.screens.RequestCodes
+import start.up.tracker.utils.screens.ResultCodes
 import java.util.*
 
 @AndroidEntryPoint
@@ -197,8 +199,8 @@ class EditTaskFragment :
             when (event) {
                 is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
                     setFragmentResult(
-                        "add_edit_request",
-                        bundleOf("add_edit_result" to event.result)
+                        RequestCodes.EDIT_TASK,
+                        bundleOf(ResultCodes.EDIT_TASK to event.result)
                     )
                     findNavController().popBackStack()
                 }
