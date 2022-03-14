@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments.tasks
+package start.up.tracker.ui.fragments.edit_task
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
