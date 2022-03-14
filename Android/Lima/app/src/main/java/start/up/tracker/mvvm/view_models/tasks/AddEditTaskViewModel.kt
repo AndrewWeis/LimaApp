@@ -13,6 +13,7 @@ import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
+import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +25,8 @@ class AddEditTaskViewModel @Inject constructor(
 
     private var isEditMode = true
 
-    private var task = state.get<Task>("task") ?: Task()
+    private var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
+    private val categoryId = state.get<Int>(StateHandleKeys.CATEGORY_ID) ?: -1
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
     val taskInfoLiveData: LiveData<Task>
