@@ -4,8 +4,8 @@ import android.text.Editable
 import android.view.View
 import androidx.annotation.DrawableRes
 import start.up.tracker.databinding.TextInputItemBinding
-import start.up.tracker.ui.data.entities.forms.Error
-import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.data.entities.Error
+import start.up.tracker.ui.data.entities.ListItem
 
 open class BaseInputView(
     private val binding: TextInputItemBinding

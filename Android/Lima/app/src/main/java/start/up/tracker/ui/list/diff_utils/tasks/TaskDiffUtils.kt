@@ -2,7 +2,7 @@ package start.up.tracker.ui.list.diff_utils.tasks
 
 import androidx.recyclerview.widget.DiffUtil
 import start.up.tracker.entities.Task
-import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.data.entities.ListItem
 
 class TaskDiffUtils(
     private val oldList: List<ListItem>,

@@ -2,8 +2,8 @@ package start.up.tracker.ui.list.generators.tasks
 
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.ListItemTypes
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.generators.base.BaseGenerator
 
 class TasksGenerator : BaseGenerator() {

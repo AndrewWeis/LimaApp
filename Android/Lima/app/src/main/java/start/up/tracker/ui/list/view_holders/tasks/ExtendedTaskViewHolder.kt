@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import start.up.tracker.R
 import start.up.tracker.databinding.ExtendedTaskItemBinding
 import start.up.tracker.entities.Task
-import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.Settings
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.Settings
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 
 class ExtendedTaskViewHolder(

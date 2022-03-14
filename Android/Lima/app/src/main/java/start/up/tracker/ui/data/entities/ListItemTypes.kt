@@ -1,4 +1,4 @@
-package start.up.tracker.ui.data.entities.forms
+package start.up.tracker.ui.data.entities
 
 /**
  * Типы ListItem

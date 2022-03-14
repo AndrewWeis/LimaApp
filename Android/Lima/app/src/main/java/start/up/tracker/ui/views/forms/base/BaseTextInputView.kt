@@ -6,8 +6,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import start.up.tracker.R
 import start.up.tracker.databinding.TextInputItemBinding
-import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.Settings
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.Settings
 import start.up.tracker.ui.extensions.SimpleTextWatcher
 
 open class BaseTextInputView(

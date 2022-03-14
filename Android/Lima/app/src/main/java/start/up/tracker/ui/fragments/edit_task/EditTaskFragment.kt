@@ -19,7 +19,7 @@ import start.up.tracker.databinding.EditTaskFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.AddEditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter

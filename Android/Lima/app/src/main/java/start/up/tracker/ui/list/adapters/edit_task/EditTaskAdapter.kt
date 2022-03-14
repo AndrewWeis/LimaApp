@@ -3,8 +3,8 @@ package start.up.tracker.ui.list.adapters.edit_task
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.ListItemTypes
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder

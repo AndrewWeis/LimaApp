@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import start.up.tracker.R
 import start.up.tracker.databinding.EditTaskHeaderItemBinding
 import start.up.tracker.ui.data.entities.Header
-import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 
 class HeaderViewHolder(

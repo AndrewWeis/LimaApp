@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.diff_utils.tasks.TaskDiffUtils
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener

@@ -1,8 +1,8 @@
 package start.up.tracker.ui.list.generators.base
 
-import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.ListItemTypes
-import start.up.tracker.ui.data.entities.forms.Settings
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.ListItemTypes
+import start.up.tracker.ui.data.entities.Settings
 
 open class BaseGenerator {
 

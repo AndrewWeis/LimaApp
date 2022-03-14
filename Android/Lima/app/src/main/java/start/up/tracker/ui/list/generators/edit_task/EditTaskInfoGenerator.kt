@@ -7,10 +7,10 @@ import start.up.tracker.data.fields.Field
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.Header
-import start.up.tracker.ui.data.entities.forms.Error
-import start.up.tracker.ui.data.entities.forms.ListItem
-import start.up.tracker.ui.data.entities.forms.ListItemTypes
-import start.up.tracker.ui.data.entities.forms.Settings
+import start.up.tracker.ui.data.entities.Error
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.ListItemTypes
+import start.up.tracker.ui.data.entities.Settings
 import start.up.tracker.ui.extensions.ValidationMessages
 import start.up.tracker.ui.list.generators.base.BaseGenerator
 import start.up.tracker.utils.TimeHelper

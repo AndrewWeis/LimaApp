@@ -1,4 +1,4 @@
-package start.up.tracker.ui.data.entities.forms
+package start.up.tracker.ui.data.entities
 
 import androidx.annotation.DrawableRes
 
@@ -22,7 +22,8 @@ class Settings(
     var maxLines: Int? = null,
     var editable: Boolean = true,
     var changeErrorAfterChangingText: Boolean = true,
+    @DrawableRes var icon: Int? = null,
 
-    @DrawableRes
-    var icon: Int? = null
+    var leftMargin: Int? = null,
+    var rightMargin: Int? = null,
 )

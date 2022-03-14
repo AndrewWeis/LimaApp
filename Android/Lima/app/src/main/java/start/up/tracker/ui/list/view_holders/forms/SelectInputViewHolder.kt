@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import start.up.tracker.R
-import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.view_holders.forms.base.BaseInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView.TextInputListener
 
