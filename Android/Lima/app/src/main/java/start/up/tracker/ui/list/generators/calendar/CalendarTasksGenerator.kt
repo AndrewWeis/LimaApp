@@ -1,4 +1,4 @@
-package start.up.tracker.ui.list.generators.tasks
+package start.up.tracker.ui.list.generators.calendar
 
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
@@ -6,7 +6,7 @@ import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.generators.base.BaseGenerator
 
-class TasksGenerator : BaseGenerator() {
+class CalendarTasksGenerator : BaseGenerator() {
 
     /**
      * Получить список [ListItem]'ов
@@ -22,28 +22,10 @@ class TasksGenerator : BaseGenerator() {
         val list: MutableList<ListItem> = mutableListOf()
 
         tasks.forEach { task ->
-            if (task.categoryName != null) {
-                list.add(getExtendedTaskListItem(task))
-            } else {
-                list.add(getTaskListItem(task))
-            }
+            list.add(getCalendarTaskListItem(task))
         }
 
         return list
-    }
-
-    /**
-     * Получить listItem с расширенной задачей
-     *
-     * @param task задача
-     * @return listItem с расширенной задачей
-     */
-    private fun getExtendedTaskListItem(task: Task): ListItem {
-        return createListItem(
-            id = ListItemIds.EXTENDED_TASK,
-            type = ListItemTypes.TASK,
-            data = task
-        )
     }
 
     /**
@@ -52,9 +34,9 @@ class TasksGenerator : BaseGenerator() {
      * @param task задача
      * @return listItem с задачей
      */
-    private fun getTaskListItem(task: Task): ListItem {
+    private fun getCalendarTaskListItem(task: Task): ListItem {
         return createListItem(
-            id = ListItemIds.TASK,
+            id = ListItemIds.CALENDAR_TASK,
             type = ListItemTypes.TASK,
             data = task
         )

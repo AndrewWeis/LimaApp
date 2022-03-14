@@ -150,7 +150,7 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todayCalendarRV"
+            android:id="@+id/calendar_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/spacing_little"
@@ -160,10 +160,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/timesLayout"
             app:layout_constraintTop_toTopOf="@+id/timesLayout"
-            tools:listitem="@layout/item_task_calendar" />
+            tools:listitem="@layout/calendar_task_item" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/currentTime"
+            android:id="@+id/time_indicator_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="1dp"
@@ -174,7 +174,7 @@
             app:layout_constraintTop_toTopOf="@+id/timesLayout">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/indicator_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -186,9 +186,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@color/primaryColor"
-                app:layout_constraintBottom_toBottomOf="@id/imageView"
-                app:layout_constraintStart_toEndOf="@id/imageView"
-                app:layout_constraintTop_toTopOf="@id/imageView" />
+                app:layout_constraintBottom_toBottomOf="@id/indicator_image"
+                app:layout_constraintStart_toEndOf="@id/indicator_image"
+                app:layout_constraintTop_toTopOf="@id/indicator_image" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -15,10 +14,12 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
 import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.ui.data.entities.TasksEvent
+import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
-import start.up.tracker.ui.list.adapters.CalendarTasksAdapter
+import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter
+import start.up.tracker.ui.list.generators.calendar.CalendarTasksGenerator
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.convertDpToPx
@@ -31,14 +32,17 @@ class CalendarTasksFragment :
     private val viewModel: CalendarTasksViewModel by viewModels()
 
     private var binding: FragmentCalendarTasksBinding? = null
-    private lateinit var taskAdapter: CalendarTasksAdapter
+
+    private lateinit var adapter: CalendarTasksAdapter
+    private var listExtension: ListExtension? = null
+    private val generator = CalendarTasksGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCalendarTasksBinding.bind(view)
 
         initAdapter()
-        initListeners()
+        initObservers()
         initTaskEventListener()
         initCurrentTimeIndicator()
 
@@ -48,6 +52,7 @@ class CalendarTasksFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listExtension = null
     }
 
     override fun onTaskClick(task: Task) {
@@ -63,7 +68,7 @@ class CalendarTasksFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.hideCompleted.first() ?: false
+                viewModel.hideCompleted.first()
         }
     }
 
@@ -80,6 +85,10 @@ class CalendarTasksFragment :
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showTasks(tasks: List<Task>) {
+        adapter.addListItems(generator.createListItems(tasks))
     }
 
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -116,27 +125,27 @@ class CalendarTasksFragment :
         }
     }
 
-    private fun initListeners() {
+    private fun initObservers() {
         viewModel.calendarTasks.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
+            showTasks(it)
         }
     }
 
     private fun initAdapter() {
-        taskAdapter = CalendarTasksAdapter(this)
+        adapter = CalendarTasksAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
 
-        binding?.todayCalendarRV?.apply {
-            itemAnimator = null
-            adapter = taskAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
+        listExtension = ListExtension(binding?.calendarList)
+        listExtension?.setLayoutManager()
+        listExtension?.setAdapter(adapter)
     }
 
     private fun initCurrentTimeIndicator() {
-        val layoutParams: ViewGroup.MarginLayoutParams =
-            binding?.currentTime?.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.topMargin = convertDpToPx(TimeHelper.getMinutesOfCurrentDay() - TIME_OFFSET)
-        binding?.currentTime?.requestLayout()
+        val layoutParams = binding?.timeIndicatorView?.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.topMargin =
+            convertDpToPx(TimeHelper.getMinutesOfCurrentDay() - TIME_OFFSET.toInt())
+        binding?.timeIndicatorView?.requestLayout()
     }
 }

@@ -13,6 +13,7 @@ import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.Settings
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
+import start.up.tracker.utils.resources.ResourcesUtils
 
 open class TaskViewHolder(
     layoutInflater: LayoutInflater,
@@ -41,6 +42,11 @@ open class TaskViewHolder(
 
         setTaskClickListener()
         setCheckboxClickListener()
+    }
+
+    protected fun setPriorityImageBackground() {
+        val colorRes = ResourcesUtils.getColor(getPriorityColorByPriority(task.priority))
+        priorityImage.setBackgroundColor(colorRes)
     }
 
     private fun initViews() {
@@ -73,14 +79,26 @@ open class TaskViewHolder(
     private fun setPriority() {
         if (task.priority == NO_PRIORITY) {
             priorityImage.visibility = View.GONE
-        } else {
-            priorityImage.setImageResource(
-                getIconDrawableByPriority(task.priority)
-            )
+            return
+        }
+
+        val imageRes = getPriorityImageByPriority(task.priority)
+        priorityImage.setImageResource(imageRes)
+
+        val colorRes = ResourcesUtils.getColor(getPriorityColorByPriority(task.priority))
+        priorityImage.setColorFilter(colorRes)
+    }
+
+    private fun getPriorityColorByPriority(priority: Int): Int {
+        return when (priority) {
+            PRIORITY_HIGH -> R.color.priority_high
+            PRIORITY_MEDIUM -> R.color.priority_medium
+            PRIORITY_LOW -> R.color.priority_low
+            else -> android.R.color.transparent
         }
     }
 
-    private fun getIconDrawableByPriority(priority: Int): Int {
+    private fun getPriorityImageByPriority(priority: Int): Int {
         return when (priority) {
             PRIORITY_HIGH -> R.drawable.ic_priority_1
             PRIORITY_MEDIUM -> R.drawable.ic_priority_2
@@ -95,6 +113,6 @@ open class TaskViewHolder(
         const val PRIORITY_MEDIUM = 2
         const val PRIORITY_LOW = 3
 
-        const val NOT_FOUND = -1
+        const val NOT_FOUND = 0
     }
 }

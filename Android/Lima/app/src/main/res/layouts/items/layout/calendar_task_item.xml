@@ -37,20 +37,19 @@
             android:maxLines="1"
             android:textColor="@color/secondaryTextColor"
             app:layout_constraintBottom_toBottomOf="@+id/task_check_box"
-            app:layout_constraintEnd_toStartOf="@+id/priority_image"
+            app:layout_constraintEnd_toStartOf="@id/priority_image"
             app:layout_constraintStart_toEndOf="@+id/task_check_box"
             app:layout_constraintTop_toTopOf="@+id/task_check_box"
             tools:text="Some task we need to complete or we are going to suffer" />
 
-        <View
+        <ImageView
             android:id="@+id/priority_image"
             android:layout_width="8dp"
-            android:layout_height="wrap_content"
-            android:background="@color/primaryColor"
-            android:contentDescription="@string/importance_icon"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/priority_high"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

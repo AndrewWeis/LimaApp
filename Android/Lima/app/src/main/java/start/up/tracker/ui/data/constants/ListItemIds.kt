@@ -19,4 +19,7 @@ object ListItemIds {
     const val TASK = "task"
     const val SUBTASK = "subtask"
     const val EXTENDED_TASK = "extended_task"
+
+    const val CALENDAR_TASK = "calendar_task"
+    const val CALENDAR_SUBTASK = "calendar_subtask"
 }
