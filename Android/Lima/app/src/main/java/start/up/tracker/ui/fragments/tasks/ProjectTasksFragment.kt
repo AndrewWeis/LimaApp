@@ -109,21 +109,19 @@ class ProjectTasksFragment :
                 }
 
                 is TasksEvent.NavigateToAddTaskScreen -> {
-                    val action =
-                        ProjectTasksFragmentDirections.actionCategoryInsideToAddEditTask(
-                            title = "Add new task",
-                            categoryId = viewModel.categoryId
-                        )
+                    val action = ProjectTasksFragmentDirections.actionProjectTasksToAddEditTask(
+                        title = "Add new task",
+                        categoryId = viewModel.categoryId
+                    )
                     navigateTo(action)
                 }
 
                 is TasksEvent.NavigateToEditTaskScreen -> {
-                    val action =
-                        ProjectTasksFragmentDirections.actionCategoryInsideToAddEditTask(
-                            event.task,
-                            "Edit task",
-                            viewModel.categoryId
-                        )
+                    val action = ProjectTasksFragmentDirections.actionProjectTasksToAddEditTask(
+                        event.task,
+                        "Edit task",
+                        viewModel.categoryId
+                    )
                     navigateTo(action)
                 }
 
@@ -132,8 +130,7 @@ class ProjectTasksFragment :
                 }
 
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                    val action =
-                        ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }

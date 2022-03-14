@@ -20,7 +20,7 @@ import start.up.tracker.databinding.FragmentUpcomingBinding
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.UpcomingAdapter
 import start.up.tracker.utils.TimeHelper
 
@@ -101,8 +101,7 @@ class UpcomingFragment :
                     showTaskSavedMessage(event.msg)
                 }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                    val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }

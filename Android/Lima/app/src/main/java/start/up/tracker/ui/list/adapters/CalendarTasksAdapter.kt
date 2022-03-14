@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import start.up.tracker.ui.data.constants.TIME_OFFSET
-import start.up.tracker.entities.Task
 import start.up.tracker.databinding.ItemTaskCalendarBinding
+import start.up.tracker.entities.Task
+import start.up.tracker.ui.data.constants.TIME_OFFSET
+import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.utils.convertDpToPx
 
 class CalendarTasksAdapter(
-    private val listener: OnItemClickListener
+    private val listener: OnTaskClickListener
 ) : ListAdapter<Task, CalendarTasksAdapter.TasksViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
@@ -41,15 +42,15 @@ class CalendarTasksAdapter(
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val todayTask = getItem(position)
-                        listener.onItemClick(todayTask)
+                        listener.onTaskClick(todayTask)
                     }
                 }
 
-                checkBoxCompleted.setOnClickListener {
+                taskCheckBox.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val todayTask = getItem(position)
-                        listener.onCheckBoxClick(todayTask, checkBoxCompleted.isChecked)
+                        listener.onCheckBoxClick(todayTask.copy(completed = taskCheckBox.isChecked))
                     }
                 }
             }
@@ -57,14 +58,14 @@ class CalendarTasksAdapter(
 
         fun bind(task: Task, nextTask: Task?, position: Int) {
             binding.apply {
-                checkBoxCompleted.isChecked = task.completed
-                textViewName.text = task.title
-                textViewName.paint.isStrikeThruText = task.completed
+                taskCheckBox.isChecked = task.completed
+                taskTitleText.text = task.title
+                taskTitleText.paint.isStrikeThruText = task.completed
                 if (task.priority == 4) {
-                    icPriority.visibility = View.GONE
+                    priorityImage.visibility = View.GONE
                 } else {
                     val color = chooseColorPriority(task.priority)
-                    icPriority.setBackgroundColor(Color.parseColor(color))
+                    priorityImage.setBackgroundColor(Color.parseColor(color))
                 }
 
                 if (task.startTimeInMinutes != null && task.endTimeInMinutes != null) {
@@ -97,11 +98,6 @@ class CalendarTasksAdapter(
                 else -> "#000000" // This should never be reached
             }
         }
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(task: Task)
-        fun onCheckBoxClick(task: Task, isChecked: Boolean)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {

@@ -10,25 +10,23 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.ui.data.constants.TIME_OFFSET
-import start.up.tracker.entities.Task
 import start.up.tracker.databinding.FragmentCalendarTasksBinding
+import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
+import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
 import start.up.tracker.ui.list.adapters.CalendarTasksAdapter
+import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.convertDpToPx
-import start.up.tracker.utils.timeToMinutes
-import java.text.SimpleDateFormat
-import java.util.*
 
 @AndroidEntryPoint
 class CalendarTasksFragment :
     BaseTasksFragment(R.layout.fragment_calendar_tasks),
-    CalendarTasksAdapter.OnItemClickListener {
+    OnTaskClickListener {
 
     private val viewModel: CalendarTasksViewModel by viewModels()
 
@@ -52,12 +50,12 @@ class CalendarTasksFragment :
         binding = null
     }
 
-    override fun onItemClick(task: Task) {
+    override fun onTaskClick(task: Task) {
         viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
-        viewModel.onTaskCheckedChanged(task, isChecked)
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -111,7 +109,7 @@ class CalendarTasksFragment :
                 }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                        ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }

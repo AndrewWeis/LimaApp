@@ -53,7 +53,7 @@ class CategoriesFragment :
         viewModel.categoryEvent.collect { event ->
             when (event) {
                 is CategoriesViewModel.CategoryEvent.NavigateToCategoryInside -> {
-                    val action = CategoriesFragmentDirections.actionCategoryToCategoryInside(
+                    val action = CategoriesFragmentDirections.actionCategoryToProjectTasks(
                         event.category,
                         event.category.categoryId,
                         event.category.categoryName

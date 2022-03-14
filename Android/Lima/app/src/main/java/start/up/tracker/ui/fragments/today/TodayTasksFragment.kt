@@ -15,18 +15,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.entities.Task
 import start.up.tracker.databinding.FragmentTodayTasksBinding
+import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.TodayTasksAdapter
+import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 
 @AndroidEntryPoint
 class TodayTasksFragment :
     BaseTasksFragment(R.layout.fragment_today_tasks),
-    TodayTasksAdapter.OnItemClickListener {
+    OnTaskClickListener {
 
     private val viewModel: TodayTasksViewModel by viewModels()
 
@@ -49,12 +50,12 @@ class TodayTasksFragment :
         binding = null
     }
 
-    override fun onItemClick(task: Task) {
+    override fun onTaskClick(task: Task) {
         viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(task: Task, isChecked: Boolean) {
-        viewModel.onTaskCheckedChanged(task, isChecked)
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -107,8 +108,7 @@ class TodayTasksFragment :
                     showTaskSavedMessage(event.msg)
                 }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                    val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }

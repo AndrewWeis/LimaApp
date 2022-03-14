@@ -34,8 +34,8 @@
         android:label="Home"
         tools:layout="@layout/fragment_categories">
         <action
-            android:id="@+id/action_category_to_categoryInside"
-            app:destination="@id/categoryInsideFragment" />
+            android:id="@+id/action_category_to_projectTasks"
+            app:destination="@id/projectTasksFragment" />
         <action
             android:id="@+id/action_category_to_addCategory"
             app:destination="@id/addCategoryFragment" />
@@ -63,7 +63,7 @@
         android:id="@+id/action_global_deleteAllCompletedDialog"
         app:destination="@id/deleteAllCompletedDialogFragment" />
     <fragment
-        android:id="@+id/categoryInsideFragment"
+        android:id="@+id/projectTasksFragment"
         android:name="start.up.tracker.ui.fragments.tasks.ProjectTasksFragment"
         android:label="{titleCategory}"
         tools:layout="@layout/project_tasks_fragment">
@@ -74,7 +74,7 @@
             android:name="categoryId"
             app:argType="integer" />
         <action
-            android:id="@+id/action_categoryInside_to_addEditTask"
+            android:id="@+id/action_projectTasks_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
         <argument
             android:name="titleCategory"

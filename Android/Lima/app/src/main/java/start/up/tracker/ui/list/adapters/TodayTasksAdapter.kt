@@ -6,17 +6,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import start.up.tracker.databinding.ExtendedTaskItemBinding
 import start.up.tracker.entities.Task
-import start.up.tracker.databinding.ItemTaskExtendedBinding
+import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.utils.chooseIconDrawable
 
 class TodayTasksAdapter(
-    private val listener: OnItemClickListener
+    private val listener: OnTaskClickListener
 ) : ListAdapter<Task, TodayTasksAdapter.TasksViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TasksViewHolder {
         val binding =
-            ItemTaskExtendedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ExtendedTaskItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TasksViewHolder(binding)
     }
 
@@ -25,7 +26,7 @@ class TodayTasksAdapter(
         holder.bind(currentItem)
     }
 
-    inner class TasksViewHolder(private val binding: ItemTaskExtendedBinding) :
+    inner class TasksViewHolder(private val binding: ExtendedTaskItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -34,15 +35,15 @@ class TodayTasksAdapter(
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val todayTask = getItem(position)
-                        listener.onItemClick(todayTask)
+                        listener.onTaskClick(todayTask)
                     }
                 }
 
-                checkBoxCompleted.setOnClickListener {
+                taskCheckBox.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val todayTask = getItem(position)
-                        listener.onCheckBoxClick(todayTask, checkBoxCompleted.isChecked)
+                        listener.onCheckBoxClick(todayTask.copy(completed = taskCheckBox.isChecked))
                     }
                 }
             }
@@ -50,26 +51,21 @@ class TodayTasksAdapter(
 
         fun bind(task: Task) {
             binding.apply {
-                checkBoxCompleted.isChecked = task.completed
-                textViewName.text = task.title
-                textViewName.paint.isStrikeThruText = task.completed
+                taskCheckBox.isChecked = task.completed
+                taskTitleText.text = task.title
+                taskTitleText.paint.isStrikeThruText = task.completed
 
-                textCategoryName.text = task.categoryName
-                textCategoryName.setTextColor(task.color!!)
-                categoryCircle.background.setTint(task.color)
+                taskCategoryText.text = task.categoryName
+                taskCategoryText.setTextColor(task.color!!)
+                taskCategoryImage.background.setTint(task.color)
 
                 if (task.priority == 4) {
-                    icPriority.visibility = View.GONE
+                    priorityImage.visibility = View.GONE
                 } else {
-                    icPriority.setImageResource(chooseIconDrawable(task.priority))
+                    priorityImage.setImageResource(chooseIconDrawable(task.priority))
                 }
             }
         }
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(task: Task)
-        fun onCheckBoxClick(task: Task, isChecked: Boolean)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Task>() {

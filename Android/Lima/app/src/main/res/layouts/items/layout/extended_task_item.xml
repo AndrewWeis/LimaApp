@@ -44,7 +44,7 @@
         app:srcCompat="@drawable/ic_priority_3" />
 
     <ImageView
-        android:id="@+id/category_circle"
+        android:id="@+id/task_category_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_category_color_small"
@@ -53,17 +53,17 @@
         app:layout_constraintTop_toBottomOf="@id/task_title_text" />
 
     <TextView
-        android:id="@+id/text_category_name"
+        android:id="@+id/task_category_text"
         style="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_little"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/category_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/task_category_image"
         app:layout_constraintEnd_toStartOf="@+id/priority_image"
-        app:layout_constraintStart_toEndOf="@+id/category_circle"
-        app:layout_constraintTop_toTopOf="@+id/category_circle"
+        app:layout_constraintStart_toEndOf="@+id/task_category_image"
+        app:layout_constraintTop_toTopOf="@+id/task_category_image"
         tools:text="English" />
 
     <View
@@ -74,6 +74,6 @@
         android:background="@color/lightGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_category_name" />
+        app:layout_constraintTop_toBottomOf="@id/task_category_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
