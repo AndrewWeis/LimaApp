@@ -15,17 +15,35 @@ class TasksGenerator : BaseGenerator() {
      * @return список [ListItem]'ов
      */
     fun createListItems(tasks: List<Task>?): List<ListItem> {
-        if (tasks == null) {
+        if (tasks.isNullOrEmpty()) {
             return listOf()
         }
 
         val list: MutableList<ListItem> = mutableListOf()
 
         tasks.forEach { task ->
-            list.add(getTaskListItem(task))
+            if (task.categoryName != null) {
+                list.add(getExtendedTaskListItem(task))
+            } else {
+                list.add(getTaskListItem(task))
+            }
         }
 
         return list
+    }
+
+    /**
+     * Получить listItem с расширенной задачей
+     *
+     * @param task задача
+     * @return listItem с расширенной задачей
+     */
+    private fun getExtendedTaskListItem(task: Task): ListItem {
+        return createListItem(
+            id = ListItemIds.EXTENDED_TASK,
+            type = ListItemTypes.ITEM,
+            data = task
+        )
     }
 
     /**

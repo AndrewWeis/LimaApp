@@ -9,9 +9,10 @@ import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.diff_utils.tasks.TaskDiffUtils
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.ExtendedTaskViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.TaskViewHolder
 
-class ProjectsTasksAdapter(
+class TasksAdapter(
     layoutInflater: LayoutInflater,
     private val listener: OnTaskClickListener
 ) : BaseAdapter<ListItem, BaseViewHolder>(layoutInflater) {
@@ -19,6 +20,7 @@ class ProjectsTasksAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             TYPE_TASK, TYPE_SUBTASK -> TaskViewHolder(layoutInflater, parent)
+            TYPE_EXTENDED_TASK -> ExtendedTaskViewHolder(layoutInflater, parent)
             else -> throwUnknownViewHolderTypeException()
         }
     }
@@ -26,6 +28,7 @@ class ProjectsTasksAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
             TYPE_TASK, TYPE_SUBTASK -> (holder as TaskViewHolder).bind(item, listener)
+            TYPE_EXTENDED_TASK -> (holder as ExtendedTaskViewHolder).bind(item, listener)
         }
     }
 
@@ -33,6 +36,7 @@ class ProjectsTasksAdapter(
         return when (item.id) {
             ListItemIds.TASK -> TYPE_TASK
             ListItemIds.SUBTASK -> TYPE_SUBTASK
+            ListItemIds.EXTENDED_TASK -> TYPE_EXTENDED_TASK
             else -> NOT_FOUND
         }
     }
@@ -52,5 +56,6 @@ class ProjectsTasksAdapter(
     private companion object {
         const val TYPE_TASK = 0
         const val TYPE_SUBTASK = 1
+        const val TYPE_EXTENDED_TASK = 2
     }
 }

@@ -41,7 +41,7 @@ abstract class TaskDatabase : RoomDatabase() {
             applicationScope.launch {
 
                 // DON'T DELETE. IT'S DEFAULT CATEGORY
-                categoriesDao.insertCategory(Category(categoryName = "Inbox"))
+                categoriesDao.insertCategory(Category(name = "Inbox"))
 
                 val articles = ArticleStorage.getArticles().toTypedArray()
                 articlesDao.insertAllArticles(*articles)

@@ -54,8 +54,8 @@ class CategoriesFragment :
             when (event) {
                 is CategoriesViewModel.CategoryEvent.NavigateToCategoryInside -> {
                     val action = CategoriesFragmentDirections.actionCategoryToProjectTasks(
-                        event.category.categoryId,
-                        event.category.categoryName
+                        event.category.id,
+                        event.category.name
                     )
                     findNavController().navigate(action)
                 }
@@ -82,7 +82,7 @@ class CategoriesFragment :
 
     private fun initListeners() {
         binding?.cardViewInbox?.setOnClickListener {
-            viewModel.onCategoryInboxSelected(Category(categoryName = "Inbox", categoryId = 1))
+            viewModel.onCategoryInboxSelected(Category(name = "Inbox", id = 1))
         }
 
         binding?.addCategoryFAB?.setOnClickListener {

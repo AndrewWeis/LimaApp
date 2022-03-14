@@ -12,7 +12,7 @@ interface CalendarTasksDao {
         """
        SELECT *
        FROM task_table
-       JOIN categories_table ON task_table.categoryId = categories_table.categoryId
+       JOIN categories_table ON task_table.categoryId = categories_table.id
        WHERE (completed != :hideCompleted OR completed = 0) AND
        task_table.date = :today AND
        task_table.startTimeInMinutes is not NULL AND

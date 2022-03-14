@@ -30,7 +30,7 @@ class CategoriesViewModel @Inject constructor(
         Transformations.map(_categories) {
             val newData: MutableList<Category> = mutableListOf()
             it.forEach { category ->
-                if (category.categoryName != "Inbox")
+                if (category.name != "Inbox")
                     newData.add(category)
             }
             return@map newData
@@ -65,7 +65,7 @@ class CategoriesViewModel @Inject constructor(
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         _categories.value?.forEach {
-            val number = taskDao.countTasksOfCategory(it.categoryId, true)
+            val number = taskDao.countTasksOfCategory(it.id, true)
             categoriesDao.updateCategory(it.copy(tasksInside = number))
         }
     }

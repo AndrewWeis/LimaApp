@@ -40,7 +40,7 @@ class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter
 
         fun bind(category: Category) {
             binding.apply {
-                textViewCategoryName.text = category.categoryName
+                textViewCategoryName.text = category.name
                 icCategory.background.setTint(category.color)
                 textViewTasksNumber.text = category.tasksInside.toString()
             }
@@ -54,7 +54,7 @@ class CategoriesAdapter(private val listener: OnItemClickListener) : ListAdapter
 
     class DiffCallback : DiffUtil.ItemCallback<Category>() {
         override fun areItemsTheSame(oldItem: Category, newItem: Category) =
-            oldItem.categoryId == newItem.categoryId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Category, newItem: Category) =
             oldItem == newItem

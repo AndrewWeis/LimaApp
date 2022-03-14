@@ -31,5 +31,5 @@ data class Task(
 
     val categoryId: Int = 1, // 1 - inbox
     val categoryName: String? = null,
-    val color: Int? = null,
+    val categoryColor: Int? = null,
 ) : Parcelable

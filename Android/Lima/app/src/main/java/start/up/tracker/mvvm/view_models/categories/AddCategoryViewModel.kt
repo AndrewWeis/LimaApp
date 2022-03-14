@@ -21,7 +21,7 @@ class AddCategoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val category = state.get<Category>("category")
-    var categoryName = category?.categoryName ?: ""
+    var categoryName = category?.name ?: ""
     var color = category?.color ?: DEFAULT_PROJECT_COLOR
 
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
@@ -45,7 +45,7 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     private fun createCategory() = viewModelScope.launch {
-        val newCategory = Category(categoryName = categoryName, color = color)
+        val newCategory = Category(name = categoryName, color = color)
         categoriesDao.insertCategory(newCategory)
         addCategoryEventChannel.send(AddCategoryEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }

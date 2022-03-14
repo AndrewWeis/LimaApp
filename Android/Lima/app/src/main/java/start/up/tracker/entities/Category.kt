@@ -10,8 +10,8 @@ import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
 @Entity(tableName = "categories_table")
 data class Category(
     @PrimaryKey(autoGenerate = true)
-    val categoryId: Int = 0,
-    val categoryName: String = "",
+    val id: Int = 0,
+    val name: String = "",
     val color: Int = DEFAULT_PROJECT_COLOR,
     val tasksInside: Int = 0,
 ) : Parcelable

@@ -3,28 +3,37 @@ package start.up.tracker.ui.list.view_holders.tasks
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.annotation.LayoutRes
 import start.up.tracker.R
-import start.up.tracker.databinding.TaskItemBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.data.entities.forms.Settings
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 
-class TaskViewHolder(
+open class TaskViewHolder(
     layoutInflater: LayoutInflater,
-    parent: ViewGroup
-) : BaseViewHolder(layoutInflater, parent, R.layout.task_item) {
+    parent: ViewGroup,
+    @LayoutRes contentLayoutId: Int = R.layout.task_item
+) : BaseViewHolder(layoutInflater, parent, contentLayoutId) {
 
-    private var binding: TaskItemBinding = TaskItemBinding.bind(itemView)
     private lateinit var settings: Settings
     private lateinit var task: Task
     private lateinit var listener: OnTaskClickListener
 
-    fun bind(listItem: ListItem, listener: OnTaskClickListener) {
+    private lateinit var taskCheckBox: CheckBox
+    private lateinit var taskTitleText: TextView
+    private lateinit var priorityImage: ImageView
+
+    open fun bind(listItem: ListItem, listener: OnTaskClickListener) {
         this.task = listItem.data as Task
         this.settings = listItem.settings
         this.listener = listener
+
+        initViews()
 
         setPriority()
         setCheckbox()
@@ -34,32 +43,38 @@ class TaskViewHolder(
         setCheckboxClickListener()
     }
 
+    private fun initViews() {
+        taskCheckBox = itemView.findViewById(R.id.task_check_box)
+        taskTitleText = itemView.findViewById(R.id.task_title_text)
+        priorityImage = itemView.findViewById(R.id.priority_image)
+    }
+
     private fun setCheckboxClickListener() {
-        binding.taskCheckBox.setOnClickListener {
-            listener.onCheckBoxClick(task.copy(completed = binding.taskCheckBox.isChecked))
+        taskCheckBox.setOnClickListener {
+            listener.onCheckBoxClick(task.copy(completed = taskCheckBox.isChecked))
         }
     }
 
     private fun setTaskClickListener() {
-        binding.root.setOnClickListener {
+        itemView.setOnClickListener {
             listener.onTaskClick(task)
         }
     }
 
     private fun setTaskTitle() {
-        binding.taskTitleText.text = task.title
-        binding.taskTitleText.paint.isStrikeThruText = task.completed
+        taskTitleText.text = task.title
+        taskTitleText.paint.isStrikeThruText = task.completed
     }
 
     private fun setCheckbox() {
-        binding.taskCheckBox.isChecked = task.completed
+        taskCheckBox.isChecked = task.completed
     }
 
     private fun setPriority() {
         if (task.priority == NO_PRIORITY) {
-            binding.priorityImage.visibility = View.GONE
+            priorityImage.visibility = View.GONE
         } else {
-            binding.priorityImage.setImageResource(
+            priorityImage.setImageResource(
                 getIconDrawableByPriority(task.priority)
             )
         }

@@ -55,8 +55,8 @@ class UpcomingSectionAdapter(
                 taskTitleText.paint.isStrikeThruText = task.completed
 
                 taskCategoryText.text = task.categoryName
-                taskCategoryText.setTextColor(task.color!!)
-                taskCategoryImage.background.setTint(task.color)
+                taskCategoryText.setTextColor(task.categoryColor!!)
+                taskCategoryImage.background.setTint(task.categoryColor)
 
                 if (task.priority == 4) {
                     priorityImage.visibility = View.GONE

@@ -20,8 +20,8 @@ interface TaskDao {
         """
        SELECT * 
        FROM task_table
-       JOIN categories_table ON task_table.categoryId = categories_table.categoryId
-       WHERE categories_table.categoryId = :categoryId AND
+       JOIN categories_table ON task_table.categoryId = categories_table.id
+       WHERE categories_table.id = :categoryId AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.title LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
@@ -33,8 +33,8 @@ interface TaskDao {
         """
         SELECT COUNT(*) 
         FROM task_table 
-        JOIN categories_table ON task_table.categoryId = categories_table.categoryId
-        WHERE categories_table.categoryId = :categoryId AND
+        JOIN categories_table ON task_table.categoryId = categories_table.id
+        WHERE categories_table.id = :categoryId AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
@@ -44,8 +44,8 @@ interface TaskDao {
         """
         SELECT COUNT(*)
         FROM task_table 
-        JOIN categories_table ON task_table.categoryId = categories_table.categoryId
-        WHERE categories_table.categoryId = 1 AND
+        JOIN categories_table ON task_table.categoryId = categories_table.id
+        WHERE categories_table.id = 1 AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
