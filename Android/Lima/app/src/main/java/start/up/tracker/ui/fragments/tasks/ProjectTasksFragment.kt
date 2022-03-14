@@ -9,9 +9,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
@@ -21,8 +18,10 @@ import start.up.tracker.databinding.ProjectTasksFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
+import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.tasks.ProjectsTasksAdapter
+import start.up.tracker.ui.list.generators.tasks.TasksGenerator
 import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.utils.onQueryTextChanged
 
@@ -34,7 +33,10 @@ class ProjectTasksFragment :
     private val viewModel: ProjectsTasksViewModel by viewModels()
 
     private var binding: ProjectTasksFragmentBinding? = null
-    private lateinit var taskAdapter: ProjectsTasksAdapter
+
+    private lateinit var adapter: ProjectsTasksAdapter
+    private var listExtension: ListExtension? = null
+    private val generator: TasksGenerator = TasksGenerator()
 
     private lateinit var searchView: SearchView
 
@@ -130,7 +132,8 @@ class ProjectTasksFragment :
                 }
 
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                    val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    val action =
+                        ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }
@@ -155,34 +158,15 @@ class ProjectTasksFragment :
     }
 
     private fun initAdapter() {
-        taskAdapter = ProjectsTasksAdapter(layoutInflater, this)
+        adapter = ProjectsTasksAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
 
-        binding?.projectTasksList?.apply {
-            adapter = taskAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
+        listExtension = ListExtension(binding?.projectTasksList)
+        listExtension?.setLayoutManager()
+        listExtension?.setAdapter(adapter)
 
-        attachSwipeToAdapter()
-    }
-
-    private fun attachSwipeToAdapter() {
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val listItem = taskAdapter.getItems().elementAt(viewHolder.adapterPosition)
-                viewModel.onTaskSwiped(listItem.data as Task)
-            }
-        }).attachToRecyclerView(binding?.projectTasksList)
+        listExtension?.attachSwipeToAdapter(adapter, viewModel)
     }
 }

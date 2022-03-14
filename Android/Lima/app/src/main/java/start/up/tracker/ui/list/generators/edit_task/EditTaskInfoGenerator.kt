@@ -1,4 +1,4 @@
-package start.up.tracker.ui.list.generators.tasks
+package start.up.tracker.ui.list.generators.edit_task
 
 import android.text.InputType
 import android.view.inputmethod.EditorInfo

@@ -1,9 +1,14 @@
 package start.up.tracker.ui.extensions.list
 
 import android.view.MotionEvent
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
+import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
+import start.up.tracker.ui.data.entities.forms.ListItem
+import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 
 /**
@@ -49,6 +54,32 @@ class ListExtension(private var list: RecyclerView?) {
      */
     fun setLayoutManager(layoutManager: LayoutManager = getDefaultLayoutManager()) {
         list?.layoutManager = layoutManager
+    }
+
+    /**
+     * Добавляет возможность свайпать вправо или влево элемент списка
+     */
+    fun attachSwipeToAdapter(
+        adapter: BaseAdapter<ListItem, BaseViewHolder>,
+        viewModel: BaseTasksOperationsViewModel
+    ) {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: ViewHolder,
+                target: ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
+                val listItem = adapter.getItems().elementAt(viewHolder.adapterPosition)
+                viewModel.onTaskSwiped(listItem.data as Task)
+            }
+        }).attachToRecyclerView(list)
     }
 
     /**

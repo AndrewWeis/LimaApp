@@ -23,7 +23,7 @@ import start.up.tracker.ui.data.entities.forms.ListItem
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
-import start.up.tracker.ui.list.generators.tasks.EditTaskInfoGenerator
+import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
