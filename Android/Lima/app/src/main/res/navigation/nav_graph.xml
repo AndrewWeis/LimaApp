@@ -68,9 +68,6 @@
         android:label="{titleCategory}"
         tools:layout="@layout/project_tasks_fragment">
         <argument
-            android:name="category"
-            app:argType="start.up.tracker.entities.Category" />
-        <argument
             android:name="categoryId"
             app:argType="integer" />
         <action

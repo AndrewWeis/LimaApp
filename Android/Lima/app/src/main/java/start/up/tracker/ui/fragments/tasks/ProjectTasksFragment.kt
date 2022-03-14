@@ -147,7 +147,7 @@ class ProjectTasksFragment :
     }
 
     private fun initObservers() {
-        viewModel.tasksOfCategory.observe(viewLifecycleOwner) {
+        viewModel.projectTasks.observe(viewLifecycleOwner) {
             showTasks(it)
         }
     }
