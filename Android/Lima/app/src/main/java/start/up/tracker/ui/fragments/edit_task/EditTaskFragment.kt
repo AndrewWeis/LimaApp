@@ -17,7 +17,7 @@ import start.up.tracker.R
 import start.up.tracker.data.fields.Field
 import start.up.tracker.databinding.EditTaskFragmentBinding
 import start.up.tracker.entities.Task
-import start.up.tracker.mvvm.view_models.tasks.AddEditTaskViewModel
+import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.extensions.list.ListExtension
@@ -39,7 +39,7 @@ class EditTaskFragment :
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener {
 
-    private val viewModel: AddEditTaskViewModel by viewModels()
+    private val viewModel: EditTaskViewModel by viewModels()
 
     private var binding: EditTaskFragmentBinding? = null
 
@@ -195,9 +195,9 @@ class EditTaskFragment :
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-        viewModel.addEditTaskEvent.collect { event ->
+        viewModel.editTaskEvent.collect { event ->
             when (event) {
-                is AddEditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
+                is EditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
                     setFragmentResult(
                         RequestCodes.EDIT_TASK,
                         bundleOf(ResultCodes.EDIT_TASK to event.result)

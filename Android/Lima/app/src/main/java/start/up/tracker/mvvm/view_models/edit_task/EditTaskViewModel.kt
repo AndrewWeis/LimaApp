@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models.tasks
+package start.up.tracker.mvvm.view_models.edit_task
 
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
@@ -17,7 +17,7 @@ import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
 @HiltViewModel
-class AddEditTaskViewModel @Inject constructor(
+class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     categoriesDao: CategoriesDao,
     @Assisted private val state: SavedStateHandle
@@ -38,8 +38,8 @@ class AddEditTaskViewModel @Inject constructor(
 
     val categories = categoriesDao.getCategories()
 
-    private val addEditTaskEventChannel = Channel<AddEditTaskEvent>()
-    val addEditTaskEvent = addEditTaskEventChannel.receiveAsFlow()
+    private val editTaskEventChannel = Channel<AddEditTaskEvent>()
+    val editTaskEvent = editTaskEventChannel.receiveAsFlow()
 
     private val fieldSet: EditTaskInfoFieldSet = EditTaskInfoFieldSet(task)
 
@@ -160,12 +160,12 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun createTask(task: Task, categoryId: Int) = viewModelScope.launch {
         taskDao.insertTask(task.copy(categoryId = categoryId))
-        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
+        editTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }
 
     private fun updatedTask(task: Task, categoryId: Int) = viewModelScope.launch {
         taskDao.updateTask(task.copy(categoryId = categoryId))
-        addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
+        editTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }
 
     sealed class AddEditTaskEvent {
