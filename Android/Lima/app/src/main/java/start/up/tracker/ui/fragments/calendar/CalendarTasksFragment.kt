@@ -20,7 +20,7 @@ import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
 import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter
 import start.up.tracker.ui.list.generators.calendar.CalendarTasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.convertDpToPx
 

@@ -7,7 +7,7 @@ import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.diff_utils.tasks.TaskDiffUtils
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.ExtendedTaskViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.TaskViewHolder

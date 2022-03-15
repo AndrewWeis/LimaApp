@@ -1,4 +1,4 @@
-package start.up.tracker.ui.list.view_holders
+package start.up.tracker.ui.list.view_holders.tasks
 
 import start.up.tracker.entities.Task
 

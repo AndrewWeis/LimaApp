@@ -21,7 +21,7 @@ import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.tasks.TasksAdapter
 import start.up.tracker.ui.list.generators.tasks.TasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.resources.ResourcesUtils
 
 @AndroidEntryPoint

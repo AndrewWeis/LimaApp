@@ -11,7 +11,6 @@ import start.up.tracker.R
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.Settings
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.utils.resources.ResourcesUtils
 

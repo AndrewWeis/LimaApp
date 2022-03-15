@@ -22,7 +22,7 @@ import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.list.adapters.upcoming.UpcomingTasksAdapter
 import start.up.tracker.ui.list.generators.upcoming.UpcomingTasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.RequestCodes
 import start.up.tracker.utils.screens.ResultCodes
