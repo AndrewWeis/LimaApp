@@ -4,27 +4,32 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
-import start.up.tracker.entities.Article
-import start.up.tracker.databinding.FragmentArticlesBinding
-import start.up.tracker.mvvm.view_models.articles.ArticlesViewModel
-import start.up.tracker.ui.list.adapters.ArticlesAdapter
+import start.up.tracker.databinding.TechniquesFragmentBinding
+import start.up.tracker.entities.Technique
+import start.up.tracker.mvvm.view_models.articles.TechniquesViewModel
+import start.up.tracker.ui.extensions.list.ListExtension
+import start.up.tracker.ui.list.adapters.techniques.TechniquesAdapter
+import start.up.tracker.ui.list.generators.technique.TechniqueGenerator
+import start.up.tracker.ui.list.view_holders.techniques.TechniqueViewHolder
 
 @AndroidEntryPoint
 class ArticlesFragment :
-    Fragment(R.layout.fragment_articles),
-    ArticlesAdapter.OnArticleClickListener {
+    Fragment(R.layout.techniques_fragment),
+    TechniqueViewHolder.OnTechniqueClickListener {
 
-    private val viewModel: ArticlesViewModel by viewModels()
+    private val viewModel: TechniquesViewModel by viewModels()
 
-    private lateinit var articlesAdapter: ArticlesAdapter
-    private var binding: FragmentArticlesBinding? = null
+    private var binding: TechniquesFragmentBinding? = null
+
+    private lateinit var adapter: TechniquesAdapter
+    private var listExtension: ListExtension? = null
+    private val generator = TechniqueGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentArticlesBinding.bind(view)
+        binding = TechniquesFragmentBinding.bind(view)
 
         initAdapter()
         initObservers()
@@ -33,25 +38,31 @@ class ArticlesFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listExtension = null
     }
 
-    override fun onArticleClick(article: Article) {
-        // navigate to article
+    override fun onTechniqueClick(technique: Technique) {
+        // todo (добавить events)
+    }
+
+    private fun showTechniques(techniques: List<Technique>) {
+        adapter.updateItems(generator.createListItems(techniques))
     }
 
     private fun initObservers() {
-        viewModel.articles.observe(viewLifecycleOwner) {
-            articlesAdapter.submitList(it)
+        viewModel.techniques.observe(viewLifecycleOwner) {
+            showTechniques(it)
         }
     }
 
     private fun initAdapter() {
-        articlesAdapter = ArticlesAdapter(this)
+        adapter = TechniquesAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
 
-        binding?.articlesList?.apply {
-            adapter = articlesAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
+        listExtension = ListExtension(binding?.list)
+        listExtension?.setLayoutManager()
+        listExtension?.setAdapter(adapter)
     }
 }

@@ -3,42 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/lightGray"
     android:layout_marginVertical="8dp"
     android:paddingHorizontal="16dp"
     android:paddingVertical="16dp">
 
     <TextView
-        android:id="@+id/article_title_text"
+        android:id="@+id/technique_title_text"
         style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Title"/>
 
     <TextView
-        android:id="@+id/article_description_text"
+        android:id="@+id/technique_description_text"
         style="@style/TextAppearance.MaterialComponents.Body2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="3"
-        android:text="Description of the wonderful article"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/article_title_text" />
+        app:layout_constraintTop_toBottomOf="@id/technique_title_text"
+        tools:text="Description of the wonderful article"/>
 
     <TextView
-        android:id="@+id/article_read_time_text"
+        android:id="@+id/technique_read_time_text"
         style="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Time to read"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/article_description_text" />
+        app:layout_constraintTop_toBottomOf="@id/technique_description_text"
+        tools:text="Time to read"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

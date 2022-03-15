@@ -3,8 +3,8 @@ package start.up.tracker.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "articles_table")
-data class Article(
+@Entity(tableName = "technique_table")
+data class Technique(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val title: String,

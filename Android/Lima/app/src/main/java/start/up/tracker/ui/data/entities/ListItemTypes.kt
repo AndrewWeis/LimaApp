@@ -42,4 +42,7 @@ enum class ListItemTypes {
 
     // ListItem с элементом задача
     TASK,
+
+    // ListItem с элементом техника
+    TECHNIQUE,
 }

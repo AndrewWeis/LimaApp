@@ -53,7 +53,7 @@
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_settings_to_articles"
-            app:destination="@id/articlesFragment" />
+            app:destination="@id/techniquesFragment" />
     </fragment>
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
@@ -113,8 +113,8 @@
             app:destination="@id/addEditTaskFragment" />
     </fragment>
     <fragment
-        android:id="@+id/articlesFragment"
+        android:id="@+id/techniquesFragment"
         android:name="start.up.tracker.ui.fragments.articles.ArticlesFragment"
         android:label="Articles"
-        tools:layout="@layout/fragment_articles" />
+        tools:layout="@layout/techniques_fragment" />
 </navigation>
