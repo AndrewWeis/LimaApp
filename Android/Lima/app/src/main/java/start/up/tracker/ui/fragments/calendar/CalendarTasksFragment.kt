@@ -15,7 +15,7 @@ import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
 import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.BaseTasksFragment
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
 import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter

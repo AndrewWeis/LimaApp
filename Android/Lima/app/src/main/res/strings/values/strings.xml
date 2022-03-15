@@ -8,6 +8,9 @@
     <string name="task_time_end">End time</string>
     <string name="task_date">Date</string>
 
+    <string name="task_deleted">Task Deleted</string>
+    <string name="undo">UNDO</string>
+
     <string name="action_search">Search</string>
     <string name="success_delete">Success delete task</string>
     <string name="success_clear">Success clear all tasks</string>
