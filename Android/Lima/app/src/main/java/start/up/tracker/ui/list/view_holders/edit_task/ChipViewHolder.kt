@@ -17,9 +17,11 @@ class ChipViewHolder(
     private val binding: ChipItemBinding = ChipItemBinding.bind(itemView)
 
     private lateinit var data: ChipData
+    private lateinit var listItem: ListItem
     private lateinit var listener: ChipViewHolderListener
 
     fun bind(listItem: ListItem, listener: ChipViewHolderListener) {
+        this.listItem = listItem
         this.data = listItem.data as ChipData
         this.listener = listener
 
@@ -35,7 +37,7 @@ class ChipViewHolder(
             }
 
             data.isSelected = true
-            listener.onChipClick(data)
+            listener.onChipClick(listItem)
         }
     }
 
@@ -54,6 +56,6 @@ class ChipViewHolder(
     }
 
     interface ChipViewHolderListener {
-        fun onChipClick(chipData: ChipData)
+        fun onChipClick(listItem: ListItem)
     }
 }

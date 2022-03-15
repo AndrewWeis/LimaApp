@@ -236,7 +236,11 @@ class EditTaskFragment :
         }
     }
 
-    override fun onChipClick(chipData: ChipData) {
-        TODO("Not yet implemented")
+    override fun onChipClick(listItem: ListItem) {
+        val chipData = listItem.data as ChipData
+
+        when (listItem.id) {
+            ListItemIds.TASK_CATEGORIES -> viewModel.onCategoryChipChanged(chipData)
+        }
     }
 }

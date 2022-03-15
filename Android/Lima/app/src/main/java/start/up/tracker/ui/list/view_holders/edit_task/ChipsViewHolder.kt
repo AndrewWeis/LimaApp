@@ -30,8 +30,8 @@ class ChipsViewHolder(
         initAdapter()
     }
 
-    override fun onChipClick(chipData: ChipData) {
-        listener.onChipClick(chipData)
+    override fun onChipClick(listItem: ListItem) {
+        listener.onChipClick(listItem)
     }
 
     fun bind(listItem: ListItem, listener: CategoriesViewHolderListener) {
@@ -66,6 +66,6 @@ class ChipsViewHolder(
     }
 
     interface CategoriesViewHolderListener {
-        fun onChipClick(chipData: ChipData)
+        fun onChipClick(listItem: ListItem)
     }
 }

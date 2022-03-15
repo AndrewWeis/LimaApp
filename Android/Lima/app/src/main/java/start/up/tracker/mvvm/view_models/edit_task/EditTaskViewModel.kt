@@ -31,7 +31,7 @@ class EditTaskViewModel @Inject constructor(
     private var isEditMode = true
 
     private var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
-    private val selectedCategoryId = state.getLiveData<Int>(StateHandleKeys.CATEGORY_ID).asFlow()
+    private val selectedCategoryId = state.getLiveData<Int>(StateHandleKeys.CATEGORY_ID)
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
     val taskInfoLiveData: LiveData<Task>
@@ -43,7 +43,7 @@ class EditTaskViewModel @Inject constructor(
 
     private val categoriesFlow = categoriesDao.getCategories()
     private val categoriesChipsFlow: Flow<ChipsData> = combine(
-        selectedCategoryId,
+        selectedCategoryId.asFlow(),
         categoriesFlow,
         ::mergeCategoriesFlows
     )
@@ -70,9 +70,9 @@ class EditTaskViewModel @Inject constructor(
         }
 
         if (isEditMode) {
-            updatedTask(task, 1)
+            updatedTask(task)
         } else {
-            createTask(task, 1)
+            createTask(task)
         }
     }
 
@@ -145,6 +145,16 @@ class EditTaskViewModel @Inject constructor(
         showFields()
     }
 
+    /**
+     * Категория задачи была изменена
+     *
+     * @param chipData содержащая выбранную категорию
+     */
+    fun onCategoryChipChanged(chipData: ChipData) {
+        task = task.copy(categoryId = chipData.id)
+        selectedCategoryId.postValue(chipData.id)
+    }
+
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()
@@ -200,13 +210,13 @@ class EditTaskViewModel @Inject constructor(
         )
     }
 
-    private fun createTask(task: Task, categoryId: Int) = viewModelScope.launch {
-        taskDao.insertTask(task.copy(categoryId = categoryId))
+    private fun createTask(task: Task) = viewModelScope.launch {
+        taskDao.insertTask(task)
         editTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }
 
-    private fun updatedTask(task: Task, categoryId: Int) = viewModelScope.launch {
-        taskDao.updateTask(task.copy(categoryId = categoryId))
+    private fun updatedTask(task: Task) = viewModelScope.launch {
+        taskDao.updateTask(task)
         editTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }
 
