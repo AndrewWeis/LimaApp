@@ -107,7 +107,7 @@
         android:id="@+id/upcomingFragment"
         android:name="start.up.tracker.ui.fragments.upcoming.UpcomingFragment"
         android:label="Upcoming"
-        tools:layout="@layout/fragment_upcoming" >
+        tools:layout="@layout/upcoming_fragment" >
         <action
             android:id="@+id/action_upcoming_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />

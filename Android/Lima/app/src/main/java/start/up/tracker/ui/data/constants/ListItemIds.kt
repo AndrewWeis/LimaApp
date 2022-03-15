@@ -22,4 +22,6 @@ object ListItemIds {
 
     const val CALENDAR_TASK = "calendar_task"
     const val CALENDAR_SUBTASK = "calendar_subtask"
+
+    const val SECTION_HEADER = "section_header"
 }

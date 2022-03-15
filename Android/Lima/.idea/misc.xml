@@ -24,6 +24,7 @@
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_priority_1.xml" value="0.2587962962962963" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_priority_2.xml" value="0.2587962962962963" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_priority_3.xml" value="0.2587962962962963" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_priority_rechtanle.xml" value="0.1574074074074074" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_search.xml" value="0.2587962962962963" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_settings.xml" value="0.2587962962962963" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/drawable/ic_sort.xml" value="0.2587962962962963" />
@@ -62,6 +63,7 @@
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/activities/layout/activity_main.xml" value="0.2439814814814815" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/edit_task_fragment.xml" value="0.23324275362318841" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/edit_task_fragment_old.xml" value="0.536" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_add_category.xml" value="0.24048913043478262" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_add_edit_task.xml" value="0.264" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_articles.xml" value="0.21829710144927536" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_calendar_tasks.xml" value="0.4" />
@@ -69,8 +71,11 @@
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_category_inside.xml" value="0.17481884057971014" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_settings.xml" value="0.4" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_today_tasks.xml" value="0.11901535682023487" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_upcoming.xml" value="0.1" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/project_tasks_fragment.xml" value="0.17481884057971014" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/test_fragment.xml" value="0.23324275362318841" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/upcoming_fragment.xml" value="0.264" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/calendar_task_item.xml" value="0.536" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/edit_task_header_item.xml" value="0.22916666666666666" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/extended_task_item.xml" value="0.536" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/item_article.xml" value="0.264" />
@@ -79,7 +84,7 @@
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/item_task_calendar.xml" value="0.4" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/item_task_extended.xml" value="0.2439814814814815" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/item_upcoming_section.xml" value="0.2439814814814815" />
-        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/task_item.xml" value="0.16666666666666666" />
+        <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/task_item.xml" value="0.72" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/text_input_item.xml" value="0.4473684210526316" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/layouts/views/layout/custom_category_chip.xml" value="0.2439814814814815" />
         <entry key="..\:/App/LimaApp/Android/Lima/app/src/main/res/menu/bottom_nav_menu.xml" value="0.15151515151515152" />

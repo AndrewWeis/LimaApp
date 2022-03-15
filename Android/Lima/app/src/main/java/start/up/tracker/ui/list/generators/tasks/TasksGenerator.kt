@@ -1,12 +1,10 @@
 package start.up.tracker.ui.list.generators.tasks
 
 import start.up.tracker.entities.Task
-import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
-import start.up.tracker.ui.data.entities.ListItemTypes
-import start.up.tracker.ui.list.generators.base.BaseGenerator
+import start.up.tracker.ui.list.generators.base.BaseTasksGenerator
 
-class TasksGenerator : BaseGenerator() {
+class TasksGenerator : BaseTasksGenerator() {
 
     /**
      * Получить список [ListItem]'ов
@@ -30,33 +28,5 @@ class TasksGenerator : BaseGenerator() {
         }
 
         return list
-    }
-
-    /**
-     * Получить listItem с расширенной задачей
-     *
-     * @param task задача
-     * @return listItem с расширенной задачей
-     */
-    private fun getExtendedTaskListItem(task: Task): ListItem {
-        return createListItem(
-            id = ListItemIds.EXTENDED_TASK,
-            type = ListItemTypes.TASK,
-            data = task
-        )
-    }
-
-    /**
-     * Получить listItem с задачей
-     *
-     * @param task задача
-     * @return listItem с задачей
-     */
-    private fun getTaskListItem(task: Task): ListItem {
-        return createListItem(
-            id = ListItemIds.TASK,
-            type = ListItemTypes.TASK,
-            data = task
-        )
     }
 }
