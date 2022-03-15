@@ -2,8 +2,8 @@ package start.up.tracker.ui.data.constants
 
 object ListItemIds {
     const val TASK_DATA_HEADER = "task_data_header"
-    const val TASK_PRIORITY_HEADER = "task_priority_header"
-    const val TASK_CATEGORY_HEADER = "task_category_header"
+    const val TASK_PRIORITIES_HEADER = "task_priority_header"
+    const val TASK_CATEGORIES_HEADER = "task_category_header"
     const val TASK_TIME_HEADER = "task_time_header"
     const val TASK_DATE_HEADER = "task_date_header"
 

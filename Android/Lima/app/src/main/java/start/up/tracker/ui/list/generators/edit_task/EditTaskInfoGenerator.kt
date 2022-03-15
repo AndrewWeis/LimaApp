@@ -30,7 +30,9 @@ class EditTaskInfoGenerator : BaseGenerator() {
 
         list.add(getTaskDescription(task.description))
 
-        // list.add(getHeader(ListItemIds.TASK_PRIORITY_HEADER, R.string.title_task_priority))
+        list.add(getHeader(ListItemIds.TASK_PRIORITIES_HEADER, R.string.title_task_priority))
+        list.add(getHeader(ListItemIds.TASK_CATEGORIES_HEADER, R.string.title_task_category))
+
         list.add(getTaskStartTime(task.startTimeInMinutes))
         list.add(getTaskEndTime(task.endTimeInMinutes))
         list.add(getTaskDate(task.date))

@@ -116,8 +116,8 @@ class EditTaskAdapter(
 
     private fun getHeaderItemViewType(item: ListItem): Int {
         return when (item.id) {
-            ListItemIds.TASK_PRIORITY_HEADER -> ITEM_PRIORITY_HEADER
-            ListItemIds.TASK_CATEGORY_HEADER -> ITEM_CATEGORY_HEADER
+            ListItemIds.TASK_PRIORITIES_HEADER -> ITEM_PRIORITY_HEADER
+            ListItemIds.TASK_CATEGORIES_HEADER -> ITEM_CATEGORY_HEADER
             ListItemIds.TASK_TIME_HEADER -> ITEM_TIME_HEADER
             ListItemIds.TASK_DATE_HEADER -> ITEM_DATE_HEADER
             else -> NOT_FOUND
