@@ -172,8 +172,6 @@ class AddEditTaskViewModel @Inject constructor(
 
     private fun updatedTask(task: Task) = viewModelScope.launch {
         taskDao.updateTask(task)
-        // TODO edit tasks deletion: muppet is used now
-        activeAnalytics.finishTask(task, true)
 
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }

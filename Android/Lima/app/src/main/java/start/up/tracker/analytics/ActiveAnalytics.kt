@@ -2,9 +2,12 @@ package start.up.tracker.analytics
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
+import start.up.tracker.utils.TimeHelper
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +19,8 @@ import javax.inject.Singleton
 1. Отметка результата выполнения активности:
 1.1. Выполнено:
 1.1.1. В срок
-1.1.2. С опозданием
+1.1.2. С опозданием (если галочка выставлена в течение не более 24 часов после времен окончания
+задания)
 1.2. Не выполнено.
 2. Удаление активности
 При свайпе активности вбок появляется красная кнопка "удалить". Нажимаем на неё, система при этом
@@ -65,14 +69,43 @@ import javax.inject.Singleton
 class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao
 ) {
+    private var allPrinciples = ArrayList<Principle>()
+
     suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
     }
 
-    suspend fun finishTask(task: Task, inTime: Boolean) = withContext(Dispatchers.Default) {
+    suspend fun updateStatus(task: Task) = withContext(Dispatchers.Default) {
+        if (task.completed) {
+            finishTask(task);
+        } else {
+            unfinishTask(task);
+        }
+    }
+
+    private suspend fun finishTask(task: Task) = withContext(Dispatchers.Default) {
         val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val inTime = isFinishedInTime(taskAnalytics);
         val newTaskAnalytics = taskAnalytics.copy(completed = true, completedInTime = inTime)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
+    }
+
+    private suspend fun unfinishTask(task: Task) = withContext(Dispatchers.Default) {
+        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val newTaskAnalytics = taskAnalytics.copy(completed = false, completedInTime = false)
+        taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
+    }
+
+    suspend fun deleteAllTasks() = withContext(Dispatchers.Default) {
+        val tasks = taskAnalyticsDao.getAllTasks()
+        for (task in tasks) {
+            taskAnalyticsDao.deleteTaskAnalytics(task)
+        }
+    }
+
+    // TODO think of location to get all existing principles
+    fun preparePrinciples() {
+        allPrinciples.add(Pareto())
     }
 
     private fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {
@@ -85,4 +118,24 @@ class ActiveAnalytics @Inject constructor(
             categoryName = task.categoryName,
         )
     }
+
+    private fun isFinishedInTime(taskAnalytics: TaskAnalytics): Boolean {
+        val currentDate = TimeHelper.getCurrentDayInMilliseconds()
+        return if (taskAnalytics.date != null) {
+            val dif: Long = if (currentDate - taskAnalytics.date > 0) {
+                currentDate - taskAnalytics.date
+            } else {
+                (-1) * (currentDate - taskAnalytics.date)
+            }
+            val days: Long = TimeUnit.MILLISECONDS.toDays(dif)
+            days < 1
+        } else {
+            true
+        }
+    }
+
+    fun manager() {
+        // будем вызывать логику каждого из методов при необходимости: при создании таска
+    }
+
 }

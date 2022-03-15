@@ -4,6 +4,7 @@ import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.CategoriesDao
@@ -22,7 +23,8 @@ class UpcomingViewModel @Inject constructor(
     analytics: Analytics,
     categoriesDao: CategoriesDao,
     upcomingTasksDao: UpcomingTasksDao,
-) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
+    private val activeAnalytics: ActiveAnalytics,
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(
         TimeHelper.getCurrentDayInMilliseconds()

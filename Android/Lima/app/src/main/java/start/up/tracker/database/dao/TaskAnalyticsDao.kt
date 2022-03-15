@@ -2,6 +2,7 @@ package start.up.tracker.database.dao
 
 import androidx.room.*
 import start.up.tracker.entities.TaskAnalytics
+import java.util.ArrayList
 
 @Dao
 interface TaskAnalyticsDao {
@@ -22,4 +23,12 @@ interface TaskAnalyticsDao {
            """
     )
     suspend fun getTaskById(id: Int): TaskAnalytics
+
+    @Query(
+        """
+            SELECT * 
+            FROM taskAnalytics_table
+           """
+    )
+    suspend fun getAllTasks(): List<TaskAnalytics>
 }
