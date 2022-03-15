@@ -16,6 +16,9 @@ enum class ListItemTypes {
     // ListItem c RadioGroup
     RADIO_GROUP,
 
+    // ListItem c chip
+    CHIP,
+
     // ListItem с возможностью перехода (без выбора)
     LINK,
 

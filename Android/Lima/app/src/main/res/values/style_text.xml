@@ -1,2 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <style name="RobotoRegular">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RobotoRegular.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size12">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size12.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

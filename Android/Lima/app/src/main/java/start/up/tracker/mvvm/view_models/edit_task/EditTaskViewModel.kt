@@ -4,15 +4,20 @@ import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.data.fields.Field
 import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
 import start.up.tracker.database.dao.CategoriesDao
 import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.entities.Category
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
+import start.up.tracker.ui.data.entities.chips.ChipData
+import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
@@ -26,7 +31,7 @@ class EditTaskViewModel @Inject constructor(
     private var isEditMode = true
 
     private var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
-    private val categoryId = state.get<Int>(StateHandleKeys.CATEGORY_ID) ?: -1
+    private val selectedCategoryId = state.getLiveData<Int>(StateHandleKeys.CATEGORY_ID).asFlow()
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
     val taskInfoLiveData: LiveData<Task>
@@ -36,7 +41,13 @@ class EditTaskViewModel @Inject constructor(
     val titleField: LiveData<Field<String>>
         get() = _titleField
 
-    val categories = categoriesDao.getCategories()
+    private val categoriesFlow = categoriesDao.getCategories()
+    private val categoriesChipsFlow: Flow<ChipsData> = combine(
+        selectedCategoryId,
+        categoriesFlow,
+        ::mergeCategoriesFlows
+    )
+    val categoriesChips = categoriesChipsFlow.asLiveData()
 
     private val editTaskEventChannel = Channel<AddEditTaskEvent>()
     val editTaskEvent = editTaskEventChannel.receiveAsFlow()
@@ -156,6 +167,37 @@ class EditTaskViewModel @Inject constructor(
         }
 
         showTitleField()
+    }
+
+    /**
+     * Соединяет flow категорий, полученних их базы данных и flow идентификатора выбранной категории
+     *
+     * @param selectedCategoryId идентификатор выбранной категории
+     * @param categories список категорий
+     * @return chipsData с информацией о выбранной категории
+     */
+    private fun mergeCategoriesFlows(
+        selectedCategoryId: Int,
+        categories: List<Category>
+    ): ChipsData {
+        val values = categories.map { category ->
+            var isSelected = false
+            if (category.id == selectedCategoryId) {
+                isSelected = true
+            }
+
+            val chipData = ChipData(
+                id = category.id,
+                name = category.name,
+                isSelected = isSelected
+            )
+
+            chipData
+        }
+
+        return ChipsData(
+            values = values
+        )
     }
 
     private fun createTask(task: Task, categoryId: Int) = viewModelScope.launch {

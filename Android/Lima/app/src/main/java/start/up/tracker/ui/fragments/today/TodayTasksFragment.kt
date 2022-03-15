@@ -17,8 +17,8 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.tasks.TasksAdapter
 import start.up.tracker.ui.list.generators.tasks.TasksGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
@@ -143,7 +143,7 @@ class TodayTasksFragment :
         )
 
         listExtension = ListExtension(binding?.todayTasksList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
 
         listExtension?.attachSwipeToAdapter(adapter, viewModel)

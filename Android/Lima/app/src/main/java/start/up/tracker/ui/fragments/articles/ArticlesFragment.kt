@@ -62,7 +62,7 @@ class ArticlesFragment :
         )
 
         listExtension = ListExtension(binding?.list)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
     }
 }

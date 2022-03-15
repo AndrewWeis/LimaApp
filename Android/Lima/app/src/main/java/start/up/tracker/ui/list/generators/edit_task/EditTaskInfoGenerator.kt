@@ -6,11 +6,8 @@ import start.up.tracker.R
 import start.up.tracker.data.fields.Field
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.Header
-import start.up.tracker.ui.data.entities.Error
-import start.up.tracker.ui.data.entities.ListItem
-import start.up.tracker.ui.data.entities.ListItemTypes
-import start.up.tracker.ui.data.entities.Settings
+import start.up.tracker.ui.data.entities.*
+import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.ui.extensions.ValidationMessages
 import start.up.tracker.ui.list.generators.base.BaseGenerator
 import start.up.tracker.utils.TimeHelper
@@ -24,7 +21,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
      * @param task информация о задача
      * @return спикок с информацией о задаче
      */
-    fun createListItems(task: Task?): List<ListItem> {
+    fun createEditableTaskInfoListItems(task: Task?): List<ListItem> {
         if (task == null) {
             return listOf()
         }
@@ -145,6 +142,20 @@ class EditTaskInfoGenerator : BaseGenerator() {
             data = title,
             settings = setting,
             error = error
+        )
+    }
+
+    /**
+     * Получить [ListItem] со списком выбираемых категорий
+     *
+     * @param chips список выбираемых категорий
+     * @return [ListItem] содержаший список выбираемых категорий
+     */
+    fun createCategoriesChipsListItems(chips: ChipsData): ListItem {
+        return ListItem(
+            id = ListItemIds.TASK_CATEGORIES,
+            type = ListItemTypes.LIST,
+            data = chips
         )
     }
 

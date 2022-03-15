@@ -181,7 +181,7 @@ class ProjectTasksFragment :
         )
 
         listExtension = ListExtension(binding?.projectTasksList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
 
         listExtension?.attachSwipeToAdapter(adapter, viewModel)

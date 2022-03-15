@@ -7,6 +7,7 @@ import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
+import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.list.view_holders.forms.TextInputViewHolder
 import start.up.tracker.ui.list.view_holders.headers.HeaderViewHolder
@@ -16,6 +17,7 @@ class EditTaskAdapter(
     layoutInflater: LayoutInflater,
     private val textInputListener: BaseInputView.TextInputListener,
     private val textInputSelectionListener: SelectInputViewHolder.TextInputSelectionListener,
+    private val categoriesViewHolderListener: ChipsViewHolder.CategoriesViewHolderListener
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -28,10 +30,10 @@ class EditTaskAdapter(
             ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
             ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
                 return SelectInputViewHolder(layoutInflater, parent)
-            /*ITEM_PRIORITIES_LIST ->
-                return PriorityViewHolder(layoutInflater, parent)
             ITEM_CATEGORIES_LIST ->
-                return CategoriesViewHolder(layoutInflater, parent)*/
+                return ChipsViewHolder(layoutInflater, parent)
+            /*ITEM_PRIORITIES_LIST ->
+                return PriorityViewHolder(layoutInflater, parent)*/
             else -> throwUnknownViewHolderTypeException()
         }
     }
@@ -46,10 +48,10 @@ class EditTaskAdapter(
             ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
             ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
                 (holder as SelectInputViewHolder).bind(item, textInputSelectionListener)
-            /*ITEM_PRIORITIES_LIST ->
-                (holder as PriorityViewHolder).bind(item)
             ITEM_CATEGORIES_LIST ->
-                (holder as CategoriesViewHolder).bind(item)*/
+                (holder as ChipsViewHolder).bind(item, categoriesViewHolderListener)
+            /*ITEM_PRIORITIES_LIST ->
+                (holder as PriorityViewHolder).bind(item)*/
         }
     }
 
@@ -78,8 +80,8 @@ class EditTaskAdapter(
         ITEM_SELECTION_REPEAT
     )
 
-    fun addListItems(listItems: List<ListItem>) {
-        updateItems(listItems)
+    fun setCategoryChipListItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_CATEGORIES_LIST)
     }
 
     fun setTitleItem(listItem: ListItem) {

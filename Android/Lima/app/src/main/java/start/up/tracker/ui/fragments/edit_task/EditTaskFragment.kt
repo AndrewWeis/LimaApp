@@ -20,10 +20,13 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.chips.ChipData
+import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
+import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
@@ -37,7 +40,8 @@ class EditTaskFragment :
     BaseInputView.TextInputListener,
     SelectInputViewHolder.TextInputSelectionListener,
     TimePickerDialog.OnTimeSetListener,
-    DatePickerDialog.OnDateSetListener {
+    DatePickerDialog.OnDateSetListener,
+    ChipsViewHolder.CategoriesViewHolderListener {
 
     private val viewModel: EditTaskViewModel by viewModels()
 
@@ -155,6 +159,19 @@ class EditTaskFragment :
         timePickerDialog.show()
     }
 
+    private fun showCategories(chips: ChipsData) {
+        val listItem: ListItem = generator.createCategoriesChipsListItems(chips)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setCategoryChipListItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setCategoryChipListItem(listItem)
+        }
+    }
+
     private fun showTitleField(field: Field<String>) {
         val listItem: ListItem = generator.createTitleListItem(field)
 
@@ -169,18 +186,19 @@ class EditTaskFragment :
     }
 
     private fun showEditableTaskInfo(task: Task?) {
-        adapter.addListItems(generator.createListItems(task))
+        adapter.updateItems(generator.createEditableTaskInfoListItems(task))
     }
 
     private fun initAdapter() {
         adapter = EditTaskAdapter(
             layoutInflater = layoutInflater,
             textInputListener = this,
-            textInputSelectionListener = this
+            textInputSelectionListener = this,
+            categoriesViewHolderListener = this
         )
 
         listExtension = ListExtension(binding?.editTasksList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
     }
 
@@ -191,6 +209,10 @@ class EditTaskFragment :
 
         viewModel.titleField.observe(viewLifecycleOwner) { field ->
             showTitleField(field)
+        }
+
+        viewModel.categoriesChips.observe(viewLifecycleOwner) { chips ->
+            showCategories(chips)
         }
     }
 
@@ -212,5 +234,9 @@ class EditTaskFragment :
         binding?.doneButton?.setOnClickListener {
             viewModel.onSaveClick()
         }
+    }
+
+    override fun onChipClick(chipData: ChipData) {
+        TODO("Not yet implemented")
     }
 }

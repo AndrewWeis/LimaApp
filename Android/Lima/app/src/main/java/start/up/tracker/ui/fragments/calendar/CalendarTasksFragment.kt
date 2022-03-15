@@ -138,7 +138,7 @@ class CalendarTasksFragment :
         )
 
         listExtension = ListExtension(binding?.calendarList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
     }
 

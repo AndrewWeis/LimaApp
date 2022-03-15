@@ -23,7 +23,7 @@ class ListExtension(private var list: RecyclerView?) {
     private var shouldLockList = false
 
     init {
-        setLayoutManager()
+        setVerticalLayoutManager()
         addOnItemTouchListener()
     }
 
@@ -49,11 +49,17 @@ class ListExtension(private var list: RecyclerView?) {
     }
 
     /**
-     * Задать @LayoutManager
-     * По умолчанию задается @LinearLayoutManager
+     * Задать вертикальный @LayoutManager
      */
-    fun setLayoutManager(layoutManager: LayoutManager = getDefaultLayoutManager()) {
-        list?.layoutManager = layoutManager
+    fun setVerticalLayoutManager() {
+        list?.layoutManager = getVerticalLayoutManager()
+    }
+
+    /**
+     * Задать горизонтальный @LayoutManager
+     */
+    fun setHorizontalLayoutManager() {
+        list?.layoutManager = getHorizontalLayoutManager()
     }
 
     /**
@@ -83,12 +89,23 @@ class ListExtension(private var list: RecyclerView?) {
     }
 
     /**
-     * Получить @LayoutManager по умолчанию
+     * Получить вертикальный @LayoutManager
      */
-    private fun getDefaultLayoutManager(): LayoutManager {
+    private fun getVerticalLayoutManager(): LayoutManager {
         return LinearLayoutManager(
             null,
             LinearLayoutManager.VERTICAL,
+            false
+        )
+    }
+
+    /**
+     * Получить горизонтальный @LayoutManager
+     */
+    private fun getHorizontalLayoutManager(): LayoutManager {
+        return LinearLayoutManager(
+            null,
+            LinearLayoutManager.HORIZONTAL,
             false
         )
     }
