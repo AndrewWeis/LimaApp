@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models.articles
+package start.up.tracker.mvvm.view_models.techniques
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData

@@ -1,4 +1,4 @@
-package start.up.tracker.ui.list.generators.technique
+package start.up.tracker.ui.list.generators.techniques
 
 import start.up.tracker.entities.Technique
 import start.up.tracker.ui.data.constants.ListItemIds

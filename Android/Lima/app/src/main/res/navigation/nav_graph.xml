@@ -52,7 +52,7 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings" >
         <action
-            android:id="@+id/action_settings_to_articles"
+            android:id="@+id/action_settings_to_techniques"
             app:destination="@id/techniquesFragment" />
     </fragment>
     <dialog
@@ -114,7 +114,7 @@
     </fragment>
     <fragment
         android:id="@+id/techniquesFragment"
-        android:name="start.up.tracker.ui.fragments.articles.ArticlesFragment"
-        android:label="Articles"
+        android:name="start.up.tracker.ui.fragments.articles.TechniquesFragment"
+        android:label="Techniques"
         tools:layout="@layout/techniques_fragment" />
 </navigation>

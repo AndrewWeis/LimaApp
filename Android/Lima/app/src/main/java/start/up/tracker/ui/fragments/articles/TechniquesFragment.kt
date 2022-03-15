@@ -8,14 +8,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.TechniquesFragmentBinding
 import start.up.tracker.entities.Technique
-import start.up.tracker.mvvm.view_models.articles.TechniquesViewModel
+import start.up.tracker.mvvm.view_models.techniques.TechniquesViewModel
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.list.adapters.techniques.TechniquesAdapter
-import start.up.tracker.ui.list.generators.technique.TechniqueGenerator
+import start.up.tracker.ui.list.generators.techniques.TechniqueGenerator
 import start.up.tracker.ui.list.view_holders.techniques.TechniqueViewHolder
 
 @AndroidEntryPoint
-class ArticlesFragment :
+class TechniquesFragment :
     Fragment(R.layout.techniques_fragment),
     TechniqueViewHolder.OnTechniqueClickListener {
 

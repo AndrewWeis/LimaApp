@@ -43,7 +43,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun initListeners() {
         binding?.articlesView?.setOnClickListener {
-            val action = SettingsFragmentDirections.actionSettingsToArticles()
+            val action = SettingsFragmentDirections.actionSettingsToTechniques()
             findNavController().navigate(action)
         }
     }
