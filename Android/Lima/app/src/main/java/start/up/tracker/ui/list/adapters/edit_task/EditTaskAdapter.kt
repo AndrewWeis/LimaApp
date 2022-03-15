@@ -30,10 +30,8 @@ class EditTaskAdapter(
             ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
             ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
                 return SelectInputViewHolder(layoutInflater, parent)
-            ITEM_CATEGORIES_LIST ->
+            ITEM_CATEGORIES_LIST, ITEM_PRIORITIES_LIST ->
                 return ChipsViewHolder(layoutInflater, parent)
-            /*ITEM_PRIORITIES_LIST ->
-                return PriorityViewHolder(layoutInflater, parent)*/
             else -> throwUnknownViewHolderTypeException()
         }
     }
@@ -48,10 +46,8 @@ class EditTaskAdapter(
             ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
             ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
                 (holder as SelectInputViewHolder).bind(item, textInputSelectionListener)
-            ITEM_CATEGORIES_LIST ->
+            ITEM_CATEGORIES_LIST, ITEM_PRIORITIES_LIST ->
                 (holder as ChipsViewHolder).bind(item, categoriesViewHolderListener)
-            /*ITEM_PRIORITIES_LIST ->
-                (holder as PriorityViewHolder).bind(item)*/
         }
     }
 
@@ -79,6 +75,10 @@ class EditTaskAdapter(
         ITEM_SELECTION_DATE,
         ITEM_SELECTION_REPEAT
     )
+
+    fun setPrioritiesChipListItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_PRIORITIES_LIST)
+    }
 
     fun setCategoryChipListItem(listItem: ListItem) {
         updateItem(listItem, ITEM_CATEGORIES_LIST)

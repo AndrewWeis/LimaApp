@@ -148,6 +148,20 @@ class EditTaskInfoGenerator : BaseGenerator() {
     }
 
     /**
+     * Получить [ListItem] со списком приоритетов
+     *
+     * @param chips список приоритетов
+     * @return [ListItem] содержаший список приоритетов
+     */
+    fun createPrioritiesChipsListItems(chips: ChipsData): ListItem {
+        return ListItem(
+            id = ListItemIds.TASK_PRIORITIES,
+            type = ListItemTypes.LIST,
+            data = chips
+        )
+    }
+
+    /**
      * Получить [ListItem] со списком выбираемых категорий
      *
      * @param chips список выбираемых категорий

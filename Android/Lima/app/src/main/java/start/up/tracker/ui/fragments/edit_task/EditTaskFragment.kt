@@ -122,6 +122,15 @@ class EditTaskFragment :
         }
     }
 
+    override fun onChipClick(listItem: ListItem) {
+        val chipData = listItem.data as ChipData
+
+        when (listItem.id) {
+            ListItemIds.TASK_CATEGORIES -> viewModel.onCategoryChipChanged(chipData)
+            ListItemIds.TASK_PRIORITIES -> viewModel.onPriorityChipChanged(chipData)
+        }
+    }
+
     override fun onTimeSet(timePicker: TimePicker, hours: Int, minutes: Int) {
         if (isTaskTimeTypeStart) {
             viewModel.onTaskStartTimeChanged(hours * 60 + minutes)
@@ -157,6 +166,19 @@ class EditTaskFragment :
         )
 
         timePickerDialog.show()
+    }
+
+    private fun showPriorities(chips: ChipsData) {
+        val listItem: ListItem = generator.createPrioritiesChipsListItems(chips)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setPrioritiesChipListItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setPrioritiesChipListItem(listItem)
+        }
     }
 
     private fun showCategories(chips: ChipsData) {
@@ -211,8 +233,12 @@ class EditTaskFragment :
             showTitleField(field)
         }
 
-        viewModel.categoriesChips.observe(viewLifecycleOwner) { chips ->
-            showCategories(chips)
+        viewModel.categoriesChips.observe(viewLifecycleOwner) { categoriesChips ->
+            showCategories(categoriesChips)
+        }
+
+        viewModel.prioritiesChips.observe(viewLifecycleOwner) { prioritiesChips ->
+            showPriorities(prioritiesChips)
         }
     }
 
@@ -233,14 +259,6 @@ class EditTaskFragment :
     private fun initListeners() {
         binding?.doneButton?.setOnClickListener {
             viewModel.onSaveClick()
-        }
-    }
-
-    override fun onChipClick(listItem: ListItem) {
-        val chipData = listItem.data as ChipData
-
-        when (listItem.id) {
-            ListItemIds.TASK_CATEGORIES -> viewModel.onCategoryChipChanged(chipData)
         }
     }
 }

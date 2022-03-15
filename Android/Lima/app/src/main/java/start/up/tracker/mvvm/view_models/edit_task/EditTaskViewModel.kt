@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import start.up.tracker.R
 import start.up.tracker.data.fields.Field
 import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
 import start.up.tracker.database.dao.CategoriesDao
@@ -18,6 +19,7 @@ import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
@@ -48,6 +50,10 @@ class EditTaskViewModel @Inject constructor(
         ::mergeCategoriesFlows
     )
     val categoriesChips = categoriesChipsFlow.asLiveData()
+
+    private val _prioritiesChips: MutableLiveData<ChipsData> = MutableLiveData()
+    val prioritiesChips: LiveData<ChipsData>
+        get() = _prioritiesChips
 
     private val editTaskEventChannel = Channel<AddEditTaskEvent>()
     val editTaskEvent = editTaskEventChannel.receiveAsFlow()
@@ -155,9 +161,20 @@ class EditTaskViewModel @Inject constructor(
         selectedCategoryId.postValue(chipData.id)
     }
 
+    /**
+     * Приоритет задачи была изменен
+     *
+     * @param chipData содержащая выбранный приоритет
+     */
+    fun onPriorityChipChanged(chipData: ChipData) {
+        task = task.copy(priority = chipData.id)
+        showPrioritiesChips()
+    }
+
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()
+        showPrioritiesChips()
     }
 
     private fun showEditableTaskInfo() {
@@ -167,6 +184,30 @@ class EditTaskViewModel @Inject constructor(
     private fun showTitleField() {
         val field: Field<String> = fieldSet.getTitleField()
         _titleField.postValue(field)
+    }
+
+    private fun showPrioritiesChips() {
+        val chips: MutableList<ChipData> = mutableListOf()
+
+        chips.add(getChipData(0, ResourcesUtils.getString(R.string.priority_undefined)))
+        chips.add(getChipData(1, ResourcesUtils.getString(R.string.priority_high)))
+        chips.add(getChipData(2, ResourcesUtils.getString(R.string.priority_medium)))
+        chips.add(getChipData(3, ResourcesUtils.getString(R.string.priority_low)))
+
+        _prioritiesChips.postValue(ChipsData(values = chips))
+    }
+
+    private fun getChipData(id: Int, name: String): ChipData {
+        var isSelected = false
+        if (task.priority == id) {
+            isSelected = true
+        }
+
+        return ChipData(
+            id = id,
+            name = name,
+            isSelected = isSelected
+        )
     }
 
     private fun validateTitleField() {
