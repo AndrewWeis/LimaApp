@@ -13,4 +13,13 @@ interface TaskAnalyticsDao {
 
     @Delete
     suspend fun deleteTaskAnalytics(taskAnalyticsDao: TaskAnalytics)
+
+    @Query(
+        """
+            SELECT * 
+            FROM taskAnalytics_table
+            WHERE taskAnalytics_table.id = :id
+           """
+    )
+    suspend fun getTaskById(id: Int): TaskAnalytics
 }

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 /**
  * Table for active analytics
  */
-@Entity
+@Entity(tableName = "taskAnalytics_table")
 data class TaskAnalytics (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

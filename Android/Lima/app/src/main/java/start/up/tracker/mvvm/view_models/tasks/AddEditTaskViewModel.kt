@@ -6,11 +6,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import start.up.tracker.analytics.ActiveAnalytics
+import start.up.tracker.analytics.Analytics
 import start.up.tracker.data.fields.Field
 import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
 import start.up.tracker.database.dao.CategoriesDao
+import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
+import start.up.tracker.entities.TaskAnalytics
 import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.utils.screens.StateHandleKeys
@@ -19,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val activeAnalytics: ActiveAnalytics,
     categoriesDao: CategoriesDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
@@ -59,9 +64,9 @@ class AddEditTaskViewModel @Inject constructor(
         }
 
         if (isEditMode) {
-            updatedTask(task, 1)
+            updatedTask(task)
         } else {
-            createTask(task, 1)
+            createTask(task)
         }
     }
 
@@ -158,13 +163,18 @@ class AddEditTaskViewModel @Inject constructor(
         showTitleField()
     }
 
-    private fun createTask(task: Task, categoryId: Int) = viewModelScope.launch {
-        taskDao.insertTask(task.copy(categoryId = categoryId))
+    private fun createTask(task: Task) = viewModelScope.launch {
+        taskDao.insertTask(task)
+        activeAnalytics.addTask(task)
+
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }
 
-    private fun updatedTask(task: Task, categoryId: Int) = viewModelScope.launch {
-        taskDao.updateTask(task.copy(categoryId = categoryId))
+    private fun updatedTask(task: Task) = viewModelScope.launch {
+        taskDao.updateTask(task)
+        // TODO edit tasks deletion: muppet is used now
+        activeAnalytics.finishTask(task, true)
+
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }
 
