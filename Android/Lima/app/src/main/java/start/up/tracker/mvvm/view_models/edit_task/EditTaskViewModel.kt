@@ -175,6 +175,11 @@ class EditTaskViewModel @Inject constructor(
         showEditableTaskInfo()
         showTitleField()
         showPrioritiesChips()
+        showCategoriesChips()
+    }
+
+    private fun showCategoriesChips() {
+        selectedCategoryId.postValue(task.categoryId)
     }
 
     private fun showEditableTaskInfo() {
@@ -189,10 +194,10 @@ class EditTaskViewModel @Inject constructor(
     private fun showPrioritiesChips() {
         val chips: MutableList<ChipData> = mutableListOf()
 
-        chips.add(getChipData(0, ResourcesUtils.getString(R.string.priority_undefined)))
-        chips.add(getChipData(1, ResourcesUtils.getString(R.string.priority_high)))
-        chips.add(getChipData(2, ResourcesUtils.getString(R.string.priority_medium)))
-        chips.add(getChipData(3, ResourcesUtils.getString(R.string.priority_low)))
+        chips.add(getChipData(PRIORITY_UNDEFINED, ResourcesUtils.getString(R.string.priority_undefined)))
+        chips.add(getChipData(PRIORITY_HIGH, ResourcesUtils.getString(R.string.priority_high)))
+        chips.add(getChipData(PRIORITY_MEDIUM, ResourcesUtils.getString(R.string.priority_medium)))
+        chips.add(getChipData(PRIORITY_LOW, ResourcesUtils.getString(R.string.priority_low)))
 
         _prioritiesChips.postValue(ChipsData(values = chips))
     }
@@ -263,5 +268,12 @@ class EditTaskViewModel @Inject constructor(
 
     sealed class AddEditTaskEvent {
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvent()
+    }
+
+    private companion object {
+        const val PRIORITY_UNDEFINED = 0
+        const val PRIORITY_HIGH = 1
+        const val PRIORITY_MEDIUM = 2
+        const val PRIORITY_LOW = 3
     }
 }
