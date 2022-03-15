@@ -47,6 +47,9 @@ object AppModule {
     @Provides
     fun provideUpcomingTasksDao(db: TaskDatabase) = db.upcomingTasksDao()
 
+    @Provides
+    fun provideTaskAnalyticsDao(db: TaskDatabase) = db.taskAnalyticsDao()
+
     @ApplicationScope
     @Provides
     @Singleton

@@ -22,6 +22,9 @@ abstract class BaseTasksOperationsViewModel(
         tasksEventChannel.send(TasksEvent.NavigateToEditTaskScreen(task))
     }
 
+    /**
+     * Calling task deletion through ticks
+     */
     fun onTaskCheckedChanged(
         task: Task,
     ) = viewModelScope.launch {
@@ -31,6 +34,9 @@ abstract class BaseTasksOperationsViewModel(
         taskDao.updateTask(task.copy(wasCompleted = true))
     }
 
+    /**
+     * Calling task deletion through swipe
+     */
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
         taskDao.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))

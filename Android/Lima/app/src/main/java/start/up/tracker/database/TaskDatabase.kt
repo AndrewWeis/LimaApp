@@ -6,16 +6,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.*
-import start.up.tracker.entities.Article
-import start.up.tracker.entities.Category
-import start.up.tracker.entities.DayStat
-import start.up.tracker.entities.Task
 import start.up.tracker.di.ApplicationScope
+import start.up.tracker.entities.*
 import javax.inject.Inject
 import javax.inject.Provider
 
 @Database(
-    entities = [Task::class, Category::class, DayStat::class, Article::class],
+    entities = [Task::class, Category::class, DayStat::class, Article::class, TaskAnalytics::class],
     version = 1
 )
 abstract class TaskDatabase : RoomDatabase() {
@@ -27,6 +24,7 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun todayTasksDao(): TodayTasksDao
     abstract fun calendarTasksDao(): CalendarTasksDao
     abstract fun upcomingTasksDao(): UpcomingTasksDao
+    abstract fun taskAnalyticsDao(): TaskAnalyticsDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,
