@@ -5,7 +5,6 @@ abstract class PrincipleKt(
     val description: String
 ) {
     abstract var isEnabled: Boolean
-    //val name: String
 
     fun setStatus(isEnabled: Boolean) {
         this.isEnabled = isEnabled

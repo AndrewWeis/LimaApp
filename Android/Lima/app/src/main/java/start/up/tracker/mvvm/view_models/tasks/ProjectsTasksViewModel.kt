@@ -20,8 +20,8 @@ class ProjectsTasksViewModel @Inject constructor(
     private val taskDao: TaskDao,
     @Assisted private val state: SavedStateHandle,
     preferencesManager: PreferencesManager,
-    private val activeAnalytics: ActiveAnalytics,
     analytics: Analytics,
+    activeAnalytics: ActiveAnalytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     val searchQuery = state.getLiveData(StateHandleKeys.SEARCH_QUERY, "")
