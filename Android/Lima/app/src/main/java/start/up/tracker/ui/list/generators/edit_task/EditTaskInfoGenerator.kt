@@ -8,6 +8,7 @@ import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.*
 import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.ValidationMessages
 import start.up.tracker.ui.list.generators.base.BaseGenerator
 import start.up.tracker.utils.TimeHelper
@@ -37,7 +38,23 @@ class EditTaskInfoGenerator : BaseGenerator() {
         list.add(getTaskEndTime(task.endTimeInMinutes))
         list.add(getTaskDate(task.date))
 
+        list.add(getHeader(ListItemIds.TASK_SUBTASKS_HEADER, R.string.title_task_subtasks))
+        list.add(getAddSubtaskButton())
+
         return list
+    }
+
+    /**
+     * Получить listItem с кнопкой для добавления подзадачи
+     *
+     * @return listItem с кнопкой для добавления подзадачи
+     */
+    private fun getAddSubtaskButton(): ListItem {
+        return createListItem(
+            id = ListItemIds.SUBTASK,
+            type = ListItemTypes.BUTTON,
+            data = null
+        )
     }
 
     /**
@@ -172,6 +189,20 @@ class EditTaskInfoGenerator : BaseGenerator() {
             id = ListItemIds.TASK_CATEGORIES,
             type = ListItemTypes.LIST,
             data = chips
+        )
+    }
+
+    /**
+     * Получить [ListItem] со списком подзадач
+     *
+     * @param subtasks список подзадач
+     * @return [ListItem] содержаший список подзадач
+     */
+    fun createSubtasksListItems(subtasks: TasksData): ListItem {
+        return ListItem(
+            id = ListItemIds.TASK_SUBTASKS,
+            type = ListItemTypes.LIST,
+            data = subtasks
         )
     }
 

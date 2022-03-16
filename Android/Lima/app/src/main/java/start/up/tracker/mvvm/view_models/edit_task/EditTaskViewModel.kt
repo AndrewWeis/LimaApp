@@ -7,18 +7,24 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import start.up.tracker.R
+import start.up.tracker.analytics.Analytics
 import start.up.tracker.data.fields.Field
 import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
+import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.CategoriesDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Category
 import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
+import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
@@ -26,14 +32,17 @@ import javax.inject.Inject
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    @Assisted private val state: SavedStateHandle,
     categoriesDao: CategoriesDao,
-    @Assisted private val state: SavedStateHandle
-) : ViewModel() {
+    preferencesManager: PreferencesManager,
+    analytics: Analytics,
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private var isEditMode = true
 
-    private var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
+    var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
     private val selectedCategoryId = state.getLiveData<Int>(StateHandleKeys.CATEGORY_ID)
+    private val parentTaskId = state.get<Int>(StateHandleKeys.PARENT_TASK_ID) ?: -1
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
     val taskInfoLiveData: LiveData<Task>
@@ -55,15 +64,18 @@ class EditTaskViewModel @Inject constructor(
     val prioritiesChips: LiveData<ChipsData>
         get() = _prioritiesChips
 
-    private val editTaskEventChannel = Channel<AddEditTaskEvent>()
-    val editTaskEvent = editTaskEventChannel.receiveAsFlow()
-
     private val fieldSet: EditTaskInfoFieldSet = EditTaskInfoFieldSet(task)
+
+    private var subtasksFlow: Flow<TasksData> = taskDao.getSubtasksByTaskId(task.taskId)
+        .transform { tasks -> emit(TasksData(tasks = tasks)) }
+    val subtasks = subtasksFlow.asLiveData()
 
     init {
         if (task.title.isEmpty()) {
             isEditMode = false
         }
+
+        task = task.copy(parentTaskId = parentTaskId)
 
         showFields()
     }
@@ -80,6 +92,13 @@ class EditTaskViewModel @Inject constructor(
         } else {
             createTask(task)
         }
+    }
+
+    /**
+     * Была нажата кнопка "Добавить подзадачу"
+     */
+    fun onAddSubtaskClick() {
+        navigateToAddSubtask()
     }
 
     /**
@@ -258,16 +277,16 @@ class EditTaskViewModel @Inject constructor(
 
     private fun createTask(task: Task) = viewModelScope.launch {
         taskDao.insertTask(task)
-        editTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
+        tasksEventChannel.send(TasksEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }
 
     private fun updatedTask(task: Task) = viewModelScope.launch {
         taskDao.updateTask(task)
-        editTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
+        tasksEventChannel.send(TasksEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }
 
-    sealed class AddEditTaskEvent {
-        data class NavigateBackWithResult(val result: Int) : AddEditTaskEvent()
+    private fun navigateToAddSubtask() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
     }
 
     private companion object {

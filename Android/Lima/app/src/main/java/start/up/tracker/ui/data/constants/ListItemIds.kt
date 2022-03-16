@@ -6,6 +6,7 @@ object ListItemIds {
     const val TASK_CATEGORIES_HEADER = "task_category_header"
     const val TASK_TIME_HEADER = "task_time_header"
     const val TASK_DATE_HEADER = "task_date_header"
+    const val TASK_SUBTASKS_HEADER = "task_subtasks_header"
 
     const val TASK_TITLE = "task_title"
     const val TASK_DESCRIPTION = "task_description"
@@ -15,6 +16,7 @@ object ListItemIds {
     const val TASK_TIME_END = "task_time_end"
     const val TASK_DATE = "task_date"
     const val TASK_REPEAT = "task_repeat"
+    const val TASK_SUBTASKS = "task_subtasks"
 
     const val TASK = "task"
     const val SUBTASK = "subtask"

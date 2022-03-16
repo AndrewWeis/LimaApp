@@ -11,19 +11,24 @@ import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.list.view_holders.forms.TextInputViewHolder
 import start.up.tracker.ui.list.view_holders.headers.HeaderViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.AddSubtaskViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.TasksViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
 
 class EditTaskAdapter(
     layoutInflater: LayoutInflater,
     private val textInputListener: BaseInputView.TextInputListener,
     private val textInputSelectionListener: SelectInputViewHolder.TextInputSelectionListener,
-    private val categoriesViewHolderListener: ChipsViewHolder.CategoriesViewHolderListener
+    private val categoriesViewHolderListener: ChipsViewHolder.CategoriesViewHolderListener,
+    private val onTaskClickListener: OnTaskClickListener,
+    private val onAddSubtaskListener: AddSubtaskViewHolder.OnAddSubtaskClickListener,
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             ITEM_PRIORITY_HEADER, ITEM_CATEGORY_HEADER,
-            ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
+            ITEM_TIME_HEADER, ITEM_DATE_HEADER, ITEM_SUBTASKS_HEADER ->
                 return HeaderViewHolder(layoutInflater, parent)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
                 return TextInputViewHolder(layoutInflater, parent)
@@ -32,6 +37,10 @@ class EditTaskAdapter(
                 return SelectInputViewHolder(layoutInflater, parent)
             ITEM_CATEGORIES_LIST, ITEM_PRIORITIES_LIST ->
                 return ChipsViewHolder(layoutInflater, parent)
+            ITEM_SUBTASKS_LIST ->
+                return TasksViewHolder(layoutInflater, parent)
+            ITEM_ADD_SUBTASK_BUTTON ->
+                return AddSubtaskViewHolder(layoutInflater, parent)
             else -> throwUnknownViewHolderTypeException()
         }
     }
@@ -39,7 +48,7 @@ class EditTaskAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
             ITEM_PRIORITY_HEADER, ITEM_CATEGORY_HEADER,
-            ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
+            ITEM_TIME_HEADER, ITEM_DATE_HEADER, ITEM_SUBTASKS_HEADER ->
                 (holder as HeaderViewHolder).bind(item)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
                 (holder as TextInputViewHolder).bind(item, textInputListener)
@@ -48,6 +57,10 @@ class EditTaskAdapter(
                 (holder as SelectInputViewHolder).bind(item, textInputSelectionListener)
             ITEM_CATEGORIES_LIST, ITEM_PRIORITIES_LIST ->
                 (holder as ChipsViewHolder).bind(item, categoriesViewHolderListener)
+            ITEM_SUBTASKS_LIST ->
+                (holder as TasksViewHolder).bind(item, onTaskClickListener)
+            ITEM_ADD_SUBTASK_BUTTON ->
+                (holder as AddSubtaskViewHolder).bind(onAddSubtaskListener)
         }
     }
 
@@ -57,6 +70,7 @@ class EditTaskAdapter(
             ListItemTypes.INPUT_TEXT -> getInputTextItemViewTime(item)
             ListItemTypes.SELECT -> getSelectionItemViewType(item)
             ListItemTypes.LIST -> getListItemViewType(item)
+            ListItemTypes.BUTTON -> ITEM_ADD_SUBTASK_BUTTON
             else -> NOT_FOUND
         }
     }
@@ -73,8 +87,15 @@ class EditTaskAdapter(
         ITEM_SELECTION_TIME_END,
         ITEM_DATE_HEADER,
         ITEM_SELECTION_DATE,
-        ITEM_SELECTION_REPEAT
+        ITEM_SELECTION_REPEAT,
+        ITEM_SUBTASKS_HEADER,
+        ITEM_SUBTASKS_LIST,
+        ITEM_ADD_SUBTASK_BUTTON
     )
+
+    fun setSubtasksListItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_SUBTASKS_LIST)
+    }
 
     fun setPrioritiesChipListItem(listItem: ListItem) {
         updateItem(listItem, ITEM_PRIORITIES_LIST)
@@ -100,6 +121,7 @@ class EditTaskAdapter(
         return when (item.id) {
             ListItemIds.TASK_CATEGORIES -> ITEM_CATEGORIES_LIST
             ListItemIds.TASK_PRIORITIES -> ITEM_PRIORITIES_LIST
+            ListItemIds.TASK_SUBTASKS -> ITEM_SUBTASKS_LIST
             else -> NOT_FOUND
         }
     }
@@ -120,6 +142,7 @@ class EditTaskAdapter(
             ListItemIds.TASK_CATEGORIES_HEADER -> ITEM_CATEGORY_HEADER
             ListItemIds.TASK_TIME_HEADER -> ITEM_TIME_HEADER
             ListItemIds.TASK_DATE_HEADER -> ITEM_DATE_HEADER
+            ListItemIds.TASK_SUBTASKS_HEADER -> ITEM_SUBTASKS_HEADER
             else -> NOT_FOUND
         }
     }
@@ -137,5 +160,8 @@ class EditTaskAdapter(
         const val ITEM_DATE_HEADER = 9
         const val ITEM_SELECTION_DATE = 10
         const val ITEM_SELECTION_REPEAT = 11
+        const val ITEM_SUBTASKS_HEADER = 12
+        const val ITEM_SUBTASKS_LIST = 13
+        const val ITEM_ADD_SUBTASK_BUTTON = 14
     }
 }

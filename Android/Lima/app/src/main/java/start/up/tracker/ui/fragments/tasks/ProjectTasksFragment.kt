@@ -20,7 +20,7 @@ import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
-import start.up.tracker.ui.list.adapters.tasks.TasksAdapter
+import start.up.tracker.ui.list.adapters.tasks.TaskAdapter
 import start.up.tracker.ui.list.generators.tasks.TasksGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.onQueryTextChanged
@@ -37,7 +37,7 @@ class ProjectTasksFragment :
 
     private var binding: ProjectTasksFragmentBinding? = null
 
-    private lateinit var adapter: TasksAdapter
+    private lateinit var adapter: TaskAdapter
     private var listExtension: ListExtension? = null
     private val generator: TasksGenerator = TasksGenerator()
 
@@ -175,7 +175,7 @@ class ProjectTasksFragment :
     }
 
     private fun initAdapter() {
-        adapter = TasksAdapter(
+        adapter = TaskAdapter(
             layoutInflater = layoutInflater,
             listener = this
         )

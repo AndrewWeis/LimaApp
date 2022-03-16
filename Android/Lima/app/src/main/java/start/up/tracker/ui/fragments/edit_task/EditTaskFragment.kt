@@ -20,28 +20,36 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseFragment
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
 import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
 import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.AddSubtaskViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.RequestCodes
 import start.up.tracker.utils.screens.ResultCodes
 import java.util.*
 
 @AndroidEntryPoint
 class EditTaskFragment :
-    BaseFragment(R.layout.edit_task_fragment),
+    BaseTasksFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
     SelectInputViewHolder.TextInputSelectionListener,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener,
-    ChipsViewHolder.CategoriesViewHolderListener {
+    ChipsViewHolder.CategoriesViewHolderListener,
+    OnTaskClickListener,
+    AddSubtaskViewHolder.OnAddSubtaskClickListener {
 
     private val viewModel: EditTaskViewModel by viewModels()
 
@@ -131,6 +139,18 @@ class EditTaskFragment :
         }
     }
 
+    override fun onTaskClick(task: Task) {
+        viewModel.onTaskSelected(task)
+    }
+
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
+    }
+
+    override fun onAddSubtaskClick() {
+        viewModel.onAddSubtaskClick()
+    }
+
     override fun onTimeSet(timePicker: TimePicker, hours: Int, minutes: Int) {
         if (isTaskTimeTypeStart) {
             viewModel.onTaskStartTimeChanged(hours * 60 + minutes)
@@ -166,6 +186,19 @@ class EditTaskFragment :
         )
 
         timePickerDialog.show()
+    }
+
+    private fun showSubtasks(subtasks: TasksData) {
+        val listItem: ListItem = generator.createSubtasksListItems(subtasks)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setSubtasksListItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setSubtasksListItem(listItem)
+        }
     }
 
     private fun showPriorities(chips: ChipsData) {
@@ -216,7 +249,9 @@ class EditTaskFragment :
             layoutInflater = layoutInflater,
             textInputListener = this,
             textInputSelectionListener = this,
-            categoriesViewHolderListener = this
+            categoriesViewHolderListener = this,
+            onTaskClickListener = this,
+            onAddSubtaskListener = this
         )
 
         listExtension = ListExtension(binding?.editTasksList)
@@ -240,17 +275,38 @@ class EditTaskFragment :
         viewModel.prioritiesChips.observe(viewLifecycleOwner) { prioritiesChips ->
             showPriorities(prioritiesChips)
         }
+
+        viewModel.subtasks.observe(viewLifecycleOwner) { subtasks ->
+            showSubtasks(subtasks)
+        }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
-        viewModel.editTaskEvent.collect { event ->
+        viewModel.tasksEvent.collect { event ->
             when (event) {
-                is EditTaskViewModel.AddEditTaskEvent.NavigateBackWithResult -> {
+                is TasksEvent.NavigateBackWithResult -> {
                     setFragmentResult(
                         RequestCodes.EDIT_TASK,
                         bundleOf(ResultCodes.EDIT_TASK to event.result)
                     )
                     findNavController().popBackStack()
+                }
+                is TasksEvent.NavigateToAddTaskScreen -> {
+                    val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
+                        title = ResourcesUtils.getString(R.string.title_add_task),
+                        categoryId = viewModel.task.categoryId,
+                        parentTaskId = viewModel.task.taskId
+                    )
+                    navigateTo(action)
+                }
+                is TasksEvent.NavigateToEditTaskScreen -> {
+                    val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
+                        event.task,
+                        ResourcesUtils.getString(R.string.title_edit_task),
+                        event.task.categoryId,
+                        event.task.taskId
+                    )
+                    navigateTo(action)
                 }
             }
         }

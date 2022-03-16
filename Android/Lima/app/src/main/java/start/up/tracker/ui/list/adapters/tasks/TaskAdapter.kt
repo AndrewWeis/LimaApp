@@ -12,7 +12,7 @@ import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.ExtendedTaskViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.TaskViewHolder
 
-class TasksAdapter(
+class TaskAdapter(
     layoutInflater: LayoutInflater,
     private val listener: OnTaskClickListener
 ) : BaseAdapter<ListItem, BaseViewHolder>(layoutInflater) {
@@ -35,8 +35,8 @@ class TasksAdapter(
     override fun getItemViewType(item: ListItem): Int {
         return when (item.id) {
             ListItemIds.TASK -> TYPE_TASK
-            ListItemIds.SUBTASK -> TYPE_SUBTASK
             ListItemIds.EXTENDED_TASK -> TYPE_EXTENDED_TASK
+            ListItemIds.SUBTASK -> TYPE_SUBTASK
             else -> NOT_FOUND
         }
     }
@@ -55,7 +55,7 @@ class TasksAdapter(
 
     private companion object {
         const val TYPE_TASK = 0
-        const val TYPE_SUBTASK = 1
-        const val TYPE_EXTENDED_TASK = 2
+        const val TYPE_EXTENDED_TASK = 1
+        const val TYPE_SUBTASK = 2
     }
 }
