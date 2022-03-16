@@ -2,15 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/MM"
     tools:context=".ui.fragments.settings.SettingsFragment">
 
     <TextView
         android:id="@+id/tx_darkMode"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size16.WW"
         android:layout_marginStart="@dimen/spacing_normal"
         android:text="@string/dark_mode"
         app:layout_constraintBottom_toBottomOf="@+id/img_darkMode"
@@ -19,8 +16,7 @@
 
     <ImageView
         android:id="@+id/img_darkMode"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        style="@style/W50_H50"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_normal"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,8 +34,7 @@
 
     <View
         android:id="@+id/articles_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        style="@style/M_H0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/articles_image"
@@ -47,8 +42,7 @@
 
     <ImageView
         android:id="@+id/articles_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        style="@style/W50_H50"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,9 +51,7 @@
 
     <TextView
         android:id="@+id/articles_title_text"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size16.WW"
         android:layout_marginStart="@dimen/spacing_normal"
         android:text="Articles"
         app:layout_constraintBottom_toBottomOf="@+id/articles_image"

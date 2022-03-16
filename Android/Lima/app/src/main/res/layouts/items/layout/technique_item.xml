@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    style="@style/MW"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/lightGray"
     android:layout_marginVertical="8dp"
@@ -11,9 +10,7 @@
 
     <TextView
         android:id="@+id/technique_title_text"
-        style="@style/TextAppearance.MaterialComponents.Headline6"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size20.Zero_W"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -21,9 +18,7 @@
 
     <TextView
         android:id="@+id/technique_description_text"
-        style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size14.Zero_W"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="3"
@@ -34,9 +29,7 @@
 
     <TextView
         android:id="@+id/technique_read_time_text"
-        style="@style/TextAppearance.MaterialComponents.Caption"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size12.Zero_W"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
