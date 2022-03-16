@@ -22,6 +22,7 @@ interface TaskDao {
        FROM task_table
        JOIN categories_table ON task_table.categoryId = categories_table.id
        WHERE categories_table.id = :categoryId AND
+       task_table.parentTaskId == -1 AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.title LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
@@ -50,6 +51,15 @@ interface TaskDao {
     """
     )
     fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
+
+    @Query(
+        """
+        SELECT *
+        FROM task_table
+        WHERE parentTaskId = :id
+        """
+    )
+    fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
 
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?

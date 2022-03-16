@@ -39,19 +39,18 @@ class ChipsViewHolder(
         this.data = listItem.data as ChipsData
         this.listener = listener
 
-        updateItems(data)
+        updateItems()
     }
 
-    private fun updateItems(data: ChipsData) {
+    private fun updateItems() {
         val chipsListItems = data.values.map {
             val item = ListItem(
                 id = listItem.id,
-                type = ListItemTypes.LIST,
+                type = ListItemTypes.CHIP,
                 data = it
             )
             item
         }
-
         adapter.updateItems(chipsListItems)
     }
 

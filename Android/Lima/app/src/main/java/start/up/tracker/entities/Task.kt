@@ -19,6 +19,9 @@ data class Task(
     val endTimeInMinutes: Int? = null,
     val date: Long? = null,
 
+    // для определения к какому таску относится текущая
+    val parentTaskId: Int = -1,
+
     // todo (maybe add task id to day stat)
     val wasCompleted: Boolean = false,
 
