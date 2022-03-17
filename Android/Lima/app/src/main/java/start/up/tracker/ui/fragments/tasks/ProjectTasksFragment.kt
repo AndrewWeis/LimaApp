@@ -49,7 +49,6 @@ class ProjectTasksFragment :
 
         initAdapter()
         initListeners()
-        initResultListeners()
         initObservers()
         initTaskEventListener()
 
@@ -121,10 +120,6 @@ class ProjectTasksFragment :
                     navigateTo(action)
                 }
 
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
-                }
-
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
@@ -136,13 +131,6 @@ class ProjectTasksFragment :
     private fun initListeners() {
         binding?.addTaskFab?.setOnClickListener {
             viewModel.onAddNewTaskClick()
-        }
-    }
-
-    private fun initResultListeners() {
-        setFragmentResultListener(RequestCodes.EDIT_TASK) { _, bundle ->
-            val result = bundle.getInt(ResultCodes.EDIT_TASK)
-            viewModel.onAddEditResult(result)
         }
     }
 

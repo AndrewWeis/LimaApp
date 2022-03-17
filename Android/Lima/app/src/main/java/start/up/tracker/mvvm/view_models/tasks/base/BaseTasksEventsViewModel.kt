@@ -6,8 +6,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.database.PreferencesManager
-import start.up.tracker.ui.data.constants.ADD_RESULT_OK
-import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.ui.data.entities.TasksEvent
 
 abstract class BaseTasksEventsViewModel(
@@ -28,16 +26,5 @@ abstract class BaseTasksEventsViewModel(
 
     fun onDeleteAllCompletedClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToDeleteAllCompletedScreen)
-    }
-
-    fun onAddEditResult(result: Int) {
-        when (result) {
-            ADD_RESULT_OK -> showTaskSavedConfirmationMessage("Task added")
-            EDIT_RESULT_OK -> showTaskSavedConfirmationMessage("Task updated")
-        }
-    }
-
-    private fun showTaskSavedConfirmationMessage(text: String) = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.ShowTaskSavedConfirmationMessage(text))
     }
 }

@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -35,8 +33,6 @@ import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 import java.util.*
 
 @AndroidEntryPoint
@@ -288,13 +284,10 @@ class EditTaskFragment :
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.NavigateBackWithResult -> {
-                    setFragmentResult(
-                        RequestCodes.EDIT_TASK,
-                        bundleOf(ResultCodes.EDIT_TASK to event.result)
-                    )
+                is TasksEvent.NavigateBack -> {
                     findNavController().popBackStack()
                 }
+
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
                         title = ResourcesUtils.getString(R.string.title_add_task),
@@ -303,6 +296,7 @@ class EditTaskFragment :
                     )
                     navigateTo(action)
                 }
+
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
                         event.task,

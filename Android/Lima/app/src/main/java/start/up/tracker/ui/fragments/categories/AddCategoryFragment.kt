@@ -2,10 +2,8 @@ package start.up.tracker.ui.fragments.categories
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -43,9 +41,8 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.addCategoryEvent.collect { event ->
                 when (event) {
-                    is AddCategoryViewModel.AddCategoryEvent.NavigateBackWithResult -> {
+                    is AddCategoryViewModel.AddCategoryEvent.NavigateBack -> {
                         binding?.editTextCategoryLabel?.clearFocus()
-                        setFragmentResult("add_request", bundleOf("add_request" to event.result))
                         findNavController().popBackStack()
                     }
                     is AddCategoryViewModel.AddCategoryEvent.ShowInvalidInputMessage -> {

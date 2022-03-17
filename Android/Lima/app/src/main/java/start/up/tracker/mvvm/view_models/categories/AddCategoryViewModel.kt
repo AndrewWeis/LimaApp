@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.CategoriesDao
 import start.up.tracker.entities.Category
-import start.up.tracker.ui.data.constants.ADD_RESULT_OK
 import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
 import javax.inject.Inject
 
@@ -47,7 +46,7 @@ class AddCategoryViewModel @Inject constructor(
     private fun createCategory() = viewModelScope.launch {
         val newCategory = Category(name = categoryName, color = color)
         categoriesDao.insertCategory(newCategory)
-        addCategoryEventChannel.send(AddCategoryEvent.NavigateBackWithResult(ADD_RESULT_OK))
+        addCategoryEventChannel.send(AddCategoryEvent.NavigateBack)
     }
 
     private fun showInvalidInputMessage(text: String) = viewModelScope.launch {
@@ -56,6 +55,6 @@ class AddCategoryViewModel @Inject constructor(
 
     sealed class AddCategoryEvent {
         data class ShowInvalidInputMessage(val msg: String) : AddCategoryEvent()
-        data class NavigateBackWithResult(val result: Int) : AddCategoryEvent()
+        object NavigateBack : AddCategoryEvent()
     }
 }

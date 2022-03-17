@@ -15,8 +15,6 @@ import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Category
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
-import start.up.tracker.ui.data.constants.ADD_RESULT_OK
-import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
@@ -288,12 +286,12 @@ class EditTaskViewModel @Inject constructor(
 
     private fun createTask(task: Task) = viewModelScope.launch {
         taskDao.insertTask(task)
-        tasksEventChannel.send(TasksEvent.NavigateBackWithResult(ADD_RESULT_OK))
+        tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun updatedTask(task: Task) = viewModelScope.launch {
         taskDao.updateTask(task)
-        tasksEventChannel.send(TasksEvent.NavigateBackWithResult(EDIT_RESULT_OK))
+        tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun navigateToAddSubtask() = viewModelScope.launch {

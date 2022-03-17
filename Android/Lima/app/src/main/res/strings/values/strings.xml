@@ -17,17 +17,9 @@
     <string name="priority_low">Low</string>
 
     <string name="action_search">Search</string>
-    <string name="success_delete">Success delete task</string>
-    <string name="success_clear">Success clear all tasks</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
     <string name="form_empty">Some data is empty, checked your form</string>
-    <string name="update_task">Update task</string>
-    <string name="success_save">Success save task</string>
-    <string name="success_update">Success update task</string>
-    <string name="tx_welcome">Good evening, Nikita</string>
     <string name="settings">Settings</string>
-    <string name="tx_subtitle">Organize your plans for the day</string>
-    <string name="unsorted_tasks">Unsorted tasks</string>
     <string name="fab">FAB</string>
     <string name="label">Label</string>
     <string name="description">Description</string>
@@ -39,11 +31,6 @@
     <string name="save">Save</string>
     <string name="dark_mode">Dark mode</string>
     <string name="importance_icon">Importance icon</string>
-    <string name="important">Important</string>
     <string name="hide_completed">Hide completed</string>
-    <string name="action_sort">Sort</string>
-    <string name="sort_by_name">Sort by name</string>
-    <string name="sort_by_date_created">Sort by date created</string>
     <string name="delete_all_completed">Delete all completed</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

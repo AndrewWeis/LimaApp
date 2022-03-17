@@ -112,9 +112,6 @@ class TodayTasksFragment :
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
-                }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
                         ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
