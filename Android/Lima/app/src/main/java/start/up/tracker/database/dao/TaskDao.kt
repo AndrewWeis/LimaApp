@@ -54,13 +54,7 @@ interface TaskDao {
     )
     fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
 
-    @Query(
-        """
-        SELECT *
-        FROM task_table
-        WHERE parentTaskId = :id
-        """
-    )
+    @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
 
     @Query("SELECT MAX(taskId) FROM task_table")

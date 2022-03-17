@@ -18,11 +18,11 @@ class TaskViewHolder(
     override fun bind(listItem: ListItem, listener: OnTaskClickListener) {
         super.bind(listItem, listener)
 
-        setSubtaskImage()
-        setCategory()
+        setupSubtasks()
+        setupCategory()
     }
 
-    private fun setCategory() {
+    private fun setupCategory() {
         if (task.categoryName == null && task.categoryColor == null) {
             binding.taskCategoryText.visibility = View.GONE
             binding.taskCategoryImage.visibility = View.GONE
@@ -36,11 +36,14 @@ class TaskViewHolder(
         }
     }
 
-    private fun setSubtaskImage() {
-        if (task.hasSubtasks) {
-            binding.subtaskImage.visibility = View.VISIBLE
-        } else {
+    private fun setupSubtasks() {
+        if (task.subtasksNumber == 0) {
             binding.subtaskImage.visibility = View.GONE
+            binding.subtasksNumberText.visibility = View.GONE
+            return
         }
+
+        val subtasksText = "${task.completedSubtasksNumber}/${task.subtasksNumber}"
+        binding.subtasksNumberText.text = subtasksText
     }
 }

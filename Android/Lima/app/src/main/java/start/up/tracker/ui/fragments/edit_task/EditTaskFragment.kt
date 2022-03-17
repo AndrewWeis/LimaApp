@@ -183,8 +183,12 @@ class EditTaskFragment :
         timePickerDialog.show()
     }
 
-    private fun onHasSubtasksChanged(hasSubtasks: Boolean) {
-        viewModel.onHasSubtasksChanged(hasSubtasks)
+    private fun onSubtasksNumberChanged(number: Int) {
+        viewModel.onSubtasksNumberChanged(number)
+    }
+
+    private fun onCompletedSubtasksNumberChanged(number: Int) {
+        viewModel.onCompletedSubtasksNumberChanged(number)
     }
 
     private fun showSubtasks(subtasks: TasksData) {
@@ -278,7 +282,8 @@ class EditTaskFragment :
 
         viewModel.subtasks.observe(viewLifecycleOwner) { subtasks ->
             showSubtasks(subtasks)
-            onHasSubtasksChanged(subtasks.tasks.isNotEmpty())
+            onSubtasksNumberChanged(subtasks.tasks.size)
+            onCompletedSubtasksNumberChanged(subtasks.tasks.count { it.completed })
         }
     }
 

@@ -181,12 +181,21 @@ class EditTaskViewModel @Inject constructor(
     }
 
     /**
-     * Флаг о наличии подзадач был изменен
+     * Количество подзадач было изменено
      *
-     * @param hasSubtasks флаг о наличии подзадач
+     * @param number количество подзадач
      */
-    fun onHasSubtasksChanged(hasSubtasks: Boolean) {
-        task = task.copy(hasSubtasks = hasSubtasks)
+    fun onSubtasksNumberChanged(number: Int) {
+        task = task.copy(subtasksNumber = number)
+    }
+
+    /**
+     * Количество выполненных подзадач было изменено
+     *
+     * @param number количество выполненных подзадач
+     */
+    fun onCompletedSubtasksNumberChanged(number: Int) {
+        task = task.copy(completedSubtasksNumber = number)
     }
 
     private fun setParentTaskId() {

@@ -32,6 +32,17 @@
         app:layout_constraintTop_toTopOf="@id/task_check_box"
         tools:text="Some task we need to complete or we are going to suffer" />
 
+    <TextView
+        android:id="@+id/subtasks_number_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@id/subtask_image"
+        app:layout_constraintStart_toStartOf="@id/subtask_image"
+        app:layout_constraintTop_toBottomOf="@id/subtask_image"
+        tools:text="0/12" />
+
     <ImageView
         android:id="@+id/priority_image"
         android:layout_width="wrap_content"
@@ -80,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@color/lightGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
