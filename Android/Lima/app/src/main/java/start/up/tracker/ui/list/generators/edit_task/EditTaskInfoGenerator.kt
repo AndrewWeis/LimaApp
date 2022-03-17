@@ -38,9 +38,6 @@ class EditTaskInfoGenerator : BaseGenerator() {
         list.add(getTaskEndTime(task.endTimeInMinutes))
         list.add(getTaskDate(task.date))
 
-        list.add(getHeader(ListItemIds.TASK_SUBTASKS_HEADER, R.string.title_task_subtasks))
-        list.add(getAddSubtaskButton())
-
         return list
     }
 
@@ -49,11 +46,84 @@ class EditTaskInfoGenerator : BaseGenerator() {
      *
      * @return listItem с кнопкой для добавления подзадачи
      */
-    private fun getAddSubtaskButton(): ListItem {
+    fun createAddSubtaskButton(): ListItem {
         return createListItem(
             id = ListItemIds.SUBTASK,
             type = ListItemTypes.BUTTON,
             data = null
+        )
+    }
+
+    /**
+     * Получить listItem с заголовком задачи
+     *
+     * @param field содержит заголовок задачи
+     * @return listItem с заголовком задачи
+     */
+    fun createTitleListItem(field: Field<String>): ListItem {
+        val title = field.getValue() ?: ""
+
+        val setting = Settings(
+            inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
+            imeOption = EditorInfo.IME_ACTION_NEXT,
+            editable = field.isEditable(),
+            name = ResourcesUtils.getString(R.string.task_title),
+            hint = getHint()
+        )
+
+        val validationMessages = ValidationMessages(field)
+        val error = Error(
+            message = validationMessages.getMessage()
+        )
+
+        return ListItem(
+            id = ListItemIds.TASK_TITLE,
+            type = ListItemTypes.INPUT_TEXT,
+            data = title,
+            settings = setting,
+            error = error
+        )
+    }
+
+    /**
+     * Получить [ListItem] со списком приоритетов
+     *
+     * @param chips список приоритетов
+     * @return [ListItem] содержаший список приоритетов
+     */
+    fun createPrioritiesChipsListItems(chips: ChipsData): ListItem {
+        return ListItem(
+            id = ListItemIds.TASK_PRIORITIES,
+            type = ListItemTypes.LIST,
+            data = chips
+        )
+    }
+
+    /**
+     * Получить [ListItem] со списком выбираемых категорий
+     *
+     * @param chips список выбираемых категорий
+     * @return [ListItem] содержаший список выбираемых категорий
+     */
+    fun createCategoriesChipsListItems(chips: ChipsData): ListItem {
+        return ListItem(
+            id = ListItemIds.TASK_CATEGORIES,
+            type = ListItemTypes.LIST,
+            data = chips
+        )
+    }
+
+    /**
+     * Получить [ListItem] со списком подзадач
+     *
+     * @param subtasks список подзадач
+     * @return [ListItem] содержаший список подзадач
+     */
+    fun createSubtasksListItems(subtasks: TasksData): ListItem {
+        return ListItem(
+            id = ListItemIds.TASK_SUBTASKS,
+            type = ListItemTypes.LIST,
+            data = subtasks
         )
     }
 
@@ -131,79 +201,6 @@ class EditTaskInfoGenerator : BaseGenerator() {
      */
     private fun getFormattedTimeStart(time: Int?): String? {
         return TimeHelper.formatMinutesOfCurrentDay(time)
-    }
-
-    /**
-     * Получить listItem с заголовком задачи
-     *
-     * @param field содержит заголовок задачи
-     * @return listItem с заголовком задачи
-     */
-    fun createTitleListItem(field: Field<String>): ListItem {
-        val title = field.getValue() ?: ""
-
-        val setting = Settings(
-            inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
-            imeOption = EditorInfo.IME_ACTION_NEXT,
-            editable = field.isEditable(),
-            name = ResourcesUtils.getString(R.string.task_title),
-            hint = getHint()
-        )
-
-        val validationMessages = ValidationMessages(field)
-        val error = Error(
-            message = validationMessages.getMessage()
-        )
-
-        return ListItem(
-            id = ListItemIds.TASK_TITLE,
-            type = ListItemTypes.INPUT_TEXT,
-            data = title,
-            settings = setting,
-            error = error
-        )
-    }
-
-    /**
-     * Получить [ListItem] со списком приоритетов
-     *
-     * @param chips список приоритетов
-     * @return [ListItem] содержаший список приоритетов
-     */
-    fun createPrioritiesChipsListItems(chips: ChipsData): ListItem {
-        return ListItem(
-            id = ListItemIds.TASK_PRIORITIES,
-            type = ListItemTypes.LIST,
-            data = chips
-        )
-    }
-
-    /**
-     * Получить [ListItem] со списком выбираемых категорий
-     *
-     * @param chips список выбираемых категорий
-     * @return [ListItem] содержаший список выбираемых категорий
-     */
-    fun createCategoriesChipsListItems(chips: ChipsData): ListItem {
-        return ListItem(
-            id = ListItemIds.TASK_CATEGORIES,
-            type = ListItemTypes.LIST,
-            data = chips
-        )
-    }
-
-    /**
-     * Получить [ListItem] со списком подзадач
-     *
-     * @param subtasks список подзадач
-     * @return [ListItem] содержаший список подзадач
-     */
-    fun createSubtasksListItems(subtasks: TasksData): ListItem {
-        return ListItem(
-            id = ListItemIds.TASK_SUBTASKS,
-            type = ListItemTypes.LIST,
-            data = subtasks
-        )
     }
 
     /**

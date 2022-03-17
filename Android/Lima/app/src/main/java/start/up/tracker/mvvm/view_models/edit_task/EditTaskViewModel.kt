@@ -62,7 +62,7 @@ class EditTaskViewModel @Inject constructor(
 
     private var subtasksFlow: Flow<TasksData> = taskDao.getSubtasksByTaskId(task.taskId)
         .transform { tasks -> emit(TasksData(tasks = tasks)) }
-    val subtasks = subtasksFlow.asLiveData()
+    var subtasks: LiveData<TasksData> = MutableLiveData()
 
     init {
         isAddOrEditMode()
@@ -203,10 +203,18 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun showFields() {
+        if (isEditMode) {
+            showSubtasks()
+        }
+
         showEditableTaskInfo()
         showTitleField()
         showPrioritiesChips()
         showCategoriesChips()
+    }
+
+    private fun showSubtasks() {
+        subtasks = subtasksFlow.asLiveData()
     }
 
     private fun showCategoriesChips() {

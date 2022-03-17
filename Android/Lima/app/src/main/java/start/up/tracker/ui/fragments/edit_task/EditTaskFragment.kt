@@ -191,6 +191,19 @@ class EditTaskFragment :
         viewModel.onCompletedSubtasksNumberChanged(number)
     }
 
+    private fun showAddSubtaskButton() {
+        val listItem: ListItem = generator.createAddSubtaskButton()
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setAddSubtaskButtonListItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setAddSubtaskButtonListItem(listItem)
+        }
+    }
+
     private fun showSubtasks(subtasks: TasksData) {
         val listItem: ListItem = generator.createSubtasksListItems(subtasks)
 
@@ -282,6 +295,7 @@ class EditTaskFragment :
 
         viewModel.subtasks.observe(viewLifecycleOwner) { subtasks ->
             showSubtasks(subtasks)
+            showAddSubtaskButton()
             onSubtasksNumberChanged(subtasks.tasks.size)
             onCompletedSubtasksNumberChanged(subtasks.tasks.count { it.completed })
         }
