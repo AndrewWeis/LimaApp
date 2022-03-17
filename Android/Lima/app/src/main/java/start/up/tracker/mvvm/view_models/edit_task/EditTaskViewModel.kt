@@ -3,7 +3,9 @@ package start.up.tracker.mvvm.view_models.edit_task
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.analytics.Analytics
@@ -39,12 +41,10 @@ class EditTaskViewModel @Inject constructor(
     private val parentTaskId = state.get<Int>(StateHandleKeys.PARENT_TASK_ID) ?: -1
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
-    val taskInfoLiveData: LiveData<Task>
-        get() = _taskInfoLiveData
+    val taskInfoLiveData: LiveData<Task> get() = _taskInfoLiveData
 
     private val _titleField: MutableLiveData<Field<String>> = MutableLiveData()
-    val titleField: LiveData<Field<String>>
-        get() = _titleField
+    val titleField: LiveData<Field<String>> get() = _titleField
 
     private val categoriesFlow = categoriesDao.getCategories()
     private val categoriesChipsFlow: Flow<ChipsData> = combine(
@@ -52,17 +52,18 @@ class EditTaskViewModel @Inject constructor(
         categoriesFlow,
         ::mergeCategoriesFlows
     )
-    val categoriesChips = categoriesChipsFlow.asLiveData()
+    private var _categoriesChips: LiveData<ChipsData> = MutableLiveData()
+    val categoriesChips: LiveData<ChipsData> get() = _categoriesChips
 
     private val _prioritiesChips: MutableLiveData<ChipsData> = MutableLiveData()
-    val prioritiesChips: LiveData<ChipsData>
-        get() = _prioritiesChips
+    val prioritiesChips: LiveData<ChipsData> get() = _prioritiesChips
 
     private val fieldSet: EditTaskInfoFieldSet = EditTaskInfoFieldSet(task)
 
     private var subtasksFlow: Flow<TasksData> = taskDao.getSubtasksByTaskId(task.taskId)
         .transform { tasks -> emit(TasksData(tasks = tasks)) }
-    var subtasks: LiveData<TasksData> = MutableLiveData()
+    private var _subtasks: LiveData<TasksData> = MutableLiveData()
+    val subtasks: LiveData<TasksData> get() = _subtasks
 
     init {
         isAddOrEditMode()
@@ -89,13 +90,6 @@ class EditTaskViewModel @Inject constructor(
      */
     fun onAddSubtaskClick() {
         navigateToAddSubtask()
-    }
-
-    /**
-     * Закончилось редактирование данных о задаче
-     */
-    fun onFinishedEditingTask() {
-        showFields()
     }
 
     /**
@@ -203,21 +197,27 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun showFields() {
+        // показываем подзадачи только в режиме редактирования
         if (isEditMode) {
             showSubtasks()
+        }
+
+        // показываем категории только если это задача = (в подзадачах не показываем)
+        if (task.parentTaskId == -1) {
+            showCategoriesChips()
         }
 
         showEditableTaskInfo()
         showTitleField()
         showPrioritiesChips()
-        showCategoriesChips()
     }
 
     private fun showSubtasks() {
-        subtasks = subtasksFlow.asLiveData()
+        _subtasks = subtasksFlow.asLiveData()
     }
 
     private fun showCategoriesChips() {
+        _categoriesChips = categoriesChipsFlow.asLiveData()
         selectedCategoryId.postValue(task.categoryId)
     }
 

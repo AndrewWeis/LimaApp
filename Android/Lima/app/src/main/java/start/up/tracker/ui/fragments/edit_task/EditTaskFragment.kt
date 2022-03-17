@@ -67,11 +67,6 @@ class EditTaskFragment :
         initEventsListener()
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.onFinishedEditingTask()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
