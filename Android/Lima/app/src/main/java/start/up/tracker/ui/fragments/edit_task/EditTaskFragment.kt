@@ -67,6 +67,11 @@ class EditTaskFragment :
         initEventsListener()
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.saveDataAboutSubtask()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null

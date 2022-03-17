@@ -57,6 +57,12 @@ interface TaskDao {
     @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
 
+    @Query("UPDATE task_table SET subtasksNumber = :number WHERE taskId = :taskId")
+    suspend fun updateSubtasksNumber(number: Int, taskId: Int)
+
+    @Query("UPDATE task_table SET completedSubtasksNumber = :number WHERE taskId = :taskId")
+    suspend fun updateCompletedSubtasksNumber(number: Int, taskId: Int)
+
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
 

@@ -71,6 +71,13 @@ class EditTaskViewModel @Inject constructor(
         showFields()
     }
 
+    fun saveDataAboutSubtask() {
+        if (isEditMode) {
+            updateSubtasksNumber(task.subtasksNumber)
+            updateCompletedSubtasksNumber(task.completedSubtasksNumber)
+        }
+    }
+
     fun onSaveClick() {
         validateTitleField()
 
@@ -79,9 +86,9 @@ class EditTaskViewModel @Inject constructor(
         }
 
         if (isEditMode) {
-            updatedTask(task)
+            updateTask()
         } else {
-            createTask(task)
+            createTask()
         }
     }
 
@@ -301,18 +308,26 @@ class EditTaskViewModel @Inject constructor(
         )
     }
 
-    private fun createTask(task: Task) = viewModelScope.launch {
+    private fun createTask() = viewModelScope.launch {
         taskDao.insertTask(task)
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
-    private fun updatedTask(task: Task) = viewModelScope.launch {
+    private fun updateTask() = viewModelScope.launch {
         taskDao.updateTask(task)
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun navigateToAddSubtask() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
+    }
+
+    private fun updateSubtasksNumber(number: Int) = viewModelScope.launch {
+        taskDao.updateSubtasksNumber(number, task.taskId)
+    }
+
+    private fun updateCompletedSubtasksNumber(number: Int) = viewModelScope.launch {
+        taskDao.updateCompletedSubtasksNumber(number, task.taskId)
     }
 
     private companion object {
