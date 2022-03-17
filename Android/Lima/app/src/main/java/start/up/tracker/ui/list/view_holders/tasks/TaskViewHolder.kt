@@ -27,6 +27,7 @@ open class TaskViewHolder(
     private lateinit var taskCheckBox: CheckBox
     private lateinit var taskTitleText: TextView
     private lateinit var priorityImage: ImageView
+    private lateinit var subtasksImage: ImageView
 
     open fun bind(listItem: ListItem, listener: OnTaskClickListener) {
         this.task = listItem.data as Task
@@ -36,6 +37,7 @@ open class TaskViewHolder(
         initViews()
 
         setPriority()
+        setSubtaskImageVisibility()
         setCheckbox()
         setTaskTitle()
 
@@ -52,6 +54,15 @@ open class TaskViewHolder(
         taskCheckBox = itemView.findViewById(R.id.task_check_box)
         taskTitleText = itemView.findViewById(R.id.task_title_text)
         priorityImage = itemView.findViewById(R.id.priority_image)
+        subtasksImage = itemView.findViewById(R.id.subtask_image)
+    }
+
+    private fun setSubtaskImageVisibility() {
+        if (task.hasSubtasks) {
+            subtasksImage.visibility = View.VISIBLE
+        } else {
+            subtasksImage.visibility = View.GONE
+        }
     }
 
     private fun setCheckboxClickListener() {

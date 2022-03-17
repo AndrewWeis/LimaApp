@@ -21,6 +21,7 @@ data class Task(
 
     // для определения к какому таску относится текущая
     val parentTaskId: Int = -1,
+    val hasSubtasks: Boolean = false,
 
     // todo (maybe add task id to day stat)
     val wasCompleted: Boolean = false,

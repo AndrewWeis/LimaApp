@@ -25,7 +25,6 @@ import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.base.BaseFragment
 import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
@@ -188,6 +187,10 @@ class EditTaskFragment :
         timePickerDialog.show()
     }
 
+    private fun onHasSubtasksChanged(hasSubtasks: Boolean) {
+        viewModel.onHasSubtasksChanged(hasSubtasks)
+    }
+
     private fun showSubtasks(subtasks: TasksData) {
         val listItem: ListItem = generator.createSubtasksListItems(subtasks)
 
@@ -278,6 +281,7 @@ class EditTaskFragment :
 
         viewModel.subtasks.observe(viewLifecycleOwner) { subtasks ->
             showSubtasks(subtasks)
+            onHasSubtasksChanged(subtasks.tasks.isNotEmpty())
         }
     }
 

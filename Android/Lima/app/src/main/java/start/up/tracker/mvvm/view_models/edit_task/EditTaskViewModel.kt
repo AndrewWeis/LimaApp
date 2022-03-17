@@ -3,11 +3,7 @@ package start.up.tracker.mvvm.view_models.edit_task
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.analytics.Analytics
@@ -188,6 +184,15 @@ class EditTaskViewModel @Inject constructor(
     fun onPriorityChipChanged(chipData: ChipData) {
         task = task.copy(priority = chipData.id)
         showPrioritiesChips()
+    }
+
+    /**
+     * Флаг о наличии подзадач был изменен
+     *
+     * @param hasSubtasks флаг о наличии подзадач
+     */
+    fun onHasSubtasksChanged(hasSubtasks: Boolean) {
+        task = task.copy(hasSubtasks = hasSubtasks)
     }
 
     private fun showFields() {

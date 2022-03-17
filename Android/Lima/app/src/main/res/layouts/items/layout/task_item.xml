@@ -27,7 +27,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         app:layout_constraintBottom_toBottomOf="@+id/task_check_box"
-        app:layout_constraintEnd_toStartOf="@+id/priority_image"
+        app:layout_constraintEnd_toStartOf="@id/subtask_image"
         app:layout_constraintStart_toEndOf="@+id/task_check_box"
         app:layout_constraintTop_toTopOf="@+id/task_check_box"
         tools:text="Some task we need to complete or we are going to suffer" />
@@ -42,6 +42,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_priority_3" />
+
+    <ImageView
+        android:id="@+id/subtask_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/priority_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_subtask" />
 
     <View
         android:layout_width="match_parent"
