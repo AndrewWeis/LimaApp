@@ -7,9 +7,8 @@ import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.diff_utils.tasks.TaskDiffUtils
-import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
-import start.up.tracker.ui.list.view_holders.tasks.ExtendedTaskViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.tasks.TaskViewHolder
 
 class TaskAdapter(
@@ -19,16 +18,14 @@ class TaskAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            TYPE_TASK, TYPE_SUBTASK -> TaskViewHolder(layoutInflater, parent)
-            TYPE_EXTENDED_TASK -> ExtendedTaskViewHolder(layoutInflater, parent)
+            TYPE_TASK, TYPE_SUBTASK, TYPE_EXTENDED_TASK -> TaskViewHolder(layoutInflater, parent)
             else -> throwUnknownViewHolderTypeException()
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
-            TYPE_TASK, TYPE_SUBTASK -> (holder as TaskViewHolder).bind(item, listener)
-            TYPE_EXTENDED_TASK -> (holder as ExtendedTaskViewHolder).bind(item, listener)
+            TYPE_TASK, TYPE_SUBTASK, TYPE_EXTENDED_TASK -> (holder as TaskViewHolder).bind(item, listener)
         }
     }
 

@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="56dp">
+    android:layout_height="wrap_content">
 
     <CheckBox
         android:id="@+id/task_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_little"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:minWidth="0dp"
         android:minHeight="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck" />
@@ -26,10 +26,10 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/task_check_box"
+        app:layout_constraintBottom_toBottomOf="@id/task_check_box"
         app:layout_constraintEnd_toStartOf="@id/subtask_image"
-        app:layout_constraintStart_toEndOf="@+id/task_check_box"
-        app:layout_constraintTop_toTopOf="@+id/task_check_box"
+        app:layout_constraintStart_toEndOf="@id/task_check_box"
+        app:layout_constraintTop_toTopOf="@id/task_check_box"
         tools:text="Some task we need to complete or we are going to suffer" />
 
     <ImageView
@@ -38,28 +38,52 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_normal"
         android:contentDescription="@string/importance_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/task_title_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/task_title_text"
         app:srcCompat="@drawable/ic_priority_3" />
+
+    <ImageView
+        android:id="@+id/task_category_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_little"
+        android:background="@drawable/ic_category_color_small"
+        app:layout_constraintStart_toStartOf="@+id/task_title_text"
+        app:layout_constraintTop_toBottomOf="@id/task_title_text" />
+
+    <TextView
+        android:id="@+id/task_category_text"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_little"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/task_category_image"
+        app:layout_constraintEnd_toStartOf="@+id/priority_image"
+        app:layout_constraintStart_toEndOf="@+id/task_category_image"
+        app:layout_constraintTop_toTopOf="@+id/task_category_image"
+        tools:text="English" />
 
     <ImageView
         android:id="@+id/subtask_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/priority_image"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/task_title_text"
+        app:layout_constraintEnd_toStartOf="@id/priority_image"
+        app:layout_constraintTop_toTopOf="@id/task_title_text"
         app:srcCompat="@drawable/ic_subtask" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="8dp"
         android:background="@color/lightGray"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/task_category_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
