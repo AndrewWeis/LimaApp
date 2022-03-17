@@ -33,6 +33,7 @@ abstract class BaseTasksOperationsViewModel(
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
         taskDao.deleteTask(task)
+        taskDao.deleteSubtasks(task.taskId)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 }
