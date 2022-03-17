@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,8 +24,6 @@ import start.up.tracker.ui.list.generators.tasks.TasksGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.onQueryTextChanged
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 
 @AndroidEntryPoint
 class ProjectTasksFragment :

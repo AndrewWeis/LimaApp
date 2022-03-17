@@ -2,6 +2,7 @@ package start.up.tracker.ui.list.adapters.edit_task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
@@ -18,6 +19,7 @@ import start.up.tracker.ui.views.forms.base.BaseInputView
 
 class EditTaskAdapter(
     layoutInflater: LayoutInflater,
+    private val viewModel: BaseTasksOperationsViewModel,
     private val textInputListener: BaseInputView.TextInputListener,
     private val textInputSelectionListener: SelectInputViewHolder.TextInputSelectionListener,
     private val categoriesViewHolderListener: ChipsViewHolder.CategoriesViewHolderListener,
@@ -58,7 +60,7 @@ class EditTaskAdapter(
             ITEM_CATEGORIES_LIST, ITEM_PRIORITIES_LIST ->
                 (holder as ChipsViewHolder).bind(item, categoriesViewHolderListener)
             ITEM_SUBTASKS_LIST ->
-                (holder as TasksViewHolder).bind(item, onTaskClickListener)
+                (holder as TasksViewHolder).bind(item, viewModel, onTaskClickListener)
             ITEM_ADD_SUBTASK_BUTTON ->
                 (holder as AddSubtaskViewHolder).bind(onAddSubtaskListener)
         }

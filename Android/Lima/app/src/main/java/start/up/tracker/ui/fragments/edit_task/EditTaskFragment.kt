@@ -245,6 +245,7 @@ class EditTaskFragment :
 
     private fun initAdapter() {
         adapter = EditTaskAdapter(
+            viewModel = viewModel,
             layoutInflater = layoutInflater,
             textInputListener = this,
             textInputSelectionListener = this,
