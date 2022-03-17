@@ -256,8 +256,63 @@ class EditTaskFragment :
         }
     }
 
-    private fun showEditableTaskInfo(task: Task?) {
-        adapter.updateItems(generator.createEditableTaskInfoListItems(task))
+    private fun showEditableTaskInfo(task: Task) {
+        setDescription(task)
+        setStartTime(task)
+        setEndTime(task)
+        setDate(task)
+    }
+
+    private fun setDate(task: Task) {
+        val listItem: ListItem = generator.createTaskDateListItem(task.date)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setDateItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setDateItem(listItem)
+        }
+    }
+
+    private fun setEndTime(task: Task) {
+        val listItem: ListItem = generator.createTaskEndTimeListItem(task.endTimeInMinutes)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setEndTimeItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setEndTimeItem(listItem)
+        }
+    }
+
+    private fun setStartTime(task: Task) {
+        val listItem: ListItem = generator.createTaskStartTimeListItem(task.startTimeInMinutes)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setStartTimeItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setStartTimeItem(listItem)
+        }
+    }
+
+    private fun setDescription(task: Task) {
+        val listItem: ListItem = generator.createTaskDescriptionListItem(task.description)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setDescriptionItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setDescriptionItem(listItem)
+        }
     }
 
     private fun initAdapter() {

@@ -204,6 +204,10 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun showFields() {
+        showEditableTaskInfo()
+        showTitleField()
+        showPrioritiesChips()
+
         // показываем подзадачи только в режиме редактирования
         if (isEditMode) {
             showSubtasks()
@@ -213,10 +217,6 @@ class EditTaskViewModel @Inject constructor(
         if (task.parentTaskId == -1) {
             showCategoriesChips()
         }
-
-        showEditableTaskInfo()
-        showTitleField()
-        showPrioritiesChips()
     }
 
     private fun showSubtasks() {

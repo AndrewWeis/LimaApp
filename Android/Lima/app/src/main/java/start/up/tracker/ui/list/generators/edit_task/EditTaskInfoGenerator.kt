@@ -17,28 +17,6 @@ import start.up.tracker.utils.resources.ResourcesUtils
 class EditTaskInfoGenerator : BaseGenerator() {
 
     /**
-     * Получить список с информацией о задаче
-     *
-     * @param task информация о задача
-     * @return спикок с информацией о задаче
-     */
-    fun createEditableTaskInfoListItems(task: Task?): List<ListItem> {
-        if (task == null) {
-            return listOf()
-        }
-
-        val list: MutableList<ListItem> = mutableListOf()
-
-        list.add(getTaskDescription(task.description))
-
-        list.add(getTaskStartTime(task.startTimeInMinutes))
-        list.add(getTaskEndTime(task.endTimeInMinutes))
-        list.add(getTaskDate(task.date))
-
-        return list
-    }
-
-    /**
      * Получить listItem с кнопкой для добавления подзадачи
      *
      * @return listItem с кнопкой для добавления подзадачи
@@ -130,7 +108,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
      * @param startTimeInMinutes минуты
      * @return listItem с временем начала задачи в минутах
      */
-    private fun getTaskStartTime(startTimeInMinutes: Int?): ListItem {
+    fun createTaskStartTimeListItem(startTimeInMinutes: Int?): ListItem {
         val settings = Settings(
             hint = getHint(),
             name = ResourcesUtils.getString(R.string.task_time_start),
@@ -151,7 +129,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
      * @param endTimeInMinutes минуты
      * @return listItem с временем окончания задачи в минутах
      */
-    private fun getTaskEndTime(endTimeInMinutes: Int?): ListItem {
+    fun createTaskEndTimeListItem(endTimeInMinutes: Int?): ListItem {
         val settings = Settings(
             hint = getHint(),
             name = ResourcesUtils.getString(R.string.task_time_end),
@@ -172,7 +150,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
      * @param milliseconds миллисекунды
      * @return listItem с датой окончания задачи
      */
-    private fun getTaskDate(milliseconds: Long?): ListItem {
+    fun createTaskDateListItem(milliseconds: Long?): ListItem {
         val settings = Settings(
             hint = getHint(),
             name = ResourcesUtils.getString(R.string.task_date),
@@ -223,7 +201,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
      * @param description описание задачи
      * @return listItem с описанием задачи
      */
-    private fun getTaskDescription(description: String): ListItem {
+    fun createTaskDescriptionListItem(description: String): ListItem {
         val settings = Settings(
             inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
             imeOption = EditorInfo.IME_ACTION_NEXT,

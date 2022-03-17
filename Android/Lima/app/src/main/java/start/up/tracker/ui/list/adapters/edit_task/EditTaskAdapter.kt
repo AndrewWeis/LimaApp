@@ -94,6 +94,22 @@ class EditTaskAdapter(
         ITEM_ADD_SUBTASK_BUTTON
     )
 
+    fun setStartTimeItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_SELECTION_TIME_START)
+    }
+
+    fun setEndTimeItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_SELECTION_TIME_END)
+    }
+
+    fun setDateItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_SELECTION_DATE)
+    }
+
+    fun setDescriptionItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_INPUT_DESCRIPTION)
+    }
+
     fun setAddSubtaskButtonListItem(listItem: ListItem) {
         updateItem(listItem, ITEM_ADD_SUBTASK_BUTTON)
     }
