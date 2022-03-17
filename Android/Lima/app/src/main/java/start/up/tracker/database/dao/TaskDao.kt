@@ -36,6 +36,7 @@ interface TaskDao {
         FROM task_table 
         JOIN categories_table ON task_table.categoryId = categories_table.id
         WHERE categories_table.id = :categoryId AND
+        parentTaskId == -1 AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
@@ -47,6 +48,7 @@ interface TaskDao {
         FROM task_table 
         JOIN categories_table ON task_table.categoryId = categories_table.id
         WHERE categories_table.id = 1 AND
+        parentTaskId == -1 AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
