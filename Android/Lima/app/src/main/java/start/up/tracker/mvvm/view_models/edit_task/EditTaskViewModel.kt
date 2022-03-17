@@ -67,12 +67,8 @@ class EditTaskViewModel @Inject constructor(
     val subtasks = subtasksFlow.asLiveData()
 
     init {
-        if (task.title.isEmpty()) {
-            isEditMode = false
-        }
-
-        task = task.copy(parentTaskId = parentTaskId)
-
+        isAddOrEditMode()
+        setParentTaskId()
         showFields()
     }
 
@@ -195,6 +191,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(hasSubtasks = hasSubtasks)
     }
 
+    private fun setParentTaskId() {
+        task = task.copy(parentTaskId = parentTaskId)
+    }
+
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()
@@ -247,6 +247,12 @@ class EditTaskViewModel @Inject constructor(
         }
 
         showTitleField()
+    }
+
+    private fun isAddOrEditMode() {
+        if (task.title.isEmpty()) {
+            isEditMode = false
+        }
     }
 
     /**
