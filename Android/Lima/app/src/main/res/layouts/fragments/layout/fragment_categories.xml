@@ -2,8 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/MM"
     tools:context=".ui.fragments.categories.CategoriesFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -179,8 +178,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/categoryRV"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            style="@style/M_H0"
             android:layout_marginTop="@dimen/spacing_little"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

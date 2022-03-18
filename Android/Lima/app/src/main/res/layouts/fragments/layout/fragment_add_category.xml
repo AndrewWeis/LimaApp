@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    style="@style/MW"
     tools:context=".ui.fragments.categories.AddCategoryFragment">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -51,8 +50,7 @@
 
     <ImageView
         android:id="@+id/colorPickerBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        style="@style/W40_H40"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginTop="@dimen/spacing_normal"
         android:layout_marginBottom="16dp"

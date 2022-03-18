@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="56dp">
+    style="@style/M_H56">
 
     <CheckBox
         android:id="@+id/task_check_box"
@@ -19,9 +18,7 @@
 
     <TextView
         android:id="@+id/task_title_text"
-        style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size14.Zero_W"
         android:layout_marginStart="@dimen/spacing_little"
         android:layout_marginEnd="@dimen/spacing_normal"
         android:ellipsize="end"
@@ -34,8 +31,7 @@
 
     <ImageView
         android:id="@+id/priority_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WW"
         android:layout_marginEnd="@dimen/spacing_normal"
         android:contentDescription="@string/importance_icon"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,8 +40,8 @@
         app:srcCompat="@drawable/ic_priority_3" />
 
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+        style="@style/M_H1"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:layout_marginStart="@dimen/spacing_normal"
         android:background="@color/lightGray"
         app:layout_constraintBottom_toBottomOf="parent"

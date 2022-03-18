@@ -3,13 +3,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="50dp">
+    style="@style/M_H50">
 
     <ImageView
         android:id="@+id/ic_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/WW"
         android:layout_marginStart="16dp"
         android:background="@drawable/ic_category_color_small"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,11 +17,9 @@
 
     <TextView
         android:id="@+id/text_view_category_name"
-        style="@style/TextAppearance.MaterialComponents.Body2"
+        style="@style/RobotoRegular.Black.Size14.Zero_W"
         android:ellipsize="end"
         android:maxLines="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
         app:layout_constraintBottom_toBottomOf="@+id/ic_category"
@@ -34,9 +30,7 @@
 
     <TextView
         android:id="@+id/text_view_tasks_number"
-        style="@style/TextAppearance.MaterialComponents.Body2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/RobotoRegular.Black.Size14.Zero_W"
         android:layout_marginEnd="@dimen/spacing_normal"
         app:layout_constraintBottom_toBottomOf="@+id/text_view_category_name"
         app:layout_constraintEnd_toEndOf="parent"

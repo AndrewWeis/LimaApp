@@ -2,9 +2,7 @@
 <com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/edit_task_header_text"
-    style="@style/TextAppearance.MaterialComponents.Subtitle2"
+    style="@style/RobotoRegular.Black.Size14.MW"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="16dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     tools:text="Какой-то заголовок" />
