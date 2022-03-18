@@ -57,6 +57,9 @@ interface TaskDao {
     @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
 
+    @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
+    suspend fun getSubtasksToRestore(id: Int): List<Task>
+
     @Query("UPDATE task_table SET subtasksNumber = :number WHERE taskId = :taskId")
     suspend fun updateSubtasksNumber(number: Int, taskId: Int)
 
@@ -68,6 +71,9 @@ interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSubtasks(subtasks: List<Task>)
 
     @Update
     suspend fun updateTask(task: Task)

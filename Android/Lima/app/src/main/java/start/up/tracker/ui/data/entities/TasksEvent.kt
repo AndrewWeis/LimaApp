@@ -7,5 +7,5 @@ sealed class TasksEvent {
     object NavigateBack : TasksEvent()
     object NavigateToDeleteAllCompletedScreen : TasksEvent()
     data class NavigateToEditTaskScreen(val task: Task) : TasksEvent()
-    data class ShowUndoDeleteTaskMessage(val task: Task) : TasksEvent()
+    data class ShowUndoDeleteTaskMessage(val task: Task, val subtasks: List<Task>) : TasksEvent()
 }
