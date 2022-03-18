@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,8 +24,6 @@ import start.up.tracker.ui.list.generators.tasks.TasksGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.onQueryTextChanged
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 
 @AndroidEntryPoint
 class ProjectTasksFragment :
@@ -49,7 +46,6 @@ class ProjectTasksFragment :
 
         initAdapter()
         initListeners()
-        initResultListeners()
         initObservers()
         initTaskEventListener()
 
@@ -101,7 +97,7 @@ class ProjectTasksFragment :
         viewModel.tasksEvent.collect { event ->
             when (event) {
                 is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
 
                 is TasksEvent.NavigateToAddTaskScreen -> {
@@ -121,10 +117,6 @@ class ProjectTasksFragment :
                     navigateTo(action)
                 }
 
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
-                }
-
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
@@ -136,13 +128,6 @@ class ProjectTasksFragment :
     private fun initListeners() {
         binding?.addTaskFab?.setOnClickListener {
             viewModel.onAddNewTaskClick()
-        }
-    }
-
-    private fun initResultListeners() {
-        setFragmentResultListener(RequestCodes.EDIT_TASK) { _, bundle ->
-            val result = bundle.getInt(ResultCodes.EDIT_TASK)
-            viewModel.onAddEditResult(result)
         }
     }
 

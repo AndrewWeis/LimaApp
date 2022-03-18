@@ -25,6 +25,7 @@ interface UpcomingTasksDao {
         SELECT COUNT(*)
         FROM task_table
         WHERE date > :today AND
+        parentTaskId == -1 AND
         (completed != :hideCompleted OR completed = 0)
     """
     )

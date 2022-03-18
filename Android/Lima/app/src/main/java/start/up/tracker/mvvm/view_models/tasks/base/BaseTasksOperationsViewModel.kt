@@ -14,8 +14,9 @@ abstract class BaseTasksOperationsViewModel(
     private val analytics: Analytics
 ) : BaseTasksEventsViewModel(preferencesManager) {
 
-    fun onUndoDeleteTaskClick(task: Task) = viewModelScope.launch {
+    fun onUndoDeleteTaskClick(task: Task, subtasks: List<Task>) = viewModelScope.launch {
         taskDao.insertTask(task)
+        taskDao.insertSubtasks(subtasks)
     }
 
     fun onTaskSelected(task: Task) = viewModelScope.launch {
@@ -33,6 +34,10 @@ abstract class BaseTasksOperationsViewModel(
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
         taskDao.deleteTask(task)
-        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
+
+        val subtaskToRestore = taskDao.getSubtasksToRestore(task.taskId)
+        taskDao.deleteSubtasks(task.taskId)
+
+        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task, subtaskToRestore))
     }
 }

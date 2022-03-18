@@ -82,10 +82,6 @@ class CategoriesViewModel @Inject constructor(
         categoryEventChannel.send(CategoryEvent.NavigateToAddCategoryScreen)
     }
 
-    fun showCategorySavedConfirmationMessage() = viewModelScope.launch {
-        categoryEventChannel.send(CategoryEvent.ShowCategorySavedConfirmationMessage("Project added"))
-    }
-
     fun onTodaySelected() = viewModelScope.launch {
         categoryEventChannel.send(CategoryEvent.NavigateToToday)
     }

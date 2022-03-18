@@ -36,6 +36,7 @@ interface TaskDao {
         FROM task_table 
         JOIN categories_table ON task_table.categoryId = categories_table.id
         WHERE categories_table.id = :categoryId AND
+        parentTaskId == -1 AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
@@ -47,25 +48,32 @@ interface TaskDao {
         FROM task_table 
         JOIN categories_table ON task_table.categoryId = categories_table.id
         WHERE categories_table.id = 1 AND
+        parentTaskId == -1 AND
         (completed != :hideCompleted OR completed = 0)
     """
     )
     fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
 
-    @Query(
-        """
-        SELECT *
-        FROM task_table
-        WHERE parentTaskId = :id
-        """
-    )
+    @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
+
+    @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
+    suspend fun getSubtasksToRestore(id: Int): List<Task>
+
+    @Query("UPDATE task_table SET subtasksNumber = :number WHERE taskId = :taskId")
+    suspend fun updateSubtasksNumber(number: Int, taskId: Int)
+
+    @Query("UPDATE task_table SET completedSubtasksNumber = :number WHERE taskId = :taskId")
+    suspend fun updateCompletedSubtasksNumber(number: Int, taskId: Int)
 
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSubtasks(subtasks: List<Task>)
 
     @Update
     suspend fun updateTask(task: Task)
@@ -75,4 +83,7 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE completed = 1")
     suspend fun deleteCompletedTasks()
+
+    @Query("DELETE FROM task_table WHERE parentTaskId = :taskId")
+    suspend fun deleteSubtasks(taskId: Int)
 }

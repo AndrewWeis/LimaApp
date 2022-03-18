@@ -3,10 +3,8 @@ package start.up.tracker.mvvm.view_models.edit_task
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import start.up.tracker.R
@@ -19,8 +17,6 @@ import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Category
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
-import start.up.tracker.ui.data.constants.ADD_RESULT_OK
-import start.up.tracker.ui.data.constants.EDIT_RESULT_OK
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
@@ -45,12 +41,10 @@ class EditTaskViewModel @Inject constructor(
     private val parentTaskId = state.get<Int>(StateHandleKeys.PARENT_TASK_ID) ?: -1
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
-    val taskInfoLiveData: LiveData<Task>
-        get() = _taskInfoLiveData
+    val taskInfoLiveData: LiveData<Task> get() = _taskInfoLiveData
 
     private val _titleField: MutableLiveData<Field<String>> = MutableLiveData()
-    val titleField: LiveData<Field<String>>
-        get() = _titleField
+    val titleField: LiveData<Field<String>> get() = _titleField
 
     private val categoriesFlow = categoriesDao.getCategories()
     private val categoriesChipsFlow: Flow<ChipsData> = combine(
@@ -58,26 +52,30 @@ class EditTaskViewModel @Inject constructor(
         categoriesFlow,
         ::mergeCategoriesFlows
     )
-    val categoriesChips = categoriesChipsFlow.asLiveData()
+    private var _categoriesChips: LiveData<ChipsData> = MutableLiveData()
+    val categoriesChips: LiveData<ChipsData> get() = _categoriesChips
 
     private val _prioritiesChips: MutableLiveData<ChipsData> = MutableLiveData()
-    val prioritiesChips: LiveData<ChipsData>
-        get() = _prioritiesChips
+    val prioritiesChips: LiveData<ChipsData> get() = _prioritiesChips
 
     private val fieldSet: EditTaskInfoFieldSet = EditTaskInfoFieldSet(task)
 
     private var subtasksFlow: Flow<TasksData> = taskDao.getSubtasksByTaskId(task.taskId)
         .transform { tasks -> emit(TasksData(tasks = tasks)) }
-    val subtasks = subtasksFlow.asLiveData()
+    private var _subtasks: LiveData<TasksData> = MutableLiveData()
+    val subtasks: LiveData<TasksData> get() = _subtasks
 
     init {
-        if (task.title.isEmpty()) {
-            isEditMode = false
-        }
-
-        task = task.copy(parentTaskId = parentTaskId)
-
+        isAddOrEditMode()
+        setParentTaskId()
         showFields()
+    }
+
+    fun saveDataAboutSubtask() {
+        if (isEditMode) {
+            updateSubtasksNumber(task.subtasksNumber)
+            updateCompletedSubtasksNumber(task.completedSubtasksNumber)
+        }
     }
 
     fun onSaveClick() {
@@ -88,9 +86,9 @@ class EditTaskViewModel @Inject constructor(
         }
 
         if (isEditMode) {
-            updatedTask(task)
+            updateTask()
         } else {
-            createTask(task)
+            createTask()
         }
     }
 
@@ -99,13 +97,6 @@ class EditTaskViewModel @Inject constructor(
      */
     fun onAddSubtaskClick() {
         navigateToAddSubtask()
-    }
-
-    /**
-     * Закончилось редактирование данных о задаче
-     */
-    fun onFinishedEditingTask() {
-        showFields()
     }
 
     /**
@@ -190,14 +181,50 @@ class EditTaskViewModel @Inject constructor(
         showPrioritiesChips()
     }
 
+    /**
+     * Количество подзадач было изменено
+     *
+     * @param number количество подзадач
+     */
+    fun onSubtasksNumberChanged(number: Int) {
+        task = task.copy(subtasksNumber = number)
+    }
+
+    /**
+     * Количество выполненных подзадач было изменено
+     *
+     * @param number количество выполненных подзадач
+     */
+    fun onCompletedSubtasksNumberChanged(number: Int) {
+        task = task.copy(completedSubtasksNumber = number)
+    }
+
+    private fun setParentTaskId() {
+        task = task.copy(parentTaskId = parentTaskId)
+    }
+
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()
         showPrioritiesChips()
-        showCategoriesChips()
+
+        // показываем подзадачи только в режиме редактирования
+        if (isEditMode) {
+            showSubtasks()
+        }
+
+        // показываем категории только если это задача = (в подзадачах не показываем)
+        if (task.parentTaskId == -1) {
+            showCategoriesChips()
+        }
+    }
+
+    private fun showSubtasks() {
+        _subtasks = subtasksFlow.asLiveData()
     }
 
     private fun showCategoriesChips() {
+        _categoriesChips = categoriesChipsFlow.asLiveData()
         selectedCategoryId.postValue(task.categoryId)
     }
 
@@ -244,6 +271,12 @@ class EditTaskViewModel @Inject constructor(
         showTitleField()
     }
 
+    private fun isAddOrEditMode() {
+        if (task.title.isEmpty()) {
+            isEditMode = false
+        }
+    }
+
     /**
      * Соединяет flow категорий, полученних их базы данных и flow идентификатора выбранной категории
      *
@@ -275,18 +308,26 @@ class EditTaskViewModel @Inject constructor(
         )
     }
 
-    private fun createTask(task: Task) = viewModelScope.launch {
+    private fun createTask() = viewModelScope.launch {
         taskDao.insertTask(task)
-        tasksEventChannel.send(TasksEvent.NavigateBackWithResult(ADD_RESULT_OK))
+        tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
-    private fun updatedTask(task: Task) = viewModelScope.launch {
+    private fun updateTask() = viewModelScope.launch {
         taskDao.updateTask(task)
-        tasksEventChannel.send(TasksEvent.NavigateBackWithResult(EDIT_RESULT_OK))
+        tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun navigateToAddSubtask() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToAddTaskScreen)
+    }
+
+    private fun updateSubtasksNumber(number: Int) = viewModelScope.launch {
+        taskDao.updateSubtasksNumber(number, task.taskId)
+    }
+
+    private fun updateCompletedSubtasksNumber(number: Int) = viewModelScope.launch {
+        taskDao.updateCompletedSubtasksNumber(number, task.taskId)
     }
 
     private companion object {

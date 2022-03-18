@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -25,7 +23,6 @@ import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.base.BaseFragment
 import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
@@ -36,8 +33,6 @@ import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 import java.util.*
 
 @AndroidEntryPoint
@@ -72,9 +67,9 @@ class EditTaskFragment :
         initEventsListener()
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.onFinishedEditingTask()
+    override fun onStop() {
+        super.onStop()
+        viewModel.saveDataAboutSubtask()
     }
 
     override fun onDestroyView() {
@@ -188,6 +183,27 @@ class EditTaskFragment :
         timePickerDialog.show()
     }
 
+    private fun onSubtasksNumberChanged(number: Int) {
+        viewModel.onSubtasksNumberChanged(number)
+    }
+
+    private fun onCompletedSubtasksNumberChanged(number: Int) {
+        viewModel.onCompletedSubtasksNumberChanged(number)
+    }
+
+    private fun showAddSubtaskButton() {
+        val listItem: ListItem = generator.createAddSubtaskButton()
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setAddSubtaskButtonListItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setAddSubtaskButtonListItem(listItem)
+        }
+    }
+
     private fun showSubtasks(subtasks: TasksData) {
         val listItem: ListItem = generator.createSubtasksListItems(subtasks)
 
@@ -240,12 +256,68 @@ class EditTaskFragment :
         }
     }
 
-    private fun showEditableTaskInfo(task: Task?) {
-        adapter.updateItems(generator.createEditableTaskInfoListItems(task))
+    private fun showEditableTaskInfo(task: Task) {
+        setDescription(task)
+        setStartTime(task)
+        setEndTime(task)
+        setDate(task)
+    }
+
+    private fun setDate(task: Task) {
+        val listItem: ListItem = generator.createTaskDateListItem(task.date)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setDateItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setDateItem(listItem)
+        }
+    }
+
+    private fun setEndTime(task: Task) {
+        val listItem: ListItem = generator.createTaskEndTimeListItem(task.endTimeInMinutes)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setEndTimeItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setEndTimeItem(listItem)
+        }
+    }
+
+    private fun setStartTime(task: Task) {
+        val listItem: ListItem = generator.createTaskStartTimeListItem(task.startTimeInMinutes)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setStartTimeItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setStartTimeItem(listItem)
+        }
+    }
+
+    private fun setDescription(task: Task) {
+        val listItem: ListItem = generator.createTaskDescriptionListItem(task.description)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setDescriptionItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setDescriptionItem(listItem)
+        }
     }
 
     private fun initAdapter() {
         adapter = EditTaskAdapter(
+            viewModel = viewModel,
             layoutInflater = layoutInflater,
             textInputListener = this,
             textInputSelectionListener = this,
@@ -278,19 +350,19 @@ class EditTaskFragment :
 
         viewModel.subtasks.observe(viewLifecycleOwner) { subtasks ->
             showSubtasks(subtasks)
+            showAddSubtaskButton()
+            onSubtasksNumberChanged(subtasks.tasks.size)
+            onCompletedSubtasksNumberChanged(subtasks.tasks.count { it.completed })
         }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.NavigateBackWithResult -> {
-                    setFragmentResult(
-                        RequestCodes.EDIT_TASK,
-                        bundleOf(ResultCodes.EDIT_TASK to event.result)
-                    )
+                is TasksEvent.NavigateBack -> {
                     findNavController().popBackStack()
                 }
+
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
                         title = ResourcesUtils.getString(R.string.title_add_task),
@@ -299,6 +371,7 @@ class EditTaskFragment :
                     )
                     navigateTo(action)
                 }
+
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
                         event.task,

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import start.up.tracker.R
 import start.up.tracker.databinding.TasksItemBinding
 import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
@@ -40,12 +41,17 @@ class TasksViewHolder(
         listener.onCheckBoxClick(task)
     }
 
-    fun bind(listItem: ListItem, listener: OnTaskClickListener) {
+    fun bind(listItem: ListItem, viewModel: BaseTasksOperationsViewModel, listener: OnTaskClickListener) {
         this.listItem = listItem
         this.data = listItem.data as TasksData
         this.listener = listener
 
         updateItems()
+        attachSwipeToDeleteTask(viewModel)
+    }
+
+    private fun attachSwipeToDeleteTask(viewModel: BaseTasksOperationsViewModel) {
+        listExtension?.attachSwipeToAdapter(adapter, viewModel)
     }
 
     private fun updateItems() {

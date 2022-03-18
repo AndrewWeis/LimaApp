@@ -46,7 +46,6 @@ class UpcomingFragment :
 
         initAdapter()
         initListeners()
-        initResultListeners()
         initObservers()
         initTaskEventListeners()
 
@@ -99,7 +98,7 @@ class UpcomingFragment :
         viewModel.tasksEvent.collect { event ->
             when (event) {
                 is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
 
                 is TasksEvent.NavigateToAddTaskScreen -> {
@@ -119,10 +118,6 @@ class UpcomingFragment :
                     navigateTo(action)
                 }
 
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
-                }
-
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
@@ -140,13 +135,6 @@ class UpcomingFragment :
     private fun initObservers() {
         viewModel.upcomingTasks.observe(viewLifecycleOwner) {
             showTasks(it)
-        }
-    }
-
-    private fun initResultListeners() {
-        setFragmentResultListener(RequestCodes.EDIT_TASK) { _, bundle ->
-            val result = bundle.getInt(ResultCodes.EDIT_TASK)
-            viewModel.onAddEditResult(result)
         }
     }
 
