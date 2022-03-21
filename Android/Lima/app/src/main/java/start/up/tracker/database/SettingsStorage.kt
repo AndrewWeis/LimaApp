@@ -4,14 +4,14 @@ import start.up.tracker.R
 import start.up.tracker.ui.data.entities.settings.Setting
 import start.up.tracker.utils.resources.ResourcesUtils
 
-object SettingsStorage {
+class SettingsStorage {
 
     fun getSettings(): List<Setting> {
         val settings = mutableListOf<Setting>()
 
         settings.add(
             Setting(
-                id = 1,
+                id = SETTING_APPEARANCE_ID,
                 imageRes = R.drawable.img_app_appearance,
                 title = ResourcesUtils.getString(R.string.appearance_text)
             )
@@ -19,12 +19,17 @@ object SettingsStorage {
 
         settings.add(
             Setting(
-                id = 2,
+                id = SETTING_TECHNIQUES_ID,
                 imageRes = R.drawable.img_time_management_techniques,
                 title = ResourcesUtils.getString(R.string.techniques_text)
             )
         )
 
         return settings.toList()
+    }
+
+    companion object SettingIds {
+        const val SETTING_APPEARANCE_ID = 1
+        const val SETTING_TECHNIQUES_ID = 2
     }
 }

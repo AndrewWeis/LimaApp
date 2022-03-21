@@ -57,7 +57,7 @@
         android:id="@+id/settingsFragment"
         android:name="start.up.tracker.ui.fragments.settings.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings" >
+        tools:layout="@layout/settings_fragment" >
         <action
             android:id="@+id/action_settings_to_techniques"
             app:destination="@id/techniquesFragment" />
