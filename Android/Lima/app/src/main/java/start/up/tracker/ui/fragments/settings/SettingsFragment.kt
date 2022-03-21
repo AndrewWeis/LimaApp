@@ -2,49 +2,68 @@ package start.up.tracker.ui.fragments.settings
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
-import start.up.tracker.databinding.FragmentSettingsBinding
+import start.up.tracker.database.SettingsStorage
+import start.up.tracker.databinding.SettingsFragmentBinding
+import start.up.tracker.mvvm.view_models.settings.SettingsViewModel
+import start.up.tracker.ui.data.entities.settings.Setting
+import start.up.tracker.ui.extensions.list.ListExtension
+import start.up.tracker.ui.list.adapters.settings.SettingsAdapter
+import start.up.tracker.ui.list.generators.settings.SettingsGenerator
+import start.up.tracker.ui.list.view_holders.settings.SettingsViewHolder
 
-class SettingsFragment : Fragment(R.layout.fragment_settings) {
+@AndroidEntryPoint
+class SettingsFragment :
+    Fragment(R.layout.settings_fragment),
+    SettingsViewHolder.OnSettingClickListener {
 
-    // todo (recode using adapter)
+    private val viewModel: SettingsViewModel by viewModels()
 
-    private var binding: FragmentSettingsBinding? = null
+    private var binding: SettingsFragmentBinding? = null
+
+    private lateinit var adapter: SettingsAdapter
+    private var listExtension: ListExtension? = null
+    private val generator = SettingsGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentSettingsBinding.bind(view)
+        binding = SettingsFragmentBinding.bind(view)
 
-        initListeners()
-        initAppTheme()
+        setupAdapter()
+        setupData()
+        setupSettingEventListener()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listExtension = null
     }
 
-    // todo(It doesn't work)
-    private fun initAppTheme() {
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES)
-            binding?.switchMode?.isChecked = true
-
-        binding?.switchMode?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-        }
+    override fun onSettingClick(setting: Setting) {
+        // send to view model
     }
 
-    private fun initListeners() {
-        binding?.articlesView?.setOnClickListener {
-            val action = SettingsFragmentDirections.actionSettingsToTechniques()
-            findNavController().navigate(action)
-        }
+    private fun setupSettingEventListener() {
+        // collect events from vm
+    }
+
+    private fun setupAdapter() {
+        adapter = SettingsAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
+
+        listExtension = ListExtension(binding?.settingsList)
+        listExtension?.setVerticalLayoutManager()
+        listExtension?.setAdapter(adapter)
+    }
+
+    private fun setupData() {
+        val settings = SettingsStorage.getSettings()
+        adapter.updateItems(generator.createListItems(settings))
     }
 }

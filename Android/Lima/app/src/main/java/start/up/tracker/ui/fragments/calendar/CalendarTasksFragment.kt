@@ -88,7 +88,7 @@ class CalendarTasksFragment :
     }
 
     private fun showTasks(tasks: List<Task>) {
-        adapter.addListItems(generator.createListItems(tasks))
+        adapter.updateItems(generator.createListItems(tasks))
     }
 
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
