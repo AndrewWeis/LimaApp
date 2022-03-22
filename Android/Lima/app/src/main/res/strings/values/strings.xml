@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Tracker</string>
 
+    <!-- task -->
     <string name="task_title">Title</string>
     <string name="task_description">Description</string>
 
@@ -11,10 +12,15 @@
     <string name="task_deleted">Task Deleted</string>
     <string name="undo">UNDO</string>
 
+    <!-- priorities -->
     <string name="priority_undefined">No priority</string>
     <string name="priority_high">High</string>
     <string name="priority_medium">Medium</string>
     <string name="priority_low">Low</string>
+
+    <!-- settings -->
+    <string name="appearance_text">Appearance</string>
+    <string name="techniques_text">Time-management techniques</string>
 
     <string name="action_search">Search</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
@@ -29,7 +35,6 @@
     <string name="average">Average</string>
     <string name="low">Low</string>
     <string name="save">Save</string>
-    <string name="dark_mode">Dark mode</string>
     <string name="importance_icon">Importance icon</string>
     <string name="hide_completed">Hide completed</string>
     <string name="delete_all_completed">Delete all completed</string>
