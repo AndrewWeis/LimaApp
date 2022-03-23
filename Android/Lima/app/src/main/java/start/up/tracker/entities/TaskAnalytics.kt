@@ -1,5 +1,6 @@
 package start.up.tracker.entities
 
+import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -13,8 +14,10 @@ data class TaskAnalytics (
 
     val taskId: Int? = null,
     val title: String? = null,
+    val deleted: Boolean = false,
     val completed: Boolean = false,
     val completedInTime: Boolean = false,
+    val day: Long? = null,
     val date: Long? = null,
 
     val categoryId: Int? = null,

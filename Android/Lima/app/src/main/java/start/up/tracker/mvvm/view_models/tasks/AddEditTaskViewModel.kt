@@ -164,14 +164,19 @@ class AddEditTaskViewModel @Inject constructor(
     }
 
     private fun createTask(task: Task) = viewModelScope.launch {
-        taskDao.insertTask(task)
-        activeAnalytics.addTask(task)
+        val taskId = taskDao.getTaskMaxId() ?: 0
+        val newTask = task.copy(taskId = taskId + 1)
+        activeAnalytics.managerAddTask(newTask)
+        taskDao.insertTask(newTask)
+        activeAnalytics.addTask(newTask)
 
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(ADD_RESULT_OK))
     }
 
     private fun updatedTask(task: Task) = viewModelScope.launch {
+        activeAnalytics.managerEditTask(task)
         taskDao.updateTask(task)
+        activeAnalytics.editTask(task)
 
         addEditTaskEventChannel.send(AddEditTaskEvent.NavigateBackWithResult(EDIT_RESULT_OK))
     }

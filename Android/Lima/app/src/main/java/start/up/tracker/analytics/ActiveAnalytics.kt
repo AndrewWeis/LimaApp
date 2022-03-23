@@ -2,8 +2,10 @@ package start.up.tracker.analytics
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.database.dao.TaskAnalyticsDao
+import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
 import start.up.tracker.utils.TimeHelper
@@ -67,25 +69,49 @@ import javax.inject.Singleton
 
 @Singleton
 class ActiveAnalytics @Inject constructor(
-    private val taskAnalyticsDao: TaskAnalyticsDao
+    private val taskAnalyticsDao: TaskAnalyticsDao,
 ) {
     private var allPrinciples = ArrayList<Principle>()
+    private var activePrinciples = ArrayList<Principle>()
+
+    var taskDao: TaskDao? = null
+        @Inject set
+
+    init {
+        preparePrinciples()
+    }
 
     suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
     }
 
+    suspend fun editTask(task: Task) = withContext(Dispatchers.Default) {
+        taskAnalyticsDao.updateTaskAnalytics(mapTaskToAnalyticsTask(task))
+    }
+
+    suspend fun deleteTask(task: Task) = withContext(Dispatchers.Default) {
+        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val newTaskAnalytics = taskAnalytics.copy(deleted = true)
+        taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
+    }
+
+    suspend fun recoverTask(task: Task) = withContext(Dispatchers.Default) {
+        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val newTaskAnalytics = taskAnalytics.copy(deleted = false)
+        taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
+    }
+
     suspend fun updateStatus(task: Task) = withContext(Dispatchers.Default) {
         if (task.completed) {
-            finishTask(task);
+            finishTask(task)
         } else {
-            unfinishTask(task);
+            unfinishTask(task)
         }
     }
 
     private suspend fun finishTask(task: Task) = withContext(Dispatchers.Default) {
         val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
-        val inTime = isFinishedInTime(taskAnalytics);
+        val inTime = isFinishedInTime(taskAnalytics)
         val newTaskAnalytics = taskAnalytics.copy(completed = true, completedInTime = inTime)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
@@ -103,9 +129,11 @@ class ActiveAnalytics @Inject constructor(
         }
     }
 
-    // TODO think of location to get all existing principles
+    // TODO think of location to get all existing and active principles
     fun preparePrinciples() {
-        allPrinciples.add(Pareto())
+        allPrinciples.add(Pareto(taskAnalyticsDao))
+        allPrinciples.add(EisenhowerMatrix(taskAnalyticsDao))
+        activePrinciples.add(Pareto(taskAnalyticsDao))
     }
 
     private fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {
@@ -113,29 +141,48 @@ class ActiveAnalytics @Inject constructor(
             id = task.taskId,
             taskId = task.taskId,
             title = task.title,
-            date = task.date,
+            day = task.date,
+            date = if (task.date == null) {
+                null
+            } else {
+                if (task.endTimeInMinutes == null) {
+                    task.date + 24 * 60 * 60 * 1000 - 1;
+                } else {
+                    task.date + task.endTimeInMinutes.toLong() * 60 * 1000
+                }
+            },
             categoryId = task.categoryId,
             categoryName = task.categoryName,
         )
     }
 
     private fun isFinishedInTime(taskAnalytics: TaskAnalytics): Boolean {
-        val currentDate = TimeHelper.getCurrentDayInMilliseconds()
+        val currentDate = TimeHelper.getCurrentTimeInMilliseconds()
         return if (taskAnalytics.date != null) {
-            val dif: Long = if (currentDate - taskAnalytics.date > 0) {
-                currentDate - taskAnalytics.date
+            val dif: Long = currentDate - taskAnalytics.date
+            if (dif > 0) {
+                val days: Long = TimeUnit.MILLISECONDS.toDays(dif)
+                days < 1
             } else {
-                (-1) * (currentDate - taskAnalytics.date)
+                true
             }
-            val days: Long = TimeUnit.MILLISECONDS.toDays(dif)
-            days < 1
         } else {
             true
         }
     }
 
-    fun manager() {
+    suspend fun managerAddTask(task: Task) {
         // будем вызывать логику каждого из методов при необходимости: при создании таска
+        for (principle in activePrinciples) {
+            principle.logicAddTask(task)
+        }
+    }
+
+    suspend fun managerEditTask(task: Task) {
+        // будем вызывать логику каждого из методов при необходимости: при создании таска
+        for (principle in activePrinciples) {
+            principle.logicEditTask(task)
+        }
     }
 
 }

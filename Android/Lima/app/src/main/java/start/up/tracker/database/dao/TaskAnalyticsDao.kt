@@ -1,8 +1,8 @@
 package start.up.tracker.database.dao
 
 import androidx.room.*
+import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
-import java.util.ArrayList
 
 @Dao
 interface TaskAnalyticsDao {
@@ -23,6 +23,15 @@ interface TaskAnalyticsDao {
            """
     )
     suspend fun getTaskById(id: Int): TaskAnalytics
+
+    @Query(
+        """
+            SELECT * 
+            FROM task_table
+            WHERE date =:day
+           """
+    )
+    suspend fun getTasksOfDay(day: Long): List<Task>
 
     @Query(
         """

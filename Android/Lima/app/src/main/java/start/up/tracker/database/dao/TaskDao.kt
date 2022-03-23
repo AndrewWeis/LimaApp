@@ -3,6 +3,7 @@ package start.up.tracker.database.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.entities.Task
+import start.up.tracker.entities.TaskAnalytics
 
 /**
  * A suspending function is simply a function that can be paused and resumed at a later time.

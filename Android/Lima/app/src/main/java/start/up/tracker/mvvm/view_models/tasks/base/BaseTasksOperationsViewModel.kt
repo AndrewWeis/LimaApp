@@ -18,6 +18,7 @@ abstract class BaseTasksOperationsViewModel(
 
     fun onUndoDeleteTaskClick(task: Task) = viewModelScope.launch {
         taskDao.insertTask(task)
+        activeAnalytics.recoverTask(task)
     }
 
     fun onTaskSelected(task: Task) = viewModelScope.launch {
@@ -42,6 +43,7 @@ abstract class BaseTasksOperationsViewModel(
      */
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
         taskDao.deleteTask(task)
+        activeAnalytics.deleteTask(task)
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
     }
 }
