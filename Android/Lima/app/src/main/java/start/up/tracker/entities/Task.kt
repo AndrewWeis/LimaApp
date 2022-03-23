@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "task_table")
 data class Task(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     val taskId: Int = 0,
     val taskTitle: String = "",
     val description: String = "",

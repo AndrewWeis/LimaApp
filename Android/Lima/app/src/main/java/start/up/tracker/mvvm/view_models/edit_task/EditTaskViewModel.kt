@@ -311,7 +311,8 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun createTask() = viewModelScope.launch {
-        taskDao.insertTask(task)
+        val taskId = taskDao.getTaskMaxId() ?: 0
+        taskDao.insertTask(task.copy(taskId = taskId + 1))
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
