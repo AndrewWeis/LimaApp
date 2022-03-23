@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments.articles
+package start.up.tracker.ui.fragments.techniques
 
 import android.os.Bundle
 import android.view.View

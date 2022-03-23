@@ -121,7 +121,7 @@
     </fragment>
     <fragment
         android:id="@+id/techniquesFragment"
-        android:name="start.up.tracker.ui.fragments.articles.TechniquesFragment"
+        android:name="start.up.tracker.ui.fragments.techniques.TechniquesFragment"
         android:label="Techniques"
         tools:layout="@layout/techniques_fragment" />
 </navigation>
