@@ -10,7 +10,7 @@ class EditTaskInfoFieldSet(
 ) : FieldSet() {
 
     init {
-        addTaskTitleField(task.title)
+        addTaskTitleField(task.taskTitle)
     }
 
     fun getTitleField(): Field<String> {

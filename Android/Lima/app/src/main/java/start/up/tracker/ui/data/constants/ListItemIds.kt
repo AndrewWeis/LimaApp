@@ -28,4 +28,10 @@ object ListItemIds {
     const val SECTION_HEADER = "section_header"
 
     const val TIME_MANAGEMENT_TECHNIQUE = "time_management_technique"
+
+    const val INBOX = "inbox"
+    const val TODAY = "today"
+    const val UPCOMING = "upcoming"
+
+    const val PROJECTS = "projects"
 }

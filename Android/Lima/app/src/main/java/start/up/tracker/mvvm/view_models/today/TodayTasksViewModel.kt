@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
-import start.up.tracker.database.dao.CategoriesDao
+import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TodayTasksDao
 import start.up.tracker.entities.Task
@@ -21,13 +21,13 @@ class TodayTasksViewModel @Inject constructor(
     preferencesManager: PreferencesManager,
     analytics: Analytics,
     todayTasksDao: TodayTasksDao,
-    categoriesDao: CategoriesDao
+    categoriesDao: ProjectsDao
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private val todayTasksFlow = todayTasksDao.getTodayTasks(
         TimeHelper.getCurrentDayInMilliseconds()
     )
-    private val categoriesFlow = categoriesDao.getCategories()
+    private val categoriesFlow = categoriesDao.getProjects()
 
     private val tasksFlow: Flow<List<Task>> = combine(
         hideCompleted,

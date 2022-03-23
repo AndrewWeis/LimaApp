@@ -103,16 +103,16 @@ class ProjectTasksFragment :
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = ProjectTasksFragmentDirections.actionProjectTasksToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = viewModel.categoryId
+                        categoryId = viewModel.projectId
                     )
                     navigateTo(action)
                 }
 
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = ProjectTasksFragmentDirections.actionProjectTasksToAddEditTask(
-                        event.task,
-                        ResourcesUtils.getString(R.string.title_edit_task),
-                        viewModel.categoryId
+                        task = event.task,
+                        title = ResourcesUtils.getString(R.string.title_edit_task),
+                        categoryId = viewModel.projectId
                     )
                     navigateTo(action)
                 }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/M_H50">
+
+    <ImageView
+        android:id="@+id/project_image"
+        style="@style/WW"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/ic_project_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/project_title_text"
+        style="@style/RobotoRegular.Black.Size14.Zero_W"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@+id/project_image"
+        app:layout_constraintEnd_toStartOf="@+id/tasks_number_text"
+        app:layout_constraintStart_toEndOf="@+id/project_image"
+        app:layout_constraintTop_toTopOf="@+id/project_image"
+        tools:text="Category name" />
+
+    <TextView
+        android:id="@+id/tasks_number_text"
+        style="@style/RobotoRegular.Black.Size14.Zero_W"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/project_title_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/project_title_text"
+        tools:text="12" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

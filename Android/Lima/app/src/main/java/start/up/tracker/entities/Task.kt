@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val taskId: Int = 0,
-    val title: String = "",
+    val taskTitle: String = "",
     val description: String = "",
     val priority: Int = 0,
     val completed: Boolean = false,

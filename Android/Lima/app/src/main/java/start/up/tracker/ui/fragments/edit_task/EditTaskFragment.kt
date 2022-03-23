@@ -340,7 +340,7 @@ class EditTaskFragment :
             showTitleField(field)
         }
 
-        viewModel.categoriesChips.observe(viewLifecycleOwner) { categoriesChips ->
+        viewModel.projectsChips.observe(viewLifecycleOwner) { categoriesChips ->
             showCategories(categoriesChips)
         }
 

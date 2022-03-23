@@ -65,7 +65,7 @@ abstract class BaseTaskViewHolder(
     }
 
     private fun setTaskTitle() {
-        taskTitleText.text = task.title
+        taskTitleText.text = task.taskTitle
         taskTitleText.paint.isStrikeThruText = task.completed
     }
 

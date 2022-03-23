@@ -4,9 +4,11 @@ import android.text.InputType
 import android.view.inputmethod.EditorInfo
 import start.up.tracker.R
 import start.up.tracker.data.fields.Field
-import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.*
+import start.up.tracker.ui.data.entities.Error
+import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.ListItemTypes
+import start.up.tracker.ui.data.entities.Settings
 import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.ValidationMessages
@@ -176,23 +178,6 @@ class EditTaskInfoGenerator : BaseGenerator() {
      */
     private fun getFormattedTimeStart(time: Int?): String? {
         return TimeHelper.formatMinutesOfCurrentDay(time)
-    }
-
-    /**
-     * Получить заголовок
-     *
-     * @param stringId интификатор ресурса строки
-     * @return заголовок
-     */
-    private fun getHeader(id: String, stringId: Int): ListItem {
-        val header = Header(
-            title = ResourcesUtils.getString(stringId)
-        )
-        return createListItem(
-            id = id,
-            type = ListItemTypes.HEADER,
-            data = header
-        )
     }
 
     /**

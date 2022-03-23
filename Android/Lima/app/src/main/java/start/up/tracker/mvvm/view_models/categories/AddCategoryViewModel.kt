@@ -8,19 +8,20 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import start.up.tracker.database.dao.CategoriesDao
-import start.up.tracker.entities.Category
+import start.up.tracker.database.dao.ProjectsDao
+import start.up.tracker.entities.Project
 import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
+import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
 @HiltViewModel
 class AddCategoryViewModel @Inject constructor(
-    private val categoriesDao: CategoriesDao,
+    private val categoriesDao: ProjectsDao,
     @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
-    val category = state.get<Category>("category")
-    var categoryName = category?.name ?: ""
+    val category = state.get<Project>(StateHandleKeys.PROJECT_ID)
+    var categoryName = category?.projectTitle ?: ""
     var color = category?.color ?: DEFAULT_PROJECT_COLOR
 
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
@@ -44,8 +45,8 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     private fun createCategory() = viewModelScope.launch {
-        val newCategory = Category(name = categoryName, color = color)
-        categoriesDao.insertCategory(newCategory)
+        val newProject = Project(projectTitle = categoryName, color = color)
+        categoriesDao.insertProject(newProject)
         addCategoryEventChannel.send(AddCategoryEvent.NavigateBack)
     }
 

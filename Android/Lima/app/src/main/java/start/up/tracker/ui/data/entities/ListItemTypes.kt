@@ -48,4 +48,10 @@ enum class ListItemTypes {
 
     // ListItem с элементом техника
     TECHNIQUE,
+
+    // ListItem с элементов project
+    PROJECT,
+
+    // ListItem с элементом home block
+    HOME_BLOCK,
 }
