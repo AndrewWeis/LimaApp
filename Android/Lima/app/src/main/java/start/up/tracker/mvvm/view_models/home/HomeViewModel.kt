@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
@@ -45,7 +44,7 @@ class HomeViewModel @Inject constructor(
     private val projectEventsChannel = Channel<HomeEvents>()
     val projectEvents = projectEventsChannel.receiveAsFlow()
 
-    private val inboxSectionFlow: Flow<HomeSection> = taskDao.countTasksOfProject(INBOX_ID)
+    private val inboxSectionFlow: Flow<HomeSection> = taskDao.countTasksOfInbox()
         .transform { tasksInside ->
             val inboxSection = createHomeSection(R.drawable.ic_inbox, R.string.inbox, tasksInside)
             emit(inboxSection)
@@ -70,9 +69,8 @@ class HomeViewModel @Inject constructor(
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         projects.value?.projects?.forEach { project ->
-            taskDao.countTasksOfProject(project.projectId).collect { number ->
-                projectsDao.updateProject(project.copy(tasksInside = number))
-            }
+            val number = taskDao.countTasksOfProject(project.projectId)
+            projectsDao.updateProject(project.copy(tasksInside = number))
         }
     }
 

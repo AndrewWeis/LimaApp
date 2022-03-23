@@ -35,12 +35,24 @@ interface TaskDao {
         SELECT COUNT(*) 
         FROM task_table 
         JOIN projects_table ON task_table.projectId = projects_table.projectId
+        WHERE projects_table.projectId = 1 AND
+        parentTaskId == -1 AND
+        completed == 0
+    """
+    )
+    fun countTasksOfInbox(): Flow<Int>
+
+    @Query(
+        """
+        SELECT COUNT(*) 
+        FROM task_table 
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
         WHERE projects_table.projectId = :projectId AND
         parentTaskId == -1 AND
         completed == 0
     """
     )
-    fun countTasksOfProject(projectId: Int): Flow<Int>
+    suspend fun countTasksOfProject(projectId: Int): Int
 
     @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
