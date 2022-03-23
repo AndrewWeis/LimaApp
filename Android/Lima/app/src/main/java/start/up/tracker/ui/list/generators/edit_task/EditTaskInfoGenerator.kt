@@ -77,14 +77,14 @@ class EditTaskInfoGenerator : BaseGenerator() {
     }
 
     /**
-     * Получить [ListItem] со списком выбираемых категорий
+     * Получить [ListItem] со списком выбираемых проектов
      *
-     * @param chips список выбираемых категорий
-     * @return [ListItem] содержаший список выбираемых категорий
+     * @param chips список выбираемых проектов
+     * @return [ListItem] содержаший список выбираемых проектов
      */
-    fun createCategoriesChipsListItems(chips: ChipsData): ListItem {
+    fun createProjectsChipsListItems(chips: ChipsData): ListItem {
         return ListItem(
-            id = ListItemIds.TASK_CATEGORIES,
+            id = ListItemIds.TASK_PROJECTS,
             type = ListItemTypes.LIST,
             data = chips
         )

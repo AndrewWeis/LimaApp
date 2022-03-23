@@ -1,7 +1,5 @@
-package start.up.tracker.mvvm.view_models.categories
+package start.up.tracker.mvvm.view_models.add_project
 
-import androidx.hilt.Assisted
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,18 +9,15 @@ import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.entities.Project
 import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
-import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
 @HiltViewModel
-class AddCategoryViewModel @Inject constructor(
-    private val categoriesDao: ProjectsDao,
-    @Assisted private val state: SavedStateHandle
+class AddProjectViewModel @Inject constructor(
+    private val projectsDao: ProjectsDao,
 ) : ViewModel() {
 
-    val category = state.get<Project>(StateHandleKeys.PROJECT_ID)
-    var categoryName = category?.projectTitle ?: ""
-    var color = category?.color ?: DEFAULT_PROJECT_COLOR
+    var projectName = ""
+    var color = DEFAULT_PROJECT_COLOR
 
     private val addCategoryEventChannel = Channel<AddCategoryEvent>()
     val addCategoryEvent = addCategoryEventChannel.receiveAsFlow()
@@ -36,7 +31,7 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     private fun isValidationSucceed(): Boolean {
-        if (categoryName.isBlank()) {
+        if (projectName.isBlank()) {
             showInvalidInputMessage("Label cannot be empty")
             return false
         }
@@ -45,8 +40,8 @@ class AddCategoryViewModel @Inject constructor(
     }
 
     private fun createCategory() = viewModelScope.launch {
-        val newProject = Project(projectTitle = categoryName, color = color)
-        categoriesDao.insertProject(newProject)
+        val newProject = Project(projectTitle = projectName, color = color)
+        projectsDao.insertProject(newProject)
         addCategoryEventChannel.send(AddCategoryEvent.NavigateBack)
     }
 

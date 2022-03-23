@@ -1,4 +1,4 @@
-package start.up.tracker.mvvm.view_models.categories
+package start.up.tracker.mvvm.view_models.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -25,7 +25,7 @@ import start.up.tracker.utils.resources.ResourcesUtils
 import javax.inject.Inject
 
 @HiltViewModel
-class ProjectsViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val projectsDao: ProjectsDao,
     todayTasksDao: TodayTasksDao,

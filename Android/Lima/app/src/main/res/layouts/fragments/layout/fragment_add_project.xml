@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MW"
-    tools:context=".ui.fragments.categories.AddCategoryFragment">
+    tools:context=".ui.fragments.add_project.AddProjectFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/category_title"

@@ -20,7 +20,7 @@ class TasksGenerator : BaseTasksGenerator() {
         val list: MutableList<ListItem> = mutableListOf()
 
         tasks.forEach { task ->
-            if (task.categoryName != null) {
+            if (task.projectName != null) {
                 list.add(getExtendedTaskListItem(task))
             } else {
                 list.add(getTaskListItem(task))

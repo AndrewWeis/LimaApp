@@ -19,7 +19,7 @@
             android:name="title"
             app:argType="string" />
         <argument
-            android:name="categoryId"
+            android:name="projectId"
             android:defaultValue="-1"
             app:argType="integer" />
         <action
@@ -45,7 +45,7 @@
             app:destination="@id/projectTasksFragment" />
         <action
             android:id="@+id/action_project_to_addProject"
-            app:destination="@id/addCategoryFragment" />
+            app:destination="@id/addProjectFragment" />
         <action
             android:id="@+id/action_project_to_today"
             app:destination="@id/todayFragment" />
@@ -85,10 +85,10 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/addCategoryFragment"
-        android:name="start.up.tracker.ui.fragments.categories.AddCategoryFragment"
+        android:id="@+id/addProjectFragment"
+        android:name="start.up.tracker.ui.fragments.add_project.AddProjectFragment"
         android:label="Add new project"
-        tools:layout="@layout/fragment_add_category" />
+        tools:layout="@layout/fragment_add_project" />
     <fragment
         android:id="@+id/todayFragment"
         android:name="start.up.tracker.ui.fragments.today.TodayFragment"

@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,8 +23,6 @@ import start.up.tracker.ui.list.adapters.upcoming.UpcomingTasksAdapter
 import start.up.tracker.ui.list.generators.upcoming.UpcomingTasksGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 
 @AndroidEntryPoint
 class UpcomingFragment :
@@ -104,7 +101,7 @@ class UpcomingFragment :
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
@@ -112,7 +109,7 @@ class UpcomingFragment :
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_edit_task),
-                        categoryId = event.task.categoryId,
+                        projectId = event.task.projectId,
                         task = event.task
                     )
                     navigateTo(action)

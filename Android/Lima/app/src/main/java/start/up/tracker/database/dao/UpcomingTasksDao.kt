@@ -12,7 +12,7 @@ interface UpcomingTasksDao {
         """
         SELECT *
         FROM task_table
-        JOIN projects_table ON task_table.categoryId = projects_table.projectId
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
         WHERE task_table.date > :today 
         ORDER BY date
         ASC

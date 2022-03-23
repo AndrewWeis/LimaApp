@@ -8,7 +8,7 @@ data class StatisticsTask(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val status: TaskStatus,
-    val categoryId: Int,
+    val projectId: Int,
     val creationTime: Long,
     val expectedCompletionTime: Long?,
     val completionTime: Long,

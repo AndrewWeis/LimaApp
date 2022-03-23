@@ -18,9 +18,9 @@ object ExtendedTasksMergeFlows {
             }
             .forEach { task ->
                 projects.forEach { project ->
-                    if (project.projectId == task.categoryId) {
+                    if (project.projectId == task.projectId) {
                         tasksWithProjectData.add(
-                            task.copy(categoryName = project.projectTitle, categoryColor = project.color)
+                            task.copy(projectName = project.projectTitle, projectColor = project.color)
                         )
                     }
                 }

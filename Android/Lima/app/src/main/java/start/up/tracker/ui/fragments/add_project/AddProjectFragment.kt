@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments.categories
+package start.up.tracker.ui.fragments.add_project
 
 import android.os.Bundle
 import android.view.View
@@ -12,24 +12,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import petrov.kristiyan.colorpicker.ColorPicker
 import start.up.tracker.R
-import start.up.tracker.databinding.FragmentAddCategoryBinding
-import start.up.tracker.mvvm.view_models.categories.AddCategoryViewModel
+import start.up.tracker.databinding.FragmentAddProjectBinding
+import start.up.tracker.mvvm.view_models.add_project.AddProjectViewModel
 import start.up.tracker.utils.exhaustive
 
 @AndroidEntryPoint
-class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
+class AddProjectFragment : Fragment(R.layout.fragment_add_project) {
 
-    private val viewModel: AddCategoryViewModel by viewModels()
+    private val viewModel: AddProjectViewModel by viewModels()
 
-    private var binding: FragmentAddCategoryBinding? = null
+    private var binding: FragmentAddProjectBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentAddCategoryBinding.bind(view)
+        binding = FragmentAddProjectBinding.bind(view)
 
         initData()
         initListeners()
-        initCategoriesEventListener()
+        initProjectsEventListener()
     }
 
     override fun onDestroyView() {
@@ -37,15 +37,15 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
         binding = null
     }
 
-    private fun initCategoriesEventListener() {
+    private fun initProjectsEventListener() {
         viewLifecycleOwner.lifecycleScope.launchWhenCreated {
             viewModel.addCategoryEvent.collect { event ->
                 when (event) {
-                    is AddCategoryViewModel.AddCategoryEvent.NavigateBack -> {
+                    is AddProjectViewModel.AddCategoryEvent.NavigateBack -> {
                         binding?.editTextCategoryLabel?.clearFocus()
                         findNavController().popBackStack()
                     }
-                    is AddCategoryViewModel.AddCategoryEvent.ShowInvalidInputMessage -> {
+                    is AddProjectViewModel.AddCategoryEvent.ShowInvalidInputMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
@@ -55,7 +55,7 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
 
     private fun initListeners() {
         binding?.editTextCategoryLabel?.addTextChangedListener {
-            viewModel.categoryName = it.toString()
+            viewModel.projectName = it.toString()
         }
 
         binding?.fabSaveCategory?.setOnClickListener {
@@ -87,6 +87,6 @@ class AddCategoryFragment : Fragment(R.layout.fragment_add_category) {
     }
 
     private fun initData() {
-        binding?.editTextCategoryLabel?.setText(viewModel.categoryName)
+        binding?.editTextCategoryLabel?.setText(viewModel.projectName)
     }
 }

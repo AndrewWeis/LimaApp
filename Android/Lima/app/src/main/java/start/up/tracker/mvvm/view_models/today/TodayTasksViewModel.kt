@@ -21,18 +21,18 @@ class TodayTasksViewModel @Inject constructor(
     preferencesManager: PreferencesManager,
     analytics: Analytics,
     todayTasksDao: TodayTasksDao,
-    categoriesDao: ProjectsDao
+    projectsDao: ProjectsDao
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private val todayTasksFlow = todayTasksDao.getTodayTasks(
         TimeHelper.getCurrentDayInMilliseconds()
     )
-    private val categoriesFlow = categoriesDao.getProjects()
+    private val projectsFlow = projectsDao.getProjects()
 
     private val tasksFlow: Flow<List<Task>> = combine(
         hideCompleted,
         todayTasksFlow,
-        categoriesFlow,
+        projectsFlow,
         ::mergeFlowsForExtendedTask
     )
 

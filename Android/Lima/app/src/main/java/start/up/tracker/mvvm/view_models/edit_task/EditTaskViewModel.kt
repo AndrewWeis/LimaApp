@@ -29,16 +29,18 @@ import javax.inject.Inject
 class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     @Assisted private val state: SavedStateHandle,
-    categoriesDao: ProjectsDao,
+    projectsDao: ProjectsDao,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private var isEditMode = true
 
-    var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
-    private val selectedProjectId = state.getLiveData<Int>(StateHandleKeys.PROJECT_ID)
+    val projectId = state.get<Int>(StateHandleKeys.PROJECT_ID) ?: -1
+    var task = state.get<Task>(StateHandleKeys.TASK) ?: Task(projectId = projectId)
     private val parentTaskId = state.get<Int>(StateHandleKeys.PARENT_TASK_ID) ?: -1
+
+    private val selectedProjectId: MutableLiveData<Int> = MutableLiveData(projectId)
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
     val taskInfoLiveData: LiveData<Task> get() = _taskInfoLiveData
@@ -46,11 +48,11 @@ class EditTaskViewModel @Inject constructor(
     private val _titleField: MutableLiveData<Field<String>> = MutableLiveData()
     val titleField: LiveData<Field<String>> get() = _titleField
 
-    private val projectsFlow = categoriesDao.getProjects()
+    private val projectsFlow = projectsDao.getProjects()
     private val projectsChipsFlow: Flow<ChipsData> = combine(
         selectedProjectId.asFlow(),
         projectsFlow,
-        ::mergeCategoriesFlows
+        ::mergeProjectsFlows
     )
     private var _projectsChips: LiveData<ChipsData> = MutableLiveData()
     val projectsChips: LiveData<ChipsData> get() = _projectsChips
@@ -68,7 +70,6 @@ class EditTaskViewModel @Inject constructor(
     init {
         isAddOrEditMode()
         setParentTaskId()
-        setProjectId()
         showFields()
     }
 
@@ -163,12 +164,12 @@ class EditTaskViewModel @Inject constructor(
     }
 
     /**
-     * Категория задачи была изменена
+     * Проект задачи была изменена
      *
      * @param chipData содержащая выбранную категорию
      */
     fun onCategoryChipChanged(chipData: ChipData) {
-        task = task.copy(categoryId = chipData.id)
+        task = task.copy(projectId = chipData.id)
         selectedProjectId.postValue(chipData.id)
     }
 
@@ -204,10 +205,6 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(parentTaskId = parentTaskId)
     }
 
-    private fun setProjectId() {
-        task = task.copy(categoryId = selectedProjectId.value ?: -1)
-    }
-
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()
@@ -218,9 +215,9 @@ class EditTaskViewModel @Inject constructor(
             showSubtasks()
         }
 
-        // показываем категории только если это задача = (в подзадачах не показываем)
+        // показываем проекты только если это задача = (в подзадачах не показываем)
         if (task.parentTaskId == -1) {
-            showCategoriesChips()
+            showProjectsChips()
         }
     }
 
@@ -228,9 +225,9 @@ class EditTaskViewModel @Inject constructor(
         _subtasks = subtasksFlow.asLiveData()
     }
 
-    private fun showCategoriesChips() {
+    private fun showProjectsChips() {
         _projectsChips = projectsChipsFlow.asLiveData()
-        selectedProjectId.postValue(task.categoryId)
+        // selectedProjectId.postValue(task.projectId)
     }
 
     private fun showEditableTaskInfo() {
@@ -283,13 +280,13 @@ class EditTaskViewModel @Inject constructor(
     }
 
     /**
-     * Соединяет flow категорий, полученних их базы данных и flow идентификатора выбранной категории
+     * Соединяет flow проектов, полученних их базы данных и flow идентификатора выбранного проекта
      *
-     * @param selectedProjectId идентификатор выбранной категории
+     * @param selectedProjectId идентификатор выбранного проекта
      * @param projects список проектов
-     * @return chipsData с информацией о выбранной категории
+     * @return chipsData с информацией о выбранном проекте
      */
-    private fun mergeCategoriesFlows(
+    private fun mergeProjectsFlows(
         selectedProjectId: Int,
         projects: List<Project>
     ): ChipsData {

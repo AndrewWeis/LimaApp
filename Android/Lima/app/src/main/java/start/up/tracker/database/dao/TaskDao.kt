@@ -20,7 +20,7 @@ interface TaskDao {
         """
        SELECT * 
        FROM task_table
-       JOIN projects_table ON task_table.categoryId = projects_table.projectId
+       JOIN projects_table ON task_table.projectId = projects_table.projectId
        WHERE projects_table.projectId = :categoryId AND
        task_table.parentTaskId == -1 AND
        (completed != :hideCompleted OR completed = 0) AND 
@@ -34,7 +34,7 @@ interface TaskDao {
         """
         SELECT COUNT(*) 
         FROM task_table 
-        JOIN projects_table ON task_table.categoryId = projects_table.projectId
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
         WHERE projects_table.projectId = :projectId AND
         parentTaskId == -1 AND
         completed == 0

@@ -20,19 +20,19 @@ class UpcomingViewModel @Inject constructor(
     taskDao: TaskDao,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
-    categoriesDao: ProjectsDao,
+    projectsDao: ProjectsDao,
     upcomingTasksDao: UpcomingTasksDao,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(
         TimeHelper.getCurrentDayInMilliseconds()
     )
-    private val categoriesFlow = categoriesDao.getProjects()
+    private val projectsFlow = projectsDao.getProjects()
 
     private val tasksFlow: Flow<List<Task>> = combine(
         hideCompleted,
         upcomingTasksFlow,
-        categoriesFlow,
+        projectsFlow,
         ExtendedTasksMergeFlows::mergeFlowsForExtendedTask
     )
 

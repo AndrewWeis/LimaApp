@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.HomeFragmentBinding
 import start.up.tracker.entities.Project
-import start.up.tracker.mvvm.view_models.categories.ProjectsViewModel
+import start.up.tracker.mvvm.view_models.home.HomeViewModel
 import start.up.tracker.ui.data.entities.Header
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.home.HomeSection
@@ -29,7 +29,7 @@ class HomeFragment :
     HomeSectionViewHolder.OnHomeSectionClickListener,
     ProjectViewHolder.OnProjectClickListener {
 
-    private val viewModel: ProjectsViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     private var binding: HomeFragmentBinding? = null
 
@@ -170,7 +170,7 @@ class HomeFragment :
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.projectEvents.collect { event ->
             when (event) {
-                is ProjectsViewModel.HomeEvents.NavigateToProject -> {
+                is HomeViewModel.HomeEvents.NavigateToProject -> {
                     val action = HomeFragmentDirections.actionProjectToProjectTasks(
                         event.project.projectId,
                         event.project.projectTitle
@@ -178,18 +178,18 @@ class HomeFragment :
                     navigateTo(action)
                 }
 
-                is ProjectsViewModel.HomeEvents.NavigateToAddProject -> {
+                is HomeViewModel.HomeEvents.NavigateToAddProject -> {
                     val action = HomeFragmentDirections.actionProjectToAddProject()
                     navigateTo(action)
                 }
 
-                is ProjectsViewModel.HomeEvents.NavigateToToday -> {
+                is HomeViewModel.HomeEvents.NavigateToToday -> {
                     val today = TimeHelper.getTodayAsString(TimeHelper.DateFormats.DD_MMM_EEEE)
                     val action = HomeFragmentDirections.actionProjectToToday(today)
                     navigateTo(action)
                 }
 
-                is ProjectsViewModel.HomeEvents.NavigateToUpcoming -> {
+                is HomeViewModel.HomeEvents.NavigateToUpcoming -> {
                     val action = HomeFragmentDirections.actionProjectToUpcoming()
                     navigateTo(action)
                 }

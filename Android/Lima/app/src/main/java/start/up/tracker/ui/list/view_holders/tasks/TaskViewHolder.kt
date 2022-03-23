@@ -23,16 +23,16 @@ class TaskViewHolder(
     }
 
     private fun setupCategory() {
-        if (task.categoryName == null && task.categoryColor == null) {
-            binding.taskCategoryText.visibility = View.GONE
-            binding.taskCategoryImage.visibility = View.GONE
+        if (task.projectName == null && task.projectColor == null) {
+            binding.taskProjectText.visibility = View.GONE
+            binding.taskProjectImage.visibility = View.GONE
             return
         }
 
         binding.apply {
-            taskCategoryText.text = task.categoryName
-            taskCategoryText.setTextColor(task.categoryColor!!)
-            taskCategoryImage.background.setTint(task.categoryColor!!)
+            taskProjectText.text = task.projectName
+            taskProjectText.setTextColor(task.projectColor!!)
+            taskProjectImage.background.setTint(task.projectColor!!)
         }
     }
 

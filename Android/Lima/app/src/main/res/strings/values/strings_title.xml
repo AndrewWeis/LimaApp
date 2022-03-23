@@ -2,7 +2,7 @@
 <resources>
     <string name="title_task_data">Task Data</string>
     <string name="title_task_priority">Choose Priority</string>
-    <string name="title_task_category">Choose Category</string>
+    <string name="title_task_project">Choose Project</string>
     <string name="title_task_time">Time</string>
     <string name="title_task_date">Date</string>
     <string name="title_task_subtasks">Subtasks</string>

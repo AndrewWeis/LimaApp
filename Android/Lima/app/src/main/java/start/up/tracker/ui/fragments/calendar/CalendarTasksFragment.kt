@@ -100,7 +100,7 @@ class CalendarTasksFragment :
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Add new task",
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
@@ -108,7 +108,7 @@ class CalendarTasksFragment :
                     val task = event.task
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Edit task",
-                        categoryId = event.task.categoryId,
+                        projectId = event.task.projectId,
                         task = task
                     )
                     navigateTo(action)
