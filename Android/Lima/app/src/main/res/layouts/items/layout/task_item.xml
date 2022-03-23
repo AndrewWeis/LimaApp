@@ -51,26 +51,26 @@
         app:srcCompat="@drawable/ic_priority_3" />
 
     <ImageView
-        android:id="@+id/task_category_image"
+        android:id="@+id/task_project_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_little"
-        android:background="@drawable/ic_category_color_small"
+        android:background="@drawable/ic_project_circle"
         app:layout_constraintStart_toStartOf="@+id/task_title_text"
         app:layout_constraintTop_toBottomOf="@id/task_title_text" />
 
     <TextView
-        android:id="@+id/task_category_text"
+        android:id="@+id/task_project_text"
         style="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_little"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintBottom_toBottomOf="@+id/task_category_image"
+        app:layout_constraintBottom_toBottomOf="@+id/task_project_image"
         app:layout_constraintEnd_toStartOf="@+id/priority_image"
-        app:layout_constraintStart_toEndOf="@+id/task_category_image"
-        app:layout_constraintTop_toTopOf="@+id/task_category_image"
+        app:layout_constraintStart_toEndOf="@+id/task_project_image"
+        app:layout_constraintTop_toTopOf="@+id/task_project_image"
         tools:text="English" />
 
     <ImageView
@@ -90,6 +90,6 @@
         android:background="@color/lightGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/task_category_text" />
+        app:layout_constraintTop_toBottomOf="@id/task_project_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

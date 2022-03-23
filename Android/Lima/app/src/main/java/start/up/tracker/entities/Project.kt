@@ -7,11 +7,11 @@ import kotlinx.android.parcel.Parcelize
 import start.up.tracker.ui.data.constants.DEFAULT_PROJECT_COLOR
 
 @Parcelize
-@Entity(tableName = "categories_table")
-data class Category(
+@Entity(tableName = "projects_table")
+data class Project(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val name: String = "",
+    val projectId: Int = 0,
+    val projectTitle: String = "",
     val color: Int = DEFAULT_PROJECT_COLOR,
     val tasksInside: Int = 0,
 ) : Parcelable

@@ -22,6 +22,12 @@
     <string name="appearance_text">Appearance</string>
     <string name="techniques_text">Time-management techniques</string>
 
+    <!-- Home Blocks -->
+    <string name="inbox">Inbox</string>
+    <string name="today">Today</string>
+    <string name="upcoming">Upcoming</string>
+
+
     <string name="action_search">Search</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
     <string name="form_empty">Some data is empty, checked your form</string>

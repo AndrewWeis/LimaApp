@@ -10,6 +10,6 @@
         android:id="@+id/title_text"
         style="@style/RobotoRegular.Black.Size12.WW"
         android:padding="8dp"
-        tools:text="Категория" />
+        tools:text="Project" />
 
 </com.google.android.material.card.MaterialCardView>

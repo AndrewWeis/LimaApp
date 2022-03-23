@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
-import start.up.tracker.database.dao.CategoriesDao
+import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.UpcomingTasksDao
 import start.up.tracker.entities.Task
@@ -20,19 +20,19 @@ class UpcomingViewModel @Inject constructor(
     taskDao: TaskDao,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
-    categoriesDao: CategoriesDao,
+    projectsDao: ProjectsDao,
     upcomingTasksDao: UpcomingTasksDao,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(
         TimeHelper.getCurrentDayInMilliseconds()
     )
-    private val categoriesFlow = categoriesDao.getCategories()
+    private val projectsFlow = projectsDao.getProjects()
 
     private val tasksFlow: Flow<List<Task>> = combine(
         hideCompleted,
         upcomingTasksFlow,
-        categoriesFlow,
+        projectsFlow,
         ExtendedTasksMergeFlows::mergeFlowsForExtendedTask
     )
 

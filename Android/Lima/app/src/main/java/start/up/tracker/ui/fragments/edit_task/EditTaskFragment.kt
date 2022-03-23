@@ -42,7 +42,7 @@ class EditTaskFragment :
     SelectInputViewHolder.TextInputSelectionListener,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener,
-    ChipsViewHolder.CategoriesViewHolderListener,
+    ChipsViewHolder.ProjectViewHolderListener,
     OnTaskClickListener,
     AddSubtaskViewHolder.OnAddSubtaskClickListener {
 
@@ -129,7 +129,7 @@ class EditTaskFragment :
         val chipData = listItem.data as ChipData
 
         when (listItem.id) {
-            ListItemIds.TASK_CATEGORIES -> viewModel.onCategoryChipChanged(chipData)
+            ListItemIds.TASK_PROJECTS -> viewModel.onCategoryChipChanged(chipData)
             ListItemIds.TASK_PRIORITIES -> viewModel.onPriorityChipChanged(chipData)
         }
     }
@@ -230,16 +230,16 @@ class EditTaskFragment :
         }
     }
 
-    private fun showCategories(chips: ChipsData) {
-        val listItem: ListItem = generator.createCategoriesChipsListItems(chips)
+    private fun showProjects(chips: ChipsData) {
+        val listItem: ListItem = generator.createProjectsChipsListItems(chips)
 
         if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setCategoryChipListItem(listItem)
+            adapter.setProjectChipListItem(listItem)
             return
         }
 
         binding?.editTasksList?.post {
-            adapter.setCategoryChipListItem(listItem)
+            adapter.setProjectChipListItem(listItem)
         }
     }
 
@@ -321,7 +321,7 @@ class EditTaskFragment :
             layoutInflater = layoutInflater,
             textInputListener = this,
             textInputSelectionListener = this,
-            categoriesViewHolderListener = this,
+            projectViewHolderListener = this,
             onTaskClickListener = this,
             onAddSubtaskListener = this
         )
@@ -340,8 +340,8 @@ class EditTaskFragment :
             showTitleField(field)
         }
 
-        viewModel.categoriesChips.observe(viewLifecycleOwner) { categoriesChips ->
-            showCategories(categoriesChips)
+        viewModel.projectsChips.observe(viewLifecycleOwner) { projectsChips ->
+            showProjects(projectsChips)
         }
 
         viewModel.prioritiesChips.observe(viewLifecycleOwner) { prioritiesChips ->
@@ -366,7 +366,7 @@ class EditTaskFragment :
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = viewModel.task.categoryId,
+                        projectId = viewModel.task.projectId,
                         parentTaskId = viewModel.task.taskId
                     )
                     navigateTo(action)
@@ -376,7 +376,7 @@ class EditTaskFragment :
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
                         event.task,
                         ResourcesUtils.getString(R.string.title_edit_task),
-                        event.task.categoryId,
+                        event.task.projectId,
                         event.task.taskId
                     )
                     navigateTo(action)

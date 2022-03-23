@@ -22,7 +22,7 @@ class ChipsViewHolder(
     private lateinit var listItem: ListItem
     private lateinit var data: ChipsData
 
-    private lateinit var listener: CategoriesViewHolderListener
+    private lateinit var listener: ProjectViewHolderListener
     private lateinit var adapter: ChipsAdapter
     private var listExtension: ListExtension? = null
 
@@ -34,7 +34,7 @@ class ChipsViewHolder(
         listener.onChipClick(listItem)
     }
 
-    fun bind(listItem: ListItem, listener: CategoriesViewHolderListener) {
+    fun bind(listItem: ListItem, listener: ProjectViewHolderListener) {
         this.listItem = listItem
         this.data = listItem.data as ChipsData
         this.listener = listener
@@ -65,7 +65,7 @@ class ChipsViewHolder(
         listExtension?.setAdapter(adapter)
     }
 
-    interface CategoriesViewHolderListener {
+    interface ProjectViewHolderListener {
         fun onChipClick(listItem: ListItem)
     }
 }

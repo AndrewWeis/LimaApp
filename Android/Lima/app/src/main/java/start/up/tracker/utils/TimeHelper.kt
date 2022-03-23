@@ -129,7 +129,19 @@ object TimeHelper {
         return null
     }
 
+    /**
+     * Получить дату в виде строки вида [DateFormats]
+     *
+     * @param format вид даты
+     * @return форматированная дата
+     */
+    fun getTodayAsString(format: String): String {
+        val currentDayMillis = TimeHelper.getCurrentDayInMilliseconds()
+        return formatMillisecondToDate(currentDayMillis, format) ?: ""
+    }
+
     object DateFormats {
         const val DD_MMMM: String = "dd-MMMM"
+        const val DD_MMM_EEEE: String = "dd MMM, EEEE"
     }
 }

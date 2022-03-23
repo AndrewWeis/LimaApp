@@ -100,14 +100,14 @@ class TodayTasksFragment :
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_edit_task),
-                        categoryId = event.task.categoryId,
+                        projectId = event.task.projectId,
                         task = event.task
                     )
                     navigateTo(action)

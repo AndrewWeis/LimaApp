@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Task(
     @PrimaryKey(autoGenerate = true)
     val taskId: Int = 0,
-    val title: String = "",
+    val taskTitle: String = "",
     val description: String = "",
     val priority: Int = 0,
     val completed: Boolean = false,
@@ -27,7 +27,7 @@ data class Task(
     // todo (maybe add task id to day stat)
     val wasCompleted: Boolean = false,
 
-    val categoryId: Int = 1, // 1 - inbox
-    val categoryName: String? = null,
-    val categoryColor: Int? = null,
+    val projectId: Int = -1,
+    val projectName: String? = null,
+    val projectColor: Int? = null,
 ) : Parcelable

@@ -12,9 +12,9 @@ import start.up.tracker.analytics.Analytics
 import start.up.tracker.data.fields.Field
 import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
 import start.up.tracker.database.PreferencesManager
-import start.up.tracker.database.dao.CategoriesDao
+import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.database.dao.TaskDao
-import start.up.tracker.entities.Category
+import start.up.tracker.entities.Project
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
@@ -29,16 +29,18 @@ import javax.inject.Inject
 class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     @Assisted private val state: SavedStateHandle,
-    categoriesDao: CategoriesDao,
+    projectsDao: ProjectsDao,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
 
     private var isEditMode = true
 
-    var task = state.get<Task>(StateHandleKeys.TASK) ?: Task()
-    private val selectedCategoryId = state.getLiveData<Int>(StateHandleKeys.CATEGORY_ID)
+    val projectId = state.get<Int>(StateHandleKeys.PROJECT_ID) ?: -1
+    var task = state.get<Task>(StateHandleKeys.TASK) ?: Task(projectId = projectId)
     private val parentTaskId = state.get<Int>(StateHandleKeys.PARENT_TASK_ID) ?: -1
+
+    private val selectedProjectId: MutableLiveData<Int> = MutableLiveData(projectId)
 
     private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
     val taskInfoLiveData: LiveData<Task> get() = _taskInfoLiveData
@@ -46,14 +48,14 @@ class EditTaskViewModel @Inject constructor(
     private val _titleField: MutableLiveData<Field<String>> = MutableLiveData()
     val titleField: LiveData<Field<String>> get() = _titleField
 
-    private val categoriesFlow = categoriesDao.getCategories()
-    private val categoriesChipsFlow: Flow<ChipsData> = combine(
-        selectedCategoryId.asFlow(),
-        categoriesFlow,
-        ::mergeCategoriesFlows
+    private val projectsFlow = projectsDao.getProjects()
+    private val projectsChipsFlow: Flow<ChipsData> = combine(
+        selectedProjectId.asFlow(),
+        projectsFlow,
+        ::mergeProjectsFlows
     )
-    private var _categoriesChips: LiveData<ChipsData> = MutableLiveData()
-    val categoriesChips: LiveData<ChipsData> get() = _categoriesChips
+    private var _projectsChips: LiveData<ChipsData> = MutableLiveData()
+    val projectsChips: LiveData<ChipsData> get() = _projectsChips
 
     private val _prioritiesChips: MutableLiveData<ChipsData> = MutableLiveData()
     val prioritiesChips: LiveData<ChipsData> get() = _prioritiesChips
@@ -162,13 +164,13 @@ class EditTaskViewModel @Inject constructor(
     }
 
     /**
-     * Категория задачи была изменена
+     * Проект задачи была изменена
      *
      * @param chipData содержащая выбранную категорию
      */
     fun onCategoryChipChanged(chipData: ChipData) {
-        task = task.copy(categoryId = chipData.id)
-        selectedCategoryId.postValue(chipData.id)
+        task = task.copy(projectId = chipData.id)
+        selectedProjectId.postValue(chipData.id)
     }
 
     /**
@@ -213,9 +215,9 @@ class EditTaskViewModel @Inject constructor(
             showSubtasks()
         }
 
-        // показываем категории только если это задача = (в подзадачах не показываем)
+        // показываем проекты только если это задача = (в подзадачах не показываем)
         if (task.parentTaskId == -1) {
-            showCategoriesChips()
+            showProjectsChips()
         }
     }
 
@@ -223,9 +225,9 @@ class EditTaskViewModel @Inject constructor(
         _subtasks = subtasksFlow.asLiveData()
     }
 
-    private fun showCategoriesChips() {
-        _categoriesChips = categoriesChipsFlow.asLiveData()
-        selectedCategoryId.postValue(task.categoryId)
+    private fun showProjectsChips() {
+        _projectsChips = projectsChipsFlow.asLiveData()
+        // selectedProjectId.postValue(task.projectId)
     }
 
     private fun showEditableTaskInfo() {
@@ -265,38 +267,38 @@ class EditTaskViewModel @Inject constructor(
         fieldSet.getTitleField().validate()
 
         if (fieldSet.getTitleField().isValid()) {
-            task = task.copy(title = fieldSet.getTitleField().getValue()!!)
+            task = task.copy(taskTitle = fieldSet.getTitleField().getValue()!!)
         }
 
         showTitleField()
     }
 
     private fun isAddOrEditMode() {
-        if (task.title.isEmpty()) {
+        if (task.taskTitle.isEmpty()) {
             isEditMode = false
         }
     }
 
     /**
-     * Соединяет flow категорий, полученних их базы данных и flow идентификатора выбранной категории
+     * Соединяет flow проектов, полученних их базы данных и flow идентификатора выбранного проекта
      *
-     * @param selectedCategoryId идентификатор выбранной категории
-     * @param categories список категорий
-     * @return chipsData с информацией о выбранной категории
+     * @param selectedProjectId идентификатор выбранного проекта
+     * @param projects список проектов
+     * @return chipsData с информацией о выбранном проекте
      */
-    private fun mergeCategoriesFlows(
-        selectedCategoryId: Int,
-        categories: List<Category>
+    private fun mergeProjectsFlows(
+        selectedProjectId: Int,
+        projects: List<Project>
     ): ChipsData {
-        val values = categories.map { category ->
+        val values = projects.map { project ->
             var isSelected = false
-            if (category.id == selectedCategoryId) {
+            if (project.projectId == selectedProjectId) {
                 isSelected = true
             }
 
             val chipData = ChipData(
-                id = category.id,
-                name = category.name,
+                id = project.projectId,
+                name = project.projectTitle,
                 isSelected = isSelected
             )
 

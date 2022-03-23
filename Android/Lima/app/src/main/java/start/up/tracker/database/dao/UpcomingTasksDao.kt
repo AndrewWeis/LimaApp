@@ -12,7 +12,7 @@ interface UpcomingTasksDao {
         """
         SELECT *
         FROM task_table
-        JOIN categories_table ON task_table.categoryId = categories_table.id
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
         WHERE task_table.date > :today 
         ORDER BY date
         ASC
@@ -26,8 +26,8 @@ interface UpcomingTasksDao {
         FROM task_table
         WHERE date > :today AND
         parentTaskId == -1 AND
-        (completed != :hideCompleted OR completed = 0)
+        completed == 0
     """
     )
-    fun countUpcomingTasks(today: Long, hideCompleted: Boolean): Flow<Int>
+    fun countUpcomingTasks(today: Long): Flow<Int>
 }

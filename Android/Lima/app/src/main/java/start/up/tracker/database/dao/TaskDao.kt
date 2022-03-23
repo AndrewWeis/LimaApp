@@ -20,11 +20,11 @@ interface TaskDao {
         """
        SELECT * 
        FROM task_table
-       JOIN categories_table ON task_table.categoryId = categories_table.id
-       WHERE categories_table.id = :categoryId AND
+       JOIN projects_table ON task_table.projectId = projects_table.projectId
+       WHERE projects_table.projectId = :categoryId AND
        task_table.parentTaskId == -1 AND
        (completed != :hideCompleted OR completed = 0) AND 
-       task_table.title LIKE '%' || :searchQuery || '%' 
+       task_table.taskTitle LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
        ASC, created"""
     )
@@ -34,25 +34,25 @@ interface TaskDao {
         """
         SELECT COUNT(*) 
         FROM task_table 
-        JOIN categories_table ON task_table.categoryId = categories_table.id
-        WHERE categories_table.id = :categoryId AND
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
+        WHERE projects_table.projectId = 1 AND
         parentTaskId == -1 AND
-        (completed != :hideCompleted OR completed = 0)
+        completed == 0
     """
     )
-    suspend fun countTasksOfCategory(categoryId: Int, hideCompleted: Boolean): Int
+    fun countTasksOfInbox(): Flow<Int>
 
     @Query(
         """
-        SELECT COUNT(*)
+        SELECT COUNT(*) 
         FROM task_table 
-        JOIN categories_table ON task_table.categoryId = categories_table.id
-        WHERE categories_table.id = 1 AND
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
+        WHERE projects_table.projectId = :projectId AND
         parentTaskId == -1 AND
-        (completed != :hideCompleted OR completed = 0)
+        completed == 0
     """
     )
-    fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
+    suspend fun countTasksOfProject(projectId: Int): Int
 
     @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
