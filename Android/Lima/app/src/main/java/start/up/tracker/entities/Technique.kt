@@ -12,5 +12,6 @@ data class Technique(
     val id: Int,
     val title: String,
     val body: String,
-    val timeToRead: String
+    val timeToRead: String,
+    val isEnabled: Boolean = false,
 ) : Parcelable
