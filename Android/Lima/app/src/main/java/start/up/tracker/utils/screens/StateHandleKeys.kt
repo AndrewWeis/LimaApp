@@ -6,4 +6,5 @@ object StateHandleKeys {
     const val TASK = "task"
 
     const val PROJECT_ID = "projectId"
+    const val TECHNIQUE = "technique"
 }

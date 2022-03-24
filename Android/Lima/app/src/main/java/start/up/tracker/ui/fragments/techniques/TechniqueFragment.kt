@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.TechniqueFragmentBinding
@@ -16,18 +15,12 @@ class TechniqueFragment :
     Fragment(R.layout.technique_fragment) {
 
     private val viewModel: TechniqueViewModel by viewModels()
-    private val args by navArgs<TechniqueFragmentArgs>()
     private var binding: TechniqueFragmentBinding? = null
-
-    private lateinit var technique: Technique
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = TechniqueFragmentBinding.bind(view)
 
-        this.technique = args.technique
-
-        setupData()
         setupObservers()
         setupClickListener()
     }
@@ -38,13 +31,14 @@ class TechniqueFragment :
     }
 
     private fun setupObservers() {
-        viewModel.selectedTechniqueId.observe(viewLifecycleOwner) {
+        viewModel.technique.observe(viewLifecycleOwner) {
             setupButton(it)
+            setupData(it)
         }
     }
 
-    private fun setupButton(selectedTechniqueId: Int) {
-        if (selectedTechniqueId == technique.id) {
+    private fun setupButton(technique: Technique) {
+        if (technique.isEnabled) {
             binding?.techniqueTryOutButton?.visibility = View.GONE
             binding?.techniqueCancelButton?.visibility = View.VISIBLE
         } else {
@@ -55,15 +49,15 @@ class TechniqueFragment :
 
     private fun setupClickListener() {
         binding?.techniqueTryOutButton?.setOnClickListener {
-            viewModel.onSelectTechniqueClick(technique.id)
+            viewModel.onSelectTechniqueClick(true)
         }
 
         binding?.techniqueCancelButton?.setOnClickListener {
-            viewModel.onCancelSelectTechniqueClick()
+            viewModel.onSelectTechniqueClick(false)
         }
     }
 
-    private fun setupData() {
+    private fun setupData(technique: Technique) {
         binding?.techniqueTitleText?.text = technique.title
         binding?.techniqueBodyText?.text = technique.body
     }

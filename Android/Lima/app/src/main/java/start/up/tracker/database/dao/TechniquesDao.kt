@@ -11,9 +11,6 @@ interface TechniquesDao {
     fun getTechniques(): Flow<List<Technique>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTechnique(technique: Technique)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTechniques(vararg technique: Technique)
 
     @Update
