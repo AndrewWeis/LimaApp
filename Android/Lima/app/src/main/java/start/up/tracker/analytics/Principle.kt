@@ -4,9 +4,10 @@ import start.up.tracker.entities.Task
 import java.util.ArrayList
 
 interface Principle {
-    fun setStatus(boolean: Boolean)
+    fun setStatus(status: Boolean)
+    fun canBeEnabled(activePrinciples: List<Principle>): Boolean
     fun getStatus(): Boolean
-    fun setNotifications(boolean: Boolean)
+    fun setNotifications(notifications: Boolean)
     fun getNotifications(): Boolean
     fun getTimeToRead(): Int?
     fun getReference(): String?

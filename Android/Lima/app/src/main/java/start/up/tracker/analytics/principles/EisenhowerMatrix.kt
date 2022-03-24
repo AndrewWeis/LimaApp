@@ -7,6 +7,7 @@ import java.util.ArrayList
 import javax.inject.Inject
 
 class EisenhowerMatrix @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Principle {
+
     private val name = "Eisenhower Matrix"
     private val timeToRead = 2
     private val reference = "www.bbc.com"
@@ -15,7 +16,7 @@ class EisenhowerMatrix @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDa
     private var status: Boolean = false
     private var notifications: Boolean = false
 
-    override fun setStatus(boolean: Boolean) {
+    override fun setStatus(status: Boolean) {
         /*if (boolean) {
             for (principle in activePrinciples) {
                 if (incompatiblePrinciples.contains(principle)) {
@@ -30,15 +31,25 @@ class EisenhowerMatrix @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDa
         } else {
             status = boolean
         }*/
-        status = boolean
+        this.status = status
     }
+
+    override fun canBeEnabled(activePrinciples: List<Principle>): Boolean {
+        for (principle in activePrinciples) {
+            if (incompatiblePrinciples.contains(principle)) {
+                return false
+            }
+        }
+        return true
+    }
+
 
     override fun getStatus(): Boolean {
         return status
     }
 
-    override fun setNotifications(boolean: Boolean) {
-        notifications = boolean
+    override fun setNotifications(notifications: Boolean) {
+        this.notifications = notifications
     }
 
     override fun getNotifications(): Boolean {

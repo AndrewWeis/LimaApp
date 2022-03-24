@@ -4,6 +4,7 @@ import android.text.format.DateFormat.is24HourFormat
 import start.up.tracker.application.App
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object TimeHelper {
 
@@ -129,7 +130,26 @@ object TimeHelper {
         return null
     }
 
-    object DateFormats {
-        const val DD_MMMM: String = "dd-MMMM"
+    /**
+     * Найти разницу в днях между двумя датами.
+     *
+     * @param date1 первая дата
+     * @param date2 вторая дата
+     * @return разница в днях
+     */
+    fun getDifferenceOfDatesInDays(date1: Long?, date2: Long?): Long? {
+        if (date1 != null && date2 != null) {
+            val dif: Long = date1 - date2
+            return if (dif > 0) {
+                TimeUnit.MILLISECONDS.toDays(dif)
+            } else {
+                -1 * (TimeUnit.MILLISECONDS.toDays(-1 * dif))
+            }
+        }
+        return null
     }
-}
+
+        object DateFormats {
+            const val DD_MMMM: String = "dd-MMMM"
+        }
+    }

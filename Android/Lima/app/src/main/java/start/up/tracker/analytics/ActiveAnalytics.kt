@@ -9,7 +9,6 @@ import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
 import start.up.tracker.utils.TimeHelper
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -73,6 +72,8 @@ class ActiveAnalytics @Inject constructor(
 ) {
     private var allPrinciples = ArrayList<Principle>()
     private var activePrinciples = ArrayList<Principle>()
+    private var taskToAnalyticsTask = HashMap<Int, Int>()
+    private var elementsCounter = 0;
 
     var taskDao: TaskDao? = null
         @Inject set
@@ -83,6 +84,7 @@ class ActiveAnalytics @Inject constructor(
 
     suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
+        taskToAnalyticsTask.put(task.taskId, ++elementsCounter)
     }
 
     suspend fun editTask(task: Task) = withContext(Dispatchers.Default) {
@@ -90,13 +92,13 @@ class ActiveAnalytics @Inject constructor(
     }
 
     suspend fun deleteTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = true)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
     suspend fun recoverTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
@@ -110,19 +112,19 @@ class ActiveAnalytics @Inject constructor(
     }
 
     private suspend fun finishTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
         val inTime = isFinishedInTime(taskAnalytics)
         val newTaskAnalytics = taskAnalytics.copy(completed = true, completedInTime = inTime)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
     private suspend fun unfinishTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(task.taskId)
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(completed = false, completedInTime = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun deleteAllTasks() = withContext(Dispatchers.Default) {
+    suspend fun deleteAllAnalyticsTasks() = withContext(Dispatchers.Default) {
         val tasks = taskAnalyticsDao.getAllTasks()
         for (task in tasks) {
             taskAnalyticsDao.deleteTaskAnalytics(task)
@@ -142,30 +144,32 @@ class ActiveAnalytics @Inject constructor(
             taskId = task.taskId,
             title = task.title,
             day = task.date,
-            date = if (task.date == null) {
-                null
-            } else {
-                if (task.endTimeInMinutes == null) {
-                    task.date + 24 * 60 * 60 * 1000 - 1;
-                } else {
-                    task.date + task.endTimeInMinutes.toLong() * 60 * 1000
-                }
-            },
+            date = computeEndDate(task),
             categoryId = task.categoryId,
             categoryName = task.categoryName,
         )
     }
 
+    /**
+     * The function calculates the exact time of the end of the task.
+     * If only day is given, the very end of the day is returned
+     */
+    private fun computeEndDate(task: Task) : Long? {
+        task.date?.let {
+            task.endTimeInMinutes?.let {
+                return task.date + task.endTimeInMinutes.toLong() * 60 * 1000
+            }
+            return task.date + 24 * 60 * 60 * 1000 - 1
+        }
+
+        return null
+    }
+
     private fun isFinishedInTime(taskAnalytics: TaskAnalytics): Boolean {
         val currentDate = TimeHelper.getCurrentTimeInMilliseconds()
-        return if (taskAnalytics.date != null) {
-            val dif: Long = currentDate - taskAnalytics.date
-            if (dif > 0) {
-                val days: Long = TimeUnit.MILLISECONDS.toDays(dif)
-                days < 1
-            } else {
-                true
-            }
+        val days = TimeHelper.getDifferenceOfDatesInDays(currentDate, taskAnalytics.date)
+        return if (days != null) {
+            days < 1.toLong()
         } else {
             true
         }

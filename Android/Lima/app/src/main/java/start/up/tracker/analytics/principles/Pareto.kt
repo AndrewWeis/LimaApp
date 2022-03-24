@@ -32,7 +32,7 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
      * а статус от выкл к вкл только тогда, когда активные принципы совместимы с включаемым
      * принципом
      */
-    override fun setStatus(boolean: Boolean) {
+    override fun setStatus(status: Boolean) {
         /*if (boolean) {
             for (principle in activePrinciples) {
                 if (incompatiblePrinciples.contains(principle)) {
@@ -47,15 +47,24 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
         } else {
             status = boolean
         }*/
-        status = boolean
+        this.status = status
+    }
+
+    override fun canBeEnabled(activePrinciples: List<Principle>): Boolean {
+        for (principle in activePrinciples) {
+            if (incompatiblePrinciples.contains(principle)) {
+                return false
+            }
+        }
+        return true
     }
 
     override fun getStatus(): Boolean {
         return status
     }
 
-    override fun setNotifications(boolean: Boolean) {
-        notifications = boolean
+    override fun setNotifications(notifications: Boolean) {
+        this.notifications = notifications
     }
 
     override fun getNotifications(): Boolean {
@@ -117,22 +126,19 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
                 priorityCount++
             }
         }
-        if (tasksOfDay.size == 3) {
-            if (priorityCount > 1) {
+        if (tasksOfDay.size == 3 && priorityCount > 1) {
                 /* TODO диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
                 TODO продолжить и отменить */
-            }
-        } else if (tasksOfDay.size in 3..8) {
-            if (priorityCount > 2) {
+            // Я тут отправляю сигнал о необходимости создания диалог окна
+        } else if (tasksOfDay.size in 3..8 && priorityCount > 2) {
                 /* TODO диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
                 TODO продолжить и отменить */
-            }
-        }
-        else if (tasksOfDay.size > 8) {
-            if ((priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2) {
+            // Я тут отправляю сигнал о необходимости создания диалог окна
+        } else if (tasksOfDay.size > 8 &&
+            (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2) {
                 /* TODO диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
                 TODO продолжить и отменить */
-            }
+            // Я тут отправляю сигнал о необходимости создания диалог окна
         }
     }
 
