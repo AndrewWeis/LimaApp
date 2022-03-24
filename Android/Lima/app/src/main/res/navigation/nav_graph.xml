@@ -121,7 +121,23 @@
     </fragment>
     <fragment
         android:id="@+id/techniquesFragment"
-        android:name="start.up.tracker.ui.fragments.articles.TechniquesFragment"
+        android:name="start.up.tracker.ui.fragments.techniques.TechniquesFragment"
         android:label="Techniques"
-        tools:layout="@layout/techniques_fragment" />
+        tools:layout="@layout/techniques_fragment" >
+        <action
+            android:id="@+id/action_techniques_to_technique"
+            app:destination="@id/techniqueFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/techniqueFragment"
+        android:name="start.up.tracker.ui.fragments.techniques.TechniqueFragment"
+        android:label="{title}"
+        tools:layout="@layout/technique_fragment">
+        <argument
+            android:name="technique"
+            app:argType="start.up.tracker.entities.Technique" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

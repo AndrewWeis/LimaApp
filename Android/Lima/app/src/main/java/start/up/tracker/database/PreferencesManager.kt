@@ -20,13 +20,25 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
             preferences[PreferencesKeys.HIDE_COMPLETED] ?: false
         }
 
+    val selectedTechniqueId: Flow<Int>
+        get() = dataStore.data.map { preferences ->
+            preferences[PreferencesKeys.SELECTED_TECHNIQUE_ID] ?: -1
+        }
+
     suspend fun updateHideCompleted(hideCompleted: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKeys.HIDE_COMPLETED] = hideCompleted
         }
     }
 
+    suspend fun updateTechniqueId(id: Int) {
+        dataStore.edit { preferences ->
+            preferences[PreferencesKeys.SELECTED_TECHNIQUE_ID] = id
+        }
+    }
+
     private object PreferencesKeys {
         val HIDE_COMPLETED = preferencesKey<Boolean>("hide_completed")
+        val SELECTED_TECHNIQUE_ID = preferencesKey<Int>("selected_technique_id")
     }
 }
