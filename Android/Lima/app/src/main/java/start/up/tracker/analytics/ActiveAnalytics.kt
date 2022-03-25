@@ -164,7 +164,7 @@ class ActiveAnalytics @Inject constructor(
     }
 
     // TODO think of location to get all existing and active principles
-    fun preparePrinciples() {
+    private fun preparePrinciples() {
         allPrinciples.add(Pareto(taskAnalyticsDao))
         idToPrinciple[Pareto(taskAnalyticsDao).getId()] = Pareto(taskAnalyticsDao)
         allPrinciples.add(EisenhowerMatrix(taskAnalyticsDao))
