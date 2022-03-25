@@ -29,7 +29,7 @@ class AddProjectViewModel @Inject constructor(
     private val _projectTitle: MutableLiveData<Project> = MutableLiveData()
     val projectTitle: LiveData<Project> get() = _projectTitle
 
-    private val _projectActions: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _projectActions: MutableLiveData<Boolean> = MutableLiveData(true)
     val projectActions: LiveData<Boolean> get() = _projectActions
 
     private val _colorsCircles: MutableLiveData<ColorsData> = MutableLiveData()
