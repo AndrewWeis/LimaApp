@@ -13,6 +13,7 @@ import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.list.adapters.add_project.ColorsAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 
+
 class ColorsViewHolder(
     private val layoutInflater: LayoutInflater,
     parent: ViewGroup
