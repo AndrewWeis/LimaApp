@@ -2,6 +2,7 @@ package start.up.tracker.analytics
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.database.dao.TaskAnalyticsDao
@@ -72,8 +73,9 @@ class ActiveAnalytics @Inject constructor(
 ) {
     private var allPrinciples = ArrayList<Principle>()
     private var activePrinciples = ArrayList<Principle>()
+    private var idToPrinciple = HashMap<Int, Principle>()
     private var taskToAnalyticsTask = HashMap<Int, Int>()
-    private var elementsCounter = 0;
+    private var elementsCounter = 0
 
     var taskDao: TaskDao? = null
         @Inject set
@@ -134,8 +136,11 @@ class ActiveAnalytics @Inject constructor(
     // TODO think of location to get all existing and active principles
     fun preparePrinciples() {
         allPrinciples.add(Pareto(taskAnalyticsDao))
+        idToPrinciple[Pareto(taskAnalyticsDao).getId()] = Pareto(taskAnalyticsDao)
         allPrinciples.add(EisenhowerMatrix(taskAnalyticsDao))
-        activePrinciples.add(Pareto(taskAnalyticsDao))
+        idToPrinciple[EisenhowerMatrix(taskAnalyticsDao).getId()] =
+            EisenhowerMatrix(taskAnalyticsDao)
+        //activePrinciples.add(Pareto(taskAnalyticsDao))
     }
 
     private fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {
@@ -154,7 +159,7 @@ class ActiveAnalytics @Inject constructor(
      * The function calculates the exact time of the end of the task.
      * If only day is given, the very end of the day is returned
      */
-    private fun computeEndDate(task: Task) : Long? {
+    private fun computeEndDate(task: Task): Long? {
         task.date?.let {
             task.endTimeInMinutes?.let {
                 return task.date + task.endTimeInMinutes.toLong() * 60 * 1000
@@ -175,18 +180,56 @@ class ActiveAnalytics @Inject constructor(
         }
     }
 
-    suspend fun managerAddTask(task: Task) {
-        // будем вызывать логику каждого из методов при необходимости: при создании таска
-        for (principle in activePrinciples) {
-            principle.logicAddTask(task)
-        }
+    /**
+     * TODO АНДРЕЙ. СВЯЗАТЬ.
+     * Метод проверяет совместимость включаемого принципа со всеми активными принципами
+     * @param id Айди включаемого принципа
+     * @return можно или нельзя включить
+     */
+    fun managerCheckCompatibility(id: Int): Boolean {
+        //var activePrinciplesIds : principlesDao.getActivePrinciplesIds()
+        val activePrinciplesIds = arrayListOf(1)
+        val principle = idToPrinciple[id]
+        return principle!!.canBeEnabled(activePrinciplesIds)
     }
 
-    suspend fun managerEditTask(task: Task) {
-        // будем вызывать логику каждого из методов при необходимости: при создании таска
-        for (principle in activePrinciples) {
-            principle.logicEditTask(task)
+    /**
+     * TODO АНДРЕЙ. СВЯЗАТЬ.
+     * Метод вызывает логику каждого из активных тасков при создании активности
+     * @param task активность
+     * @return список всех сообщений для создания диалоговых окон (Null - все в порядке)
+     */
+    suspend fun managerAddTask(task: Task): List<AnalyticsMessage> {
+        val analyticsMessages = ArrayList<AnalyticsMessage>()
+        //var activePrinciplesIds : principlesDao.getActivePrinciplesIds()
+        val activePrinciplesIds = arrayListOf(1)
+        // будем вызывать логику каждого из методов при необходимости: при редактировании таска
+        for (activePrincipleId in activePrinciplesIds) {
+            val res = idToPrinciple[activePrincipleId]!!.logicAddTask(task)
+            if (res != null) {
+                analyticsMessages.add(res)
+            }
         }
+        return analyticsMessages
     }
 
+    /**
+     * TODO АНДРЕЙ. СВЯЗАТЬ.
+     * Метод вызывает логику каждого из активных тасков при редактирования активности
+     * @param task активность
+     * @return список всех сообщений для создания диалоговых окон (Null - все в порядке)
+     */
+    suspend fun managerEditTask(task: Task): List<AnalyticsMessage> {
+        val analyticsMessages = ArrayList<AnalyticsMessage>()
+        //var activePrinciplesIds : principlesDao.getActivePrinciplesIds()
+        val activePrinciplesIds = arrayListOf(1)
+        // будем вызывать логику каждого из методов при необходимости: при редактировании таска
+        for (activePrincipleId in activePrinciplesIds) {
+            val res = idToPrinciple[activePrincipleId]!!.logicEditTask(task)
+            if (res != null) {
+                analyticsMessages.add(res)
+            }
+        }
+        return analyticsMessages
+    }
 }

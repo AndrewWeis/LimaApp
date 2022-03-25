@@ -1,17 +1,10 @@
 package start.up.tracker.analytics.principles
 
-import android.app.AlertDialog
-import android.app.Dialog
-import android.os.Bundle
-import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import start.up.tracker.R
 import start.up.tracker.analytics.Principle
-import start.up.tracker.database.dao.AnalyticsDao
+import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.database.dao.TaskAnalyticsDao
-import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import java.util.ArrayList
 import javax.inject.Inject
@@ -19,10 +12,11 @@ import javax.inject.Singleton
 
 @Singleton
 class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Principle {
+    private val id = 1  // пока указываем конкретный id
     private val name = "Pareto"
     private val timeToRead = 2
     private val reference = "www.bbc.com"
-    private val incompatiblePrinciples = ArrayList<Principle>()
+    private val incompatiblePrinciplesIds = arrayListOf(2)
 
     private var status: Boolean = false
     private var notifications: Boolean = false
@@ -33,26 +27,12 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
      * принципом
      */
     override fun setStatus(status: Boolean) {
-        /*if (boolean) {
-            for (principle in activePrinciples) {
-                if (incompatiblePrinciples.contains(principle)) {
-                    Toast.makeText(applicationContext,
-                        "Cannot enable the principle because " + principle +
-                                " is already enabled",
-                        Toast.LENGTH_SHORT).show()
-                    status = true
-                }
-            }
-            status = false
-        } else {
-            status = boolean
-        }*/
         this.status = status
     }
 
-    override fun canBeEnabled(activePrinciples: List<Principle>): Boolean {
-        for (principle in activePrinciples) {
-            if (incompatiblePrinciples.contains(principle)) {
+    override fun canBeEnabled(activePrinciplesIds: List<Int>): Boolean {
+        for (principleId in activePrinciplesIds) {
+            if (incompatiblePrinciplesIds.contains(principleId)) {
                 return false
             }
         }
@@ -75,6 +55,10 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
         return name
     }
 
+    override fun getId(): Int {
+        return id
+    }
+
     override fun getTimeToRead(): Int {
         return timeToRead
     }
@@ -83,33 +67,33 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
         return reference
     }
 
-    override fun getIncompatiblePrinciples(): ArrayList<Principle> {
-        return incompatiblePrinciples
+    override fun getIncompatiblePrinciplesIds(): ArrayList<Int> {
+        return incompatiblePrinciplesIds
     }
 
-    override fun logic() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun logicAddTask(task: Task) = withContext(Dispatchers.Default) {
-        if (task.date != null) {
-            val tasksOfDay = ArrayList(taskAnalyticsDao.getTasksOfDay(task.date))
-            logicAddEditTask(task, tasksOfDay)
-        }
-    }
-
-    override suspend fun logicEditTask(task: Task) = withContext(Dispatchers.Default) {
-        if (task.date != null) {
-            val tasksOfDay = ArrayList(taskAnalyticsDao.getTasksOfDay(task.date))
-            for (taskOfDay in tasksOfDay) {
-                if (taskOfDay.taskId == task.taskId) {
-                    tasksOfDay.remove(taskOfDay)
-                    break
-                }
+    override suspend fun logicAddTask(task: Task): AnalyticsMessage? =
+        withContext(Dispatchers.Default) {
+            if (task.date != null) {
+                val tasksOfDay = ArrayList(taskAnalyticsDao.getTasksOfDay(task.date))
+                logicAddEditTask(task, tasksOfDay)
             }
-            logicAddEditTask(task, tasksOfDay)
+            null
         }
-    }
+
+    override suspend fun logicEditTask(task: Task): AnalyticsMessage? =
+        withContext(Dispatchers.Default) {
+            if (task.date != null) {
+                val tasksOfDay = ArrayList(taskAnalyticsDao.getTasksOfDay(task.date))
+                for (taskOfDay in tasksOfDay) {
+                    if (taskOfDay.taskId == task.taskId) {
+                        tasksOfDay.remove(taskOfDay)
+                        break
+                    }
+                }
+                logicAddEditTask(task, tasksOfDay)
+            }
+            null
+        }
 
     /**
      * Первый, тестовый принцип
@@ -118,42 +102,41 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
      * редактируемой таски. Сканируем приоритетность этих тасков. 80% тасков не должны иметь
      * приоритета, 20% остальных тасков должны иметь приоритет (любой).
      * Для реагирования необходимо как минимум 3 таски.
+     *
+     * @param task активность
+     * @param tasksOfDay список всех активностей дня, который имеет task
      */
-    private fun logicAddEditTask(task: Task, tasksOfDay: ArrayList<Task>) {
+    private fun logicAddEditTask(task: Task, tasksOfDay: ArrayList<Task>): AnalyticsMessage? {
         var priorityCount = 0
         for (taskOfDay in tasksOfDay) {
             if (taskOfDay.priority > 0) {
                 priorityCount++
             }
         }
-        if (tasksOfDay.size == 3 && priorityCount > 1) {
-                /* TODO диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
-                TODO продолжить и отменить */
-            // Я тут отправляю сигнал о необходимости создания диалог окна
-        } else if (tasksOfDay.size in 3..8 && priorityCount > 2) {
-                /* TODO диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
-                TODO продолжить и отменить */
-            // Я тут отправляю сигнал о необходимости создания диалог окна
+        if (task.priority > 0) {
+            priorityCount++
+        }
+        if (tasksOfDay.size in 3..8 && priorityCount > 2) {
+            /* TODO Андрей. диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
+            TODO продолжить и отменить, развернуть сообщение целиком и перейти к статье */
+            return AnalyticsMessage(id,"Pareto principle is violated",
+                "Pareto principle suggests that you should prioritize 20% of daily tasks" +
+                        "over 80% other tasks while you have " + tasksOfDay.size + " tasks and " +
+                        priorityCount + " of them are prioritized",
+                "Try priories your tasks in a way that the principle suggests"
+            )
         } else if (tasksOfDay.size > 8 &&
-            (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2) {
-                /* TODO диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
-                TODO продолжить и отменить */
-            // Я тут отправляю сигнал о необходимости создания диалог окна
+            (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2
+        ) {
+            /* TODO Андрей. диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
+            TODO продолжить и отменить, развернуть сообщение целиком и перейти к статье */
+            return AnalyticsMessage(id, "Pareto principle is violated",
+                "Pareto principle suggests that you should prioritize 20% of daily tasks" +
+                        "over 80% other tasks while you have " + tasksOfDay.size + " tasks and " +
+                        priorityCount + " of them are prioritized",
+                "Try priories your tasks in a way that the principle suggests"
+            )
         }
+        return null
     }
-
-    /*class MyDialogFragment : DialogFragment() {
-
-        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            return activity?.let {
-                val builder = AlertDialog.Builder(it)
-                builder.setTitle("Важное сообщение!")
-                    .setMessage("Покормите кота!")
-                    .setPositiveButton("ОК, иду на кухню") {
-                            dialog, id ->  dialog.cancel()
-                    }
-                builder.create()
-            } ?: throw IllegalStateException("Activity cannot be null")
-        }
-    }*/
 }
