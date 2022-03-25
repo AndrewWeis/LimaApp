@@ -6,6 +6,7 @@ import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
+import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.TasksEvent
 
 abstract class BaseTasksOperationsViewModel(
@@ -32,7 +33,9 @@ abstract class BaseTasksOperationsViewModel(
         taskDao.updateTask(task.copy(wasCompleted = true))
     }
 
-    fun onTaskSwiped(task: Task) = viewModelScope.launch {
+    fun onTaskSwiped(listItem: ListItem) = viewModelScope.launch {
+        val task = listItem.data as Task
+
         taskDao.deleteTask(task)
 
         val subtaskToRestore = taskDao.getSubtasksToRestore(task.taskId)

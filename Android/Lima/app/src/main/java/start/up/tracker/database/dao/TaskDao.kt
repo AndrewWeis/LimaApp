@@ -21,14 +21,28 @@ interface TaskDao {
        SELECT * 
        FROM task_table
        JOIN projects_table ON task_table.projectId = projects_table.projectId
-       WHERE projects_table.projectId = :categoryId AND
+       WHERE projects_table.projectId = :projectId AND
        task_table.parentTaskId == -1 AND
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskTitle LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
        ASC, created"""
     )
-    fun getTasksOfCategory(searchQuery: String, hideCompleted: Boolean, categoryId: Int): Flow<List<Task>>
+    fun getTasksOfProject(
+        searchQuery: String,
+        hideCompleted: Boolean,
+        projectId: Int
+    ): Flow<List<Task>>
+
+    @Query(
+        """
+       SELECT * 
+       FROM task_table
+       JOIN projects_table ON task_table.projectId = projects_table.projectId
+       WHERE projects_table.projectId = :projectId
+       """
+    )
+    fun getTasksOfProject(projectId: Int): List<Task>
 
     @Query(
         """
@@ -68,6 +82,9 @@ interface TaskDao {
 
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
+
+    @Query("DELETE FROM task_table WHERE projectId =:projectId")
+    suspend fun deleteTaskOfProject(projectId: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)

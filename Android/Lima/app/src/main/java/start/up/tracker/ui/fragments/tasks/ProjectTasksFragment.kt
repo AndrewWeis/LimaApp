@@ -169,6 +169,6 @@ class ProjectTasksFragment :
         listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
 
-        listExtension?.attachSwipeToAdapter(adapter, viewModel)
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 }

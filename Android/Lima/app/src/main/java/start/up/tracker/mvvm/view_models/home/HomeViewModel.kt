@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import start.up.tracker.R
 import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.database.dao.TaskDao
@@ -85,13 +87,29 @@ class HomeViewModel @Inject constructor(
     fun onHomeSectionClick(listItem: ListItem) = viewModelScope.launch {
         when (listItem.id) {
             ListItemIds.INBOX -> {
-                val inbox = Project(projectId = 1, projectTitle = ResourcesUtils.getString(R.string.inbox))
+                val inbox =
+                    Project(projectId = 1, projectTitle = ResourcesUtils.getString(R.string.inbox))
                 projectEventsChannel.send(HomeEvents.NavigateToProject(inbox))
             }
             ListItemIds.TODAY ->
                 projectEventsChannel.send(HomeEvents.NavigateToToday)
             ListItemIds.UPCOMING ->
                 projectEventsChannel.send(HomeEvents.NavigateToUpcoming)
+        }
+    }
+
+    // todo (figure out how coroutines works)
+    fun onProjectSwiped(listItem: ListItem) = viewModelScope.launch {
+        withContext(Dispatchers.Default) {
+            val project = listItem.data as Project
+
+            val tasks = taskDao.getTasksOfProject(project.projectId)
+            tasks.forEach { task ->
+                taskDao.deleteTask(task)
+                taskDao.deleteSubtasks(task.taskId)
+            }
+
+            projectsDao.deleteProject(project)
         }
     }
 

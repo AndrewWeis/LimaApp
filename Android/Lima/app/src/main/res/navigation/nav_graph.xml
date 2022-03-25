@@ -84,11 +84,11 @@
             android:name="title"
             app:argType="string" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/addProjectFragment"
         android:name="start.up.tracker.ui.fragments.add_project.AddProjectFragment"
         android:label="Add new project"
-        tools:layout="@layout/fragment_add_project" />
+        tools:layout="@layout/add_project_fragment" />
     <fragment
         android:id="@+id/todayFragment"
         android:name="start.up.tracker.ui.fragments.today.TodayFragment"

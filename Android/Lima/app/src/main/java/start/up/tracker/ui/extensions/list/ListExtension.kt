@@ -1,12 +1,11 @@
 package start.up.tracker.ui.extensions.list
 
 import android.view.MotionEvent
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
-import start.up.tracker.entities.Task
-import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
@@ -49,6 +48,22 @@ class ListExtension(private var list: RecyclerView?) {
     }
 
     /**
+     * Задать @LayoutManager
+     */
+    fun setLayoutManager(layoutManager: LayoutManager) {
+        list?.layoutManager = layoutManager
+    }
+
+    /**
+     * Задать @GridLayoutManager
+     * @param spanCount число строк / столбцов
+     * @param orientation ориентация
+     */
+    fun setGridLayoutManager(spanCount: Int, orientation: Int) {
+        list?.layoutManager = getGridLayoutManager(spanCount, orientation)
+    }
+
+    /**
      * Задать вертикальный @LayoutManager
      */
     fun setVerticalLayoutManager() {
@@ -67,7 +82,7 @@ class ListExtension(private var list: RecyclerView?) {
      */
     fun attachSwipeToAdapter(
         adapter: BaseAdapter<ListItem, BaseViewHolder>,
-        viewModel: BaseTasksOperationsViewModel
+        actionOnSwipe: (ListItem) -> Unit
     ) {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
@@ -83,7 +98,7 @@ class ListExtension(private var list: RecyclerView?) {
 
             override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
                 val listItem = adapter.getItems().elementAt(viewHolder.adapterPosition)
-                viewModel.onTaskSwiped(listItem.data as Task)
+                actionOnSwipe(listItem)
             }
         }).attachToRecyclerView(list)
     }
@@ -106,6 +121,18 @@ class ListExtension(private var list: RecyclerView?) {
         return LinearLayoutManager(
             null,
             LinearLayoutManager.HORIZONTAL,
+            false
+        )
+    }
+
+    /**
+     * Получить @GridLayoutManager
+     */
+    private fun getGridLayoutManager(spanCount: Int, orientation: Int): GridLayoutManager {
+        return GridLayoutManager(
+            null,
+            spanCount,
+            orientation,
             false
         )
     }

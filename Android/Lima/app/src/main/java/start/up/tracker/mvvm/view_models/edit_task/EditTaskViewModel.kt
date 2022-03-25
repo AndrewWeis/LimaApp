@@ -250,18 +250,11 @@ class EditTaskViewModel @Inject constructor(
         _prioritiesChips.postValue(ChipsData(values = chips))
     }
 
-    private fun getChipData(id: Int, name: String): ChipData {
-        var isSelected = false
-        if (task.priority == id) {
-            isSelected = true
-        }
-
-        return ChipData(
-            id = id,
-            name = name,
-            isSelected = isSelected
-        )
-    }
+    private fun getChipData(id: Int, name: String) = ChipData(
+        id = id,
+        name = name,
+        isSelected = task.priority == id
+    )
 
     private fun validateTitleField() {
         fieldSet.getTitleField().validate()

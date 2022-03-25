@@ -31,7 +31,7 @@ class ProjectsTasksViewModel @Inject constructor(
     ) { query, hideCompleted ->
         Pair(query, hideCompleted)
     }.flatMapLatest { (query, hideCompleted) ->
-        taskDao.getTasksOfCategory(query, hideCompleted, projectId)
+        taskDao.getTasksOfProject(query, hideCompleted, projectId)
     }
 
     val projectTasks = projectTasksFlow.asLiveData()
