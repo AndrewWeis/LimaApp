@@ -11,4 +11,6 @@
     <string name="title_edit_task">Edit task</string>
 
     <string name="title_projects">Projects</string>
+
+    <string name="title_add_project">Add project</string>
 </resources>

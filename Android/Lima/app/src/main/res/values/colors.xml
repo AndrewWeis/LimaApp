@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <color name="primaryColor">#ab47bc</color>
     <color name="primaryLightColor">#df78ef</color>
@@ -11,6 +11,7 @@
     <color name="secondaryTextColor">#000000</color>
 
     <color name="black">#1b1b1b</color>
+    <color name="white">#FFFFFF</color>
 
     <color name="mediumGray">#D1D1D1</color>
     <color name="darkGray">#858585</color>
@@ -20,4 +21,6 @@
     <color name="priority_high">#FC3131</color>
     <color name="priority_medium">#FC8631</color>
     <color name="priority_low">#40C686</color>
+
+    <color name="color_ripple">#DADCE1</color>
 </resources>

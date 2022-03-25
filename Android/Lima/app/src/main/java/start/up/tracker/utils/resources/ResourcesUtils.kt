@@ -43,6 +43,16 @@ object ResourcesUtils {
     fun getColor(@ColorRes resColor: Int) = ContextCompat.getColor(App.context, resColor)
 
     /**
+     * Возвращает список значених полученых из файла ресурса
+     *
+     * @param resId resource array
+     * @return значения в виде TypedArray
+     */
+    fun getValuesFromResArray(resId: Int): IntArray {
+        return getResources().getIntArray(resId)
+    }
+
+    /**
      * Возвращает drawable
      *
      * @param resDrawable идентификатор ресурса drawable
