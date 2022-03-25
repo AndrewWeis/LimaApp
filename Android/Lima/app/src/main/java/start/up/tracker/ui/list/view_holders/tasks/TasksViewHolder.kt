@@ -51,7 +51,7 @@ class TasksViewHolder(
     }
 
     private fun attachSwipeToDeleteTask(viewModel: BaseTasksOperationsViewModel) {
-        listExtension?.attachSwipeToAdapter(adapter, viewModel)
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 
     private fun updateItems() {

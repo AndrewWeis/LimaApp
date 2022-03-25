@@ -2,6 +2,7 @@ package start.up.tracker.ui.list.adapters.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import start.up.tracker.mvvm.view_models.home.HomeViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
@@ -14,6 +15,7 @@ import start.up.tracker.ui.list.view_holders.home.ProjectsViewHolder
 
 class HomeAdapter(
     layoutInflater: LayoutInflater,
+    private val viewModel: HomeViewModel,
     private val onHomeSectionClickListener: HomeSectionViewHolder.OnHomeSectionClickListener,
     private val onProjectClickListener: ProjectViewHolder.OnProjectClickListener
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
@@ -37,7 +39,7 @@ class HomeAdapter(
             ITEM_HEADER_PROJECTS ->
                 (holder as HeaderViewHolder).bind(item)
             ITEM_PROJECTS_LIST ->
-                (holder as ProjectsViewHolder).bind(item, onProjectClickListener)
+                (holder as ProjectsViewHolder).bind(item, viewModel, onProjectClickListener)
         }
     }
 

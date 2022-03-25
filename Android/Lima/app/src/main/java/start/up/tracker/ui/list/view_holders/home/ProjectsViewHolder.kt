@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import start.up.tracker.R
 import start.up.tracker.databinding.ProjectsItemBinding
 import start.up.tracker.entities.Project
+import start.up.tracker.mvvm.view_models.home.HomeViewModel
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.data.entities.home.ProjectsData
@@ -36,12 +37,19 @@ class ProjectsViewHolder(
         listener.onProjectClick(project)
     }
 
-    fun bind(listItem: ListItem, listener: OnProjectClickListener) {
+    fun bind(listItem: ListItem, viewModel: HomeViewModel, listener: OnProjectClickListener) {
         this.listItem = listItem
         this.data = listItem.data as ProjectsData
         this.listener = listener
 
         updateItems()
+        attachSwipeToDelete(viewModel)
+    }
+
+    private fun attachSwipeToDelete(viewModel: HomeViewModel) {
+        listExtension?.attachSwipeToAdapter(adapter) {
+            viewModel.onProjectSwiped(it)
+        }
     }
 
     private fun updateItems() {

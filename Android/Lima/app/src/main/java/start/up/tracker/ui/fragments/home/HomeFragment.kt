@@ -157,9 +157,9 @@ class HomeFragment :
     private fun initAdapter() {
         adapter = HomeAdapter(
             layoutInflater = layoutInflater,
+            viewModel = viewModel,
             onHomeSectionClickListener = this,
             onProjectClickListener = this
-
         )
 
         listExtension = ListExtension(binding?.homeList)
