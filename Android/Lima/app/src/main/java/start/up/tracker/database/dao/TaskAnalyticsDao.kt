@@ -31,6 +31,7 @@ interface TaskAnalyticsDao {
             WHERE date =:day
            """
     )
+    // TODO подправить (мне), если надо
     suspend fun getTasksOfDay(day: Long): List<Task>
 
     @Query(
@@ -40,4 +41,12 @@ interface TaskAnalyticsDao {
            """
     )
     suspend fun getAllTasks(): List<TaskAnalytics>
+
+    @Query(
+        """
+        SELECT COUNT(*) 
+        FROM taskAnalytics_table
+    """
+    )
+    suspend fun countTasksAnalytics(): Int
 }

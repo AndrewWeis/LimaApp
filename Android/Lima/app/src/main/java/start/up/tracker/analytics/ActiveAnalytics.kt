@@ -7,8 +7,10 @@ import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.database.dao.TaskToTaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
+import start.up.tracker.entities.TaskToTaskAnalytics
 import start.up.tracker.utils.TimeHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -72,12 +74,13 @@ class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
 ) {
     private var allPrinciples = ArrayList<Principle>()
-    private var activePrinciples = ArrayList<Principle>()
+    //private var activePrinciples = ArrayList<Principle>()
     private var idToPrinciple = HashMap<Int, Principle>()
-    private var taskToAnalyticsTask = HashMap<Int, Int>()
-    private var elementsCounter = 0
 
     var taskDao: TaskDao? = null
+        @Inject set
+
+    var taskToTaskAnalyticsDao: TaskToTaskAnalyticsDao? = null
         @Inject set
 
     init {
@@ -86,7 +89,7 @@ class ActiveAnalytics @Inject constructor(
 
     suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
-        taskToAnalyticsTask.put(task.taskId, ++elementsCounter)
+        addTaskToAnalyticsTask(task.taskId, taskAnalyticsDao.countTasksAnalytics())
     }
 
     suspend fun editTask(task: Task) = withContext(Dispatchers.Default) {
@@ -94,13 +97,15 @@ class ActiveAnalytics @Inject constructor(
     }
 
     suspend fun deleteTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
+        val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = true)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
     suspend fun recoverTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
+        val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
@@ -114,14 +119,16 @@ class ActiveAnalytics @Inject constructor(
     }
 
     private suspend fun finishTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
+        val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val inTime = isFinishedInTime(taskAnalytics)
         val newTaskAnalytics = taskAnalytics.copy(completed = true, completedInTime = inTime)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
     private suspend fun unfinishTask(task: Task) = withContext(Dispatchers.Default) {
-        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToAnalyticsTask[task.taskId]!!)
+        val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
+        val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(completed = false, completedInTime = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
@@ -131,6 +138,29 @@ class ActiveAnalytics @Inject constructor(
         for (task in tasks) {
             taskAnalyticsDao.deleteTaskAnalytics(task)
         }
+    }
+
+    /**
+     * Функция возвращает Map, сопоставляющий активности из TaskTable активность из
+     * TaskAnalyticsTable
+     */
+    private suspend fun getTaskToAnalyticsTaskMap() : HashMap<Int, Int> {
+        val elements = taskToTaskAnalyticsDao?.getAllElements()
+        val taskToAnalyticsTask = HashMap<Int, Int>()
+        if (elements != null) {
+            for (element in elements) {
+                taskToAnalyticsTask[element.from] = element.to
+            }
+        }
+        return taskToAnalyticsTask
+    }
+
+    /**
+     * Добавляем связь активность из TaskTable -> активность из
+     * TaskAnalyticsTable в бд
+     */
+    private suspend fun addTaskToAnalyticsTask(from : Int, to : Int) {
+        taskToTaskAnalyticsDao!!.insertElement(TaskToTaskAnalytics(from, to))
     }
 
     // TODO think of location to get all existing and active principles
@@ -143,9 +173,9 @@ class ActiveAnalytics @Inject constructor(
         //activePrinciples.add(Pareto(taskAnalyticsDao))
     }
 
-    private fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {
+    private suspend fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {
         return TaskAnalytics(
-            id = task.taskId,
+            id = taskAnalyticsDao.countTasksAnalytics() + 1,
             taskId = task.taskId,
             title = task.title,
             day = task.date,

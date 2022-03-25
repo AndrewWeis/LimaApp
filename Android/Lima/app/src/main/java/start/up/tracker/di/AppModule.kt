@@ -50,6 +50,9 @@ object AppModule {
     @Provides
     fun provideTaskAnalyticsDao(db: TaskDatabase) = db.taskAnalyticsDao()
 
+    @Provides
+    fun provideTaskToTaskAnalytics(db: TaskDatabase) = db.taskToTaskAnalyticsDao()
+
     @ApplicationScope
     @Provides
     @Singleton
