@@ -2,6 +2,7 @@ package start.up.tracker.utils
 
 import android.text.format.DateFormat.is24HourFormat
 import start.up.tracker.application.App
+import start.up.tracker.entities.Task
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -149,7 +150,39 @@ object TimeHelper {
         return null
     }
 
-        object DateFormats {
-            const val DD_MMMM: String = "dd-MMMM"
+    fun computeEndDate(task: Task): Long {
+        return if (task.date != null) {
+            if (task.endTimeInMinutes != null) {
+                task.date + task.endTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                task.date + 24 * 60 * 60 * 1000 - 1
+            }
+        } else {
+            if (task.endTimeInMinutes != null) {
+                getCurrentDayInMilliseconds() + task.endTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                getCurrentDayInMilliseconds() + 24 * 60 * 60 * 1000 - 1
+            }
         }
     }
+
+    fun computeStartDate(task: Task): Long {
+        return if (task.date != null) {
+            if (task.startTimeInMinutes != null) {
+                task.date + task.startTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                task.date
+            }
+        } else {
+            if (task.startTimeInMinutes != null) {
+                getCurrentDayInMilliseconds() + task.startTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                getCurrentDayInMilliseconds()
+            }
+        }
+    }
+
+    object DateFormats {
+        const val DD_MMMM: String = "dd-MMMM"
+    }
+}

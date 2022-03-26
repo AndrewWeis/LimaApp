@@ -62,7 +62,8 @@ import javax.inject.Singleton
 уведомление об этом. Необходимость внедрения этой методики стоит под сомнением.
 5)	Избежание многозадачной работы. Многозадачная работа временно снижает интеллектуальные
 способности: было доказано, что IQ падает в среднем на 10 единиц (USA Today). Система будет
-предлагать группировать задачи (привычки, очевидно, нет), если все длятся недлительный период времени (до часу – двух часов) и разбросаны на протяжении нескольких дней.
+предлагать группировать задачи (привычки, очевидно, нет), если все длятся недлительный период времени
+(до часу – двух часов) и разбросаны на протяжении нескольких дней.
 6)	Дробление задачи на этапы. Тоже полезно: увеличивает продуктивность и вероятность успешного
  выполнения задания.
 7)	Метод АБВГД: очередная методика приоритетов. Необходимо сделать – А, следует сделать – Б,
@@ -74,6 +75,7 @@ class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
 ) {
     private var allPrinciples = ArrayList<Principle>()
+
     //private var activePrinciples = ArrayList<Principle>()
     private var idToPrinciple = HashMap<Int, Principle>()
 
@@ -144,7 +146,7 @@ class ActiveAnalytics @Inject constructor(
      * Функция возвращает Map, сопоставляющий активности из TaskTable активность из
      * TaskAnalyticsTable
      */
-    private suspend fun getTaskToAnalyticsTaskMap() : HashMap<Int, Int> {
+    private suspend fun getTaskToAnalyticsTaskMap(): HashMap<Int, Int> {
         val elements = taskToTaskAnalyticsDao?.getAllElements()
         val taskToAnalyticsTask = HashMap<Int, Int>()
         if (elements != null) {
@@ -159,7 +161,7 @@ class ActiveAnalytics @Inject constructor(
      * Добавляем связь активность из TaskTable -> активность из
      * TaskAnalyticsTable в бд
      */
-    private suspend fun addTaskToAnalyticsTask(from : Int, to : Int) {
+    private suspend fun addTaskToAnalyticsTask(from: Int, to: Int) {
         taskToTaskAnalyticsDao!!.insertElement(TaskToTaskAnalytics(from, to))
     }
 
@@ -178,8 +180,8 @@ class ActiveAnalytics @Inject constructor(
             id = taskAnalyticsDao.countTasksAnalytics() + 1,
             taskId = task.taskId,
             title = task.title,
-            day = task.date,
-            date = computeEndDate(task),
+            day = task.date ?: TimeHelper.getCurrentDayInMilliseconds(),
+            date = TimeHelper.computeEndDate(task),
             categoryId = task.categoryId,
             categoryName = task.categoryName,
         )
@@ -189,16 +191,6 @@ class ActiveAnalytics @Inject constructor(
      * The function calculates the exact time of the end of the task.
      * If only day is given, the very end of the day is returned
      */
-    private fun computeEndDate(task: Task): Long? {
-        task.date?.let {
-            task.endTimeInMinutes?.let {
-                return task.date + task.endTimeInMinutes.toLong() * 60 * 1000
-            }
-            return task.date + 24 * 60 * 60 * 1000 - 1
-        }
-
-        return null
-    }
 
     private fun isFinishedInTime(taskAnalytics: TaskAnalytics): Boolean {
         val currentDate = TimeHelper.getCurrentTimeInMilliseconds()
