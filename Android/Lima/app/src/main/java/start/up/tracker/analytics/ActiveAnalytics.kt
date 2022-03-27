@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
+import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TaskIdToTaskAnalyticsIdDao
@@ -179,11 +180,11 @@ class ActiveAnalytics @Inject constructor(
         return TaskAnalytics(
             id = taskAnalyticsDao.countTasksAnalytics() + 1,
             taskId = task.taskId,
-            title = task.title,
+            title = task.taskTitle,
             day = task.date ?: TimeHelper.getCurrentDayInMilliseconds(),
             date = TimeHelper.computeEndDate(task),
-            categoryId = task.categoryId,
-            categoryName = task.categoryName,
+            projectId = task.projectId,
+            projectName = task.projectName,
         )
     }
 

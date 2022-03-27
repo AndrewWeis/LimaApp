@@ -2,11 +2,11 @@ package start.up.tracker.analytics.principles
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import start.up.tracker.analytics.Principle
 import start.up.tracker.analytics.entities.AnalyticsMessage
+import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
-import java.util.ArrayList
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 

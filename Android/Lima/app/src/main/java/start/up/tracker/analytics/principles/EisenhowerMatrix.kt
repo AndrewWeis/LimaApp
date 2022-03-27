@@ -1,10 +1,10 @@
 package start.up.tracker.analytics.principles
 
-import start.up.tracker.analytics.Principle
 import start.up.tracker.analytics.entities.AnalyticsMessage
+import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
-import java.util.ArrayList
+import java.util.*
 import javax.inject.Inject
 
 class EisenhowerMatrix @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Principle {

@@ -5,4 +5,4 @@ class AnalyticsMessage(
     var title: String,
     var message: String,
     var messageDetailed: String
-    )
+)

@@ -1,8 +1,8 @@
-package start.up.tracker.analytics
+package start.up.tracker.analytics.principles.base
 
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.entities.Task
-import java.util.ArrayList
+import java.util.*
 
 interface Principle {
     fun setStatus(status: Boolean)
