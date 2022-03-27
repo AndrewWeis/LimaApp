@@ -11,12 +11,11 @@ import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.resources.ResourcesUtils
 import java.util.*
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Pareto @Inject constructor(
-    private val taskAnalyticsDao: TaskAnalyticsDao,
+class Pareto(
+    private val taskAnalyticsDao: TaskAnalyticsDao
 ) : Principle {
 
     private val incompatiblePrinciplesIds =
@@ -83,14 +82,22 @@ class Pareto @Inject constructor(
             return AnalyticsMessage(
                 principleId = TechniquesIds.PARETO,
                 title = ResourcesUtils.getString(R.string.pareto_message_title),
-                message = ResourcesUtils.getString(R.string.pareto_message_body, tasksOfDay.size, priorityCount),
+                message = ResourcesUtils.getString(
+                    R.string.pareto_message_body,
+                    tasksOfDay.size,
+                    priorityCount
+                ),
                 messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
             )
         } else if (tasksOfDay.size > 8 && (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2) {
             return AnalyticsMessage(
                 principleId = TechniquesIds.PARETO,
                 title = ResourcesUtils.getString(R.string.pareto_message_title),
-                message = ResourcesUtils.getString(R.string.pareto_message_body, tasksOfDay.size, priorityCount),
+                message = ResourcesUtils.getString(
+                    R.string.pareto_message_body,
+                    tasksOfDay.size,
+                    priorityCount
+                ),
                 messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
             )
         }
