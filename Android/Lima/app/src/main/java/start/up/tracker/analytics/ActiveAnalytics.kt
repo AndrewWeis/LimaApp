@@ -81,8 +81,6 @@ class ActiveAnalytics @Inject constructor(
     private val techniquesDao: TechniquesDao,
 ) {
 
-    private var activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
-
     private var principlesMap: HashMap<Int, Principle> = hashMapOf(
         TechniquesIds.PARETO to Pareto(taskAnalyticsDao),
         TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix(taskAnalyticsDao)
@@ -196,8 +194,9 @@ class ActiveAnalytics @Inject constructor(
      * @param id Айди включаемого принципа
      * @return можно или нельзя включить
      */
-    fun managerCheckCompatibility(id: Int): Boolean {
+    suspend fun managerCheckCompatibility(id: Int): Boolean {
         val principle = principlesMap[id]
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
         return principle!!.canBeEnabled(activePrinciplesIds)
     }
 
@@ -229,7 +228,7 @@ class ActiveAnalytics @Inject constructor(
      */
     suspend fun managerEditTask(task: Task): List<AnalyticsMessage> {
         val analyticsMessages = ArrayList<AnalyticsMessage>()
-
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
         // будем вызывать логику каждого из методов при необходимости: при редактировании таска
         for (activePrincipleId in activePrinciplesIds) {
             val res = principlesMap[activePrincipleId]!!.logicEditTask(task)
