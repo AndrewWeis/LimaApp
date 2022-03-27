@@ -10,8 +10,6 @@ interface Principle {
     fun getStatus(): Boolean
     fun setNotifications(notifications: Boolean)
     fun getNotifications(): Boolean
-    fun getTimeToRead(): Int?
-    fun getReference(): String?
     fun getName(): String?
     fun getId(): Int?
     fun getIncompatiblePrinciplesIds(): ArrayList<Int>?

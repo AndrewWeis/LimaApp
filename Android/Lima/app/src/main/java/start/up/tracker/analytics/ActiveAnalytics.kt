@@ -7,10 +7,10 @@ import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
-import start.up.tracker.database.dao.TaskToTaskAnalyticsDao
+import start.up.tracker.database.dao.TaskIdToTaskAnalyticsIdDao
 import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
-import start.up.tracker.entities.TaskToTaskAnalytics
+import start.up.tracker.entities.TaskIdToTaskAnalyticsId
 import start.up.tracker.utils.TimeHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -82,7 +82,7 @@ class ActiveAnalytics @Inject constructor(
     var taskDao: TaskDao? = null
         @Inject set
 
-    var taskToTaskAnalyticsDao: TaskToTaskAnalyticsDao? = null
+    var taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao? = null
         @Inject set
 
     init {
@@ -147,7 +147,7 @@ class ActiveAnalytics @Inject constructor(
      * TaskAnalyticsTable
      */
     private suspend fun getTaskToAnalyticsTaskMap(): HashMap<Int, Int> {
-        val elements = taskToTaskAnalyticsDao?.getAllElements()
+        val elements = taskIdToTaskAnalyticsIdDao?.getAllElements()
         val taskToAnalyticsTask = HashMap<Int, Int>()
         if (elements != null) {
             for (element in elements) {
@@ -162,7 +162,7 @@ class ActiveAnalytics @Inject constructor(
      * TaskAnalyticsTable в бд
      */
     private suspend fun addTaskToAnalyticsTask(from: Int, to: Int) {
-        taskToTaskAnalyticsDao!!.insertElement(TaskToTaskAnalytics(from, to))
+        taskIdToTaskAnalyticsIdDao!!.insertElement(TaskIdToTaskAnalyticsId(from, to))
     }
 
     // TODO think of location to get all existing and active principles

@@ -14,8 +14,6 @@ import javax.inject.Singleton
 class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Principle {
     private val id = 1  // пока указываем конкретный id
     private val name = "Pareto"
-    private val timeToRead = 2
-    private val reference = "www.bbc.com"
     private val incompatiblePrinciplesIds = arrayListOf(2)
 
     private var status: Boolean = false
@@ -57,14 +55,6 @@ class Pareto @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Princ
 
     override fun getId(): Int {
         return id
-    }
-
-    override fun getTimeToRead(): Int {
-        return timeToRead
-    }
-
-    override fun getReference(): String {
-        return reference
     }
 
     override fun getIncompatiblePrinciplesIds(): ArrayList<Int> {

@@ -13,7 +13,7 @@ import javax.inject.Provider
 
 @Database(
     entities = [Task::class, Category::class, DayStat::class, Article::class, TaskAnalytics::class,
-               TaskToTaskAnalytics::class],
+               TaskIdToTaskAnalyticsId::class],
     version = 1
 )
 abstract class TaskDatabase : RoomDatabase() {
@@ -26,7 +26,7 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun calendarTasksDao(): CalendarTasksDao
     abstract fun upcomingTasksDao(): UpcomingTasksDao
     abstract fun taskAnalyticsDao(): TaskAnalyticsDao
-    abstract fun taskToTaskAnalyticsDao(): TaskToTaskAnalyticsDao
+    abstract fun taskIdToTaskAnalyticsIdDao(): TaskIdToTaskAnalyticsIdDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,

@@ -14,7 +14,6 @@ data class Task(
     val description: String = "",
     val priority: Int = 0,
     val completed: Boolean = false,
-    //val completedInTime: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     val startTimeInMinutes: Int? = null,
     val endTimeInMinutes: Int? = null,

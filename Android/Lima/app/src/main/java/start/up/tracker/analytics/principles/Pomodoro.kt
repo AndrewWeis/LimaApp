@@ -13,8 +13,6 @@ import javax.inject.Inject
 class Pomodoro @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Principle {
     private val id = 1  // пока указываем конкретный id
     private val name = "Pomodoro"
-    private val timeToRead = 5
-    private val reference = "www.bbc.com"
     private val incompatiblePrinciplesIds = arrayListOf(0)
 
     private var status: Boolean = false
@@ -56,14 +54,6 @@ class Pomodoro @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Pri
 
     override fun getId(): Int {
         return id
-    }
-
-    override fun getTimeToRead(): Int {
-        return timeToRead
-    }
-
-    override fun getReference(): String {
-        return reference
     }
 
     override fun getIncompatiblePrinciplesIds(): ArrayList<Int> {

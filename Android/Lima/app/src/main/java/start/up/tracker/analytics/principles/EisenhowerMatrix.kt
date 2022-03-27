@@ -11,8 +11,6 @@ class EisenhowerMatrix @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDa
 
     private val id = 2
     private val name = "Eisenhower Matrix"
-    private val timeToRead = 2
-    private val reference = "www.bbc.com"
     private val incompatiblePrinciplesIds = arrayListOf(1)
 
     private var status: Boolean = false
@@ -49,14 +47,6 @@ class EisenhowerMatrix @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDa
 
     override fun getId(): Int {
         return id
-    }
-
-    override fun getTimeToRead(): Int {
-        return timeToRead
-    }
-
-    override fun getReference(): String {
-        return reference
     }
 
     override fun getIncompatiblePrinciplesIds(): ArrayList<Int> {

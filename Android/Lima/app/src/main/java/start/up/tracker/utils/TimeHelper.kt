@@ -150,6 +150,11 @@ object TimeHelper {
         return null
     }
 
+    /**
+     * Метод вычисляет дату окончания активности в миллисекундах
+     * Если время окончания в минутах вно не указано, то берётся за основу
+     * конец дня
+     */
     fun computeEndDate(task: Task): Long {
         return if (task.date != null) {
             if (task.endTimeInMinutes != null) {
@@ -166,6 +171,11 @@ object TimeHelper {
         }
     }
 
+    /**
+     * Метод вычисляет дату начала активности в миллисекундах
+     * Если время начала в минутах вно не указано, то берётся за основу
+     * начало дня
+     */
     fun computeStartDate(task: Task): Long {
         return if (task.date != null) {
             if (task.startTimeInMinutes != null) {
