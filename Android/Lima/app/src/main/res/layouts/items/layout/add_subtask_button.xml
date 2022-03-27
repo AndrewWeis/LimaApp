@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/M_H56"
+    android:orientation="horizontal">
+
+    <ImageView
+        style="@style/W32_H32"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/secondaryDarkColor" />
+
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/RobotoRegular.SecondaryDark.Size14.MW"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/button_add_subtask" />
+
+</LinearLayout>

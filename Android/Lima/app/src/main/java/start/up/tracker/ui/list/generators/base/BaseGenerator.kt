@@ -15,7 +15,7 @@ open class BaseGenerator {
      * @param settings  настройки
      * @return элемент списка
      */
-    protected fun createListItem(id: String, type: ListItemTypes, data: Any?, settings: Settings): ListItem {
+    protected fun createListItem(id: String?, type: ListItemTypes?, data: Any?, settings: Settings): ListItem {
         val listItem: ListItem = createListItem(id, type, data)
         return listItem.copy(settings = settings)
     }
@@ -28,7 +28,7 @@ open class BaseGenerator {
      * @param data     значение
      * @return элемент списка
      */
-    protected fun createListItem(id: String, type: ListItemTypes, data: Any?): ListItem {
+    protected fun createListItem(id: String?, type: ListItemTypes?, data: Any?): ListItem {
         return ListItem(
             id = id,
             type = type,

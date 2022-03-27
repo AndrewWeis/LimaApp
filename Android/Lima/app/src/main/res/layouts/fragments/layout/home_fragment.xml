@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/MM">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_list"
+        style="@style/MM"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_project_fab"
+        style="@style/WW"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:contentDescription="@string/fab"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

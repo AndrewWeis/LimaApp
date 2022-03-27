@@ -6,7 +6,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,14 +18,12 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.ProjectsTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.list.adapters.tasks.TasksAdapter
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
+import start.up.tracker.ui.list.adapters.tasks.TaskAdapter
 import start.up.tracker.ui.list.generators.tasks.TasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.onQueryTextChanged
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 
 @AndroidEntryPoint
 class ProjectTasksFragment :
@@ -37,7 +34,7 @@ class ProjectTasksFragment :
 
     private var binding: ProjectTasksFragmentBinding? = null
 
-    private lateinit var adapter: TasksAdapter
+    private lateinit var adapter: TaskAdapter
     private var listExtension: ListExtension? = null
     private val generator: TasksGenerator = TasksGenerator()
 
@@ -49,7 +46,6 @@ class ProjectTasksFragment :
 
         initAdapter()
         initListeners()
-        initResultListeners()
         initObservers()
         initTaskEventListener()
 
@@ -101,28 +97,24 @@ class ProjectTasksFragment :
         viewModel.tasksEvent.collect { event ->
             when (event) {
                 is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
 
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = ProjectTasksFragmentDirections.actionProjectTasksToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = viewModel.categoryId
+                        projectId = viewModel.projectId
                     )
                     navigateTo(action)
                 }
 
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = ProjectTasksFragmentDirections.actionProjectTasksToAddEditTask(
-                        event.task,
-                        ResourcesUtils.getString(R.string.title_edit_task),
-                        viewModel.categoryId
+                        task = event.task,
+                        title = ResourcesUtils.getString(R.string.title_edit_task),
+                        projectId = viewModel.projectId
                     )
                     navigateTo(action)
-                }
-
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
                 }
 
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
@@ -136,13 +128,6 @@ class ProjectTasksFragment :
     private fun initListeners() {
         binding?.addTaskFab?.setOnClickListener {
             viewModel.onAddNewTaskClick()
-        }
-    }
-
-    private fun initResultListeners() {
-        setFragmentResultListener(RequestCodes.EDIT_TASK) { _, bundle ->
-            val result = bundle.getInt(ResultCodes.EDIT_TASK)
-            viewModel.onAddEditResult(result)
         }
     }
 
@@ -175,15 +160,15 @@ class ProjectTasksFragment :
     }
 
     private fun initAdapter() {
-        adapter = TasksAdapter(
+        adapter = TaskAdapter(
             layoutInflater = layoutInflater,
             listener = this
         )
 
         listExtension = ListExtension(binding?.projectTasksList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
 
-        listExtension?.attachSwipeToAdapter(adapter, viewModel)
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 }

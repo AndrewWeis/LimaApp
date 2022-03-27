@@ -1,2 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <style name="RobotoRegular">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="RobotoRegular.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="RobotoRegular.SecondaryDark">
+        <item name="android:textColor">@color/secondaryDarkColor</item>
+    </style>
+
+    <style name="RobotoRegular.SecondaryDark.Size14">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size12">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size14">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size16">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size20">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size12.Zero_W">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size12.MW">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size12.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size14.MW">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size14.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size14.Zero_W">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size14.M_H20">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">20dp</item>
+    </style>
+
+    <style name="RobotoRegular.SecondaryDark.Size14.MW" >
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size16.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size20.Zero_W">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="RobotoRegular.Black.Size16.Zero_W">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+</resources>

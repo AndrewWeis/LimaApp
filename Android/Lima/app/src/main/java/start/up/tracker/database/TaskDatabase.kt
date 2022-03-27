@@ -5,23 +5,30 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import start.up.tracker.R
 import start.up.tracker.database.dao.*
 import start.up.tracker.di.ApplicationScope
 import start.up.tracker.entities.*
+import start.up.tracker.utils.resources.ResourcesUtils
 import javax.inject.Inject
 import javax.inject.Provider
 
 @Database(
-    entities = [Task::class, Category::class, DayStat::class, Article::class, TaskAnalytics::class,
-               TaskIdToTaskAnalyticsId::class],
+    entities = [
+        Task::class,
+        Project::class,
+        DayStat::class,
+        Technique::class,
+        TaskIdToTaskAnalyticsId::class,
+    ],
     version = 1
 )
 abstract class TaskDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
-    abstract fun articlesDao(): ArticlesDao
+    abstract fun techniqueDao(): TechniquesDao
     abstract fun analyticsDao(): AnalyticsDao
-    abstract fun categoriesDao(): CategoriesDao
+    abstract fun projectsDao(): ProjectsDao
     abstract fun todayTasksDao(): TodayTasksDao
     abstract fun calendarTasksDao(): CalendarTasksDao
     abstract fun upcomingTasksDao(): UpcomingTasksDao
@@ -35,16 +42,16 @@ abstract class TaskDatabase : RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
 
-            val categoriesDao = database.get().categoriesDao()
-            val articlesDao = database.get().articlesDao()
+            val projectsDao = database.get().projectsDao()
+            val techniqueDao = database.get().techniqueDao()
 
             applicationScope.launch {
 
-                // DON'T DELETE. IT'S DEFAULT CATEGORY
-                categoriesDao.insertCategory(Category(name = "Inbox"))
+                // DON'T DELETE. IT'S DEFAULT PROJECT
+                projectsDao.insertProject(Project(projectTitle = ResourcesUtils.getString(R.string.inbox)))
 
-                val articles = ArticleStorage.getArticles().toTypedArray()
-                articlesDao.insertAllArticles(*articles)
+                val techniques = TechniquesStorage.getTechniques().toTypedArray()
+                techniqueDao.insertAllTechniques(*techniques)
             }
         }
     }

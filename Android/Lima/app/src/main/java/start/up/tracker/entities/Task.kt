@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Task(
     @PrimaryKey(autoGenerate = false)
     val taskId: Int = 0,
-    val title: String = "",
+    val taskTitle: String = "",
     val description: String = "",
     val priority: Int = 0,
     val completed: Boolean = false,
@@ -19,10 +19,15 @@ data class Task(
     val endTimeInMinutes: Int? = null,
     val date: Long? = null,
 
+    // для определения к какому таску относится текущая
+    val parentTaskId: Int = -1,
+    val subtasksNumber: Int = 0,
+    val completedSubtasksNumber: Int = 0,
+
     // todo (maybe add task id to day stat)
     val wasCompleted: Boolean = false,
 
-    val categoryId: Int = 1, // 1 - inbox
-    val categoryName: String? = null,
-    val categoryColor: Int? = null,
+    val projectId: Int = -1,
+    val projectName: String? = null,
+    val projectColor: Int? = null,
 ) : Parcelable

@@ -7,6 +7,7 @@ import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
+import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.TasksEvent
 
 abstract class BaseTasksOperationsViewModel(
@@ -16,8 +17,10 @@ abstract class BaseTasksOperationsViewModel(
     private val activeAnalytics: ActiveAnalytics
 ) : BaseTasksEventsViewModel(preferencesManager) {
 
-    fun onUndoDeleteTaskClick(task: Task) = viewModelScope.launch {
+    fun onUndoDeleteTaskClick(task: Task, subtasks: List<Task>) = viewModelScope.launch {
         taskDao.insertTask(task)
+        taskDao.insertSubtasks(subtasks)
+
         activeAnalytics.recoverTask(task)
     }
 
@@ -25,9 +28,6 @@ abstract class BaseTasksOperationsViewModel(
         tasksEventChannel.send(TasksEvent.NavigateToEditTaskScreen(task))
     }
 
-    /**
-     * Calling task deletion through ticks
-     */
     fun onTaskCheckedChanged(
         task: Task,
     ) = viewModelScope.launch {
@@ -35,15 +35,20 @@ abstract class BaseTasksOperationsViewModel(
             analytics.addTaskToStatistic()
         }
         taskDao.updateTask(task.copy(wasCompleted = true))
+
         activeAnalytics.updateStatus(task)
     }
 
-    /**
-     * Calling task deletion through swipe
-     */
-    fun onTaskSwiped(task: Task) = viewModelScope.launch {
+    fun onTaskSwiped(listItem: ListItem) = viewModelScope.launch {
+        val task = listItem.data as Task
+
         taskDao.deleteTask(task)
+
+        val subtaskToRestore = taskDao.getSubtasksToRestore(task.taskId)
+        taskDao.deleteSubtasks(task.taskId)
+
         activeAnalytics.deleteTask(task)
-        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task))
+
+        tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task, subtaskToRestore))
     }
 }

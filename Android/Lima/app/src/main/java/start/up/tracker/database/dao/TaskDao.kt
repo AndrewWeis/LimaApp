@@ -3,7 +3,6 @@ package start.up.tracker.database.dao
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.entities.Task
-import start.up.tracker.entities.TaskAnalytics
 
 /**
  * A suspending function is simply a function that can be paused and resumed at a later time.
@@ -21,42 +20,77 @@ interface TaskDao {
         """
        SELECT * 
        FROM task_table
-       JOIN categories_table ON task_table.categoryId = categories_table.id
-       WHERE categories_table.id = :categoryId AND
+       JOIN projects_table ON task_table.projectId = projects_table.projectId
+       WHERE projects_table.projectId = :projectId AND
+       task_table.parentTaskId == -1 AND
        (completed != :hideCompleted OR completed = 0) AND 
-       task_table.title LIKE '%' || :searchQuery || '%' 
+       task_table.taskTitle LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
        ASC, created"""
     )
-    fun getTasksOfCategory(searchQuery: String, hideCompleted: Boolean, categoryId: Int): Flow<List<Task>>
+    fun getTasksOfProject(
+        searchQuery: String,
+        hideCompleted: Boolean,
+        projectId: Int
+    ): Flow<List<Task>>
+
+    @Query(
+        """
+       SELECT * 
+       FROM task_table
+       JOIN projects_table ON task_table.projectId = projects_table.projectId
+       WHERE projects_table.projectId = :projectId
+       """
+    )
+    fun getTasksOfProject(projectId: Int): List<Task>
 
     @Query(
         """
         SELECT COUNT(*) 
         FROM task_table 
-        JOIN categories_table ON task_table.categoryId = categories_table.id
-        WHERE categories_table.id = :categoryId AND
-        (completed != :hideCompleted OR completed = 0)
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
+        WHERE projects_table.projectId = 1 AND
+        parentTaskId == -1 AND
+        completed == 0
     """
     )
-    suspend fun countTasksOfCategory(categoryId: Int, hideCompleted: Boolean): Int
+    fun countTasksOfInbox(): Flow<Int>
 
     @Query(
         """
-        SELECT COUNT(*)
+        SELECT COUNT(*) 
         FROM task_table 
-        JOIN categories_table ON task_table.categoryId = categories_table.id
-        WHERE categories_table.id = 1 AND
-        (completed != :hideCompleted OR completed = 0)
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
+        WHERE projects_table.projectId = :projectId AND
+        parentTaskId == -1 AND
+        completed == 0
     """
     )
-    fun countTasksOfInbox(hideCompleted: Boolean): Flow<Int>
+    suspend fun countTasksOfProject(projectId: Int): Int
+
+    @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
+    fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
+
+    @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
+    suspend fun getSubtasksToRestore(id: Int): List<Task>
+
+    @Query("UPDATE task_table SET subtasksNumber = :number WHERE taskId = :taskId")
+    suspend fun updateSubtasksNumber(number: Int, taskId: Int)
+
+    @Query("UPDATE task_table SET completedSubtasksNumber = :number WHERE taskId = :taskId")
+    suspend fun updateCompletedSubtasksNumber(number: Int, taskId: Int)
 
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
 
+    @Query("DELETE FROM task_table WHERE projectId =:projectId")
+    suspend fun deleteTaskOfProject(projectId: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertSubtasks(subtasks: List<Task>)
 
     @Update
     suspend fun updateTask(task: Task)
@@ -66,4 +100,7 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE completed = 1")
     suspend fun deleteCompletedTasks()
+
+    @Query("DELETE FROM task_table WHERE parentTaskId = :taskId")
+    suspend fun deleteSubtasks(taskId: Int)
 }

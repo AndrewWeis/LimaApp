@@ -1,6 +1,5 @@
 package start.up.tracker.ui.activities
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.categoryFragment,
+                R.id.homeFragment,
                 R.id.analyticsFragment,
                 R.id.settingsFragment
             )
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.categoryFragment -> showBottomNav()
+                R.id.homeFragment -> showBottomNav()
                 R.id.analyticsFragment -> showBottomNav()
                 R.id.settingsFragment -> showBottomNav()
                 else -> hideBottomNav()

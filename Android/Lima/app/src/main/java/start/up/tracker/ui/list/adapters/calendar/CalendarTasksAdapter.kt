@@ -7,9 +7,9 @@ import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.list.adapters.base.BaseAdapter
 import start.up.tracker.ui.list.diff_utils.tasks.TaskDiffUtils
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.CalendarTaskViewHolder
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 
 class CalendarTasksAdapter(
     layoutInflater: LayoutInflater,
@@ -56,10 +56,6 @@ class CalendarTasksAdapter(
         getItems().clear()
         getItems().addAll(items)
         diffResult.dispatchUpdatesTo(this)
-    }
-
-    fun addListItems(listItems: List<ListItem>) {
-        updateItems(listItems)
     }
 
     private companion object {

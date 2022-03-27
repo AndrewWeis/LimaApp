@@ -16,6 +16,9 @@ enum class ListItemTypes {
     // ListItem c RadioGroup
     RADIO_GROUP,
 
+    // ListItem c chip
+    CHIP,
+
     // ListItem с возможностью перехода (без выбора)
     LINK,
 
@@ -42,4 +45,13 @@ enum class ListItemTypes {
 
     // ListItem с элементом задача
     TASK,
+
+    // ListItem с элементом техника
+    TECHNIQUE,
+
+    // ListItem с элементов project
+    PROJECT,
+
+    // ListItem с элементом home block
+    HOME_BLOCK,
 }

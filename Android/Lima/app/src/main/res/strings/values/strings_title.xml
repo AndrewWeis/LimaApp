@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="title_task_data">Task Data</string>
-    <string name="title_task_priority">Priority</string>
-    <string name="title_task_category">Category</string>
+    <string name="title_task_priority">Choose Priority</string>
+    <string name="title_task_project">Choose Project</string>
     <string name="title_task_time">Time</string>
     <string name="title_task_date">Date</string>
+    <string name="title_task_subtasks">Subtasks</string>
 
     <string name="title_add_task">Add task</string>
     <string name="title_edit_task">Edit task</string>
+
+    <string name="title_projects">Projects</string>
+
+    <string name="title_add_project">Add project</string>
 </resources>

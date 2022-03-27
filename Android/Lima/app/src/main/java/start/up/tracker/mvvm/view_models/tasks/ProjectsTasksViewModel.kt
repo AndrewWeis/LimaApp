@@ -25,7 +25,7 @@ class ProjectsTasksViewModel @Inject constructor(
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     val searchQuery = state.getLiveData(StateHandleKeys.SEARCH_QUERY, "")
-    var categoryId = state.get<Int>(StateHandleKeys.CATEGORY_ID) ?: -1
+    var projectId = state.get<Int>(StateHandleKeys.PROJECT_ID) ?: -1
 
     private val projectTasksFlow = combine(
         searchQuery.asFlow(),
@@ -33,7 +33,7 @@ class ProjectsTasksViewModel @Inject constructor(
     ) { query, hideCompleted ->
         Pair(query, hideCompleted)
     }.flatMapLatest { (query, hideCompleted) ->
-        taskDao.getTasksOfCategory(query, hideCompleted, categoryId)
+        taskDao.getTasksOfProject(query, hideCompleted, projectId)
     }
 
     val projectTasks = projectTasksFlow.asLiveData()

@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,14 +17,12 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.list.adapters.upcoming.UpcomingTasksAdapter
 import start.up.tracker.ui.list.generators.upcoming.UpcomingTasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.resources.ResourcesUtils
-import start.up.tracker.utils.screens.RequestCodes
-import start.up.tracker.utils.screens.ResultCodes
 
 @AndroidEntryPoint
 class UpcomingFragment :
@@ -46,7 +43,6 @@ class UpcomingFragment :
 
         initAdapter()
         initListeners()
-        initResultListeners()
         initObservers()
         initTaskEventListeners()
 
@@ -99,13 +95,13 @@ class UpcomingFragment :
         viewModel.tasksEvent.collect { event ->
             when (event) {
                 is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
 
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
@@ -113,14 +109,10 @@ class UpcomingFragment :
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_edit_task),
-                        categoryId = event.task.categoryId,
+                        projectId = event.task.projectId,
                         task = event.task
                     )
                     navigateTo(action)
-                }
-
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
                 }
 
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
@@ -143,13 +135,6 @@ class UpcomingFragment :
         }
     }
 
-    private fun initResultListeners() {
-        setFragmentResultListener(RequestCodes.EDIT_TASK) { _, bundle ->
-            val result = bundle.getInt(ResultCodes.EDIT_TASK)
-            viewModel.onAddEditResult(result)
-        }
-    }
-
     private fun initAdapter() {
         adapter = UpcomingTasksAdapter(
             layoutInflater = layoutInflater,
@@ -157,9 +142,9 @@ class UpcomingFragment :
         )
 
         listExtension = ListExtension(binding?.projectTasksList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
 
-        listExtension?.attachSwipeToAdapter(adapter, viewModel)
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 }

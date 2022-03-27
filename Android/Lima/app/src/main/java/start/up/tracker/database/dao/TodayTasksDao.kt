@@ -13,16 +13,17 @@ interface TodayTasksDao {
         SELECT COUNT(*)
         FROM task_table
         WHERE date = :today AND
-        (completed != :hideCompleted OR completed = 0)
+        parentTaskId == -1 AND
+        (completed == 0)
     """
     )
-    fun countTodayTasks(today: Long, hideCompleted: Boolean): Flow<Int>
+    fun countTodayTasks(today: Long): Flow<Int>
 
     @Query(
         """
         SELECT *
         FROM task_table
-        JOIN categories_table ON task_table.categoryId = categories_table.id
+        JOIN projects_table ON task_table.projectId = projects_table.projectId
         WHERE task_table.date = :today
         ORDER BY priority 
         ASC

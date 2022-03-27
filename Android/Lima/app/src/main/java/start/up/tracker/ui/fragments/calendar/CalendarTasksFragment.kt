@@ -15,12 +15,12 @@ import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
 import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
 import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter
 import start.up.tracker.ui.list.generators.calendar.CalendarTasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.convertDpToPx
 
@@ -88,19 +88,19 @@ class CalendarTasksFragment :
     }
 
     private fun showTasks(tasks: List<Task>) {
-        adapter.addListItems(generator.createListItems(tasks))
+        adapter.updateItems(generator.createListItems(tasks))
     }
 
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
                 is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Add new task",
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
@@ -108,13 +108,10 @@ class CalendarTasksFragment :
                     val task = event.task
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Edit task",
-                        categoryId = event.task.categoryId,
+                        projectId = event.task.projectId,
                         task = task
                     )
                     navigateTo(action)
-                }
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
                 }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
@@ -138,7 +135,7 @@ class CalendarTasksFragment :
         )
 
         listExtension = ListExtension(binding?.calendarList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
     }
 

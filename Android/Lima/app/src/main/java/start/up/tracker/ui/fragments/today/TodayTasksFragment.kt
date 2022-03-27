@@ -17,11 +17,11 @@ import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.BaseTasksFragment
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
-import start.up.tracker.ui.list.adapters.tasks.TasksAdapter
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
+import start.up.tracker.ui.list.adapters.tasks.TaskAdapter
 import start.up.tracker.ui.list.generators.tasks.TasksGenerator
-import start.up.tracker.ui.list.view_holders.OnTaskClickListener
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.resources.ResourcesUtils
 
 @AndroidEntryPoint
@@ -33,7 +33,7 @@ class TodayTasksFragment :
 
     private var binding: FragmentTodayTasksBinding? = null
 
-    private lateinit var adapter: TasksAdapter
+    private lateinit var adapter: TaskAdapter
     private var listExtension: ListExtension? = null
     private val generator: TasksGenerator = TasksGenerator()
 
@@ -95,25 +95,22 @@ class TodayTasksFragment :
         viewModel.tasksEvent.collect { event ->
             when (event) {
                 is TasksEvent.ShowUndoDeleteTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task) }
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_add_task),
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = ResourcesUtils.getString(R.string.title_edit_task),
-                        categoryId = event.task.categoryId,
+                        projectId = event.task.projectId,
                         task = event.task
                     )
                     navigateTo(action)
-                }
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
                 }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
@@ -137,15 +134,15 @@ class TodayTasksFragment :
     }
 
     private fun initAdapter() {
-        adapter = TasksAdapter(
+        adapter = TaskAdapter(
             layoutInflater = layoutInflater,
             listener = this
         )
 
         listExtension = ListExtension(binding?.todayTasksList)
-        listExtension?.setLayoutManager()
+        listExtension?.setVerticalLayoutManager()
         listExtension?.setAdapter(adapter)
 
-        listExtension?.attachSwipeToAdapter(adapter, viewModel)
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 }

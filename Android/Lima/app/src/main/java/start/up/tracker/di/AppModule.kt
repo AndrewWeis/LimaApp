@@ -30,13 +30,13 @@ object AppModule {
     fun provideTaskDao(db: TaskDatabase) = db.taskDao()
 
     @Provides
-    fun provideArticleDao(db: TaskDatabase) = db.articlesDao()
+    fun provideTechniquesDao(db: TaskDatabase) = db.techniqueDao()
 
     @Provides
     fun provideAnalyticsDao(db: TaskDatabase) = db.analyticsDao()
 
     @Provides
-    fun provideCategoriesDao(db: TaskDatabase) = db.categoriesDao()
+    fun provideProjectsDao(db: TaskDatabase) = db.projectsDao()
 
     @Provides
     fun provideTodayTasksDao(db: TaskDatabase) = db.todayTasksDao()

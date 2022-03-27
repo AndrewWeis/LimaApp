@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/MM"
     android:layout_marginStart="@dimen/spacing_normal"
     android:layout_marginEnd="@dimen/spacing_normal"
     tools:context=".ui.fragments.analytics.AnalyticsMonthFragment">
@@ -11,8 +10,7 @@
 
     <com.anychart.AnyChartView
         android:id="@+id/line_chart_month"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+        style="@style/M_H250"
         android:layout_marginTop="@dimen/spacing_normal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

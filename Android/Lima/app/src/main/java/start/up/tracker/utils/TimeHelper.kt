@@ -132,6 +132,17 @@ object TimeHelper {
     }
 
     /**
+     * Получить дату в виде строки вида [DateFormats]
+     *
+     * @param format вид даты
+     * @return форматированная дата
+     */
+    fun getTodayAsString(format: String): String {
+        val currentDayMillis = TimeHelper.getCurrentDayInMilliseconds()
+        return formatMillisecondToDate(currentDayMillis, format) ?: ""
+    }
+
+    /**
      * Найти разницу в днях между двумя датами.
      *
      * @param date1 первая дата
@@ -155,6 +166,7 @@ object TimeHelper {
      * Если время окончания в минутах вно не указано, то берётся за основу
      * конец дня
      */
+    // todo(убрать лишнее как прийдет время)
     fun computeEndDate(task: Task): Long {
         return if (task.date != null) {
             if (task.endTimeInMinutes != null) {
@@ -176,6 +188,7 @@ object TimeHelper {
      * Если время начала в минутах вно не указано, то берётся за основу
      * начало дня
      */
+    // todo(убрать лишнее как прийдет время)
     fun computeStartDate(task: Task): Long {
         return if (task.date != null) {
             if (task.startTimeInMinutes != null) {
@@ -194,5 +207,6 @@ object TimeHelper {
 
     object DateFormats {
         const val DD_MMMM: String = "dd-MMMM"
+        const val DD_MMM_EEEE: String = "dd MMM, EEEE"
     }
 }

@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/categoryFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/addEditTaskFragment"
         android:name="start.up.tracker.ui.fragments.edit_task.EditTaskFragment"
         android:label="{title}"
-        tools:layout="@layout/edit_task_fragment_old">
+        tools:layout="@layout/edit_task_fragment">
         <argument
             android:name="task"
             android:defaultValue="@null"
@@ -19,9 +19,16 @@
             android:name="title"
             app:argType="string" />
         <argument
-            android:name="categoryId"
+            android:name="projectId"
             android:defaultValue="-1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_addEditTask_self"
+            app:destination="@id/addEditTaskFragment" />
+        <argument
+            android:name="parentTaskId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -29,31 +36,31 @@
         android:label="Analytics"
         tools:layout="@layout/fragment_analytics" />
     <fragment
-        android:id="@+id/categoryFragment"
-        android:name="start.up.tracker.ui.fragments.categories.CategoriesFragment"
+        android:id="@+id/homeFragment"
+        android:name="start.up.tracker.ui.fragments.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_categories">
+        tools:layout="@layout/home_fragment">
         <action
-            android:id="@+id/action_category_to_projectTasks"
+            android:id="@+id/action_project_to_projectTasks"
             app:destination="@id/projectTasksFragment" />
         <action
-            android:id="@+id/action_category_to_addCategory"
-            app:destination="@id/addCategoryFragment" />
+            android:id="@+id/action_project_to_addProject"
+            app:destination="@id/addProjectFragment" />
         <action
-            android:id="@+id/action_category_to_today"
+            android:id="@+id/action_project_to_today"
             app:destination="@id/todayFragment" />
         <action
-            android:id="@+id/action_category_to_upcoming"
+            android:id="@+id/action_project_to_upcoming"
             app:destination="@id/upcomingFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="start.up.tracker.ui.fragments.settings.SettingsFragment"
         android:label="Settings"
-        tools:layout="@layout/fragment_settings" >
+        tools:layout="@layout/settings_fragment" >
         <action
-            android:id="@+id/action_settings_to_articles"
-            app:destination="@id/articlesFragment" />
+            android:id="@+id/action_settings_to_techniques"
+            app:destination="@id/techniquesFragment" />
     </fragment>
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
@@ -65,23 +72,23 @@
     <fragment
         android:id="@+id/projectTasksFragment"
         android:name="start.up.tracker.ui.fragments.tasks.ProjectTasksFragment"
-        android:label="{titleCategory}"
+        android:label="{title}"
         tools:layout="@layout/project_tasks_fragment">
         <argument
-            android:name="categoryId"
+            android:name="projectId"
             app:argType="integer" />
         <action
             android:id="@+id/action_projectTasks_to_addEditTask"
             app:destination="@id/addEditTaskFragment" />
         <argument
-            android:name="titleCategory"
+            android:name="title"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/addCategoryFragment"
-        android:name="start.up.tracker.ui.fragments.categories.AddCategoryFragment"
+    <dialog
+        android:id="@+id/addProjectFragment"
+        android:name="start.up.tracker.ui.fragments.add_project.AddProjectFragment"
         android:label="Add new project"
-        tools:layout="@layout/fragment_add_category" />
+        tools:layout="@layout/add_project_fragment" />
     <fragment
         android:id="@+id/todayFragment"
         android:name="start.up.tracker.ui.fragments.today.TodayFragment"
@@ -113,8 +120,24 @@
             app:destination="@id/addEditTaskFragment" />
     </fragment>
     <fragment
-        android:id="@+id/articlesFragment"
-        android:name="start.up.tracker.ui.fragments.articles.ArticlesFragment"
-        android:label="Articles"
-        tools:layout="@layout/fragment_articles" />
+        android:id="@+id/techniquesFragment"
+        android:name="start.up.tracker.ui.fragments.techniques.TechniquesFragment"
+        android:label="Techniques"
+        tools:layout="@layout/techniques_fragment" >
+        <action
+            android:id="@+id/action_techniques_to_technique"
+            app:destination="@id/techniqueFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/techniqueFragment"
+        android:name="start.up.tracker.ui.fragments.techniques.TechniqueFragment"
+        android:label="{title}"
+        tools:layout="@layout/technique_fragment">
+        <argument
+            android:name="technique"
+            app:argType="start.up.tracker.entities.Technique" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>
