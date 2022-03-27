@@ -5,6 +5,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.CalendarTasksDao
@@ -19,7 +20,8 @@ class CalendarTasksViewModel @Inject constructor(
     taskDao: TaskDao,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
-) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
+    private val activeAnalytics: ActiveAnalytics,
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     private val calendarTasksFlow = hideCompleted.flatMapLatest {
         calendarTasksDao.getCalendarTasks(

@@ -3,14 +3,17 @@ package start.up.tracker.analytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import start.up.tracker.database.dao.AnalyticsDao
+import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.DayStat
+import start.up.tracker.entities.Task
+import start.up.tracker.entities.TaskAnalytics
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class Analytics @Inject constructor(
-    private val analyticsDao: AnalyticsDao
+    private val analyticsDao: AnalyticsDao,
 ) {
 
     suspend fun addTaskToStatistic() = withContext(Dispatchers.Default) {

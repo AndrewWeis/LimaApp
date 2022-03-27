@@ -8,16 +8,19 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.database.dao.*
 import start.up.tracker.di.ApplicationScope
-import start.up.tracker.entities.DayStat
-import start.up.tracker.entities.Project
-import start.up.tracker.entities.Task
-import start.up.tracker.entities.Technique
+import start.up.tracker.entities.*
 import start.up.tracker.utils.resources.ResourcesUtils
 import javax.inject.Inject
 import javax.inject.Provider
 
 @Database(
-    entities = [Task::class, Project::class, DayStat::class, Technique::class],
+    entities = [
+        Task::class,
+        Project::class,
+        DayStat::class,
+        Technique::class,
+        TaskIdToTaskAnalyticsId::class,
+    ],
     version = 1
 )
 abstract class TaskDatabase : RoomDatabase() {
@@ -29,6 +32,8 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun todayTasksDao(): TodayTasksDao
     abstract fun calendarTasksDao(): CalendarTasksDao
     abstract fun upcomingTasksDao(): UpcomingTasksDao
+    abstract fun taskAnalyticsDao(): TaskAnalyticsDao
+    abstract fun taskIdToTaskAnalyticsIdDao(): TaskIdToTaskAnalyticsIdDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,

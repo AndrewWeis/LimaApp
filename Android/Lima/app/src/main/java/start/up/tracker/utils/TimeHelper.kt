@@ -2,8 +2,10 @@ package start.up.tracker.utils
 
 import android.text.format.DateFormat.is24HourFormat
 import start.up.tracker.application.App
+import start.up.tracker.entities.Task
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object TimeHelper {
 
@@ -138,6 +140,69 @@ object TimeHelper {
     fun getTodayAsString(format: String): String {
         val currentDayMillis = TimeHelper.getCurrentDayInMilliseconds()
         return formatMillisecondToDate(currentDayMillis, format) ?: ""
+    }
+
+    /**
+     * Найти разницу в днях между двумя датами.
+     *
+     * @param date1 первая дата
+     * @param date2 вторая дата
+     * @return разница в днях
+     */
+    fun getDifferenceOfDatesInDays(date1: Long?, date2: Long?): Long? {
+        if (date1 != null && date2 != null) {
+            val dif: Long = date1 - date2
+            return if (dif > 0) {
+                TimeUnit.MILLISECONDS.toDays(dif)
+            } else {
+                -1 * (TimeUnit.MILLISECONDS.toDays(-1 * dif))
+            }
+        }
+        return null
+    }
+
+    /**
+     * Метод вычисляет дату окончания активности в миллисекундах
+     * Если время окончания в минутах вно не указано, то берётся за основу
+     * конец дня
+     */
+    // todo(убрать лишнее как прийдет время)
+    fun computeEndDate(task: Task): Long {
+        return if (task.date != null) {
+            if (task.endTimeInMinutes != null) {
+                task.date + task.endTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                task.date + 24 * 60 * 60 * 1000 - 1
+            }
+        } else {
+            if (task.endTimeInMinutes != null) {
+                getCurrentDayInMilliseconds() + task.endTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                getCurrentDayInMilliseconds() + 24 * 60 * 60 * 1000 - 1
+            }
+        }
+    }
+
+    /**
+     * Метод вычисляет дату начала активности в миллисекундах
+     * Если время начала в минутах вно не указано, то берётся за основу
+     * начало дня
+     */
+    // todo(убрать лишнее как прийдет время)
+    fun computeStartDate(task: Task): Long {
+        return if (task.date != null) {
+            if (task.startTimeInMinutes != null) {
+                task.date + task.startTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                task.date
+            }
+        } else {
+            if (task.startTimeInMinutes != null) {
+                getCurrentDayInMilliseconds() + task.startTimeInMinutes.toLong() * 60 * 1000
+            } else {
+                getCurrentDayInMilliseconds()
+            }
+        }
     }
 
     object DateFormats {

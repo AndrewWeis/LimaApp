@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import start.up.tracker.R
+import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.data.fields.Field
 import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
@@ -28,11 +29,12 @@ import javax.inject.Inject
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
+    private val activeAnalytics: ActiveAnalytics,
     @Assisted private val state: SavedStateHandle,
     projectsDao: ProjectsDao,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
-) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     private var isEditMode = true
 
@@ -242,7 +244,12 @@ class EditTaskViewModel @Inject constructor(
     private fun showPrioritiesChips() {
         val chips: MutableList<ChipData> = mutableListOf()
 
-        chips.add(getChipData(PRIORITY_UNDEFINED, ResourcesUtils.getString(R.string.priority_undefined)))
+        chips.add(
+            getChipData(
+                PRIORITY_UNDEFINED,
+                ResourcesUtils.getString(R.string.priority_undefined)
+            )
+        )
         chips.add(getChipData(PRIORITY_HIGH, ResourcesUtils.getString(R.string.priority_high)))
         chips.add(getChipData(PRIORITY_MEDIUM, ResourcesUtils.getString(R.string.priority_medium)))
         chips.add(getChipData(PRIORITY_LOW, ResourcesUtils.getString(R.string.priority_low)))
@@ -304,13 +311,23 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun createTask() = viewModelScope.launch {
-        val taskId = taskDao.getTaskMaxId() ?: 0
-        taskDao.insertTask(task.copy(taskId = taskId + 1))
+        val maxTaskId = taskDao.getTaskMaxId() ?: 0
+        val newTask = task.copy(taskId = maxTaskId + 1)
+
+        taskDao.insertTask(newTask)
+
+        activeAnalytics.managerAddTask(newTask)
+        activeAnalytics.addTask(newTask)
+
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun updateTask() = viewModelScope.launch {
         taskDao.updateTask(task)
+
+        activeAnalytics.managerEditTask(task)
+        activeAnalytics.editTask(task)
+
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 

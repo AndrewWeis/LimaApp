@@ -7,6 +7,7 @@ import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.TaskDao
@@ -20,7 +21,8 @@ class ProjectsTasksViewModel @Inject constructor(
     @Assisted private val state: SavedStateHandle,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
-) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics) {
+    activeAnalytics: ActiveAnalytics,
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     val searchQuery = state.getLiveData(StateHandleKeys.SEARCH_QUERY, "")
     var projectId = state.get<Int>(StateHandleKeys.PROJECT_ID) ?: -1
