@@ -5,9 +5,12 @@ import kotlinx.coroutines.withContext
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
+import start.up.tracker.analytics.principles.base.Principle
+import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TaskIdToTaskAnalyticsIdDao
+import start.up.tracker.database.dao.TechniquesDao
 import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
 import start.up.tracker.entities.TaskIdToTaskAnalyticsId
@@ -73,21 +76,15 @@ import javax.inject.Singleton
 @Singleton
 class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
+    private val taskDao: TaskDao,
+    private val taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao,
+    private val techniquesDao: TechniquesDao,
 ) {
-    private var allPrinciples = ArrayList<Principle>()
 
-    //private var activePrinciples = ArrayList<Principle>()
-    private var idToPrinciple = HashMap<Int, Principle>()
-
-    var taskDao: TaskDao? = null
-        @Inject set
-
-    var taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao? = null
-        @Inject set
-
-    init {
-        preparePrinciples()
-    }
+    private var principlesMap: HashMap<Int, Principle> = hashMapOf(
+        TechniquesIds.PARETO to Pareto(taskAnalyticsDao),
+        TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix(taskAnalyticsDao)
+    )
 
     suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
@@ -147,7 +144,7 @@ class ActiveAnalytics @Inject constructor(
      * TaskAnalyticsTable
      */
     private suspend fun getTaskToAnalyticsTaskMap(): HashMap<Int, Int> {
-        val elements = taskIdToTaskAnalyticsIdDao?.getAllElements()
+        val elements = taskIdToTaskAnalyticsIdDao.getAllElements()
         val taskToAnalyticsTask = HashMap<Int, Int>()
         if (elements != null) {
             for (element in elements) {
@@ -162,28 +159,18 @@ class ActiveAnalytics @Inject constructor(
      * TaskAnalyticsTable в бд
      */
     private suspend fun addTaskToAnalyticsTask(from: Int, to: Int) {
-        taskIdToTaskAnalyticsIdDao!!.insertElement(TaskIdToTaskAnalyticsId(from, to))
-    }
-
-    // TODO think of location to get all existing and active principles
-    private fun preparePrinciples() {
-        allPrinciples.add(Pareto(taskAnalyticsDao))
-        idToPrinciple[Pareto(taskAnalyticsDao).getId()] = Pareto(taskAnalyticsDao)
-        allPrinciples.add(EisenhowerMatrix(taskAnalyticsDao))
-        idToPrinciple[EisenhowerMatrix(taskAnalyticsDao).getId()] =
-            EisenhowerMatrix(taskAnalyticsDao)
-        //activePrinciples.add(Pareto(taskAnalyticsDao))
+        taskIdToTaskAnalyticsIdDao.insertElement(TaskIdToTaskAnalyticsId(from, to))
     }
 
     private suspend fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {
         return TaskAnalytics(
             id = taskAnalyticsDao.countTasksAnalytics() + 1,
             taskId = task.taskId,
-            title = task.title,
+            title = task.taskTitle,
             day = task.date ?: TimeHelper.getCurrentDayInMilliseconds(),
             date = TimeHelper.computeEndDate(task),
-            categoryId = task.categoryId,
-            categoryName = task.categoryName,
+            projectId = task.projectId,
+            projectName = task.projectName,
         )
     }
 
@@ -191,7 +178,6 @@ class ActiveAnalytics @Inject constructor(
      * The function calculates the exact time of the end of the task.
      * If only day is given, the very end of the day is returned
      */
-
     private fun isFinishedInTime(taskAnalytics: TaskAnalytics): Boolean {
         val currentDate = TimeHelper.getCurrentTimeInMilliseconds()
         val days = TimeHelper.getDifferenceOfDatesInDays(currentDate, taskAnalytics.date)
@@ -208,10 +194,9 @@ class ActiveAnalytics @Inject constructor(
      * @param id Айди включаемого принципа
      * @return можно или нельзя включить
      */
-    fun managerCheckCompatibility(id: Int): Boolean {
-        //var activePrinciplesIds : principlesDao.getActivePrinciplesIds()
-        val activePrinciplesIds = arrayListOf(1)
-        val principle = idToPrinciple[id]
+    suspend fun managerCheckCompatibility(id: Int): Boolean {
+        val principle = principlesMap[id]
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
         return principle!!.canBeEnabled(activePrinciplesIds)
     }
 
@@ -223,11 +208,11 @@ class ActiveAnalytics @Inject constructor(
      */
     suspend fun managerAddTask(task: Task): List<AnalyticsMessage> {
         val analyticsMessages = ArrayList<AnalyticsMessage>()
-        //var activePrinciplesIds : principlesDao.getActivePrinciplesIds()
+
         val activePrinciplesIds = arrayListOf(1)
         // будем вызывать логику каждого из методов при необходимости: при редактировании таска
         for (activePrincipleId in activePrinciplesIds) {
-            val res = idToPrinciple[activePrincipleId]!!.logicAddTask(task)
+            val res = principlesMap[activePrincipleId]!!.logicAddTask(task)
             if (res != null) {
                 analyticsMessages.add(res)
             }
@@ -243,11 +228,10 @@ class ActiveAnalytics @Inject constructor(
      */
     suspend fun managerEditTask(task: Task): List<AnalyticsMessage> {
         val analyticsMessages = ArrayList<AnalyticsMessage>()
-        //var activePrinciplesIds : principlesDao.getActivePrinciplesIds()
-        val activePrinciplesIds = arrayListOf(1)
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
         // будем вызывать логику каждого из методов при необходимости: при редактировании таска
         for (activePrincipleId in activePrinciplesIds) {
-            val res = idToPrinciple[activePrincipleId]!!.logicEditTask(task)
+            val res = principlesMap[activePrincipleId]!!.logicEditTask(task)
             if (res != null) {
                 analyticsMessages.add(res)
             }

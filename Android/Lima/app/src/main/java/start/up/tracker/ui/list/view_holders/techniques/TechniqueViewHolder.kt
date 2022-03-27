@@ -29,7 +29,7 @@ class TechniqueViewHolder(
     private fun setTechniqueData() {
         binding.apply {
             techniqueTitleText.text = technique.title
-            techniqueReadTimeText.text = technique.timeToRead
+            techniqueReadTimeText.text = technique.timeToRead.toString()
         }
     }
 
