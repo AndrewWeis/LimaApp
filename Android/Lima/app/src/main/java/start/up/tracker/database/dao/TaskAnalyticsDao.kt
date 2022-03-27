@@ -15,24 +15,15 @@ interface TaskAnalyticsDao {
     @Delete
     suspend fun deleteTaskAnalytics(taskAnalyticsDao: TaskAnalytics)
 
-    @Query(
-        " SELECT * FROM taskAnalytics_table WHERE taskAnalytics_table.id = :id "
-    )
+    @Query("SELECT * FROM taskAnalytics_table WHERE taskAnalytics_table.id = :id")
     suspend fun getTaskById(id: Int): TaskAnalytics
 
-    @Query(
-        " SELECT * FROM task_table WHERE date =:day "
-    )
-    // TODO подправить (мне), если надо
+    @Query("SELECT * FROM task_table WHERE date =:day")
     suspend fun getTasksOfDay(day: Long): List<Task>
 
-    @Query(
-        " SELECT * FROM taskAnalytics_table "
-    )
+    @Query("SELECT * FROM taskAnalytics_table")
     suspend fun getAllTasks(): List<TaskAnalytics>
 
-    @Query(
-        " SELECT COUNT(*) FROM taskAnalytics_table "
-    )
+    @Query("SELECT COUNT(*) FROM taskAnalytics_table")
     suspend fun countTasksAnalytics(): Int
 }

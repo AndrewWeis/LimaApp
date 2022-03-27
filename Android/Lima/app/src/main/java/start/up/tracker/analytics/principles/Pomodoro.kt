@@ -4,28 +4,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.base.Principle
+import start.up.tracker.database.TechniquesIds
+import start.up.tracker.database.TechniquesStorage
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.TimeHelper
-import java.util.*
 import javax.inject.Inject
 
-class Pomodoro @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Principle {
-    private val id = 1  // пока указываем конкретный id
-    private val name = "Pomodoro"
-    private val incompatiblePrinciplesIds = arrayListOf(0)
+class Pomodoro @Inject constructor(
+    private val taskAnalyticsDao: TaskAnalyticsDao
+) : Principle {
 
-    private var status: Boolean = false
-    private var notifications: Boolean = false
-
-    /**
-     * Меняем статус от вкл к выкл всегда,
-     * а статус от выкл к вкл только тогда, когда активные принципы совместимы с включаемым
-     * принципом
-     */
-    override fun setStatus(status: Boolean) {
-        this.status = status
-    }
+    private val incompatiblePrinciplesIds =
+        TechniquesStorage.getIncompatiblePrinciplesIds(TechniquesIds.POMODORO)
 
     override fun canBeEnabled(activePrinciplesIds: List<Int>): Boolean {
         for (principleId in activePrinciplesIds) {
@@ -34,30 +25,6 @@ class Pomodoro @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Pri
             }
         }
         return true
-    }
-
-    override fun getStatus(): Boolean {
-        return status
-    }
-
-    override fun setNotifications(notifications: Boolean) {
-        this.notifications = notifications
-    }
-
-    override fun getNotifications(): Boolean {
-        return notifications
-    }
-
-    override fun getName(): String {
-        return name
-    }
-
-    override fun getId(): Int {
-        return id
-    }
-
-    override fun getIncompatiblePrinciplesIds(): ArrayList<Int> {
-        return incompatiblePrinciplesIds
     }
 
     override suspend fun logicAddTask(task: Task): AnalyticsMessage? =
@@ -86,7 +53,8 @@ class Pomodoro @Inject constructor(var taskAnalyticsDao: TaskAnalyticsDao) : Pri
         val currentDate = TimeHelper.getCurrentTimeInMilliseconds()
         val startDate = TimeHelper.computeStartDate(task)
         if (task.date == null || task.startTimeInMinutes == null || task.endTimeInMinutes == null) {
-            return AnalyticsMessage(id, "Pomodoro principle cannot be applied",
+            return AnalyticsMessage(
+                TechniquesIds.POMODORO, "Pomodoro principle cannot be applied",
                 "Pomodoro principle requires ",
                 "Try priories your tasks in a way that the principle suggests"
             )

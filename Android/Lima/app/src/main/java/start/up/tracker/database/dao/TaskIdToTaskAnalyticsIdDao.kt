@@ -14,8 +14,6 @@ interface TaskIdToTaskAnalyticsIdDao {
     @Delete
     suspend fun deleteElement(taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsId)
 
-    @Query(
-        "SELECT * FROM taskIdToTaskAnalyticsId_table"
-    )
+    @Query("SELECT * FROM taskIdToTaskAnalyticsId_table")
     suspend fun getAllElements(): List<TaskIdToTaskAnalyticsId>
 }

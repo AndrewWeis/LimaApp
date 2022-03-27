@@ -6,6 +6,7 @@ import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.analytics.principles.base.Principle
+import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TaskIdToTaskAnalyticsIdDao
@@ -77,7 +78,7 @@ class ActiveAnalytics @Inject constructor(
 ) {
     private var allPrinciples = ArrayList<Principle>()
 
-    //private var activePrinciples = ArrayList<Principle>()
+    // private var activePrinciples = ArrayList<Principle>()
     private var idToPrinciple = HashMap<Int, Principle>()
 
     var taskDao: TaskDao? = null
@@ -166,14 +167,13 @@ class ActiveAnalytics @Inject constructor(
         taskIdToTaskAnalyticsIdDao!!.insertElement(TaskIdToTaskAnalyticsId(from, to))
     }
 
-    // TODO think of location to get all existing and active principles
     private fun preparePrinciples() {
         allPrinciples.add(Pareto(taskAnalyticsDao))
-        idToPrinciple[Pareto(taskAnalyticsDao).getId()] = Pareto(taskAnalyticsDao)
+        idToPrinciple[TechniquesIds.PARETO] = Pareto(taskAnalyticsDao)
+
         allPrinciples.add(EisenhowerMatrix(taskAnalyticsDao))
-        idToPrinciple[EisenhowerMatrix(taskAnalyticsDao).getId()] =
-            EisenhowerMatrix(taskAnalyticsDao)
-        //activePrinciples.add(Pareto(taskAnalyticsDao))
+        idToPrinciple[TechniquesIds.EISENHOWER_MATRIX] = EisenhowerMatrix(taskAnalyticsDao)
+        // activePrinciples.add(Pareto(taskAnalyticsDao))
     }
 
     private suspend fun mapTaskToAnalyticsTask(task: Task): TaskAnalytics {

@@ -19,6 +19,7 @@ import javax.inject.Provider
         Project::class,
         DayStat::class,
         Technique::class,
+        TaskAnalytics::class,
         TaskIdToTaskAnalyticsId::class,
     ],
     version = 1

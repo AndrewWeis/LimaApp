@@ -27,6 +27,15 @@
     <string name="today">Today</string>
     <string name="upcoming">Upcoming</string>
 
+    <!-- Techniques -->
+    <string name="pareto_title">Pareto</string>
+    <string name="pareto_body">Description of Pareto</string>
+
+    <string name="eisenhower_title">Eisenhower Matrix</string>
+    <string name="eisenhower_body">Description of Eisenhower Matrix</string>
+
+    <string name="pomodoro_title">Pomodoro</string>
+    <string name="pomodoro_body">Description of Pomodoro</string>
 
     <string name="action_search">Search</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
