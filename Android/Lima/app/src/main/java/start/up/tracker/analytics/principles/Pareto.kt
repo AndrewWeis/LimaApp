@@ -2,12 +2,14 @@ package start.up.tracker.analytics.principles
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TechniquesStorage
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
+import start.up.tracker.utils.resources.ResourcesUtils
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -66,37 +68,33 @@ class Pareto @Inject constructor(
      */
     private fun logicAddEditTask(task: Task, tasksOfDay: ArrayList<Task>): AnalyticsMessage? {
         var priorityCount = 0
+
         for (taskOfDay in tasksOfDay) {
             if (taskOfDay.priority > 0) {
                 priorityCount++
             }
         }
+
         if (task.priority > 0) {
             priorityCount++
         }
+
         if (tasksOfDay.size in 3..8 && priorityCount > 2) {
-            /* TODO Андрей. диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
-            TODO продолжить и отменить, развернуть сообщение целиком и перейти к статье */
             return AnalyticsMessage(
-                TechniquesIds.PARETO, "Pareto principle is violated",
-                "Pareto principle suggests that you should prioritize 20% of daily tasks" +
-                        "over 80% other tasks while you have " + tasksOfDay.size + " tasks and " +
-                        priorityCount + " of them are prioritized",
-                "Try priories your tasks in a way that the principle suggests"
+                principleId = TechniquesIds.PARETO,
+                title = ResourcesUtils.getString(R.string.pareto_message_title),
+                message = ResourcesUtils.getString(R.string.pareto_message_body, tasksOfDay.size, priorityCount),
+                messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
             )
-        } else if (tasksOfDay.size > 8 &&
-            (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2
-        ) {
-            /* TODO Андрей. диалоговое окно о том, что мы нарушаем принцип. 2 кнопки:
-            TODO продолжить и отменить, развернуть сообщение целиком и перейти к статье */
+        } else if (tasksOfDay.size > 8 && (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2) {
             return AnalyticsMessage(
-                TechniquesIds.PARETO, "Pareto principle is violated",
-                "Pareto principle suggests that you should prioritize 20% of daily tasks" +
-                        "over 80% other tasks while you have " + tasksOfDay.size + " tasks and " +
-                        priorityCount + " of them are prioritized",
-                "Try priories your tasks in a way that the principle suggests"
+                principleId = TechniquesIds.PARETO,
+                title = ResourcesUtils.getString(R.string.pareto_message_title),
+                message = ResourcesUtils.getString(R.string.pareto_message_body, tasksOfDay.size, priorityCount),
+                messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
             )
         }
+
         return null
     }
 }

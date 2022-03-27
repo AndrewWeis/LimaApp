@@ -30,12 +30,18 @@
     <!-- Techniques -->
     <string name="pareto_title">Pareto</string>
     <string name="pareto_body">Description of Pareto</string>
+    <string name="pareto_message_title">Pareto principle is violated</string>
+    <string name="pareto_message_body">Pareto principle suggests that you should prioritize 20% of daily tasks over 80% other tasks while you have %d tasks and %d priorityCount of them are prioritized </string>
+    <string name="pareto_message_detailed">Try priories your tasks in a way that the principle suggests</string>
 
     <string name="eisenhower_title">Eisenhower Matrix</string>
     <string name="eisenhower_body">Description of Eisenhower Matrix</string>
 
     <string name="pomodoro_title">Pomodoro</string>
     <string name="pomodoro_body">Description of Pomodoro</string>
+    <string name="pomodoro_message_title">Pomodoro principle cannot be applied</string>
+    <string name="pomodoro_message_body">Pomodoro principle requires</string>
+    <string name="pomodoro_message_detailed">Try priories your tasks in a way that the principle suggests</string>
 
     <string name="action_search">Search</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>

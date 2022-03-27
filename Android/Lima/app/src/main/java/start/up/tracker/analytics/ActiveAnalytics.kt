@@ -75,17 +75,13 @@ import javax.inject.Singleton
 @Singleton
 class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
+    private val taskDao: TaskDao,
+    private val taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao
 ) {
     private var allPrinciples = ArrayList<Principle>()
 
     // private var activePrinciples = ArrayList<Principle>()
     private var idToPrinciple = HashMap<Int, Principle>()
-
-    var taskDao: TaskDao? = null
-        @Inject set
-
-    var taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao? = null
-        @Inject set
 
     init {
         preparePrinciples()

@@ -2,6 +2,7 @@ package start.up.tracker.analytics.principles
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
@@ -9,6 +10,7 @@ import start.up.tracker.database.TechniquesStorage
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.resources.ResourcesUtils
 import javax.inject.Inject
 
 class Pomodoro @Inject constructor(
@@ -54,9 +56,10 @@ class Pomodoro @Inject constructor(
         val startDate = TimeHelper.computeStartDate(task)
         if (task.date == null || task.startTimeInMinutes == null || task.endTimeInMinutes == null) {
             return AnalyticsMessage(
-                TechniquesIds.POMODORO, "Pomodoro principle cannot be applied",
-                "Pomodoro principle requires ",
-                "Try priories your tasks in a way that the principle suggests"
+                principleId = TechniquesIds.POMODORO,
+                title = ResourcesUtils.getString(R.string.pomodoro_message_title),
+                message = ResourcesUtils.getString(R.string.pomodoro_message_body),
+                messageDetailed = ResourcesUtils.getString(R.string.pomodoro_message_detailed)
             )
         } else {
             // TODO write method
