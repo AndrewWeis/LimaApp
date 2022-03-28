@@ -4,7 +4,7 @@ import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.entities.Task
 
 interface Principle {
-    fun canBeEnabled(activePrinciplesIds: List<Int>): Boolean
-    suspend fun logicAddTask(task: Task): AnalyticsMessage?
-    suspend fun logicEditTask(task: Task): AnalyticsMessage?
+    fun checkCompatibility(activePrinciplesIds: List<Int>): Boolean
+    suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage?
+    suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage?
 }

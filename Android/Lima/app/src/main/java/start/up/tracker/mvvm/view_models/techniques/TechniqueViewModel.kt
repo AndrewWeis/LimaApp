@@ -21,7 +21,21 @@ class TechniqueViewModel @Inject constructor(
 
     val technique = state.getLiveData<Technique>(StateHandleKeys.TECHNIQUE)
 
-    fun onSelectTechniqueClick(isEnabled: Boolean) = viewModelScope.launch {
+    fun onTechniqueEnableClick() = viewModelScope.launch {
+        val isCompatible = activeAnalytics.checkPrinciplesCompatibility(technique.value!!.id)
+
+        if (isCompatible) {
+            updateTechnique(true)
+        } else {
+            // todo(show error message)
+        }
+    }
+
+    fun onTechniqueDisableClick() = viewModelScope.launch {
+        updateTechnique(false)
+    }
+
+    private suspend fun updateTechnique(isEnabled: Boolean) {
         techniquesDao.updateTechnique(technique.value!!.copy(isEnabled = isEnabled))
         technique.postValue(technique.value!!.copy(isEnabled = isEnabled))
     }

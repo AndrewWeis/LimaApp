@@ -20,7 +20,7 @@ class Pomodoro @Inject constructor(
     private val incompatiblePrinciplesIds =
         TechniquesStorage.getIncompatiblePrinciplesIds(TechniquesIds.POMODORO)
 
-    override fun canBeEnabled(activePrinciplesIds: List<Int>): Boolean {
+    override fun checkCompatibility(activePrinciplesIds: List<Int>): Boolean {
         for (principleId in activePrinciplesIds) {
             if (incompatiblePrinciplesIds.contains(principleId)) {
                 return false
@@ -29,13 +29,13 @@ class Pomodoro @Inject constructor(
         return true
     }
 
-    override suspend fun logicAddTask(task: Task): AnalyticsMessage? =
+    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? =
         withContext(Dispatchers.Default) {
             logicAddEditTask(task)
             null
         }
 
-    override suspend fun logicEditTask(task: Task): AnalyticsMessage? =
+    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? =
         withContext(Dispatchers.Default) {
             logicAddEditTask(task)
             null

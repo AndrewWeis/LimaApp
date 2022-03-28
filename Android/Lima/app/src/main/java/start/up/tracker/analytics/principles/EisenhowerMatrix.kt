@@ -15,7 +15,7 @@ class EisenhowerMatrix @Inject constructor(
     private val incompatiblePrinciplesIds =
         TechniquesStorage.getIncompatiblePrinciplesIds(TechniquesIds.EISENHOWER_MATRIX)
 
-    override fun canBeEnabled(activePrinciplesIds: List<Int>): Boolean {
+    override fun checkCompatibility(activePrinciplesIds: List<Int>): Boolean {
         for (principleId in activePrinciplesIds) {
             if (incompatiblePrinciplesIds.contains(principleId)) {
                 return false
@@ -24,11 +24,11 @@ class EisenhowerMatrix @Inject constructor(
         return true
     }
 
-    override suspend fun logicAddTask(task: Task): AnalyticsMessage? {
+    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun logicEditTask(task: Task): AnalyticsMessage? {
+    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? {
         TODO("Not yet implemented")
     }
 }

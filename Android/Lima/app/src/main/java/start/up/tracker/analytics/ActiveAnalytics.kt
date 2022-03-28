@@ -8,7 +8,6 @@ import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskAnalyticsDao
-import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TaskIdToTaskAnalyticsIdDao
 import start.up.tracker.database.dao.TechniquesDao
 import start.up.tracker.entities.Task
@@ -76,7 +75,6 @@ import javax.inject.Singleton
 @Singleton
 class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
-    private val taskDao: TaskDao,
     private val taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao,
     private val techniquesDao: TechniquesDao,
 ) {
@@ -189,53 +187,42 @@ class ActiveAnalytics @Inject constructor(
     }
 
     /**
-     * TODO АНДРЕЙ. СВЯЗАТЬ.
      * Метод проверяет совместимость включаемого принципа со всеми активными принципами
-     * @param id Айди включаемого принципа
-     * @return можно или нельзя включить
+     *
+     * @param principleId Айди включаемого принципа
+     * @return можно ли включить
      */
-    suspend fun managerCheckCompatibility(id: Int): Boolean {
-        val principle = principlesMap[id]
+    suspend fun checkPrinciplesCompatibility(principleId: Int): Boolean {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
-        return principle!!.canBeEnabled(activePrinciplesIds)
+
+        return principlesMap[principleId]!!.checkCompatibility(activePrinciplesIds)
     }
 
     /**
-     * TODO АНДРЕЙ. СВЯЗАТЬ.
-     * Метод вызывает логику каждого из активных тасков при создании активности
-     * @param task активность
-     * @return список всех сообщений для создания диалоговых окон (Null - все в порядке)
+     * Запускает логику проверок соответствия принципам при событии добавление задачи
+     *
+     * @param task задача
+     * @return список сообщений при неуспехе проверок
      */
-    suspend fun managerAddTask(task: Task): List<AnalyticsMessage> {
-        val analyticsMessages = ArrayList<AnalyticsMessage>()
+    suspend fun checkPrinciplesComplianceOnAddTask(task: Task): List<AnalyticsMessage> {
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
-        val activePrinciplesIds = arrayListOf(1)
-        // будем вызывать логику каждого из методов при необходимости: при редактировании таска
-        for (activePrincipleId in activePrinciplesIds) {
-            val res = principlesMap[activePrincipleId]!!.logicAddTask(task)
-            if (res != null) {
-                analyticsMessages.add(res)
-            }
+        return activePrinciplesIds.mapNotNull { id ->
+            principlesMap[id]!!.checkComplianceOnAddTask(task)
         }
-        return analyticsMessages
     }
 
     /**
-     * TODO АНДРЕЙ. СВЯЗАТЬ.
-     * Метод вызывает логику каждого из активных тасков при редактирования активности
-     * @param task активность
-     * @return список всех сообщений для создания диалоговых окон (Null - все в порядке)
+     * Запускает логику проверок соответствия принципам при событии редактирование задачи
+     *
+     * @param task задача
+     * @return список сообщений при неуспехе проверок
      */
-    suspend fun managerEditTask(task: Task): List<AnalyticsMessage> {
-        val analyticsMessages = ArrayList<AnalyticsMessage>()
+    suspend fun checkPrinciplesComplianceOnEditTask(task: Task): List<AnalyticsMessage> {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
-        // будем вызывать логику каждого из методов при необходимости: при редактировании таска
-        for (activePrincipleId in activePrinciplesIds) {
-            val res = principlesMap[activePrincipleId]!!.logicEditTask(task)
-            if (res != null) {
-                analyticsMessages.add(res)
-            }
+
+        return activePrinciplesIds.mapNotNull { id ->
+            principlesMap[id]!!.checkComplianceOnEditTask(task)
         }
-        return analyticsMessages
     }
 }

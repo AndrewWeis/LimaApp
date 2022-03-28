@@ -90,9 +90,9 @@ class EditTaskViewModel @Inject constructor(
         }
 
         if (isEditMode) {
-            updateTask()
+            checkPrinciplesComplianceOnEditTask()
         } else {
-            createTask()
+            checkPrinciplesComplianceOnAddTask()
         }
     }
 
@@ -279,6 +279,18 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
+    private fun checkPrinciplesComplianceOnEditTask() = viewModelScope.launch {
+        val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
+        // todo(post options)
+        createTask()
+    }
+
+    private fun checkPrinciplesComplianceOnAddTask() = viewModelScope.launch {
+        val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
+        // todo(post options)
+        updateTask()
+    }
+
     /**
      * Соединяет flow проектов, полученних их базы данных и flow идентификатора выбранного проекта
      *
@@ -314,20 +326,18 @@ class EditTaskViewModel @Inject constructor(
         val maxTaskId = taskDao.getTaskMaxId() ?: 0
         val newTask = task.copy(taskId = maxTaskId + 1)
 
-        taskDao.insertTask(newTask)
+        launch { activeAnalytics.addTask(newTask) }
 
-        activeAnalytics.managerAddTask(newTask)
-        activeAnalytics.addTask(newTask)
-
-        tasksEventChannel.send(TasksEvent.NavigateBack)
+        launch {
+            taskDao.insertTask(newTask)
+            tasksEventChannel.send(TasksEvent.NavigateBack)
+        }
     }
 
     private fun updateTask() = viewModelScope.launch {
+        launch { activeAnalytics.editTask(task) }
+
         taskDao.updateTask(task)
-
-        activeAnalytics.managerEditTask(task)
-        activeAnalytics.editTask(task)
-
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 

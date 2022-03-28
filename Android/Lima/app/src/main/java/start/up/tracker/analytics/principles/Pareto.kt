@@ -21,7 +21,7 @@ class Pareto(
     private val incompatiblePrinciplesIds =
         TechniquesStorage.getIncompatiblePrinciplesIds(TechniquesIds.PARETO)
 
-    override fun canBeEnabled(activePrinciplesIds: List<Int>): Boolean {
+    override fun checkCompatibility(activePrinciplesIds: List<Int>): Boolean {
         for (principleId in activePrinciplesIds) {
             if (incompatiblePrinciplesIds.contains(principleId)) {
                 return false
@@ -30,7 +30,7 @@ class Pareto(
         return true
     }
 
-    override suspend fun logicAddTask(task: Task): AnalyticsMessage? =
+    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? =
         withContext(Dispatchers.Default) {
             if (task.date != null) {
                 val tasksOfDay = ArrayList(taskAnalyticsDao.getTasksOfDay(task.date))
@@ -39,7 +39,7 @@ class Pareto(
             null
         }
 
-    override suspend fun logicEditTask(task: Task): AnalyticsMessage? =
+    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? =
         withContext(Dispatchers.Default) {
             if (task.date != null) {
                 val tasksOfDay = ArrayList(taskAnalyticsDao.getTasksOfDay(task.date))
