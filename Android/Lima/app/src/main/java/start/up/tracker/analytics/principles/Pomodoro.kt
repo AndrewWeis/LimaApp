@@ -1,21 +1,19 @@
 package start.up.tracker.analytics.principles
 
-import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
+import start.up.tracker.analytics.holders.AnalyticsMessageHolder
 import start.up.tracker.analytics.principles.base.Principle
-import start.up.tracker.database.TechniquesIds
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.TimeHelper
-import start.up.tracker.utils.resources.ResourcesUtils
 
 class Pomodoro : Principle {
 
     override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
-        return logicAddEditTask(task)
+        return checkComplianceToPrinciple(task)
     }
 
     override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? {
-        return logicAddEditTask(task)
+        return checkComplianceToPrinciple(task)
     }
 
     /**
@@ -28,16 +26,12 @@ class Pomodoro : Principle {
      *
      * @param task активность
      */
-    private fun logicAddEditTask(task: Task): AnalyticsMessage? {
+    private fun checkComplianceToPrinciple(task: Task): AnalyticsMessage? {
         val currentDate = TimeHelper.getCurrentTimeInMilliseconds()
         val startDate = TimeHelper.computeStartDate(task)
+
         if (task.date == null || task.startTimeInMinutes == null || task.endTimeInMinutes == null) {
-            return AnalyticsMessage(
-                principleId = TechniquesIds.POMODORO,
-                title = ResourcesUtils.getString(R.string.pomodoro_message_title),
-                message = ResourcesUtils.getString(R.string.pomodoro_message_body),
-                messageDetailed = ResourcesUtils.getString(R.string.pomodoro_message_detailed)
-            )
+            AnalyticsMessageHolder.getPomodoroMessage()
         } else {
             // TODO write method
             if (currentDate >= startDate) {

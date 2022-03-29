@@ -17,7 +17,7 @@ class Pareto : Principle {
     override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
         return task.date?.let { date ->
             val tasksOfDay = taskDao.getTasksOfDay(date)
-            checkComplianceToParetoPrinciple(task, tasksOfDay)
+            checkComplianceToPrinciple(task, tasksOfDay)
         }
     }
 
@@ -30,7 +30,7 @@ class Pareto : Principle {
                     taskOfDay.taskId != task.taskId
                 }
 
-            checkComplianceToParetoPrinciple(task, tasksOfDay)
+            checkComplianceToPrinciple(task, tasksOfDay)
         }
     }
 
@@ -45,7 +45,7 @@ class Pareto : Principle {
      * @param task активность
      * @param tasksOfDay список всех активностей дня, который имеет task
      */
-    private fun checkComplianceToParetoPrinciple(task: Task, tasksOfDay: List<Task>): AnalyticsMessage? {
+    private fun checkComplianceToPrinciple(task: Task, tasksOfDay: List<Task>): AnalyticsMessage? {
         // подсчитываем количество выставленных приоритетов у задач на сегодня
         var priorityCount = tasksOfDay.count { task.priority > 0 }
 

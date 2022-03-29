@@ -20,4 +20,14 @@ object AnalyticsMessageHolder {
             messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
         )
     }
+
+    // todo (classify messages. Use Pattern [get][principle][classification])
+    fun getPomodoroMessage(): AnalyticsMessage {
+        return AnalyticsMessage(
+            principleId = TechniquesIds.POMODORO,
+            title = ResourcesUtils.getString(R.string.pomodoro_message_title),
+            message = ResourcesUtils.getString(R.string.pomodoro_message_body),
+            messageDetailed = ResourcesUtils.getString(R.string.pomodoro_message_detailed)
+        )
+    }
 }
