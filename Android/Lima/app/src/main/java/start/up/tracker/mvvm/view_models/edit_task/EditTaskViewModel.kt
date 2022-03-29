@@ -283,14 +283,24 @@ class EditTaskViewModel @Inject constructor(
 
     private suspend fun checkPrinciplesComplianceOnEditTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
-        // todo(post options)
-        updateTask()
+
+        if (analyticsMessages.isEmpty()) {
+            updateTask()
+            return
+        }
+
+        tasksEventChannel.send(TasksEvent.ShowAnalyticMessageDialog(analyticsMessages))
     }
 
     private suspend fun checkPrinciplesComplianceOnAddTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
-        // todo(post options)
-        createTask()
+
+        if (analyticsMessages.isEmpty()) {
+            createTask()
+            return
+        }
+
+        tasksEventChannel.send(TasksEvent.ShowAnalyticMessageDialog(analyticsMessages))
     }
 
     /**

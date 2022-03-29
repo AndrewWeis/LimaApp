@@ -32,7 +32,7 @@ object ResourcesUtils {
      * @param args      параметры для строки
      * @return строка
      */
-    fun getString(stringRes: Int, vararg args: Any?) = getResources().getString(stringRes, args)
+    fun getString(@StringRes stringRes: Int, vararg args: Any?) = getResources().getString(stringRes, *args)
 
     /**
      * Возвращает цвет

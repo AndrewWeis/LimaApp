@@ -5,14 +5,12 @@ import start.up.tracker.analytics.holders.AnalyticsMessageHolder
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Pareto : Principle {
-
-    @Inject
-    lateinit var taskDao: TaskDao
+class Pareto(
+    private val taskDao: TaskDao
+) : Principle {
 
     override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
         return task.date?.let { date ->

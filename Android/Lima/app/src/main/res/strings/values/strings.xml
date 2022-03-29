@@ -31,7 +31,7 @@
     <string name="pareto_title">Pareto</string>
     <string name="pareto_body">Description of Pareto</string>
     <string name="pareto_message_title">Pareto principle is violated</string>
-    <string name="pareto_message_body">Pareto principle suggests that you should prioritize 20% of daily tasks over 80% other tasks while you have %d tasks and %d priorityCount of them are prioritized </string>
+    <string name="pareto_message_body">Pareto principle suggests that you should prioritize 20 percent of daily tasks over 80 percent other tasks while you have %d tasks and %d priorityCount of them are prioritized </string>
     <string name="pareto_message_detailed">Try priories your tasks in a way that the principle suggests</string>
 
     <string name="eisenhower_title">Eisenhower Matrix</string>

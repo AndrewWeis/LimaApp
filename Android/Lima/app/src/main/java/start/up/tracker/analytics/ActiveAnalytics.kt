@@ -7,6 +7,7 @@ import start.up.tracker.analytics.principles.Pomodoro
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskAnalyticsDao
+import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TaskIdToTaskAnalyticsIdDao
 import start.up.tracker.database.dao.TechniquesDao
 import start.up.tracker.entities.Task
@@ -76,10 +77,11 @@ class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
     private val taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao,
     private val techniquesDao: TechniquesDao,
+    taskDao: TaskDao
 ) {
 
-    private var principlesMap: HashMap<Int, Principle> = hashMapOf(
-        TechniquesIds.PARETO to Pareto(),
+    private val principlesMap: HashMap<Int, Principle> = hashMapOf(
+        TechniquesIds.PARETO to Pareto(taskDao),
         TechniquesIds.POMODORO to Pomodoro(),
         TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix()
     )
