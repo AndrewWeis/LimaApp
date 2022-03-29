@@ -1,7 +1,5 @@
 package start.up.tracker.analytics
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
@@ -86,30 +84,30 @@ class ActiveAnalytics @Inject constructor(
         TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix()
     )
 
-    suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun addTask(task: Task) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
         addTaskToAnalyticsTask(task.taskId, taskAnalyticsDao.countTasksAnalytics())
     }
 
-    suspend fun editTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun editTask(task: Task) {
         taskAnalyticsDao.updateTaskAnalytics(mapTaskToAnalyticsTask(task))
     }
 
-    suspend fun deleteTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun deleteTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = true)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun recoverTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun recoverTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun updateStatus(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun updateStatus(task: Task) {
         if (task.completed) {
             finishTask(task)
         } else {
@@ -117,7 +115,7 @@ class ActiveAnalytics @Inject constructor(
         }
     }
 
-    private suspend fun finishTask(task: Task) = withContext(Dispatchers.Default) {
+    private suspend fun finishTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val inTime = isFinishedInTime(taskAnalytics)
@@ -125,14 +123,14 @@ class ActiveAnalytics @Inject constructor(
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    private suspend fun unfinishTask(task: Task) = withContext(Dispatchers.Default) {
+    private suspend fun unfinishTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(completed = false, completedInTime = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun deleteAllAnalyticsTasks() = withContext(Dispatchers.Default) {
+    suspend fun deleteAllAnalyticsTasks() {
         val tasks = taskAnalyticsDao.getAllTasks()
         for (task in tasks) {
             taskAnalyticsDao.deleteTaskAnalytics(task)
@@ -146,11 +144,11 @@ class ActiveAnalytics @Inject constructor(
     private suspend fun getTaskToAnalyticsTaskMap(): HashMap<Int, Int> {
         val elements = taskIdToTaskAnalyticsIdDao.getAllElements()
         val taskToAnalyticsTask = HashMap<Int, Int>()
-        if (elements != null) {
-            for (element in elements) {
-                taskToAnalyticsTask[element.from] = element.to
-            }
+
+        elements.forEach {
+            taskToAnalyticsTask[it.from] = it.to
         }
+
         return taskToAnalyticsTask
     }
 
