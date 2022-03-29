@@ -4,8 +4,6 @@ import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
-import start.up.tracker.database.TechniquesStorage
-import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.resources.ResourcesUtils
@@ -13,24 +11,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Pareto(
-    private val taskAnalyticsDao: TaskAnalyticsDao
-) : Principle {
+class Pareto : Principle {
 
     @Inject
-    private lateinit var taskDao: TaskDao
-
-    private val incompatiblePrinciplesIds =
-        TechniquesStorage.getIncompatiblePrinciplesIds(TechniquesIds.PARETO)
-
-    override fun checkCompatibility(activePrinciplesIds: List<Int>): Boolean {
-        activePrinciplesIds.forEach {
-            if (incompatiblePrinciplesIds.contains(it)) {
-                return false
-            }
-        }
-        return true
-    }
+    lateinit var taskDao: TaskDao
 
     override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
         return task.date?.let { date ->

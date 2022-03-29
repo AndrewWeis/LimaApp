@@ -4,27 +4,11 @@ import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
-import start.up.tracker.database.TechniquesStorage
-import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
 
-class Pomodoro (
-    private val taskAnalyticsDao: TaskAnalyticsDao
-) : Principle {
-
-    private val incompatiblePrinciplesIds =
-        TechniquesStorage.getIncompatiblePrinciplesIds(TechniquesIds.POMODORO)
-
-    override fun checkCompatibility(activePrinciplesIds: List<Int>): Boolean {
-        for (principleId in activePrinciplesIds) {
-            if (incompatiblePrinciplesIds.contains(principleId)) {
-                return false
-            }
-        }
-        return true
-    }
+class Pomodoro : Principle {
 
     override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
         return logicAddEditTask(task)

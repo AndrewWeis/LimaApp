@@ -81,9 +81,9 @@ class ActiveAnalytics @Inject constructor(
 ) {
 
     private var principlesMap: HashMap<Int, Principle> = hashMapOf(
-        TechniquesIds.PARETO to Pareto(taskAnalyticsDao),
-        TechniquesIds.POMODORO to Pomodoro(taskAnalyticsDao),
-        TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix(taskAnalyticsDao)
+        TechniquesIds.PARETO to Pareto(),
+        TechniquesIds.POMODORO to Pomodoro(),
+        TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix()
     )
 
     suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
@@ -197,7 +197,7 @@ class ActiveAnalytics @Inject constructor(
     suspend fun checkPrinciplesCompatibility(principleId: Int): Boolean {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
-        return principlesMap[principleId]!!.checkCompatibility(activePrinciplesIds)
+        return principlesMap[principleId]!!.checkCompatibility(activePrinciplesIds, principleId)
     }
 
     /**
