@@ -1,12 +1,10 @@
 package start.up.tracker.analytics.principles
 
-import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
+import start.up.tracker.analytics.holders.AnalyticsMessageHolder
 import start.up.tracker.analytics.principles.base.Principle
-import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
-import start.up.tracker.utils.resources.ResourcesUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,7 +17,7 @@ class Pareto : Principle {
     override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
         return task.date?.let { date ->
             val tasksOfDay = taskDao.getTasksOfDay(date)
-            logicAddEditTask(task, tasksOfDay)
+            checkComplianceToParetoPrinciple(task, tasksOfDay)
         }
     }
 
@@ -32,7 +30,7 @@ class Pareto : Principle {
                     taskOfDay.taskId != task.taskId
                 }
 
-            logicAddEditTask(task, tasksOfDay)
+            checkComplianceToParetoPrinciple(task, tasksOfDay)
         }
     }
 
@@ -47,7 +45,7 @@ class Pareto : Principle {
      * @param task активность
      * @param tasksOfDay список всех активностей дня, который имеет task
      */
-    private fun logicAddEditTask(task: Task, tasksOfDay: List<Task>): AnalyticsMessage? {
+    private fun checkComplianceToParetoPrinciple(task: Task, tasksOfDay: List<Task>): AnalyticsMessage? {
         // подсчитываем количество выставленных приоритетов у задач на сегодня
         var priorityCount = tasksOfDay.count { task.priority > 0 }
 
@@ -57,27 +55,9 @@ class Pareto : Principle {
         }
 
         return if (tasksOfDay.size in 3..8 && priorityCount > 2) {
-            AnalyticsMessage(
-                principleId = TechniquesIds.PARETO,
-                title = ResourcesUtils.getString(R.string.pareto_message_title),
-                message = ResourcesUtils.getString(
-                    R.string.pareto_message_body,
-                    tasksOfDay.size,
-                    priorityCount
-                ),
-                messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
-            )
+            AnalyticsMessageHolder.getParetoMessage(tasksOfDay.size, priorityCount)
         } else if (tasksOfDay.size > 8 && (priorityCount.toDouble() * 100 / tasksOfDay.size) > 0.2) {
-            AnalyticsMessage(
-                principleId = TechniquesIds.PARETO,
-                title = ResourcesUtils.getString(R.string.pareto_message_title),
-                message = ResourcesUtils.getString(
-                    R.string.pareto_message_body,
-                    tasksOfDay.size,
-                    priorityCount
-                ),
-                messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
-            )
+            AnalyticsMessageHolder.getParetoMessage(tasksOfDay.size, priorityCount)
         } else {
             null
         }
