@@ -6,9 +6,8 @@ import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TechniquesStorage
 import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
-import javax.inject.Inject
 
-class EisenhowerMatrix @Inject constructor(
+class EisenhowerMatrix(
     private val taskAnalyticsDao: TaskAnalyticsDao
 ) : Principle {
 

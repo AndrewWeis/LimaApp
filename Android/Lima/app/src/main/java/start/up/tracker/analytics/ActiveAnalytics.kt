@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
+import start.up.tracker.analytics.principles.Pomodoro
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskAnalyticsDao
@@ -81,6 +82,7 @@ class ActiveAnalytics @Inject constructor(
 
     private var principlesMap: HashMap<Int, Principle> = hashMapOf(
         TechniquesIds.PARETO to Pareto(taskAnalyticsDao),
+        TechniquesIds.POMODORO to Pomodoro(taskAnalyticsDao),
         TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix(taskAnalyticsDao)
     )
 

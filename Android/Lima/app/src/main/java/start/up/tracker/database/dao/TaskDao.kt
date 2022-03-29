@@ -86,6 +86,9 @@ interface TaskDao {
     @Query("DELETE FROM task_table WHERE projectId =:projectId")
     suspend fun deleteTaskOfProject(projectId: Int)
 
+    @Query("SELECT * FROM task_table WHERE date =:day")
+    suspend fun getTasksOfDay(day: Long): List<Task>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
 

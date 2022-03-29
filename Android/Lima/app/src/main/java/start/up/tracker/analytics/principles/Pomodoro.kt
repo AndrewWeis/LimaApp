@@ -1,7 +1,5 @@
 package start.up.tracker.analytics.principles
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import start.up.tracker.R
 import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.principles.base.Principle
@@ -11,9 +9,8 @@ import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
-import javax.inject.Inject
 
-class Pomodoro @Inject constructor(
+class Pomodoro (
     private val taskAnalyticsDao: TaskAnalyticsDao
 ) : Principle {
 
@@ -29,17 +26,13 @@ class Pomodoro @Inject constructor(
         return true
     }
 
-    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? =
-        withContext(Dispatchers.Default) {
-            logicAddEditTask(task)
-            null
-        }
+    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
+        return logicAddEditTask(task)
+    }
 
-    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? =
-        withContext(Dispatchers.Default) {
-            logicAddEditTask(task)
-            null
-        }
+    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? {
+        return logicAddEditTask(task)
+    }
 
     /**
      * Первый, тестовый принцип

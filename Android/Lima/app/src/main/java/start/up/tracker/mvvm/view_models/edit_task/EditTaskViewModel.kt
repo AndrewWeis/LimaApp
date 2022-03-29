@@ -89,10 +89,12 @@ class EditTaskViewModel @Inject constructor(
             return
         }
 
-        if (isEditMode) {
-            checkPrinciplesComplianceOnEditTask()
-        } else {
-            checkPrinciplesComplianceOnAddTask()
+        viewModelScope.launch {
+            if (isEditMode) {
+                checkPrinciplesComplianceOnEditTask()
+            } else {
+                checkPrinciplesComplianceOnAddTask()
+            }
         }
     }
 
@@ -279,13 +281,13 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
-    private fun checkPrinciplesComplianceOnEditTask() = viewModelScope.launch {
+    private suspend fun checkPrinciplesComplianceOnEditTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
         // todo(post options)
         createTask()
     }
 
-    private fun checkPrinciplesComplianceOnAddTask() = viewModelScope.launch {
+    private suspend fun checkPrinciplesComplianceOnAddTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
         // todo(post options)
         updateTask()
