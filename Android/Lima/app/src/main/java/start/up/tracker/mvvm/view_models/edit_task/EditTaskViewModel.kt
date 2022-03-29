@@ -284,13 +284,13 @@ class EditTaskViewModel @Inject constructor(
     private suspend fun checkPrinciplesComplianceOnEditTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
         // todo(post options)
-        createTask()
+        updateTask()
     }
 
     private suspend fun checkPrinciplesComplianceOnAddTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
         // todo(post options)
-        updateTask()
+        createTask()
     }
 
     /**
@@ -328,12 +328,10 @@ class EditTaskViewModel @Inject constructor(
         val maxTaskId = taskDao.getTaskMaxId() ?: 0
         val newTask = task.copy(taskId = maxTaskId + 1)
 
-        launch { activeAnalytics.addTask(newTask) }
+        activeAnalytics.addTask(newTask)
 
-        launch {
-            taskDao.insertTask(newTask)
-            tasksEventChannel.send(TasksEvent.NavigateBack)
-        }
+        taskDao.insertTask(newTask)
+        tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun updateTask() = viewModelScope.launch {
