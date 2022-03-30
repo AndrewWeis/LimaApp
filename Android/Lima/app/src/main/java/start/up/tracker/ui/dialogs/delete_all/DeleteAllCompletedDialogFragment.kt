@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments
+package start.up.tracker.ui.dialogs.delete_all
 
 import android.app.Dialog
 import android.os.Bundle

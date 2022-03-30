@@ -44,6 +44,7 @@ android {
                     'src/main/res/layouts/appbars/toolbars',
                     'src/main/res/layouts/activities',
                     'src/main/res/layouts/views',
+                    'src/main/res/layouts/dialogs',
                     'src/main/res/layouts',
                     'src/main/res/styles',
                     'src/main/res/strings',

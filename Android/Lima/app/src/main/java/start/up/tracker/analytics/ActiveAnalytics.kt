@@ -1,6 +1,6 @@
 package start.up.tracker.analytics
 
-import start.up.tracker.analytics.entities.AnalyticsMessage
+import start.up.tracker.analytics.entities.AnalyticsMessages
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.analytics.principles.Pomodoro
@@ -206,12 +206,14 @@ class ActiveAnalytics @Inject constructor(
      * @param task задача
      * @return список сообщений при неуспехе проверок
      */
-    suspend fun checkPrinciplesComplianceOnAddTask(task: Task): List<AnalyticsMessage> {
+    suspend fun checkPrinciplesComplianceOnAddTask(task: Task): AnalyticsMessages {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
-        return activePrinciplesIds.mapNotNull { id ->
+        val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
             principlesMap[id]!!.checkComplianceOnAddTask(task)
         }
+
+        return AnalyticsMessages(messages = analyticsMessages)
     }
 
     /**
@@ -220,11 +222,13 @@ class ActiveAnalytics @Inject constructor(
      * @param task задача
      * @return список сообщений при неуспехе проверок
      */
-    suspend fun checkPrinciplesComplianceOnEditTask(task: Task): List<AnalyticsMessage> {
+    suspend fun checkPrinciplesComplianceOnEditTask(task: Task): AnalyticsMessages {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
-        return activePrinciplesIds.mapNotNull { id ->
+        val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
             principlesMap[id]!!.checkComplianceOnEditTask(task)
         }
+
+        return AnalyticsMessages(messages = analyticsMessages)
     }
 }

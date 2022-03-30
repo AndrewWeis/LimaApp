@@ -4,9 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class AnalyticsMessage(
-    var principleId: Int,
-    var title: String,
-    var error: String,
-    var hint: String
+data class AnalyticsMessages(
+    val messages: List<AnalyticsMessage>
 ) : Parcelable

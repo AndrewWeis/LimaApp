@@ -12,12 +12,12 @@ object AnalyticsMessageHolder {
         return AnalyticsMessage(
             principleId = TechniquesIds.PARETO,
             title = ResourcesUtils.getString(R.string.pareto_message_title),
-            message = ResourcesUtils.getString(
+            error = ResourcesUtils.getString(
                 R.string.pareto_message_body,
                 tasks,
                 priorityCount
             ),
-            messageDetailed = ResourcesUtils.getString(R.string.pareto_message_detailed)
+            hint = ResourcesUtils.getString(R.string.pareto_message_detailed)
         )
     }
 
@@ -26,8 +26,8 @@ object AnalyticsMessageHolder {
         return AnalyticsMessage(
             principleId = TechniquesIds.POMODORO,
             title = ResourcesUtils.getString(R.string.pomodoro_message_title),
-            message = ResourcesUtils.getString(R.string.pomodoro_message_body),
-            messageDetailed = ResourcesUtils.getString(R.string.pomodoro_message_detailed)
+            error = ResourcesUtils.getString(R.string.pomodoro_message_body),
+            hint = ResourcesUtils.getString(R.string.pomodoro_message_detailed)
         )
     }
 }

@@ -98,6 +98,14 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
+    fun saveTask() {
+        if (isEditMode) {
+            updateTask()
+        } else {
+            createTask()
+        }
+    }
+
     /**
      * Была нажата кнопка "Добавить подзадачу"
      */
@@ -284,7 +292,7 @@ class EditTaskViewModel @Inject constructor(
     private suspend fun checkPrinciplesComplianceOnEditTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
-        if (analyticsMessages.isEmpty()) {
+        if (analyticsMessages.messages.isEmpty()) {
             updateTask()
             return
         }
@@ -295,7 +303,7 @@ class EditTaskViewModel @Inject constructor(
     private suspend fun checkPrinciplesComplianceOnAddTask() {
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
 
-        if (analyticsMessages.isEmpty()) {
+        if (analyticsMessages.messages.isEmpty()) {
             createTask()
             return
         }
