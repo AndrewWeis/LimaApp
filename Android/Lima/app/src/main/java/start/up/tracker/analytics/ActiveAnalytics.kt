@@ -1,10 +1,9 @@
 package start.up.tracker.analytics
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import start.up.tracker.analytics.entities.AnalyticsMessage
+import start.up.tracker.analytics.entities.AnalyticsMessages
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
+import start.up.tracker.analytics.principles.Pomodoro
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskAnalyticsDao
@@ -76,40 +75,41 @@ import javax.inject.Singleton
 @Singleton
 class ActiveAnalytics @Inject constructor(
     private val taskAnalyticsDao: TaskAnalyticsDao,
-    private val taskDao: TaskDao,
     private val taskIdToTaskAnalyticsIdDao: TaskIdToTaskAnalyticsIdDao,
     private val techniquesDao: TechniquesDao,
+    taskDao: TaskDao
 ) {
 
-    private var principlesMap: HashMap<Int, Principle> = hashMapOf(
-        TechniquesIds.PARETO to Pareto(taskAnalyticsDao),
-        TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix(taskAnalyticsDao)
+    private val principlesMap: HashMap<Int, Principle> = hashMapOf(
+        TechniquesIds.PARETO to Pareto(taskDao),
+        TechniquesIds.POMODORO to Pomodoro(),
+        TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix()
     )
 
-    suspend fun addTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun addTask(task: Task) {
         taskAnalyticsDao.insertTaskAnalytics(mapTaskToAnalyticsTask(task))
         addTaskToAnalyticsTask(task.taskId, taskAnalyticsDao.countTasksAnalytics())
     }
 
-    suspend fun editTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun editTask(task: Task) {
         taskAnalyticsDao.updateTaskAnalytics(mapTaskToAnalyticsTask(task))
     }
 
-    suspend fun deleteTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun deleteTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = true)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun recoverTask(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun recoverTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun updateStatus(task: Task) = withContext(Dispatchers.Default) {
+    suspend fun updateStatus(task: Task) {
         if (task.completed) {
             finishTask(task)
         } else {
@@ -117,7 +117,7 @@ class ActiveAnalytics @Inject constructor(
         }
     }
 
-    private suspend fun finishTask(task: Task) = withContext(Dispatchers.Default) {
+    private suspend fun finishTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val inTime = isFinishedInTime(taskAnalytics)
@@ -125,14 +125,14 @@ class ActiveAnalytics @Inject constructor(
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    private suspend fun unfinishTask(task: Task) = withContext(Dispatchers.Default) {
+    private suspend fun unfinishTask(task: Task) {
         val taskToTaskAnalytics = getTaskToAnalyticsTaskMap()
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(completed = false, completedInTime = false)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
     }
 
-    suspend fun deleteAllAnalyticsTasks() = withContext(Dispatchers.Default) {
+    suspend fun deleteAllAnalyticsTasks() {
         val tasks = taskAnalyticsDao.getAllTasks()
         for (task in tasks) {
             taskAnalyticsDao.deleteTaskAnalytics(task)
@@ -146,11 +146,11 @@ class ActiveAnalytics @Inject constructor(
     private suspend fun getTaskToAnalyticsTaskMap(): HashMap<Int, Int> {
         val elements = taskIdToTaskAnalyticsIdDao.getAllElements()
         val taskToAnalyticsTask = HashMap<Int, Int>()
-        if (elements != null) {
-            for (element in elements) {
-                taskToAnalyticsTask[element.from] = element.to
-            }
+
+        elements.forEach {
+            taskToAnalyticsTask[it.from] = it.to
         }
+
         return taskToAnalyticsTask
     }
 
@@ -189,53 +189,46 @@ class ActiveAnalytics @Inject constructor(
     }
 
     /**
-     * TODO АНДРЕЙ. СВЯЗАТЬ.
      * Метод проверяет совместимость включаемого принципа со всеми активными принципами
-     * @param id Айди включаемого принципа
-     * @return можно или нельзя включить
+     *
+     * @param principleId Айди включаемого принципа
+     * @return можно ли включить
      */
-    suspend fun managerCheckCompatibility(id: Int): Boolean {
-        val principle = principlesMap[id]
+    suspend fun checkPrinciplesCompatibility(principleId: Int): Boolean {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
-        return principle!!.canBeEnabled(activePrinciplesIds)
+
+        return principlesMap[principleId]!!.checkCompatibility(activePrinciplesIds, principleId)
     }
 
     /**
-     * TODO АНДРЕЙ. СВЯЗАТЬ.
-     * Метод вызывает логику каждого из активных тасков при создании активности
-     * @param task активность
-     * @return список всех сообщений для создания диалоговых окон (Null - все в порядке)
+     * Запускает логику проверок соответствия принципам при событии добавление задачи
+     *
+     * @param task задача
+     * @return список сообщений при неуспехе проверок
      */
-    suspend fun managerAddTask(task: Task): List<AnalyticsMessage> {
-        val analyticsMessages = ArrayList<AnalyticsMessage>()
+    suspend fun checkPrinciplesComplianceOnAddTask(task: Task): AnalyticsMessages {
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
-        val activePrinciplesIds = arrayListOf(1)
-        // будем вызывать логику каждого из методов при необходимости: при редактировании таска
-        for (activePrincipleId in activePrinciplesIds) {
-            val res = principlesMap[activePrincipleId]!!.logicAddTask(task)
-            if (res != null) {
-                analyticsMessages.add(res)
-            }
+        val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
+            principlesMap[id]!!.checkComplianceOnAddTask(task)
         }
-        return analyticsMessages
+
+        return AnalyticsMessages(messages = analyticsMessages)
     }
 
     /**
-     * TODO АНДРЕЙ. СВЯЗАТЬ.
-     * Метод вызывает логику каждого из активных тасков при редактирования активности
-     * @param task активность
-     * @return список всех сообщений для создания диалоговых окон (Null - все в порядке)
+     * Запускает логику проверок соответствия принципам при событии редактирование задачи
+     *
+     * @param task задача
+     * @return список сообщений при неуспехе проверок
      */
-    suspend fun managerEditTask(task: Task): List<AnalyticsMessage> {
-        val analyticsMessages = ArrayList<AnalyticsMessage>()
+    suspend fun checkPrinciplesComplianceOnEditTask(task: Task): AnalyticsMessages {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
-        // будем вызывать логику каждого из методов при необходимости: при редактировании таска
-        for (activePrincipleId in activePrinciplesIds) {
-            val res = principlesMap[activePrincipleId]!!.logicEditTask(task)
-            if (res != null) {
-                analyticsMessages.add(res)
-            }
+
+        val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
+            principlesMap[id]!!.checkComplianceOnEditTask(task)
         }
-        return analyticsMessages
+
+        return AnalyticsMessages(messages = analyticsMessages)
     }
 }

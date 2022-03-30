@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
 import android.widget.TimePicker
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,7 @@ import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.views.forms.base.BaseInputView
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
+import start.up.tracker.utils.screens.ExtraCodes
 import java.util.*
 
 @AndroidEntryPoint
@@ -64,6 +66,7 @@ class EditTaskFragment :
         initAdapter()
         initListeners()
         initObservers()
+        initResultListener()
         initEventsListener()
     }
 
@@ -356,6 +359,12 @@ class EditTaskFragment :
         }
     }
 
+    private fun initResultListener() {
+        setFragmentResultListener(ExtraCodes.IGNORE_CLICKED_REQUEST) { _, _ ->
+            viewModel.saveTask()
+        }
+    }
+
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.tasksEvent.collect { event ->
             when (event) {
@@ -374,10 +383,17 @@ class EditTaskFragment :
 
                 is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = EditTaskFragmentDirections.actionAddEditTaskSelf(
-                        event.task,
-                        ResourcesUtils.getString(R.string.title_edit_task),
-                        event.task.projectId,
-                        event.task.taskId
+                        task = event.task,
+                        title = ResourcesUtils.getString(R.string.title_edit_task),
+                        projectId = event.task.projectId,
+                        parentTaskId = event.task.taskId
+                    )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.ShowAnalyticMessageDialog -> {
+                    val action = EditTaskFragmentDirections.actionAddEditTaskToAnalyticsMessagesDialog(
+                        messages = event.messages
                     )
                     navigateTo(action)
                 }

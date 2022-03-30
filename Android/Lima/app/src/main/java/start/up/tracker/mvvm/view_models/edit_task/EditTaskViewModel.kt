@@ -89,6 +89,16 @@ class EditTaskViewModel @Inject constructor(
             return
         }
 
+        viewModelScope.launch {
+            if (isEditMode) {
+                checkPrinciplesComplianceOnEditTask()
+            } else {
+                checkPrinciplesComplianceOnAddTask()
+            }
+        }
+    }
+
+    fun saveTask() {
         if (isEditMode) {
             updateTask()
         } else {
@@ -279,6 +289,28 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
+    private suspend fun checkPrinciplesComplianceOnEditTask() {
+        val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
+
+        if (analyticsMessages.messages.isEmpty()) {
+            updateTask()
+            return
+        }
+
+        tasksEventChannel.send(TasksEvent.ShowAnalyticMessageDialog(analyticsMessages))
+    }
+
+    private suspend fun checkPrinciplesComplianceOnAddTask() {
+        val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
+
+        if (analyticsMessages.messages.isEmpty()) {
+            createTask()
+            return
+        }
+
+        tasksEventChannel.send(TasksEvent.ShowAnalyticMessageDialog(analyticsMessages))
+    }
+
     /**
      * Соединяет flow проектов, полученних их базы данных и flow идентификатора выбранного проекта
      *
@@ -314,20 +346,16 @@ class EditTaskViewModel @Inject constructor(
         val maxTaskId = taskDao.getTaskMaxId() ?: 0
         val newTask = task.copy(taskId = maxTaskId + 1)
 
-        taskDao.insertTask(newTask)
-
-        activeAnalytics.managerAddTask(newTask)
         activeAnalytics.addTask(newTask)
 
+        taskDao.insertTask(newTask)
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun updateTask() = viewModelScope.launch {
+        launch { activeAnalytics.editTask(task) }
+
         taskDao.updateTask(task)
-
-        activeAnalytics.managerEditTask(task)
-        activeAnalytics.editTask(task)
-
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 

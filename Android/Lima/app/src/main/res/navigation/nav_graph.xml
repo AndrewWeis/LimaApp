@@ -29,6 +29,9 @@
             android:name="parentTaskId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_addEditTask_to_analyticsMessagesDialog"
+            app:destination="@id/analyticsMessagesDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -64,7 +67,7 @@
     </fragment>
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
-        android:name="start.up.tracker.ui.fragments.DeleteAllCompletedDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.delete_all.DeleteAllCompletedDialogFragment"
         android:label="DeleteAllCompletedDialogFragment" />
     <action
         android:id="@+id/action_global_deleteAllCompletedDialog"
@@ -140,4 +143,13 @@
             android:name="title"
             app:argType="string" />
     </fragment>
+    <dialog
+        android:id="@+id/analyticsMessagesDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.analytics_messages.AnalyticsMessagesDialogFragment"
+        android:label="AnalyticsMessagesDialogFragment"
+        tools:layout="@layout/analytics_messages_dialog_fragment">
+        <argument
+            android:name="messages"
+            app:argType="start.up.tracker.analytics.entities.AnalyticsMessages" />
+    </dialog>
 </navigation>

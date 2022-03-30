@@ -49,11 +49,11 @@ class TechniqueFragment :
 
     private fun setupClickListener() {
         binding?.techniqueTryOutButton?.setOnClickListener {
-            viewModel.onSelectTechniqueClick(true)
+            viewModel.onTechniqueEnableClick()
         }
 
         binding?.techniqueCancelButton?.setOnClickListener {
-            viewModel.onSelectTechniqueClick(false)
+            viewModel.onTechniqueDisableClick()
         }
     }
 

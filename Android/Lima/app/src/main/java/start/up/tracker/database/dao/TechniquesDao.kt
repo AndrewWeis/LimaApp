@@ -8,7 +8,7 @@ import start.up.tracker.entities.Technique
 interface TechniquesDao {
 
     @Query("SELECT id FROM technique_table WHERE isEnabled == 1")
-    fun getActiveTechniquesIds(): List<Int>
+    suspend fun getActiveTechniquesIds(): List<Int>
 
     @Query("SELECT * FROM technique_table")
     fun getTechniques(): Flow<List<Technique>>
