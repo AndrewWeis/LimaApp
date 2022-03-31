@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/MM"
-    android:paddingHorizontal="16dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MW"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="64dp"
+    android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/analytics_messages_list"
-        style="@style/MM"
-        android:layout_marginBottom="64dp" />
+        style="@style/MW" />
+
+    <LinearLayout
+        android:id="@+id/indicator_layout"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:gravity="center"
+        android:orientation="horizontal" />
 
     <LinearLayout
         style="@style/MW"
@@ -32,4 +41,4 @@
             android:text="@string/button_ignore" />
     </LinearLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
