@@ -20,6 +20,8 @@ interface Principle {
         val incompatiblePrinciplesIds =
             TechniquesStorage.getIncompatiblePrinciplesIds(techniqueId)
 
+        val currentPrincipleName = AnalyticsMessageHolder.getPrincipleNameById(techniqueId)
+
         var error = ""
         for (principleId in activePrinciplesIds) {
             if (incompatiblePrinciplesIds.contains(principleId)) {
@@ -33,7 +35,7 @@ interface Principle {
 
         return AnalyticsMessage(
             principleId = techniqueId,
-            title = ResourcesUtils.getString(R.string.incompatible_message_title),
+            title = ResourcesUtils.getString(R.string.incompatible_message_title, currentPrincipleName),
             error = error,
             hint = ResourcesUtils.getString(R.string.incompatible_message_hint)
         )

@@ -22,7 +22,7 @@ object TechniquesStorage {
     fun getIncompatiblePrinciplesIds(id: Int): List<Int> {
         return when (id) {
             PARETO -> listOf(-1)
-            EISENHOWER_MATRIX -> listOf(-1)
+            EISENHOWER_MATRIX -> listOf(PARETO, POMODORO)
             POMODORO -> listOf(-1)
             else -> listOf(-1)
         }
