@@ -31,7 +31,7 @@ class Pomodoro : Principle {
         val startDate = TimeHelper.computeStartDate(task)
 
         if (task.date == null || task.startTimeInMinutes == null || task.endTimeInMinutes == null) {
-            AnalyticsMessageHolder.getPomodoroMessage()
+            return AnalyticsMessageHolder.getPomodoroMessage()
         } else {
             // TODO write method
             if (currentDate >= startDate) {

@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/MW"
-    android:orientation="vertical"
-    android:padding="32dp">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MM"
+    android:paddingHorizontal="16dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/analytics_messages_list"
-        style="@style/MW" />
+        style="@style/MM"
+        android:layout_marginBottom="64dp" />
 
     <LinearLayout
         style="@style/MW"
-        android:orientation="horizontal">
+        android:layout_height="64dp"
+        android:layout_gravity="bottom|end"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp">
 
         <Button
             android:id="@+id/edit_button"
@@ -27,7 +30,6 @@
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/button_ignore" />
-
     </LinearLayout>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
