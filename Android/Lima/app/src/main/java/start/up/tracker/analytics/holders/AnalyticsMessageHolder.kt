@@ -30,4 +30,13 @@ object AnalyticsMessageHolder {
             hint = ResourcesUtils.getString(R.string.pomodoro_message_detailed)
         )
     }
+
+    fun getPrincipleNameById(id: Int): String {
+        return when (id) {
+            TechniquesIds.PARETO -> ResourcesUtils.getString(R.string.pareto_title)
+            TechniquesIds.EISENHOWER_MATRIX -> ResourcesUtils.getString(R.string.eisenhower_title)
+            TechniquesIds.POMODORO -> ResourcesUtils.getString(R.string.pomodoro_title)
+            else -> ResourcesUtils.getString(R.string.principle_does_not_exist)
+        }
+    }
 }

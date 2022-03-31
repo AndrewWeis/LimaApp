@@ -43,6 +43,10 @@
     <string name="pomodoro_message_body">Pomodoro principle requires</string>
     <string name="pomodoro_message_detailed">Try priories your tasks in a way that the principle suggests</string>
 
+    <string name="incompatible_message_title">The %s is incompatible with principles: \n</string>
+    <string name="incompatible_message_hint">Try to turn off incompatible principles</string>
+    <string name="principle_does_not_exist">Specified principle does not exist</string>
+
     <string name="action_search">Search</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
     <string name="form_empty">Some data is empty, checked your form</string>

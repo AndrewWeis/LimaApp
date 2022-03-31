@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
+import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.databinding.TechniqueFragmentBinding
 import start.up.tracker.entities.Technique
 import start.up.tracker.mvvm.view_models.techniques.TechniqueViewModel
@@ -35,6 +36,14 @@ class TechniqueFragment :
             setupButton(it)
             setupData(it)
         }
+
+        viewModel.analyticsMessageDialog.observe(viewLifecycleOwner) {
+            showDialog(it)
+        }
+    }
+
+    private fun showDialog(message: AnalyticsMessage) {
+
     }
 
     private fun setupButton(technique: Technique) {
