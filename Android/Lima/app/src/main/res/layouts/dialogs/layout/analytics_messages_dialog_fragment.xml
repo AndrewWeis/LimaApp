@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/MW"
+    style="@style/LVMW"
     android:orientation="vertical"
-    android:padding="32dp">
+    android:padding="24dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/analytics_messages_list"
         style="@style/MW" />
 
     <LinearLayout
-        style="@style/MW"
-        android:orientation="horizontal">
+        style="@style/LHMW"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
 
         <Button
             android:id="@+id/edit_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Contained.RobotoRegular.Size14.Gray.M_H42"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:text="@string/button_edit" />
 
         <Button
             android:id="@+id/ignore_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/OutlineButton.RobotoRegular.Size14.Gray.M_H42"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/button_ignore" />
-
     </LinearLayout>
 
 </LinearLayout>

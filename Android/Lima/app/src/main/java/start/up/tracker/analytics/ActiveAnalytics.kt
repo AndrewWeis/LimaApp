@@ -1,5 +1,6 @@
 package start.up.tracker.analytics
 
+import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.analytics.entities.AnalyticsMessages
 import start.up.tracker.analytics.principles.EisenhowerMatrix
 import start.up.tracker.analytics.principles.Pareto
@@ -192,9 +193,9 @@ class ActiveAnalytics @Inject constructor(
      * Метод проверяет совместимость включаемого принципа со всеми активными принципами
      *
      * @param principleId Айди включаемого принципа
-     * @return можно ли включить
+     * @return сообщение об ошибки или null если все хорошо
      */
-    suspend fun checkPrinciplesCompatibility(principleId: Int): Boolean {
+    suspend fun checkPrinciplesCompatibility(principleId: Int): AnalyticsMessage? {
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
         return principlesMap[principleId]!!.checkCompatibility(activePrinciplesIds, principleId)

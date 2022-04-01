@@ -2,17 +2,18 @@ package start.up.tracker.ui.fragments.techniques
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
+import start.up.tracker.analytics.entities.AnalyticsMessage
 import start.up.tracker.databinding.TechniqueFragmentBinding
 import start.up.tracker.entities.Technique
 import start.up.tracker.mvvm.view_models.techniques.TechniqueViewModel
+import start.up.tracker.ui.fragments.base.BaseNavigationFragment
 
 @AndroidEntryPoint
 class TechniqueFragment :
-    Fragment(R.layout.technique_fragment) {
+    BaseNavigationFragment(R.layout.technique_fragment) {
 
     private val viewModel: TechniqueViewModel by viewModels()
     private var binding: TechniqueFragmentBinding? = null
@@ -32,12 +33,21 @@ class TechniqueFragment :
 
     private fun setupObservers() {
         viewModel.technique.observe(viewLifecycleOwner) {
-            setupButton(it)
-            setupData(it)
+            showButton(it)
+            showData(it)
+        }
+
+        viewModel.analyticsMessageDialog.observe(viewLifecycleOwner) {
+            showDialog(it)
         }
     }
 
-    private fun setupButton(technique: Technique) {
+    private fun showDialog(message: AnalyticsMessage) {
+        val action = TechniqueFragmentDirections.actionTechniqueToCompatibilityDialog(message)
+        navigateTo(action)
+    }
+
+    private fun showButton(technique: Technique) {
         if (technique.isEnabled) {
             binding?.techniqueTryOutButton?.visibility = View.GONE
             binding?.techniqueCancelButton?.visibility = View.VISIBLE
@@ -57,7 +67,7 @@ class TechniqueFragment :
         }
     }
 
-    private fun setupData(technique: Technique) {
+    private fun showData(technique: Technique) {
         binding?.techniqueTitleText?.text = technique.title
         binding?.techniqueBodyText?.text = technique.body
     }

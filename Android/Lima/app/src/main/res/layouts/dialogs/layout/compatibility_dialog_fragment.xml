@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/LVMW"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <include
+        android:id="@+id/message"
+        layout="@layout/analytics_message_item" />
+
+    <Button
+        android:id="@+id/ok_button"
+        style="@style/Contained.RobotoRegular.Size14.Gray.M_H42"
+        android:text="@string/button_got_it" />
+
+</LinearLayout>

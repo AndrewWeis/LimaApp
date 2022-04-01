@@ -16,6 +16,14 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="LVMW" parent="MW">
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="LHMW" parent="MW">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
     <style name="W0_H0">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
