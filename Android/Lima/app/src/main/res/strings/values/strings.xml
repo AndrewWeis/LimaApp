@@ -1,19 +1,58 @@
 <resources>
     <string name="app_name">Tracker</string>
 
+    <!-- task -->
+    <string name="task_title">Title</string>
+    <string name="task_description">Description</string>
+
+    <string name="task_time_start">Start time</string>
+    <string name="task_time_end">End time</string>
+    <string name="task_date">Date</string>
+
+    <string name="task_deleted">Task Deleted</string>
+    <string name="undo">UNDO</string>
+
+    <!-- priorities -->
+    <string name="priority_undefined">No priority</string>
+    <string name="priority_high">High</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_low">Low</string>
+
+    <!-- settings -->
+    <string name="appearance_text">Appearance</string>
+    <string name="techniques_text">Time-management techniques</string>
+
+    <!-- Home Blocks -->
+    <string name="inbox">Inbox</string>
+    <string name="today">Today</string>
+    <string name="upcoming">Upcoming</string>
+
+    <!-- Techniques -->
+    <string name="pareto_title">Pareto</string>
+    <string name="pareto_body">Description of Pareto</string>
+    <string name="pareto_message_title">Pareto principle is violated</string>
+    <string name="pareto_message_body">Pareto principle suggests that you should prioritize 20 percent of daily tasks over 80 percent other tasks while you have %d tasks and %d of them are prioritized </string>
+    <string name="pareto_message_detailed">Try priories your tasks in a way that the principle suggests</string>
+
+    <string name="eisenhower_title">Eisenhower Matrix</string>
+    <string name="eisenhower_body">Description of Eisenhower Matrix</string>
+
+    <string name="pomodoro_title">Pomodoro</string>
+    <string name="pomodoro_body">Description of Pomodoro</string>
+    <string name="pomodoro_message_title">Pomodoro principle cannot be applied</string>
+    <string name="pomodoro_message_body">Pomodoro principle requires</string>
+    <string name="pomodoro_message_detailed">Try priories your tasks in a way that the principle suggests</string>
+
+    <string name="incompatible_message_title">The %s is incompatible with principles: \n</string>
+    <string name="incompatible_message_hint">Try to turn off incompatible principles</string>
+    <string name="principle_does_not_exist">Specified principle does not exist</string>
+
+    <string name="hint">Hint</string>
+
     <string name="action_search">Search</string>
-    <string name="success_delete">Success delete task</string>
-    <string name="success_clear">Success clear all tasks</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
     <string name="form_empty">Some data is empty, checked your form</string>
-    <string name="update_task">Update task</string>
-    <string name="success_save">Success save task</string>
-    <string name="success_update">Success update task</string>
-    <string name="tx_welcome">Good evening, Nikita</string>
-    <string name="add_task">Add task</string>
     <string name="settings">Settings</string>
-    <string name="tx_subtitle">Organize your plans for the day</string>
-    <string name="unsorted_tasks">Unsorted tasks</string>
     <string name="fab">FAB</string>
     <string name="label">Label</string>
     <string name="description">Description</string>
@@ -23,13 +62,7 @@
     <string name="average">Average</string>
     <string name="low">Low</string>
     <string name="save">Save</string>
-    <string name="dark_mode">Dark mode</string>
     <string name="importance_icon">Importance icon</string>
-    <string name="important">Important</string>
     <string name="hide_completed">Hide completed</string>
-    <string name="action_sort">Sort</string>
-    <string name="sort_by_name">Sort by name</string>
-    <string name="sort_by_date_created">Sort by date created</string>
     <string name="delete_all_completed">Delete all completed</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -96,10 +96,14 @@
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_child.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_parent.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_section.xml" value="0.17592592592592593" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/technique_fragment.xml" value="0.2346014492753623" />
+        <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/home_section_item.xml" value="0.1" />
+        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/add_subtask_button.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/tasks_item.xml" value="0.22826086956521738" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

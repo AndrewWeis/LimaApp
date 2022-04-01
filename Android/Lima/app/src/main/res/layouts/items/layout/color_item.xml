@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="16dp"
+    style="@style/MW">
+
+    <ImageView
+        android:id="@+id/color_image"
+        style="@style/W40_H40"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_color" />
+
+    <ImageView
+        android:id="@+id/check_image"
+        style="@style/W24_H24"
+        app:layout_constraintBottom_toBottomOf="@+id/color_image"
+        app:layout_constraintEnd_toEndOf="@+id/color_image"
+        app:layout_constraintStart_toStartOf="@+id/color_image"
+        app:layout_constraintTop_toTopOf="@id/color_image"
+        app:srcCompat="@drawable/ic_done" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

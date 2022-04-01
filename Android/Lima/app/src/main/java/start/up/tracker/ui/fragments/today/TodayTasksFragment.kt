@@ -7,32 +7,35 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.entities.ExtendedTask
 import start.up.tracker.databinding.FragmentTodayTasksBinding
-import start.up.tracker.mvvm.view_models.today.TodayViewModel
+import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.today.TodayTasksViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
-import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
-import start.up.tracker.ui.list.adapters.TodayTasksAdapter
-import start.up.tracker.utils.toTask
+import start.up.tracker.ui.extensions.list.ListExtension
+import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
+import start.up.tracker.ui.list.adapters.tasks.TaskAdapter
+import start.up.tracker.ui.list.generators.tasks.TasksGenerator
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
+import start.up.tracker.utils.resources.ResourcesUtils
 
 @AndroidEntryPoint
 class TodayTasksFragment :
     BaseTasksFragment(R.layout.fragment_today_tasks),
-    TodayTasksAdapter.OnItemClickListener {
+    OnTaskClickListener {
 
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: TodayTasksViewModel by viewModels()
 
     private var binding: FragmentTodayTasksBinding? = null
-    private lateinit var taskAdapter: TodayTasksAdapter
+
+    private lateinit var adapter: TaskAdapter
+    private var listExtension: ListExtension? = null
+    private val generator: TasksGenerator = TasksGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,6 +43,7 @@ class TodayTasksFragment :
 
         initAdapter()
         initListeners()
+        initObservers()
         initTaskEventListener()
 
         setHasOptionsMenu(true)
@@ -48,14 +52,15 @@ class TodayTasksFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listExtension = null
     }
 
-    override fun onItemClick(extendedTask: ExtendedTask) {
-        viewModel.onExtendedTaskSelected(extendedTask)
+    override fun onTaskClick(task: Task) {
+        viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-        viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -63,7 +68,7 @@ class TodayTasksFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.hideCompleted.first() ?: false
+                viewModel.hideCompleted.first()
         }
     }
 
@@ -82,34 +87,34 @@ class TodayTasksFragment :
         }
     }
 
+    private fun showTasks(tasks: List<Task>) {
+        adapter.addListItems(generator.createListItems(tasks))
+    }
+
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask) }
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
-                        title = "Add new task",
-                        categoryId = 1
+                        title = ResourcesUtils.getString(R.string.title_add_task),
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.NavigateToEditExtendedTaskScreen -> {
-                    val task = event.extendedTask.toTask()
+                is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
-                        title = "Edit task",
-                        categoryId = event.extendedTask.categoryId,
-                        task = task
+                        title = ResourcesUtils.getString(R.string.title_edit_task),
+                        projectId = event.task.projectId,
+                        task = event.task
                     )
                     navigateTo(action)
-                }
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
                 }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                        ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }
@@ -117,45 +122,27 @@ class TodayTasksFragment :
     }
 
     private fun initListeners() {
-        binding?.addTaskOfToday?.setOnClickListener {
+        binding?.addTaskFab?.setOnClickListener {
             viewModel.onAddNewTaskClick()
         }
+    }
 
+    private fun initObservers() {
         viewModel.todayTasks.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
+            showTasks(it)
         }
     }
 
     private fun initAdapter() {
-        taskAdapter = TodayTasksAdapter(this)
+        adapter = TaskAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
 
-        binding?.todayTaskRV?.apply {
-            itemAnimator = null
-            adapter = taskAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
+        listExtension = ListExtension(binding?.todayTasksList)
+        listExtension?.setVerticalLayoutManager()
+        listExtension?.setAdapter(adapter)
 
-        attachSwipeToAdapter()
-    }
-
-    private fun attachSwipeToAdapter() {
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            0,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val todayTask = taskAdapter.currentList[viewHolder.adapterPosition]
-                viewModel.onExtendedTaskSwiped(todayTask)
-            }
-        }).attachToRecyclerView(binding?.todayTaskRV)
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chip_view"
+    android:layout_width="wrap_content"
+    style="@style/Outline.Black.Width_05.Radius6.WW"
+    android:layout_marginHorizontal="4dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text"
+        style="@style/RobotoRegular.Black.Size12.WW"
+        android:padding="8dp"
+        tools:text="Project" />
+
+</com.google.android.material.card.MaterialCardView>

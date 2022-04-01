@@ -8,7 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
-import start.up.tracker.data.database.TaskDatabase
+import start.up.tracker.database.TaskDatabase
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -30,13 +30,13 @@ object AppModule {
     fun provideTaskDao(db: TaskDatabase) = db.taskDao()
 
     @Provides
-    fun provideArticleDao(db: TaskDatabase) = db.articlesDao()
+    fun provideTechniquesDao(db: TaskDatabase) = db.techniqueDao()
 
     @Provides
     fun provideAnalyticsDao(db: TaskDatabase) = db.analyticsDao()
 
     @Provides
-    fun provideCategoriesDao(db: TaskDatabase) = db.categoriesDao()
+    fun provideProjectsDao(db: TaskDatabase) = db.projectsDao()
 
     @Provides
     fun provideTodayTasksDao(db: TaskDatabase) = db.todayTasksDao()
@@ -48,7 +48,10 @@ object AppModule {
     fun provideUpcomingTasksDao(db: TaskDatabase) = db.upcomingTasksDao()
 
     @Provides
-    fun provideCrossRefDao(db: TaskDatabase) = db.crossRefDao()
+    fun provideTaskAnalyticsDao(db: TaskDatabase) = db.taskAnalyticsDao()
+
+    @Provides
+    fun provideTaskIdToTaskAnalyticsId(db: TaskDatabase) = db.taskIdToTaskAnalyticsIdDao()
 
     @ApplicationScope
     @Provides

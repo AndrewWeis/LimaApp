@@ -10,23 +10,33 @@ import start.up.tracker.databinding.FragmentAnalyticsBinding
 import start.up.tracker.ui.view_pagers.AnalyticsViewPagerAdapter
 
 @AndroidEntryPoint
-class AnalyticsFragment : Fragment(R.layout.fragment_analytics) {
+class AnalyticsFragment :
+    Fragment(R.layout.fragment_analytics) {
+
+    private var binding: FragmentAnalyticsBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding = FragmentAnalyticsBinding.bind(view)
 
-        val binding = FragmentAnalyticsBinding.bind(view)
+        initViewPager()
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun initViewPager() {
         val adapter = AnalyticsViewPagerAdapter(childFragmentManager, lifecycle)
 
-        binding.viewPager2.adapter = adapter
+        binding?.viewPager2?.adapter = adapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
-            when(position) {
+        TabLayoutMediator(binding!!.tabLayout, binding!!.viewPager2) { tab, position ->
+            when (position) {
                 0 -> { tab.text = "Month" }
                 1 -> { tab.text = "Year" }
-                /*2 -> { tab.text = "Week" }*/
             }
         }.attach()
     }
- }
+}

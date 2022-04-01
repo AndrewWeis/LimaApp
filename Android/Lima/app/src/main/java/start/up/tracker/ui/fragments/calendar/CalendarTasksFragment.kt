@@ -4,43 +4,45 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.constants.TIME_OFFSET
-import start.up.tracker.data.entities.ExtendedTask
 import start.up.tracker.databinding.FragmentCalendarTasksBinding
-import start.up.tracker.mvvm.view_models.today.TodayViewModel
+import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.today.CalendarTasksViewModel
+import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.ui.data.entities.TasksEvent
-import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
+import start.up.tracker.ui.extensions.list.ListExtension
+import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
-import start.up.tracker.ui.list.adapters.CalendarTasksAdapter
+import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter
+import start.up.tracker.ui.list.generators.calendar.CalendarTasksGenerator
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
+import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.convertDpToPx
-import start.up.tracker.utils.timeToMinutes
-import start.up.tracker.utils.toTask
-import java.text.SimpleDateFormat
-import java.util.*
 
 @AndroidEntryPoint
 class CalendarTasksFragment :
     BaseTasksFragment(R.layout.fragment_calendar_tasks),
-    CalendarTasksAdapter.OnItemClickListener {
+    OnTaskClickListener {
 
-    private val viewModel: TodayViewModel by viewModels()
+    private val viewModel: CalendarTasksViewModel by viewModels()
 
     private var binding: FragmentCalendarTasksBinding? = null
-    private lateinit var taskAdapter: CalendarTasksAdapter
+
+    private lateinit var adapter: CalendarTasksAdapter
+    private var listExtension: ListExtension? = null
+    private val generator = CalendarTasksGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCalendarTasksBinding.bind(view)
 
         initAdapter()
-        initListeners()
+        initObservers()
         initTaskEventListener()
         initCurrentTimeIndicator()
 
@@ -50,14 +52,15 @@ class CalendarTasksFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listExtension = null
     }
 
-    override fun onItemClick(extendedTask: ExtendedTask) {
-        viewModel.onExtendedTaskSelected(extendedTask)
+    override fun onTaskClick(task: Task) {
+        viewModel.onTaskSelected(task)
     }
 
-    override fun onCheckBoxClick(extendedTask: ExtendedTask, isChecked: Boolean) {
-        viewModel.onExtendedTaskCheckedChanged(extendedTask, isChecked)
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -65,7 +68,7 @@ class CalendarTasksFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.hideCompleted.first() ?: false
+                viewModel.hideCompleted.first()
         }
     }
 
@@ -84,65 +87,62 @@ class CalendarTasksFragment :
         }
     }
 
+    private fun showTasks(tasks: List<Task>) {
+        adapter.updateItems(generator.createListItems(tasks))
+    }
+
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask) }
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Add new task",
-                        categoryId = 1
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.NavigateToEditExtendedTaskScreen -> {
-                    val task = event.extendedTask.toTask()
+                is TasksEvent.NavigateToEditTaskScreen -> {
+                    val task = event.task
                     val action = TodayFragmentDirections.actionTodayToAddEditTask(
                         title = "Edit task",
-                        categoryId = event.extendedTask.categoryId,
+                        projectId = event.task.projectId,
                         task = task
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
-                }
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
                     val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                        ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }
         }
     }
 
-    private fun initListeners() {
+    private fun initObservers() {
         viewModel.calendarTasks.observe(viewLifecycleOwner) {
-            taskAdapter.submitList(it)
+            showTasks(it)
         }
     }
 
     private fun initAdapter() {
-        taskAdapter = CalendarTasksAdapter(this)
+        adapter = CalendarTasksAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
 
-        binding?.todayCalendarRV?.apply {
-            itemAnimator = null
-            adapter = taskAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
+        listExtension = ListExtension(binding?.calendarList)
+        listExtension?.setVerticalLayoutManager()
+        listExtension?.setAdapter(adapter)
     }
 
     private fun initCurrentTimeIndicator() {
-        val sdf = SimpleDateFormat("HH:mm")
-        val currentDate = sdf.format(Date())
-        val minutes = timeToMinutes(currentDate)
-
-        val layoutParams: ViewGroup.MarginLayoutParams =
-            binding?.currentTime?.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.topMargin = convertDpToPx(minutes - TIME_OFFSET)
-        binding?.currentTime?.requestLayout()
+        val layoutParams = binding?.timeIndicatorView?.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.topMargin =
+            convertDpToPx(TimeHelper.getMinutesOfCurrentDay() - TIME_OFFSET.toInt())
+        binding?.timeIndicatorView?.requestLayout()
     }
 }

@@ -18,14 +18,26 @@ import start.up.tracker.mvvm.view_models.analytics.AnalyticsMonthViewModel
 class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private val viewModel: AnalyticsMonthViewModel by viewModels()
-    private lateinit var binding: FragmentAnalyticsMonthBinding
+    private var binding: FragmentAnalyticsMonthBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAnalyticsMonthBinding.bind(view)
 
-        binding.lineChartMonth.setProgressBar(binding.progressBar)
+        initData()
+        initObservers()
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun initData() {
+        binding?.lineChartMonth?.setProgressBar(binding!!.progressBar)
+    }
+
+    private fun initObservers() {
         viewModel.statMonth.observe(viewLifecycleOwner) {
             if (it == true) {
                 initTasksChart()
@@ -34,7 +46,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     }
 
     private fun initTasksChart() {
-
         val chart = AnyChart.column()
         val column = chart.column(viewModel.data)
 
@@ -61,6 +72,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chart.tooltip().positionMode(TooltipPositionMode.POINT)
         chart.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding.lineChartMonth.setChart(chart)
+        binding?.lineChartMonth?.setChart(chart)
     }
 }

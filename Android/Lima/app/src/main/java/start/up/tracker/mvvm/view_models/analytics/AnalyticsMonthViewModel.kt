@@ -8,8 +8,7 @@ import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import start.up.tracker.data.database.dao.AnalyticsDao
-import start.up.tracker.data.entities.DayStat
+import start.up.tracker.database.dao.AnalyticsDao
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -36,10 +35,6 @@ class AnalyticsMonthViewModel @Inject constructor(
 
     private fun loadStatMonth() = viewModelScope.launch {
         val stats = dao.getStatMonth(currentYear, currentMonth)
-        initMonthData(stats)
-    }
-
-    private fun initMonthData(stats: List<DayStat>) {
 
         calendar.set(currentYear, currentMonth, 1)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)

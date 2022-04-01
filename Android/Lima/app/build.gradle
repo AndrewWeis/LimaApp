@@ -9,7 +9,7 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 android {
     compileSdk 31
 
-   defaultConfig {
+    defaultConfig {
         applicationId "start.up.tracker"
         minSdk 21
         targetSdk 31
@@ -44,6 +44,7 @@ android {
                     'src/main/res/layouts/appbars/toolbars',
                     'src/main/res/layouts/activities',
                     'src/main/res/layouts/views',
+                    'src/main/res/layouts/dialogs',
                     'src/main/res/layouts',
                     'src/main/res/styles',
                     'src/main/res/strings',
@@ -94,9 +95,6 @@ dependencies {
 
     // Data Store
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha02"
-
-    // Color picker
-    implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
 
     // View Pager 2
     implementation("androidx.viewpager2:viewpager2:1.0.0")

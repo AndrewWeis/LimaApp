@@ -5,42 +5,45 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import start.up.tracker.R
-import start.up.tracker.data.entities.ExtendedTask
-import start.up.tracker.data.entities.UpcomingSection
-import start.up.tracker.databinding.FragmentUpcomingBinding
+import start.up.tracker.databinding.ProjectTasksFragmentBinding
+import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.upcoming.UpcomingViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
-import start.up.tracker.ui.fragments.BaseTasksFragment
-import start.up.tracker.ui.fragments.tasks.ProjectsTasksFragmentDirections
-import start.up.tracker.ui.list.adapters.UpcomingAdapter
-import start.up.tracker.utils.toTask
+import start.up.tracker.ui.extensions.list.ListExtension
+import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
+import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
+import start.up.tracker.ui.list.adapters.upcoming.UpcomingTasksAdapter
+import start.up.tracker.ui.list.generators.upcoming.UpcomingTasksGenerator
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
+import start.up.tracker.utils.resources.ResourcesUtils
 
 @AndroidEntryPoint
 class UpcomingFragment :
-    BaseTasksFragment(R.layout.fragment_upcoming) {
+    BaseTasksFragment(R.layout.project_tasks_fragment),
+    OnTaskClickListener {
 
     private val viewModel: UpcomingViewModel by viewModels()
 
-    private var binding: FragmentUpcomingBinding? = null
-    private lateinit var upcomingAdapter: UpcomingAdapter
+    private var binding: ProjectTasksFragmentBinding? = null
+
+    private lateinit var adapter: UpcomingTasksAdapter
+    private var listExtension: ListExtension? = null
+    private val generator = UpcomingTasksGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentUpcomingBinding.bind(view)
+        binding = ProjectTasksFragmentBinding.bind(view)
 
         initAdapter()
         initListeners()
-        initResultListeners()
-        initViewModelObservers()
+        initObservers()
         initTaskEventListeners()
 
         setHasOptionsMenu(true)
@@ -49,6 +52,15 @@ class UpcomingFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        listExtension = null
+    }
+
+    override fun onTaskClick(task: Task) {
+        viewModel.onTaskSelected(task)
+    }
+
+    override fun onCheckBoxClick(task: Task) {
+        viewModel.onTaskCheckedChanged(task)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -56,7 +68,7 @@ class UpcomingFragment :
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.hideCompleted.first() ?: false
+                viewModel.hideCompleted.first()
         }
     }
 
@@ -75,34 +87,36 @@ class UpcomingFragment :
         }
     }
 
+    private fun showTasks(tasks: List<Task>) {
+        adapter.addListItems(generator.createListItems(tasks))
+    }
+
     private fun initTaskEventListeners() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
         viewModel.tasksEvent.collect { event ->
             when (event) {
-                is TasksEvent.ShowUndoDeleteExtendedTaskMessage -> {
-                    showUndoDeleteSnackbar { viewModel.onUndoDeleteExtendedTaskClick(event.extendedTask) }
+                is TasksEvent.ShowUndoDeleteTaskMessage -> {
+                    showUndoDeleteSnackbar { viewModel.onUndoDeleteTaskClick(event.task, event.subtasks) }
                 }
+
                 is TasksEvent.NavigateToAddTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
-                        title = "Add new task",
-                        categoryId = 1
+                        title = ResourcesUtils.getString(R.string.title_add_task),
+                        projectId = 1
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.NavigateToEditExtendedTaskScreen -> {
-                    val task = event.extendedTask.toTask()
+
+                is TasksEvent.NavigateToEditTaskScreen -> {
                     val action = UpcomingFragmentDirections.actionUpcomingToAddEditTask(
-                        title = "Edit task",
-                        categoryId = event.extendedTask.categoryId,
-                        task = task
+                        title = ResourcesUtils.getString(R.string.title_edit_task),
+                        projectId = event.task.projectId,
+                        task = event.task
                     )
                     navigateTo(action)
                 }
-                is TasksEvent.ShowTaskSavedConfirmationMessage -> {
-                    showTaskSavedMessage(event.msg)
-                }
+
                 is TasksEvent.NavigateToDeleteAllCompletedScreen -> {
-                    val action =
-                        ProjectsTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
+                    val action = ProjectTasksFragmentDirections.actionGlobalDeleteAllCompletedDialog()
                     navigateTo(action)
                 }
             }
@@ -110,45 +124,27 @@ class UpcomingFragment :
     }
 
     private fun initListeners() {
-        binding?.addTask?.setOnClickListener {
+        binding?.addTaskFab?.setOnClickListener {
             viewModel.onAddNewTaskClick()
         }
     }
 
-    private fun initViewModelObservers() {
-        viewModel.upcomingTasks.observe(viewLifecycleOwner) { tasks ->
-            separateDataAndSubmit(tasks, upcomingAdapter)
-        }
-    }
-
-    private fun initResultListeners() {
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_result")
-            viewModel.onAddEditResult(result)
+    private fun initObservers() {
+        viewModel.upcomingTasks.observe(viewLifecycleOwner) {
+            showTasks(it)
         }
     }
 
     private fun initAdapter() {
-        upcomingAdapter = UpcomingAdapter(viewModel)
+        adapter = UpcomingTasksAdapter(
+            layoutInflater = layoutInflater,
+            listener = this
+        )
 
-        binding?.upcomingRV?.apply {
-            adapter = upcomingAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-        }
-    }
+        listExtension = ListExtension(binding?.projectTasksList)
+        listExtension?.setVerticalLayoutManager()
+        listExtension?.setAdapter(adapter)
 
-    private fun separateDataAndSubmit(tasks: List<ExtendedTask>, adapter: UpcomingAdapter) {
-        val sectionsList: MutableList<UpcomingSection> = mutableListOf()
-        val tasksList: MutableList<ExtendedTask> = mutableListOf()
-
-        for (i in tasks.indices) {
-            tasksList.add(tasks[i])
-            if (i + 1 == tasks.size || tasks[i].dateLong != tasks[i + 1].dateLong) {
-                sectionsList.add(UpcomingSection(tasks[i].date, tasksList.toList()))
-                tasksList.clear()
-            }
-        }
-
-        adapter.submitList(sectionsList.toList())
+        listExtension?.attachSwipeToAdapter(adapter) { viewModel.onTaskSwiped(it) }
     }
 }

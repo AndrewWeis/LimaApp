@@ -2,29 +2,41 @@ package start.up.tracker.mvvm.view_models.upcoming
 
 import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.flatMapLatest
-import start.up.tracker.data.database.PreferencesManager
-import start.up.tracker.data.database.dao.AnalyticsDao
-import start.up.tracker.data.database.dao.CrossRefDao
-import start.up.tracker.data.database.dao.TaskDao
-import start.up.tracker.data.database.dao.UpcomingTasksDao
-import start.up.tracker.mvvm.view_models.tasks.base.BaseExtendedTasksViewModel
-import java.util.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import start.up.tracker.analytics.ActiveAnalytics
+import start.up.tracker.analytics.Analytics
+import start.up.tracker.database.PreferencesManager
+import start.up.tracker.database.dao.ProjectsDao
+import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.database.dao.UpcomingTasksDao
+import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
+import start.up.tracker.utils.ExtendedTasksMergeFlows
+import start.up.tracker.utils.TimeHelper
 import javax.inject.Inject
 
 @HiltViewModel
 class UpcomingViewModel @Inject constructor(
-    private val taskDao: TaskDao,
-    private val analyticsDao: AnalyticsDao,
-    private val upcomingTasksDao: UpcomingTasksDao,
-    private val crossRefDao: CrossRefDao,
-    private val preferencesManager: PreferencesManager
-) : BaseExtendedTasksViewModel(taskDao, crossRefDao, analyticsDao, preferencesManager) {
+    taskDao: TaskDao,
+    preferencesManager: PreferencesManager,
+    analytics: Analytics,
+    projectsDao: ProjectsDao,
+    upcomingTasksDao: UpcomingTasksDao,
+    private val activeAnalytics: ActiveAnalytics,
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
-    private val currentDate = Date().time
+    private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(
+        TimeHelper.getCurrentDayInMilliseconds()
+    )
+    private val projectsFlow = projectsDao.getProjects()
 
-    private val upcomingTasksFlow = hideCompleted.flatMapLatest {
-        upcomingTasksDao.getUpcomingTasks(currentDate, it ?: false)
-    }
-    val upcomingTasks = upcomingTasksFlow.asLiveData()
+    private val tasksFlow: Flow<List<Task>> = combine(
+        hideCompleted,
+        upcomingTasksFlow,
+        projectsFlow,
+        ExtendedTasksMergeFlows::mergeFlowsForExtendedTask
+    )
+
+    val upcomingTasks = tasksFlow.asLiveData()
 }

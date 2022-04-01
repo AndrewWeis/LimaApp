@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    style="@style/MM"
+    tools:context=".ui.fragments.edit_task.EditTaskFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/edit_tasks_list"
+        style="@style/MM" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:contentDescription="@string/fab"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_done" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

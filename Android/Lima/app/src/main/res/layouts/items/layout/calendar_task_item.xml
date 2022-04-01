@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardTaskCalendar"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_marginBottom="4dp"
+    android:backgroundTint="@color/calendarTask"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/MM">
+
+        <CheckBox
+            android:id="@+id/task_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_little"
+            android:layout_marginTop="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <TextView
+            android:id="@+id/task_title_text"
+            style="@style/RobotoRegular.Black.Size14.Zero_W"
+            android:layout_marginStart="@dimen/spacing_little"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/task_check_box"
+            app:layout_constraintEnd_toStartOf="@id/priority_image"
+            app:layout_constraintStart_toEndOf="@+id/task_check_box"
+            app:layout_constraintTop_toTopOf="@+id/task_check_box"
+            tools:text="Some task we need to complete or we are going to suffer" />
+
+        <ImageView
+            android:id="@+id/priority_image"
+            style="@style/W8_H0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/priority_high"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.cardview.widget.CardView>
