@@ -16,7 +16,7 @@ import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.list.adapters.analytics_messages.AnalyticsMessagesDialogAdapter
-import start.up.tracker.ui.list.decorators.LinePagerIndicatorDecoration
+import start.up.tracker.ui.list.decorators.CirclePagerIndicatorDecoration
 import start.up.tracker.utils.screens.ExtraCodes
 
 @AndroidEntryPoint
@@ -67,7 +67,7 @@ class AnalyticsMessagesDialogFragment :
         listExtension?.setAdapter(adapter)
 
         PagerSnapHelper().attachToRecyclerView(binding?.analyticsMessagesList)
-        binding?.analyticsMessagesList?.addItemDecoration(LinePagerIndicatorDecoration())
+        binding?.analyticsMessagesList?.addItemDecoration(CirclePagerIndicatorDecoration())
     }
 
     private fun showMessagesData(analyticsMessages: AnalyticsMessages) {

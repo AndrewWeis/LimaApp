@@ -11,15 +11,15 @@ import start.up.tracker.R
 import start.up.tracker.utils.resources.ResourcesUtils
 import kotlin.math.max
 
-class LinePagerIndicatorDecoration : RecyclerView.ItemDecoration() {
+class CirclePagerIndicatorDecoration : RecyclerView.ItemDecoration() {
 
     private val colorInactive: Int = ResourcesUtils.getColor(R.color.lightGray)
     private val colorActive: Int = ResourcesUtils.getColor(R.color.primaryColor)
 
     private val mIndicatorHeight: Int = ResourcesUtils.getPxByDp(16F)
-    private val mIndicatorStrokeWidth: Float = ResourcesUtils.getPxByDp(2F).toFloat()
-    private val mIndicatorItemLength: Float = ResourcesUtils.getPxByDp(16F).toFloat()
-    private val mIndicatorItemPadding: Float = ResourcesUtils.getPxByDp(4F).toFloat()
+    private val mIndicatorStrokeWidth: Float = ResourcesUtils.getPxByDp(4F).toFloat()
+    private val mIndicatorItemLength: Float = ResourcesUtils.getPxByDp(4F).toFloat()
+    private val mIndicatorItemPadding: Float = ResourcesUtils.getPxByDp(8F).toFloat()
 
     private val mInterpolator: AccelerateDecelerateInterpolator = AccelerateDecelerateInterpolator()
     private val mPaint: Paint = Paint()
@@ -90,7 +90,7 @@ class LinePagerIndicatorDecoration : RecyclerView.ItemDecoration() {
         var start = indicatorStartX
         repeat(itemCount) {
             // draw the line for every item
-            c.drawLine(start, indicatorPosY, start + mIndicatorItemLength, indicatorPosY, mPaint)
+            c.drawCircle(start, indicatorPosY, mIndicatorItemLength / 2F, mPaint)
             start += itemWidth
         }
     }
@@ -111,10 +111,7 @@ class LinePagerIndicatorDecoration : RecyclerView.ItemDecoration() {
         if (progress == 0f) {
             // no swipe, draw a normal indicator
             val highlightStart = indicatorStartX + itemWidth * highlightPosition
-            c.drawLine(
-                highlightStart, indicatorPosY,
-                highlightStart + mIndicatorItemLength, indicatorPosY, mPaint
-            )
+            c.drawCircle(highlightStart, indicatorPosY, mIndicatorItemLength / 2F, mPaint)
         } else {
             var highlightStart = indicatorStartX + itemWidth * highlightPosition
             // calculate partial highlight
