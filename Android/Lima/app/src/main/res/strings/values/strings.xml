@@ -47,6 +47,8 @@
     <string name="incompatible_message_hint">Try to turn off incompatible principles</string>
     <string name="principle_does_not_exist">Specified principle does not exist</string>
 
+    <string name="hint">Hint</string>
+
     <string name="action_search">Search</string>
     <string name="sure_clear_task">Are you sure, you want to delete all tasks?</string>
     <string name="form_empty">Some data is empty, checked your form</string>

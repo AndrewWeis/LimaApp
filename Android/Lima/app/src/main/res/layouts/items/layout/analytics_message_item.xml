@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_marginBottom="16dp"
-    style="@style/MW">
+    style="@style/MW"
+    android:layout_marginBottom="24dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/message_title_text"
-        style="@style/RobotoRegular.Black.Size16.MW"
-        android:gravity="center"
-        tools:text="Message title" />
+        style="@style/RobotoRegular.Black.Size20.WW"
+        android:textStyle="bold"
+        tools:text="Pareto principle is violated" />
 
     <TextView
         android:id="@+id/message_error_text"
-        style="@style/RobotoRegular.Black.Size14.MW"
-        android:layout_marginTop="8dp"
-        tools:text="Message error" />
+        style="@style/RobotoRegular.Black.Size16.WW"
+        android:layout_marginTop="24dp"
+        android:lineSpacingExtra="1sp"
+        tools:text="Pareto principle suggests that you should prioritize 20 percent of daily tasks over 80 percent other tasks while you have 5 tasks and 4 of them are prioritized" />
+
+    <TextView
+        style="@style/RobotoRegular.Black.Size12.WW"
+        android:layout_marginTop="16dp"
+        android:lineSpacingExtra="2sp"
+        android:text="@string/hint"
+        android:textAllCaps="true"
+        android:textColor="@color/primaryColor" />
 
     <TextView
         android:id="@+id/message_hint_text"
-        style="@style/RobotoRegular.Black.Size14.MW"
-        android:layout_marginTop="8dp"
-        tools:text="Message hint" />
+        style="@style/RobotoRegular.Gray.Size14.WW"
+        android:layout_marginTop="16dp"
+        android:lineSpacingExtra="4sp"
+        tools:text="Try priories your tasks in a way that the principle suggests" />
 
 </LinearLayout>

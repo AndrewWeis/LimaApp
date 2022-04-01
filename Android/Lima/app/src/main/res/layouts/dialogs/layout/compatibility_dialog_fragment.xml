@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingHorizontal="16dp"
-    android:paddingBottom="16dp"
-    android:orientation="vertical">
+    style="@style/LVMW"
+    android:orientation="vertical"
+    android:padding="24dp">
 
     <include
         android:id="@+id/message"
@@ -12,8 +10,7 @@
 
     <Button
         android:id="@+id/ok_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_ok" />
+        style="@style/Contained.RobotoRegular.Size14.Gray.M_H42"
+        android:text="@string/button_got_it" />
 
 </LinearLayout>

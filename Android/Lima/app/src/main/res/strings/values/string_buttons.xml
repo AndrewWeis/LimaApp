@@ -4,5 +4,5 @@
     <string name="button_done">DONE</string>
     <string name="button_ignore">Ignore</string>
     <string name="button_edit">Edit</string>
-    <string name="button_ok">Ok</string>
+    <string name="button_got_it">Got it</string>
 </resources>
