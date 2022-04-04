@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_addEditTask_to_analyticsMessagesDialog"
             app:destination="@id/analyticsMessagesDialogFragment" />
+        <action
+            android:id="@+id/action_addEditTask_to_priority"
+            app:destination="@id/priorityDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -163,5 +166,19 @@
         <argument
             android:name="message"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessage" />
+    </dialog>
+    <dialog
+        android:id="@+id/priorityDialogFragment"
+        android:name="start.up.tracker.ui.fragments.edit_task.dialogs.PriorityDialogFragment"
+        android:label="PriorityDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="principleId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="selectedPriorityId"
+            app:argType="integer"
+            android:defaultValue="0" />
     </dialog>
 </navigation>

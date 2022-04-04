@@ -22,7 +22,7 @@ import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter
 import start.up.tracker.ui.list.generators.calendar.CalendarTasksGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.TimeHelper
-import start.up.tracker.utils.convertDpToPx
+import start.up.tracker.utils.resources.ResourcesUtils
 
 @AndroidEntryPoint
 class CalendarTasksFragment :
@@ -142,7 +142,7 @@ class CalendarTasksFragment :
     private fun initCurrentTimeIndicator() {
         val layoutParams = binding?.timeIndicatorView?.layoutParams as ViewGroup.MarginLayoutParams
         layoutParams.topMargin =
-            convertDpToPx(TimeHelper.getMinutesOfCurrentDay() - TIME_OFFSET.toInt())
+            ResourcesUtils.getPxByDp((TimeHelper.getMinutesOfCurrentDay() - TIME_OFFSET.toInt()).toFloat())
         binding?.timeIndicatorView?.requestLayout()
     }
 }
