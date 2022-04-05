@@ -12,4 +12,7 @@ sealed class TasksEvent {
     data class ShowAnalyticMessageDialog(val messages: AnalyticsMessages) : TasksEvent()
 
     data class NavigateToPriorityDialog(val priorityId: Int) : TasksEvent()
+    data class ShowDatePicker(val date: Long?) : TasksEvent()
+    data class ShowTimeStartPicker(val timeStart: Int?) : TasksEvent()
+    data class ShowTimeEndPicker(val timeEnd: Int?) : TasksEvent()
 }

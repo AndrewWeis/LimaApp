@@ -154,7 +154,7 @@ class EditTaskViewModel @Inject constructor(
      */
     fun onTaskStartTimeChanged(minutes: Int) {
         task = task.copy(startTimeInMinutes = minutes)
-        showFields()
+        // show start time
     }
 
     /**
@@ -164,7 +164,7 @@ class EditTaskViewModel @Inject constructor(
      */
     fun onTaskEndTimeChanged(minutes: Int) {
         task = task.copy(endTimeInMinutes = minutes)
-        showFields()
+        // show end time
     }
 
     /**
@@ -174,7 +174,7 @@ class EditTaskViewModel @Inject constructor(
      */
     fun onTaskDateChanged(milliseconds: Long) {
         task = task.copy(date = milliseconds)
-        showFields()
+        // show date
     }
 
     /**
@@ -219,6 +219,18 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
     }
 
+    fun onIconDateClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.ShowDatePicker(task.date))
+    }
+
+    fun onIconTimeStartClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.ShowTimeStartPicker(task.startTimeInMinutes))
+    }
+
+    fun onIconTimeEndClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.ShowTimeEndPicker(task.endTimeInMinutes))
+    }
+
     private fun setParentTaskId() {
         task = task.copy(parentTaskId = parentTaskId)
     }
@@ -260,6 +272,9 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
 
         icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
+        icons.add(ActionIcon(id = ActionIcon.ICON_TIME_START, iconRes = R.drawable.ic_time))
+        icons.add(ActionIcon(id = ActionIcon.ICON_TIME_END, iconRes = R.drawable.ic_time))
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
     }

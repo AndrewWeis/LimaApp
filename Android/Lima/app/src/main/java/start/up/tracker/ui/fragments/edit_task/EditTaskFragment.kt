@@ -31,7 +31,6 @@ import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
 import start.up.tracker.ui.list.view_holders.edit_task.ActionIconViewHolder
 import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
-import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.AddSubtaskViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.views.forms.base.BaseInputView
@@ -44,7 +43,6 @@ import java.util.*
 class EditTaskFragment :
     BaseTasksFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
-    SelectInputViewHolder.TextInputSelectionListener,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener,
     ChipsViewHolder.ProjectViewHolderListener,
@@ -117,21 +115,6 @@ class EditTaskFragment :
         hideKeyboard()
     }
 
-    override fun onTextInputSelectionClick(listItem: ListItem) {
-        when (listItem.id) {
-            ListItemIds.TASK_TIME_START -> {
-                isTaskTimeTypeStart = true
-                openTimePicker()
-            }
-            ListItemIds.TASK_TIME_END -> {
-                isTaskTimeTypeStart = false
-                openTimePicker()
-            }
-            ListItemIds.TASK_DATE ->
-                openDatePicker()
-        }
-    }
-
     override fun onChipClick(listItem: ListItem) {
         val chipData = listItem.data as ChipData
 
@@ -168,6 +151,9 @@ class EditTaskFragment :
     override fun onActionClickListener(actionIconId: Int) {
         when (actionIconId) {
             ActionIcon.ICON_PRIORITY -> viewModel.onIconPriorityClick()
+            ActionIcon.ICON_DATE -> viewModel.onIconDateClick()
+            ActionIcon.ICON_TIME_START -> viewModel.onIconTimeStartClick()
+            ActionIcon.ICON_TIME_END -> viewModel.onIconTimeEndClick()
         }
     }
 
@@ -270,48 +256,6 @@ class EditTaskFragment :
 
     private fun showEditableTaskInfo(task: Task) {
         setDescription(task)
-        setStartTime(task)
-        setEndTime(task)
-        setDate(task)
-    }
-
-    private fun setDate(task: Task) {
-        val listItem: ListItem = generator.createTaskDateListItem(task.date)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setDateItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setDateItem(listItem)
-        }
-    }
-
-    private fun setEndTime(task: Task) {
-        val listItem: ListItem = generator.createTaskEndTimeListItem(task.endTimeInMinutes)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setEndTimeItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setEndTimeItem(listItem)
-        }
-    }
-
-    private fun setStartTime(task: Task) {
-        val listItem: ListItem = generator.createTaskStartTimeListItem(task.startTimeInMinutes)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setStartTimeItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setStartTimeItem(listItem)
-        }
     }
 
     private fun setDescription(task: Task) {
@@ -332,7 +276,6 @@ class EditTaskFragment :
             viewModel = viewModel,
             layoutInflater = layoutInflater,
             textInputListener = this,
-            textInputSelectionListener = this,
             projectViewHolderListener = this,
             onTaskClickListener = this,
             onAddSubtaskListener = this,
@@ -407,7 +350,8 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.ShowAnalyticMessageDialog -> {
-                    val action = EditTaskFragmentDirections.actionAddEditTaskToAnalyticsMessagesDialog(
+                    val action =
+                        EditTaskFragmentDirections.actionAddEditTaskToAnalyticsMessagesDialog(
                             messages = event.messages
                         )
                     navigateTo(action)
@@ -420,6 +364,20 @@ class EditTaskFragment :
                         selectedPriorityId = event.priorityId,
                     )
                     navigateTo(action)
+                }
+
+                is TasksEvent.ShowDatePicker -> {
+                    openDatePicker()
+                }
+
+                is TasksEvent.ShowTimeStartPicker -> {
+                    isTaskTimeTypeStart = true
+                    openTimePicker()
+                }
+
+                is TasksEvent.ShowTimeEndPicker -> {
+                    isTaskTimeTypeStart = false
+                    openTimePicker()
                 }
             }
         }
