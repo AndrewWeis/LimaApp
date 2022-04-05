@@ -81,7 +81,7 @@ open class BaseInputView(
 
     private fun showName(name: String?) {
         name?.let {
-            binding.fieldNameText.text = it
+            // binding.fieldNameText.text = it
         }
     }
 

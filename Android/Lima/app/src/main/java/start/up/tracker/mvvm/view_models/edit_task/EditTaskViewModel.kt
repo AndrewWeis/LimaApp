@@ -214,7 +214,7 @@ class EditTaskViewModel @Inject constructor(
 
         // показываем проекты только если это задача = (в подзадачах не показываем)
         if (task.parentTaskId == -1) {
-            icons.add(ActionIcon(id = ActionIcon.ICON_PROJECTS, iconRes = R.drawable.ic_analytics))
+            icons.add(ActionIcon(id = ActionIcon.ICON_PROJECTS, iconRes = R.drawable.ic_project))
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))

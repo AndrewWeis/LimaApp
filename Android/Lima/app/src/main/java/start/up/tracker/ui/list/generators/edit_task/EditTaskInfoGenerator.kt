@@ -39,7 +39,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
             inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
             imeOption = EditorInfo.IME_ACTION_NEXT,
             name = ResourcesUtils.getString(R.string.task_title),
-            hint = getHint()
+            hint = ResourcesUtils.getString(R.string.hint_title)
         )
 
         return ListItem(
@@ -74,7 +74,7 @@ class EditTaskInfoGenerator : BaseGenerator() {
         val settings = Settings(
             inputType = InputType.TYPE_TEXT_FLAG_CAP_SENTENCES,
             imeOption = EditorInfo.IME_ACTION_NEXT,
-            hint = getHint(),
+            hint = ResourcesUtils.getString(R.string.hint_description),
             name = ResourcesUtils.getString(R.string.task_description),
         )
 
@@ -105,14 +105,5 @@ class EditTaskInfoGenerator : BaseGenerator() {
             type = ListItemTypes.HEADER,
             data = headerActions
         )
-    }
-
-    /**
-     * Получить подсказку для поля ввода
-     *
-     * @return подсказка для поля ввода
-     */
-    private fun getHint(): String {
-        return ResourcesUtils.getString(R.string.hint_not_indicated)
     }
 }
