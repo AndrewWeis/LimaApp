@@ -15,7 +15,7 @@ data class ActionIcon(
         const val ICON_DATE = 2
         const val ICON_TIME_START = 3
         const val ICON_TIME_END = 4
-        const val ICON_PROJECT = 5
+        const val ICON_PROJECTS = 5
         const val ICON_REPEATS = 6
     }
 }

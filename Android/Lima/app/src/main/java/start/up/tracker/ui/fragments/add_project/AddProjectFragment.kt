@@ -14,12 +14,13 @@ import start.up.tracker.mvvm.view_models.add_project.AddProjectViewModel
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.add_project.ColorData
 import start.up.tracker.ui.data.entities.add_project.ColorsData
+import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
 import start.up.tracker.ui.list.adapters.add_project.AddProjectAdapter
 import start.up.tracker.ui.list.generators.add_project.AddProjectGenerator
-import start.up.tracker.ui.list.view_holders.add_project.AddProjectActionsViewHolder
 import start.up.tracker.ui.list.view_holders.add_project.ColorViewHolder
+import start.up.tracker.ui.list.view_holders.add_project.HeaderActionsViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
 
 @AndroidEntryPoint
@@ -27,7 +28,7 @@ class AddProjectFragment :
     BaseBottomSheetDialogFragment(R.layout.add_project_fragment),
     BaseInputView.TextInputListener,
     ColorViewHolder.ColorClickListener,
-    AddProjectActionsViewHolder.AddProjectActionClickListener {
+    HeaderActionsViewHolder.AddProjectActionClickListener {
 
     private val viewModel: AddProjectViewModel by viewModels()
 
@@ -94,8 +95,8 @@ class AddProjectFragment :
             showTitleInput(project)
         }
 
-        viewModel.projectActions.observe(viewLifecycleOwner) { isEnabled ->
-            showActions(isEnabled)
+        viewModel.projectActions.observe(viewLifecycleOwner) { headerActions ->
+            showHeaderActions(headerActions)
         }
 
         viewModel.colorsCircles.observe(viewLifecycleOwner) { colors ->
@@ -129,8 +130,8 @@ class AddProjectFragment :
         }
     }
 
-    private fun showActions(isEnabled: Boolean) {
-        val listItem: ListItem = generator.createActionsListItem(isEnabled)
+    private fun showHeaderActions(headerActions: HeaderActions) {
+        val listItem: ListItem = generator.createActionsListItem(headerActions)
 
         if (binding?.addProjectList?.isComputingLayout == false) {
             adapter.setActionsItem(listItem)

@@ -10,8 +10,8 @@ import start.up.tracker.R
 import start.up.tracker.databinding.HomeFragmentBinding
 import start.up.tracker.entities.Project
 import start.up.tracker.mvvm.view_models.home.HomeViewModel
-import start.up.tracker.ui.data.entities.Header
 import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.data.entities.header.Header
 import start.up.tracker.ui.data.entities.home.HomeSection
 import start.up.tracker.ui.data.entities.home.ProjectsData
 import start.up.tracker.ui.extensions.list.ListExtension

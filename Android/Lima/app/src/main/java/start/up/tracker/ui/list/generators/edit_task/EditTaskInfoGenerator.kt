@@ -7,8 +7,8 @@ import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.data.entities.Settings
-import start.up.tracker.ui.data.entities.chips.ChipsData
 import start.up.tracker.ui.data.entities.edit_task.ActionIcons
+import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.list.generators.base.BaseGenerator
 import start.up.tracker.utils.resources.ResourcesUtils
@@ -47,20 +47,6 @@ class EditTaskInfoGenerator : BaseGenerator() {
             type = ListItemTypes.INPUT_TEXT,
             data = title,
             settings = setting,
-        )
-    }
-
-    /**
-     * Получить [ListItem] со списком выбираемых проектов
-     *
-     * @param chips список выбираемых проектов
-     * @return [ListItem] содержаший список выбираемых проектов
-     */
-    fun createProjectsChipsListItems(chips: ChipsData): ListItem {
-        return ListItem(
-            id = ListItemIds.TASK_PROJECTS,
-            type = ListItemTypes.LIST,
-            data = chips
         )
     }
 
@@ -114,10 +100,10 @@ class EditTaskInfoGenerator : BaseGenerator() {
         )
     }
 
-    fun createActionsHeaderListItem(isEnabled: Boolean): ListItem {
+    fun createActionsHeaderListItem(headerActions: HeaderActions): ListItem {
         return ListItem(
             type = ListItemTypes.HEADER,
-            data = isEnabled
+            data = headerActions
         )
     }
 

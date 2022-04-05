@@ -1,9 +1,9 @@
 package start.up.tracker.ui.list.generators.home
 
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.Header
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
+import start.up.tracker.ui.data.entities.header.Header
 import start.up.tracker.ui.data.entities.home.HomeSection
 import start.up.tracker.ui.data.entities.home.ProjectsData
 

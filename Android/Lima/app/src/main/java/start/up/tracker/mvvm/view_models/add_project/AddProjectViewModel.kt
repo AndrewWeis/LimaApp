@@ -13,6 +13,7 @@ import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.entities.Project
 import start.up.tracker.ui.data.entities.add_project.ColorData
 import start.up.tracker.ui.data.entities.add_project.ColorsData
+import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.utils.resources.ResourcesUtils
 import javax.inject.Inject
 
@@ -29,8 +30,12 @@ class AddProjectViewModel @Inject constructor(
     private val _projectTitle: MutableLiveData<Project> = MutableLiveData()
     val projectTitle: LiveData<Project> get() = _projectTitle
 
-    private val _projectActions: MutableLiveData<Boolean> = MutableLiveData(true)
-    val projectActions: LiveData<Boolean> get() = _projectActions
+    private val headerActions = HeaderActions(
+        title = ResourcesUtils.getString(R.string.title_add_project),
+        isDoneEnabled = true
+    )
+    private val _projectActions: MutableLiveData<HeaderActions> = MutableLiveData(headerActions)
+    val projectActions: LiveData<HeaderActions> get() = _projectActions
 
     private val _colorsCircles: MutableLiveData<ColorsData> = MutableLiveData()
     val colorsCircles: LiveData<ColorsData> get() = _colorsCircles
@@ -74,11 +79,11 @@ class AddProjectViewModel @Inject constructor(
         project = project.copy(projectTitle = title)
 
         if (project.projectTitle.isEmpty()) {
-            _projectActions.postValue(true)
+            _projectActions.postValue(headerActions.copy(isDoneEnabled = false))
         }
 
         if (project.projectTitle.length == 1) {
-            _projectActions.postValue(false)
+            _projectActions.postValue(headerActions.copy(isDoneEnabled = true))
         }
     }
 
