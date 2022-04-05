@@ -7,6 +7,7 @@ import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
+import start.up.tracker.ui.list.view_holders.add_project.AddProjectActionsViewHolder
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.ui.list.view_holders.edit_task.ActionIconViewHolder
 import start.up.tracker.ui.list.view_holders.edit_task.ActionIconsViewHolder
@@ -26,10 +27,13 @@ class EditTaskAdapter(
     private val onTaskClickListener: OnTaskClickListener,
     private val onAddSubtaskListener: AddSubtaskViewHolder.OnAddSubtaskClickListener,
     private val actionIconClickListener: ActionIconViewHolder.ActionIconClickListener,
+    private val addProjectActionsClickListener: AddProjectActionsViewHolder.AddProjectActionClickListener,
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
+            ITEM_ACTIONS_HEADER ->
+                return AddProjectActionsViewHolder(layoutInflater, parent)
             ITEM_PROJECT_HEADER ->
                 return HeaderViewHolder(layoutInflater, parent)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
@@ -48,6 +52,8 @@ class EditTaskAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
+            ITEM_ACTIONS_HEADER ->
+                (holder as AddProjectActionsViewHolder).bind(item, addProjectActionsClickListener)
             ITEM_PROJECT_HEADER ->
                 (holder as HeaderViewHolder).bind(item)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
@@ -65,7 +71,7 @@ class EditTaskAdapter(
 
     override fun getItemViewType(item: ListItem): Int {
         return when (item.type) {
-            ListItemTypes.HEADER -> getHeaderItemViewType(item)
+            ListItemTypes.HEADER -> ITEM_ACTIONS_HEADER
             ListItemTypes.INPUT_TEXT -> getInputTextItemViewTime(item)
             ListItemTypes.SELECT -> getSelectionItemViewType(item)
             ListItemTypes.LIST -> getListItemViewType(item)
@@ -75,6 +81,7 @@ class EditTaskAdapter(
     }
 
     override fun getTypeSequence() = intArrayOf(
+        ITEM_ACTIONS_HEADER,
         ITEM_INPUT_TITLE,
         ITEM_INPUT_DESCRIPTION,
         ITEM_PROJECT_HEADER,
@@ -109,6 +116,10 @@ class EditTaskAdapter(
         updateItem(listItem, ITEM_INPUT_TITLE)
     }
 
+    fun setActionsHeaderItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_ACTIONS_HEADER)
+    }
+
     private fun getInputTextItemViewTime(item: ListItem): Int {
         return when (item.id) {
             ListItemIds.TASK_TITLE -> ITEM_INPUT_TITLE
@@ -133,21 +144,15 @@ class EditTaskAdapter(
         }
     }
 
-    private fun getHeaderItemViewType(item: ListItem): Int {
-        return when (item.id) {
-            ListItemIds.TASK_PROJECTS_HEADER -> ITEM_PROJECT_HEADER
-            else -> NOT_FOUND
-        }
-    }
-
     private companion object {
-        const val ITEM_INPUT_TITLE = 0
-        const val ITEM_INPUT_DESCRIPTION = 1
-        const val ITEM_PROJECT_HEADER = 2
-        const val ITEM_PROJECTS_LIST = 3
-        const val ITEM_SELECTION_REPEAT = 4
-        const val ITEM_ACTIONS_ICONS_LIST = 5
-        const val ITEM_SUBTASKS_LIST = 6
-        const val ITEM_ADD_SUBTASK_BUTTON = 7
+        const val ITEM_ACTIONS_HEADER = 0
+        const val ITEM_INPUT_TITLE = 1
+        const val ITEM_INPUT_DESCRIPTION = 2
+        const val ITEM_PROJECT_HEADER = 3
+        const val ITEM_PROJECTS_LIST = 4
+        const val ITEM_SELECTION_REPEAT = 5
+        const val ITEM_ACTIONS_ICONS_LIST = 6
+        const val ITEM_SUBTASKS_LIST = 7
+        const val ITEM_ADD_SUBTASK_BUTTON = 8
     }
 }

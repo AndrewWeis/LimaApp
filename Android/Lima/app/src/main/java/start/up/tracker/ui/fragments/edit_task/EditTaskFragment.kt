@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.data.fields.Field
 import start.up.tracker.databinding.EditTaskFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
@@ -26,9 +25,10 @@ import start.up.tracker.ui.data.entities.edit_task.ActionIcon
 import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
+import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
+import start.up.tracker.ui.list.view_holders.add_project.AddProjectActionsViewHolder
 import start.up.tracker.ui.list.view_holders.edit_task.ActionIconViewHolder
 import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.AddSubtaskViewHolder
@@ -41,14 +41,15 @@ import java.util.*
 
 @AndroidEntryPoint
 class EditTaskFragment :
-    BaseTasksFragment(R.layout.edit_task_fragment),
+    BaseBottomSheetDialogFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener,
     ChipsViewHolder.ProjectViewHolderListener,
     OnTaskClickListener,
     AddSubtaskViewHolder.OnAddSubtaskClickListener,
-    ActionIconViewHolder.ActionIconClickListener {
+    ActionIconViewHolder.ActionIconClickListener,
+    AddProjectActionsViewHolder.AddProjectActionClickListener {
 
     private val viewModel: EditTaskViewModel by viewModels()
 
@@ -66,7 +67,6 @@ class EditTaskFragment :
         binding = EditTaskFragmentBinding.bind(view)
 
         initAdapter()
-        initListeners()
         initObservers()
         initResultListeners()
         initEventsListener()
@@ -81,6 +81,14 @@ class EditTaskFragment :
         super.onDestroyView()
         binding = null
         listExtension = null
+    }
+
+    override fun onDoneButtonClick() {
+        viewModel.onSaveClick()
+    }
+
+    override fun onBackButtonClick() {
+        viewModel.onBackButtonClick()
     }
 
     override fun onTextInputDataChange(listItem: ListItem) {
@@ -241,8 +249,8 @@ class EditTaskFragment :
         }
     }
 
-    private fun showTitleField(field: Field<String>) {
-        val listItem: ListItem = generator.createTitleListItem(field)
+    private fun showTaskTitle(task: Task) {
+        val listItem: ListItem = generator.createTitleListItem(task.taskTitle)
 
         if (binding?.editTasksList?.isComputingLayout == false) {
             adapter.setTitleItem(listItem)
@@ -254,7 +262,20 @@ class EditTaskFragment :
         }
     }
 
-    private fun showEditableTaskInfo(task: Task) {
+    private fun showActionsHeader(isEnabled: Boolean) {
+        val listItem: ListItem = generator.createActionsHeaderListItem(isEnabled)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setActionsHeaderItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setActionsHeaderItem(listItem)
+        }
+    }
+
+    private fun showDescription(task: Task) {
         setDescription(task)
     }
 
@@ -279,7 +300,8 @@ class EditTaskFragment :
             projectViewHolderListener = this,
             onTaskClickListener = this,
             onAddSubtaskListener = this,
-            actionIconClickListener = this
+            actionIconClickListener = this,
+            addProjectActionsClickListener = this
         )
 
         listExtension = ListExtension(binding?.editTasksList)
@@ -288,12 +310,16 @@ class EditTaskFragment :
     }
 
     private fun initObservers() {
-        viewModel.taskInfoLiveData.observe(viewLifecycleOwner) { task ->
-            showEditableTaskInfo(task)
+        viewModel.taskActionsHeader.observe(viewLifecycleOwner) { isEnabled ->
+            showActionsHeader(isEnabled)
         }
 
-        viewModel.titleField.observe(viewLifecycleOwner) { field ->
-            showTitleField(field)
+        viewModel.taskDescription.observe(viewLifecycleOwner) { task ->
+            showDescription(task)
+        }
+
+        viewModel.taskTitle.observe(viewLifecycleOwner) { task ->
+            showTaskTitle(task)
         }
 
         viewModel.projectsChips.observe(viewLifecycleOwner) { projectsChips ->
@@ -380,12 +406,6 @@ class EditTaskFragment :
                     openTimePicker()
                 }
             }
-        }
-    }
-
-    private fun initListeners() {
-        binding?.doneButton?.setOnClickListener {
-            viewModel.onSaveClick()
         }
     }
 }

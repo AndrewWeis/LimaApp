@@ -1,9 +1,7 @@
 package start.up.tracker.ui.fragments.add_project
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,7 +24,7 @@ import start.up.tracker.ui.views.forms.base.BaseInputView
 
 @AndroidEntryPoint
 class AddProjectFragment :
-    BaseBottomSheetDialogFragment(),
+    BaseBottomSheetDialogFragment(R.layout.add_project_fragment),
     BaseInputView.TextInputListener,
     ColorViewHolder.ColorClickListener,
     AddProjectActionsViewHolder.AddProjectActionClickListener {
@@ -38,14 +36,6 @@ class AddProjectFragment :
     private lateinit var adapter: AddProjectAdapter
     private var listExtension: ListExtension? = null
     private val generator = AddProjectGenerator()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.add_project_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

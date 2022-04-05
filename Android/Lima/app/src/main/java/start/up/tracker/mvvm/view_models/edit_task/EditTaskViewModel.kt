@@ -10,8 +10,6 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
-import start.up.tracker.data.fields.Field
-import start.up.tracker.data.fields.task.EditTaskInfoFieldSet
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.dao.ProjectsDao
 import start.up.tracker.database.dao.TaskDao
@@ -45,11 +43,11 @@ class EditTaskViewModel @Inject constructor(
 
     private val selectedProjectId: MutableLiveData<Int> = MutableLiveData(projectId)
 
-    private val _taskInfoLiveData: MutableLiveData<Task> = MutableLiveData()
-    val taskInfoLiveData: LiveData<Task> get() = _taskInfoLiveData
+    private val _taskDescription: MutableLiveData<Task> = MutableLiveData()
+    val taskDescription: LiveData<Task> get() = _taskDescription
 
-    private val _titleField: MutableLiveData<Field<String>> = MutableLiveData()
-    val titleField: LiveData<Field<String>> get() = _titleField
+    private val _taskTitle: MutableLiveData<Task> = MutableLiveData()
+    val taskTitle: LiveData<Task> get() = _taskTitle
 
     private val projectsFlow = projectsDao.getProjects()
     private val projectsChipsFlow: Flow<ChipsData> = combine(
@@ -60,12 +58,13 @@ class EditTaskViewModel @Inject constructor(
     private var _projectsChips: LiveData<ChipsData> = MutableLiveData()
     val projectsChips: LiveData<ChipsData> get() = _projectsChips
 
-    private val fieldSet: EditTaskInfoFieldSet = EditTaskInfoFieldSet(task)
-
     private var subtasksFlow: Flow<TasksData> = taskDao.getSubtasksByTaskId(task.taskId)
         .transform { tasks -> emit(TasksData(tasks = tasks)) }
     private var _subtasks: LiveData<TasksData> = MutableLiveData()
     val subtasks: LiveData<TasksData> get() = _subtasks
+
+    private val _taskActionsHeader: MutableLiveData<Boolean> = MutableLiveData(task.taskTitle.isEmpty())
+    val taskActionsHeader: LiveData<Boolean> get() = _taskActionsHeader
 
     private val _actionsIcons: MutableLiveData<ActionIcons> = MutableLiveData()
     val actionsIcons: LiveData<ActionIcons> get() = _actionsIcons
@@ -84,19 +83,11 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
-    fun onSaveClick() {
-        validateTitleField()
-
-        if (!fieldSet.getTitleField().isValid()) {
-            return
-        }
-
-        viewModelScope.launch {
-            if (isEditMode) {
-                checkPrinciplesComplianceOnEditTask()
-            } else {
-                checkPrinciplesComplianceOnAddTask()
-            }
+    fun onSaveClick() = viewModelScope.launch {
+        if (isEditMode) {
+            checkPrinciplesComplianceOnEditTask()
+        } else {
+            checkPrinciplesComplianceOnAddTask()
         }
     }
 
@@ -108,109 +99,63 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Была нажата кнопка "Добавить подзадачу"
-     */
     fun onAddSubtaskClick() {
         navigateToAddSubtask()
     }
 
-    /**
-     * Заголовок задачи был изменен
-     *
-     * @param title заголовок
-     */
     fun onTaskTitleChanged(title: String) {
-        fieldSet.onTitleChange(title.trim())
+        task = task.copy(taskTitle = title)
+
+        if (task.taskTitle.isEmpty()) {
+            _taskActionsHeader.postValue(true)
+        }
+
+        if (task.taskTitle.length == 1) {
+            _taskActionsHeader.postValue(false)
+        }
     }
 
-    /**
-     * Описание задачи было изменено
-     *
-     * @param description описание
-     */
     fun onTaskDescriptionChanged(description: String) {
         task = task.copy(description = description.trim())
     }
 
-    /**
-     * Заголовок задачи был очищен
-     */
     fun onTaskTitleClearClick() {
-        fieldSet.onTitleChange("")
+        task = task.copy(taskTitle = "")
     }
 
-    /**
-     * Описание задачи было очищено
-     */
     fun onTaskDescriptionClearClick() {
         task = task.copy(description = "")
     }
 
-    /**
-     * Время начала задачи было изменено
-     *
-     * @param minutes минуты
-     */
     fun onTaskStartTimeChanged(minutes: Int) {
         task = task.copy(startTimeInMinutes = minutes)
         // show start time
     }
 
-    /**
-     * Время окончания задачи было изменено
-     *
-     * @param minutes минуты
-     */
     fun onTaskEndTimeChanged(minutes: Int) {
         task = task.copy(endTimeInMinutes = minutes)
         // show end time
     }
 
-    /**
-     * Дата окончания задачи была изменена
-     *
-     * @param milliseconds дата в миллисекунды
-     */
     fun onTaskDateChanged(milliseconds: Long) {
         task = task.copy(date = milliseconds)
         // show date
     }
 
-    /**
-     * Проект задачи была изменена
-     *
-     * @param chipData содержащая выбранную категорию
-     */
     fun onCategoryChipChanged(chipData: ChipData) {
         task = task.copy(projectId = chipData.id)
         selectedProjectId.postValue(chipData.id)
     }
 
-    /**
-     * Приоритет задачи был изменен
-     *
-     * @param priorityId идентификатор выбранного приоритета
-     */
     fun onPriorityChanged(priorityId: Int) {
         task = task.copy(priority = priorityId)
         // redraw
     }
 
-    /**
-     * Количество подзадач было изменено
-     *
-     * @param number количество подзадач
-     */
     fun onSubtasksNumberChanged(number: Int) {
         task = task.copy(subtasksNumber = number)
     }
 
-    /**
-     * Количество выполненных подзадач было изменено
-     *
-     * @param number количество выполненных подзадач
-     */
     fun onCompletedSubtasksNumberChanged(number: Int) {
         task = task.copy(completedSubtasksNumber = number)
     }
@@ -231,13 +176,17 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.ShowTimeEndPicker(task.endTimeInMinutes))
     }
 
+    fun onBackButtonClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
     private fun setParentTaskId() {
         task = task.copy(parentTaskId = parentTaskId)
     }
 
     private fun showFields() {
-        showEditableTaskInfo()
-        showTitleField()
+        showTaskTitle()
+        showDescription()
 
         // показываем подзадачи только в режиме редактирования
         if (isEditMode) {
@@ -259,13 +208,12 @@ class EditTaskViewModel @Inject constructor(
         // selectedProjectId.postValue(task.projectId)
     }
 
-    private fun showEditableTaskInfo() {
-        _taskInfoLiveData.postValue(task)
+    private fun showDescription() {
+        _taskDescription.postValue(task)
     }
 
-    private fun showTitleField() {
-        val field: Field<String> = fieldSet.getTitleField()
-        _titleField.postValue(field)
+    private fun showTaskTitle() {
+        _taskTitle.postValue(task)
     }
 
     private fun showActionIcons() {
@@ -277,16 +225,6 @@ class EditTaskViewModel @Inject constructor(
         icons.add(ActionIcon(id = ActionIcon.ICON_TIME_END, iconRes = R.drawable.ic_time))
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
-    }
-
-    private fun validateTitleField() {
-        fieldSet.getTitleField().validate()
-
-        if (fieldSet.getTitleField().isValid()) {
-            task = task.copy(taskTitle = fieldSet.getTitleField().getValue()!!)
-        }
-
-        showTitleField()
     }
 
     private fun isAddOrEditMode() {
