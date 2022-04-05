@@ -55,6 +55,9 @@
         <action
             android:id="@+id/action_project_to_upcoming"
             app:destination="@id/upcomingFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_pomodoroTimer"
+            app:destination="@id/pomodoroTimer" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -149,8 +152,7 @@
     <dialog
         android:id="@+id/analyticsMessagesDialogFragment"
         android:name="start.up.tracker.ui.dialogs.analytics_messages.AnalyticsMessagesDialogFragment"
-        android:label="AnalyticsMessagesDialogFragment"
-        tools:layout="@layout/analytics_messages_dialog_fragment">
+        android:label="AnalyticsMessagesDialogFragment">
         <argument
             android:name="messages"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessages" />
@@ -158,10 +160,13 @@
     <dialog
         android:id="@+id/compatibilityDialogFragment"
         android:name="start.up.tracker.ui.dialogs.analytics_messages.CompatibilityDialogFragment"
-        android:label="CompatibilityDialogFragment"
-        tools:layout="@layout/compatibility_dialog_fragment">
+        android:label="CompatibilityDialogFragment">
         <argument
             android:name="message"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessage" />
     </dialog>
+    <fragment
+        android:id="@+id/pomodoroTimer"
+        android:name="start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer"
+        android:label="PomodoroTimer" />
 </navigation>
