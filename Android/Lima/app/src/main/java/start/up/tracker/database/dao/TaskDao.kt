@@ -89,6 +89,9 @@ interface TaskDao {
     @Query("SELECT * FROM task_table WHERE date =:day")
     suspend fun getTasksOfDay(day: Long): List<Task>
 
+    @Query("SELECT * FROM task_table")
+    suspend fun getAllTasks(): List<Task>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)
 

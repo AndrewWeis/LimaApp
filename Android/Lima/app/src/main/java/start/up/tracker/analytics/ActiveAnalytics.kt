@@ -15,8 +15,10 @@ import start.up.tracker.entities.Task
 import start.up.tracker.entities.TaskAnalytics
 import start.up.tracker.entities.TaskIdToTaskAnalyticsId
 import start.up.tracker.utils.TimeHelper
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.HashMap
 
 /*  Важно реализовать правильное удаление активностей и их отмечание как выполненные.
 Проблема в том, что активность можно завершить в срок, но отметить в приложении завершение этой
@@ -83,7 +85,7 @@ class ActiveAnalytics @Inject constructor(
 
     private val principlesMap: HashMap<Int, Principle> = hashMapOf(
         TechniquesIds.PARETO to Pareto(taskDao),
-        TechniquesIds.POMODORO to Pomodoro(),
+        TechniquesIds.POMODORO to Pomodoro(taskDao),
         TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix()
     )
 
@@ -101,6 +103,10 @@ class ActiveAnalytics @Inject constructor(
         val taskAnalytics = taskAnalyticsDao.getTaskById(taskToTaskAnalytics[task.taskId]!!)
         val newTaskAnalytics = taskAnalytics.copy(deleted = true)
         taskAnalyticsDao.updateTaskAnalytics(newTaskAnalytics)
+    }
+
+    fun getPrinciple(id : Int) : Principle? {
+        return principlesMap[id]
     }
 
     suspend fun recoverTask(task: Task) {

@@ -6,13 +6,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import start.up.tracker.analytics.ActiveAnalytics
+import start.up.tracker.analytics.principles.Pareto
+import start.up.tracker.analytics.principles.Pomodoro
+import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TimerDataStore
+import start.up.tracker.entities.Task
 import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
 
 @HiltViewModel
 class PomodoroTimerViewModel @Inject constructor(
     private val timerDataStore: TimerDataStore,
+    private val activeAnalytics: ActiveAnalytics
 ) : ViewModel() {
 
     fun setPreviousTimerLengthSeconds(lengthInSec: Long) = viewModelScope.launch {
@@ -37,5 +43,15 @@ class PomodoroTimerViewModel @Inject constructor(
 
     suspend fun getPreviousTimerLengthSeconds(): Long {
         return timerDataStore.previousTimerLengthSeconds.first()
+    }
+
+    suspend fun findTaskToMatch(): Task? {
+        val a = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
+        return a.findTaskToMatch()
+    }
+
+    fun fromEndTimeToPomodoro(task : Task): Int? {
+        val a = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
+        return a.fromEndTimeToPomodoro(task)
     }
 }
