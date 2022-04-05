@@ -10,6 +10,7 @@ import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.data.entities.Settings
 import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.ValidationMessages
 import start.up.tracker.ui.list.generators.base.BaseGenerator
@@ -59,20 +60,6 @@ class EditTaskInfoGenerator : BaseGenerator() {
             data = title,
             settings = setting,
             error = error
-        )
-    }
-
-    /**
-     * Получить [ListItem] со списком приоритетов
-     *
-     * @param chips список приоритетов
-     * @return [ListItem] содержаший список приоритетов
-     */
-    fun createPrioritiesChipsListItems(chips: ChipsData): ListItem {
-        return ListItem(
-            id = ListItemIds.TASK_PRIORITIES,
-            type = ListItemTypes.LIST,
-            data = chips
         )
     }
 
@@ -199,6 +186,20 @@ class EditTaskInfoGenerator : BaseGenerator() {
             type = ListItemTypes.INPUT_TEXT,
             data = description,
             settings = settings
+        )
+    }
+
+    /**
+     * Получить [ListItem] со списком иконок действий
+     *
+     * @param icons список иконок
+     * @return [ListItem] содержаший список иконок
+     */
+    fun createActionsIconsListItem(icons: ActionIcons): ListItem {
+        return ListItem(
+            id = ListItemIds.ACTIONS_ICONS,
+            type = ListItemTypes.LIST,
+            data = icons
         )
     }
 

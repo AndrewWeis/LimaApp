@@ -21,8 +21,9 @@ import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.data.entities.chips.ChipData
 import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.ui.data.entities.edit_task.ActionIcon
+import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.tasks.TasksData
-import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
@@ -59,9 +60,6 @@ class EditTaskViewModel @Inject constructor(
     private var _projectsChips: LiveData<ChipsData> = MutableLiveData()
     val projectsChips: LiveData<ChipsData> get() = _projectsChips
 
-    private val _prioritiesChips: MutableLiveData<ChipsData> = MutableLiveData()
-    val prioritiesChips: LiveData<ChipsData> get() = _prioritiesChips
-
     private val fieldSet: EditTaskInfoFieldSet = EditTaskInfoFieldSet(task)
 
     private var subtasksFlow: Flow<TasksData> = taskDao.getSubtasksByTaskId(task.taskId)
@@ -69,10 +67,14 @@ class EditTaskViewModel @Inject constructor(
     private var _subtasks: LiveData<TasksData> = MutableLiveData()
     val subtasks: LiveData<TasksData> get() = _subtasks
 
+    private val _actionsIcons: MutableLiveData<ActionIcons> = MutableLiveData()
+    val actionsIcons: LiveData<ActionIcons> get() = _actionsIcons
+
     init {
         isAddOrEditMode()
         setParentTaskId()
         showFields()
+        showActionIcons()
     }
 
     fun saveDataAboutSubtask() {
@@ -186,13 +188,13 @@ class EditTaskViewModel @Inject constructor(
     }
 
     /**
-     * Приоритет задачи была изменен
+     * Приоритет задачи был изменен
      *
-     * @param chipData содержащая выбранный приоритет
+     * @param priorityId идентификатор выбранного приоритета
      */
-    fun onPriorityChipChanged(chipData: ChipData) {
-        task = task.copy(priority = chipData.id)
-        showPrioritiesChips()
+    fun onPriorityChanged(priorityId: Int) {
+        task = task.copy(priority = priorityId)
+        // redraw
     }
 
     /**
@@ -213,6 +215,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(completedSubtasksNumber = number)
     }
 
+    fun onIconPriorityClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
+    }
+
     private fun setParentTaskId() {
         task = task.copy(parentTaskId = parentTaskId)
     }
@@ -220,7 +226,6 @@ class EditTaskViewModel @Inject constructor(
     private fun showFields() {
         showEditableTaskInfo()
         showTitleField()
-        showPrioritiesChips()
 
         // показываем подзадачи только в режиме редактирования
         if (isEditMode) {
@@ -251,27 +256,13 @@ class EditTaskViewModel @Inject constructor(
         _titleField.postValue(field)
     }
 
-    private fun showPrioritiesChips() {
-        val chips: MutableList<ChipData> = mutableListOf()
+    private fun showActionIcons() {
+        val icons: MutableList<ActionIcon> = mutableListOf()
 
-        chips.add(
-            getChipData(
-                PRIORITY_UNDEFINED,
-                ResourcesUtils.getString(R.string.priority_undefined)
-            )
-        )
-        chips.add(getChipData(PRIORITY_HIGH, ResourcesUtils.getString(R.string.priority_high)))
-        chips.add(getChipData(PRIORITY_MEDIUM, ResourcesUtils.getString(R.string.priority_medium)))
-        chips.add(getChipData(PRIORITY_LOW, ResourcesUtils.getString(R.string.priority_low)))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
 
-        _prioritiesChips.postValue(ChipsData(values = chips))
+        _actionsIcons.postValue(ActionIcons(icons = icons))
     }
-
-    private fun getChipData(id: Int, name: String) = ChipData(
-        id = id,
-        name = name,
-        isSelected = task.priority == id
-    )
 
     private fun validateTitleField() {
         fieldSet.getTitleField().validate()
@@ -369,12 +360,5 @@ class EditTaskViewModel @Inject constructor(
 
     private fun updateCompletedSubtasksNumber(number: Int) = viewModelScope.launch {
         taskDao.updateCompletedSubtasksNumber(number, task.taskId)
-    }
-
-    private companion object {
-        const val PRIORITY_UNDEFINED = 0
-        const val PRIORITY_HIGH = 1
-        const val PRIORITY_MEDIUM = 2
-        const val PRIORITY_LOW = 3
     }
 }

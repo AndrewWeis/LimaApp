@@ -10,4 +10,6 @@ sealed class TasksEvent {
     data class NavigateToEditTaskScreen(val task: Task) : TasksEvent()
     data class ShowUndoDeleteTaskMessage(val task: Task, val subtasks: List<Task>) : TasksEvent()
     data class ShowAnalyticMessageDialog(val messages: AnalyticsMessages) : TasksEvent()
+
+    data class NavigateToPriorityDialog(val priorityId: Int) : TasksEvent()
 }

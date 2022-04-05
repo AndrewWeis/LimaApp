@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
@@ -15,6 +18,7 @@ import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.list.adapters.edit_task.dialogs.PriorityAdapter
 import start.up.tracker.ui.list.generators.edit_task.dialogs.PriorityGenerator
 import start.up.tracker.ui.list.view_holders.edit_task.dialogs.PriorityViewHolder
+import start.up.tracker.utils.screens.ExtraCodes
 
 @AndroidEntryPoint
 class PriorityDialogFragment :
@@ -53,6 +57,13 @@ class PriorityDialogFragment :
 
     override fun onPriorityClick(priorityId: Int) {
         viewModel.onPriorityClick(priorityId)
+
+        setFragmentResult(
+            requestKey = ExtraCodes.PRIORITY_REQUEST,
+            result = bundleOf(ExtraCodes.PRIORITY_REQUEST to priorityId)
+        )
+
+        findNavController().popBackStack()
     }
 
     private fun showData(priorityId: Int) {

@@ -32,6 +32,7 @@ data class Task(
     val projectColor: Int? = null,
 ) : Parcelable {
 
+    // todo (вынестим в отдельный класс)
     companion object Ids {
         const val NO_PRIORITY = 0
         const val PRIORITY_HIGH = 1
