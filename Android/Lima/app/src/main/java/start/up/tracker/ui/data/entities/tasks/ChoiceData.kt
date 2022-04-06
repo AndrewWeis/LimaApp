@@ -1,7 +1,7 @@
 package start.up.tracker.ui.data.entities.tasks
 
-data class PriorityData(
-    val priorityId: Int,
+data class ChoiceData(
+    val id: Int,
     val title: String,
     val isSelected: Boolean
 )

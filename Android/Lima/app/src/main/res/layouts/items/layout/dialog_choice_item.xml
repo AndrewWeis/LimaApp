@@ -6,21 +6,21 @@
     android:layout_marginHorizontal="16dp">
 
     <ImageView
-        android:id="@+id/priority_image"
+        android:id="@+id/choice_image"
         style="@style/W24_H24"
-        app:layout_constraintBottom_toBottomOf="@+id/priority_text"
+        app:layout_constraintBottom_toBottomOf="@+id/choice_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/priority_text"
+        app:layout_constraintTop_toTopOf="@+id/choice_text"
         tools:srcCompat="@drawable/ic_priority_fire_1" />
 
     <TextView
-        android:id="@+id/priority_text"
+        android:id="@+id/choice_text"
         style="@style/RobotoRegular.Black.Size14.Zero_W"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/selected_image"
-        app:layout_constraintStart_toEndOf="@id/priority_image"
+        app:layout_constraintStart_toEndOf="@id/choice_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Priority item" />
 
@@ -28,9 +28,9 @@
         android:id="@+id/selected_image"
         style="@style/W24_H24"
         android:src="@drawable/ic_done"
-        app:layout_constraintBottom_toBottomOf="@+id/priority_text"
+        app:layout_constraintBottom_toBottomOf="@+id/choice_text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/priority_text"
+        app:layout_constraintTop_toTopOf="@+id/choice_text"
         app:tint="@color/secondaryColor" />
 
     <View
@@ -40,6 +40,6 @@
         android:background="@color/lightGray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/priority_text" />
+        app:layout_constraintTop_toBottomOf="@id/choice_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

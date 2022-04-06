@@ -4,7 +4,7 @@ import start.up.tracker.R
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.Settings
-import start.up.tracker.ui.data.entities.tasks.PriorityData
+import start.up.tracker.ui.data.entities.tasks.ChoiceData
 import start.up.tracker.utils.resources.ResourcesUtils
 
 class PriorityGenerator {
@@ -30,11 +30,11 @@ class PriorityGenerator {
     private fun createNoPriorityListItem(priorityId: Int): ListItem {
         val settings = Settings(
             icon = R.drawable.ic_priority_fire_1,
-            iconColor = R.color.gray
+            iconColor = ResourcesUtils.getColor(R.color.gray)
         )
 
-        val data = PriorityData(
-            priorityId = Task.NO_PRIORITY,
+        val data = ChoiceData(
+            id = Task.NO_PRIORITY,
             title = ResourcesUtils.getString(R.string.priority_undefined),
             isSelected = Task.NO_PRIORITY == priorityId
         )
@@ -45,11 +45,11 @@ class PriorityGenerator {
     private fun createHighPriorityListItem(priorityId: Int): ListItem {
         val settings = Settings(
             icon = R.drawable.ic_priority_fire_1,
-            iconColor = R.color.priority_high
+            iconColor = ResourcesUtils.getColor(R.color.priority_high)
         )
 
-        val data = PriorityData(
-            priorityId = Task.PRIORITY_HIGH,
+        val data = ChoiceData(
+            id = Task.PRIORITY_HIGH,
             title = ResourcesUtils.getString(R.string.priority_high),
             isSelected = Task.PRIORITY_HIGH == priorityId
         )
@@ -60,11 +60,11 @@ class PriorityGenerator {
     private fun createMediumPriorityListItem(priorityId: Int): ListItem {
         val settings = Settings(
             icon = R.drawable.ic_priority_fire_1,
-            iconColor = R.color.priority_medium
+            iconColor = ResourcesUtils.getColor(R.color.priority_medium)
         )
 
-        val data = PriorityData(
-            priorityId = Task.PRIORITY_MEDIUM,
+        val data = ChoiceData(
+            id = Task.PRIORITY_MEDIUM,
             title = ResourcesUtils.getString(R.string.priority_medium),
             isSelected = Task.PRIORITY_MEDIUM == priorityId
         )
@@ -75,11 +75,11 @@ class PriorityGenerator {
     private fun createLowPriorityListItem(priorityId: Int): ListItem {
         val settings = Settings(
             icon = R.drawable.ic_priority_fire_1,
-            iconColor = R.color.priority_low
+            iconColor = ResourcesUtils.getColor(R.color.priority_low)
         )
 
-        val data = PriorityData(
-            priorityId = Task.PRIORITY_LOW,
+        val data = ChoiceData(
+            id = Task.PRIORITY_LOW,
             title = ResourcesUtils.getString(R.string.priority_low),
             isSelected = Task.PRIORITY_LOW == priorityId
         )
@@ -90,8 +90,8 @@ class PriorityGenerator {
     private fun createUrgentImportantListItem(priorityId: Int): ListItem {
         val settings = Settings()
 
-        val data = PriorityData(
-            priorityId = Task.URGENT_IMPORTANT,
+        val data = ChoiceData(
+            id = Task.URGENT_IMPORTANT,
             title = ResourcesUtils.getString(R.string.urgent_important),
             isSelected = Task.URGENT_IMPORTANT == priorityId
         )
@@ -102,8 +102,8 @@ class PriorityGenerator {
     private fun createNotUrgentImportantListItem(priorityId: Int): ListItem {
         val settings = Settings()
 
-        val data = PriorityData(
-            priorityId = Task.NOT_URGENT_IMPORTANT,
+        val data = ChoiceData(
+            id = Task.NOT_URGENT_IMPORTANT,
             title = ResourcesUtils.getString(R.string.not_urgent_important),
             isSelected = Task.NOT_URGENT_IMPORTANT == priorityId
         )
@@ -114,8 +114,8 @@ class PriorityGenerator {
     private fun createUrgentNotImportantListItem(priorityId: Int): ListItem {
         val settings = Settings()
 
-        val data = PriorityData(
-            priorityId = Task.URGENT_NOT_IMPORTANT,
+        val data = ChoiceData(
+            id = Task.URGENT_NOT_IMPORTANT,
             title = ResourcesUtils.getString(R.string.urgent_not_important),
             isSelected = Task.URGENT_NOT_IMPORTANT == priorityId
         )
@@ -126,8 +126,8 @@ class PriorityGenerator {
     private fun createNotUrgentNotImportantListItem(priorityId: Int): ListItem {
         val settings = Settings()
 
-        val data = PriorityData(
-            priorityId = Task.NOT_URGENT_NOT_IMPORTANT,
+        val data = ChoiceData(
+            id = Task.NOT_URGENT_NOT_IMPORTANT,
             title = ResourcesUtils.getString(R.string.not_urgent_not_important),
             isSelected = Task.NOT_URGENT_NOT_IMPORTANT == priorityId
         )

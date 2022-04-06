@@ -1,6 +1,5 @@
 package start.up.tracker.ui.data.entities
 
-import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 
 data class ListItem(
@@ -24,8 +23,8 @@ class Settings(
     var editable: Boolean = true,
     var changeErrorAfterChangingText: Boolean = true,
     @DrawableRes var icon: Int? = null,
-    @ColorRes var iconColor: Int? = null,
+    var iconColor: Int? = null,
 
-    var leftMargin: Int? = null,
-    var rightMargin: Int? = null,
+    var width: Int? = null,
+    var height: Int? = null,
 )

@@ -319,6 +319,11 @@ class EditTaskFragment :
             val result = bundle.getInt(requestKey)
             viewModel.onPriorityChanged(result)
         }
+
+        setFragmentResultListener(ExtraCodes.PROJECT_REQUEST) { requestKey, bundle ->
+            val result = bundle.getInt(requestKey)
+            viewModel.onProjectChanged(result)
+        }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
@@ -380,7 +385,10 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.NavigateToProjectsDialog -> {
-
+                    val action = EditTaskFragmentDirections.actionEditTaskToProjectsDialog(
+                        selectedProjectId = event.projectId
+                    )
+                    navigateTo(action)
                 }
             }
         }

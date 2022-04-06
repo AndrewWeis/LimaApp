@@ -10,4 +10,6 @@ object StateHandleKeys {
 
     const val SELECTED_PRIORITY_ID = "selectedPriorityId"
     const val PRINCIPLE_ID = "principleId"
+
+    const val SELECTED_PROJECT_ID = "selectedProjectId"
 }

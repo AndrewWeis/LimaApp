@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_addEditTask_to_priority"
             app:destination="@id/priorityDialogFragment" />
+        <action
+            android:id="@+id/action_editTask_to_projectsDialog"
+            app:destination="@id/projectsDialogFragment" />
     </dialog>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -180,5 +183,14 @@
             android:name="selectedPriorityId"
             app:argType="integer"
             android:defaultValue="0" />
+    </dialog>
+    <dialog
+        android:id="@+id/projectsDialogFragment"
+        android:name="start.up.tracker.ui.fragments.edit_task.dialogs.ProjectsDialogFragment"
+        android:label="ProjectsDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedProjectId"
+            app:argType="integer" />
     </dialog>
 </navigation>
