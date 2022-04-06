@@ -15,16 +15,15 @@ class Pomodoro(
     private val taskDao: TaskDao,
 ) : Principle {
 
-
-    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
-        return checkComplianceToPrinciple(task)
+    override suspend fun validateOnAddTask(task: Task): AnalyticsMessage? {
+        return validate(task)
     }
 
-    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? {
-        return checkComplianceToPrinciple(task)
+    override suspend fun validateOnEditTask(task: Task): AnalyticsMessage? {
+        return validate(task)
     }
 
-    private fun checkComplianceToPrinciple(task: Task): AnalyticsMessage? {
+    private fun validate(task: Task): AnalyticsMessage? {
         return null
     }
 

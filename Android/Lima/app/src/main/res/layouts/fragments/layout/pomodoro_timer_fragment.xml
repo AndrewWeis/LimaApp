@@ -41,4 +41,30 @@
         android:layout_gravity="center"
         android:layout_marginBottom="128dp"/>
 
+    <TextView
+        android:id="@+id/textView_taskFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="task name"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"/>
+    <TextView
+        android:id="@+id/textView_startTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="task name"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"/>
+
+    <TextView
+        android:id="@+id/textView_pomodoros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="task name"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_marginTop="200dp"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

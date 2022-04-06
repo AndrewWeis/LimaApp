@@ -12,7 +12,6 @@ import start.up.tracker.analytics.principles.Pomodoro
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TimerDataStore
 import start.up.tracker.entities.Task
-import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,6 +32,10 @@ class PomodoroTimerViewModel @Inject constructor(
         timerDataStore.setTimerState(timerState)
     }
 
+    fun setAlarmSetTime(time: Long) = viewModelScope.launch {
+        timerDataStore.setAlarmSetTime(time)
+    }
+
     suspend fun getTimerState(): Int {
         return timerDataStore.timerState.first()
     }
@@ -43,6 +46,10 @@ class PomodoroTimerViewModel @Inject constructor(
 
     suspend fun getPreviousTimerLengthSeconds(): Long {
         return timerDataStore.previousTimerLengthSeconds.first()
+    }
+
+    suspend fun getAlarmSetTime(): Long {
+        return timerDataStore.alarmSetTime.first()
     }
 
     suspend fun findTaskToMatch(): Task? {

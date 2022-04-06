@@ -217,7 +217,7 @@ class ActiveAnalytics @Inject constructor(
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
         val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
-            principlesMap[id]!!.checkComplianceOnAddTask(task)
+            principlesMap[id]!!.validateOnAddTask(task)
         }
 
         return AnalyticsMessages(messages = analyticsMessages)
@@ -233,7 +233,7 @@ class ActiveAnalytics @Inject constructor(
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
         val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
-            principlesMap[id]!!.checkComplianceOnEditTask(task)
+            principlesMap[id]!!.validateOnEditTask(task)
         }
 
         return AnalyticsMessages(messages = analyticsMessages)

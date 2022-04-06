@@ -31,6 +31,11 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
             preferences[TimerKeys.TIMER_STATE] ?: -1
         }
 
+    val alarmSetTime: Flow<Long>
+        get() = dataStore.data.map { preferences ->
+            preferences[TimerKeys.ALARM_SET_TIME] ?: -1
+        }
+
     suspend fun setPreviousTimerLengthSeconds(lengthInSec: Long) {
         dataStore.edit { preferences ->
             preferences[TimerKeys.PREVIOUS_TIMER_LENGTH_SECONDS] = lengthInSec
@@ -49,9 +54,16 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
         }
     }
 
+    suspend fun setAlarmSetTime(state: Long) {
+        dataStore.edit { preferences ->
+            preferences[TimerKeys.ALARM_SET_TIME] = state
+        }
+    }
+
     private object TimerKeys {
         val PREVIOUS_TIMER_LENGTH_SECONDS = preferencesKey<Long>("previous_timer_length_seconds")
         val SECONDS_REMAINING = preferencesKey<Long>("seconds_remaining")
         val TIMER_STATE = preferencesKey<Int>("timer_state")
+        val ALARM_SET_TIME = preferencesKey<Long>("alarm_set_time")
     }
 }

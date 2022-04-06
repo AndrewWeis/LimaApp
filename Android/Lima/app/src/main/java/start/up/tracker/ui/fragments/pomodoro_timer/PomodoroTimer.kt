@@ -1,8 +1,15 @@
 package start.up.tracker.ui.fragments.pomodoro_timer
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
+import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,7 +18,10 @@ import kotlinx.android.synthetic.main.pomodoro_timer_fragment.*
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.databinding.PomodoroTimerFragmentBinding
+import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel
+import start.up.tracker.utils.TimeHelper
+import java.util.*
 
 @AndroidEntryPoint
 class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
@@ -23,11 +33,10 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
     private var timerLengthSeconds = 0L
     private var secondsRemaining = 0L
 
-    private var timerState = TIMER_STATE_STOPPED
+    private var timerState = TIMER_STATE_DISABLED
     private var currentPhase = CURRENT_PHASE_POMODORO
     private var pomodoroNumber = 4
     private var currentPomodoro = 1
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,10 +48,9 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
             val taskToMatch = viewModel.findTaskToMatch()
 
             if (taskToMatch != null) {
-
-                // TODO Отрисовать плашку с автоматически выбранной активностью с числом помодорок у этой таски
-
-                pomodoroNumber = viewModel.fromEndTimeToPomodoro(taskToMatch)!!
+                taskMatchedCase(taskToMatch)
+            } else {
+                taskNotMatchedCase()
             }
         }
     }
@@ -51,6 +59,8 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
         super.onResume()
 
         initTimer()
+
+        removeAlarm()
     }
 
     override fun onPause() {
@@ -58,6 +68,7 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
 
         if (timerState == TIMER_STATE_RUNNING) {
             timer.cancel()
+            val wakeUpTime = setAlarm(nowSeconds, secondsRemaining)
         } else if (timerState == TIMER_STATE_PAUSED) {
 
         }
@@ -89,7 +100,13 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
                 else
                     timerLengthSeconds
 
-            if (timerState == TIMER_STATE_RUNNING)
+            val alarmSetTime = viewModel.getAlarmSetTime()
+            if (alarmSetTime > 0)
+                secondsRemaining -= nowSeconds - alarmSetTime
+
+            if (secondsRemaining <= 0)
+                onTimerFinished(false)
+            else if (timerState == TIMER_STATE_RUNNING)
                 startTimer()
 
             updateButtons()
@@ -214,13 +231,85 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
                 timer_pause_button.isEnabled = false
                 timer_stop_button.isEnabled = false
             }
+            TIMER_STATE_DISABLED -> {
+                timer_start_button.isEnabled = false
+                timer_pause_button.isEnabled = false
+                timer_stop_button.isEnabled = false
+            }
         }
     }
 
-    private companion object {
+    /**
+     * Нужно сделать плашку с автоматически выбранной таской с числом помодорок у этой таски
+     * Также крестик, по нажатию на который мы прервём привязку к таске. В таком случае вызывается
+     * taskNotMatchedCase. Старт таймера доступен сразу
+     */
+    private fun taskMatchedCase(taskToMatch : Task) {
+        pomodoroNumber = viewModel.fromEndTimeToPomodoro(taskToMatch)!!
+
+        // TODO Отрисовать плашку с автоматически выбранной активностью с числом помодорок у этой таски
+        // предварительно
+        // TODO
+        textView_taskFound.text = "${taskToMatch.taskTitle}"
+        // TODO
+        textView_startTime.text = "${TimeHelper.formatMinutesOfCurrentDay(taskToMatch.startTimeInMinutes)}"
+        // TODO
+        textView_pomodoros.text = "$pomodoroNumber"
+
+        timerState = TIMER_STATE_STOPPED
+        updateButtons()
+    }
+
+    /**
+     * Нужно сделать плашку с выбором число помодорок. Старт таймера доступен сразу после выставления
+     * помодорок (из состояние disabled в stopped)
+     */
+    private fun taskNotMatchedCase() {
+        // временно для дебага
+        textView_taskFound.text = "no task found"
+
+        // пока так
+        pomodoroNumber = 3
+
+        textView_pomodoros.text = "$pomodoroNumber"
+
+        // TODO какая-то кнопочка для выставления помодорок. Не выставив помодорки, нельзя нажимать кнопочки старта таймера
+        /*timer_..._button.setOnClickListener {
+            timerState = TIMER_STATE_PAUSED
+            updateButtons()
+        }*/
+    }
+
+    private fun setAlarm(nowSeconds: Long, secondsRemaining: Long): Long {
+        val wakeUpTime = (nowSeconds + secondsRemaining) * 1000
+        val context = requireContext()
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, TimerExpiredReceiver(viewModel)::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, wakeUpTime, pendingIntent)
+        viewModel.setAlarmSetTime(nowSeconds)
+
+        return wakeUpTime
+    }
+
+    private fun removeAlarm() {
+        val context = requireContext()
+        val intent = Intent(context, TimerExpiredReceiver(viewModel)::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.cancel(pendingIntent)
+        viewModel.setAlarmSetTime(0)
+    }
+
+    private val nowSeconds: Long
+        get() = Calendar.getInstance().timeInMillis / 1000
+
+    companion object {
+
         const val TIMER_STATE_STOPPED = 0
         const val TIMER_STATE_PAUSED = 1
         const val TIMER_STATE_RUNNING = 2
+        const val TIMER_STATE_DISABLED = 3
 
         const val CURRENT_PHASE_POMODORO = 3
         const val CURRENT_PHASE_SHORT_REST = 4

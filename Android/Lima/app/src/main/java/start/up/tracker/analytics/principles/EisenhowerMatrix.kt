@@ -6,11 +6,11 @@ import start.up.tracker.entities.Task
 
 class EisenhowerMatrix : Principle {
 
-    override suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage? {
+    override suspend fun validateOnAddTask(task: Task): AnalyticsMessage? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage? {
+    override suspend fun validateOnEditTask(task: Task): AnalyticsMessage? {
         TODO("Not yet implemented")
     }
 }
