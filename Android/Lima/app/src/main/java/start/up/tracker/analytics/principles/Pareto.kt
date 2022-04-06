@@ -12,6 +12,8 @@ class Pareto(
     private val taskDao: TaskDao
 ) : Principle {
 
+    private val isOverridesPriority = true
+
     override suspend fun validateOnAddTask(task: Task): AnalyticsMessage? {
         return task.date?.let { date ->
             val tasksOfDay = taskDao.getTasksOfDay(date)
@@ -30,6 +32,10 @@ class Pareto(
 
             validate(task, tasksOfDay)
         }
+    }
+
+    override suspend fun getIsOverridesPriority(): Boolean {
+        return isOverridesPriority
     }
 
     /**

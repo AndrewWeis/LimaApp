@@ -6,11 +6,17 @@ import start.up.tracker.entities.Task
 
 class EisenhowerMatrix : Principle {
 
+    private val isOverridesPriority = true
+
     override suspend fun validateOnAddTask(task: Task): AnalyticsMessage? {
         TODO("Not yet implemented")
     }
 
     override suspend fun validateOnEditTask(task: Task): AnalyticsMessage? {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun getIsOverridesPriority(): Boolean {
+        return isOverridesPriority
     }
 }

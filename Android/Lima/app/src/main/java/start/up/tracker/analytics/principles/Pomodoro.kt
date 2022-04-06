@@ -15,12 +15,18 @@ class Pomodoro(
     private val taskDao: TaskDao,
 ) : Principle {
 
+    private val isOverridesPriority = false
+
     override suspend fun validateOnAddTask(task: Task): AnalyticsMessage? {
         return validate(task)
     }
 
     override suspend fun validateOnEditTask(task: Task): AnalyticsMessage? {
         return validate(task)
+    }
+
+    override suspend fun getIsOverridesPriority(): Boolean {
+        return isOverridesPriority
     }
 
     private fun validate(task: Task): AnalyticsMessage? {
