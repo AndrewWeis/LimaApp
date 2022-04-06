@@ -53,7 +53,7 @@ class AnalyticsMessagesDialogFragment :
         binding?.ignoreButton?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.IGNORE_CLICKED_REQUEST,
-                result = bundleOf(ExtraCodes.IGNORE_CLICKED_RESULT to 0)
+                result = bundleOf(ExtraCodes.IGNORE_CLICKED_REQUEST to true)
             )
             findNavController().popBackStack()
         }

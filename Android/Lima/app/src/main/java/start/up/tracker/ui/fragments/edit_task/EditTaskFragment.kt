@@ -13,22 +13,22 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
-import start.up.tracker.data.fields.Field
 import start.up.tracker.databinding.EditTaskFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.TasksEvent
-import start.up.tracker.ui.data.entities.chips.ChipData
-import start.up.tracker.ui.data.entities.chips.ChipsData
+import start.up.tracker.ui.data.entities.edit_task.ActionIcon
+import start.up.tracker.ui.data.entities.edit_task.ActionIcons
+import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.ui.extensions.list.ListExtension
-import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
+import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
 import start.up.tracker.ui.list.adapters.edit_task.EditTaskAdapter
 import start.up.tracker.ui.list.generators.edit_task.EditTaskInfoGenerator
-import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
-import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
+import start.up.tracker.ui.list.view_holders.add_project.HeaderActionsViewHolder
+import start.up.tracker.ui.list.view_holders.edit_task.ActionIconViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.AddSubtaskViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.views.forms.base.BaseInputView
@@ -39,14 +39,14 @@ import java.util.*
 
 @AndroidEntryPoint
 class EditTaskFragment :
-    BaseTasksFragment(R.layout.edit_task_fragment),
+    BaseBottomSheetDialogFragment(R.layout.edit_task_fragment),
     BaseInputView.TextInputListener,
-    SelectInputViewHolder.TextInputSelectionListener,
     TimePickerDialog.OnTimeSetListener,
     DatePickerDialog.OnDateSetListener,
-    ChipsViewHolder.ProjectViewHolderListener,
     OnTaskClickListener,
-    AddSubtaskViewHolder.OnAddSubtaskClickListener {
+    AddSubtaskViewHolder.OnAddSubtaskClickListener,
+    ActionIconViewHolder.ActionIconClickListener,
+    HeaderActionsViewHolder.AddProjectActionClickListener {
 
     private val viewModel: EditTaskViewModel by viewModels()
 
@@ -64,9 +64,8 @@ class EditTaskFragment :
         binding = EditTaskFragmentBinding.bind(view)
 
         initAdapter()
-        initListeners()
         initObservers()
-        initResultListener()
+        initResultListeners()
         initEventsListener()
     }
 
@@ -79,6 +78,14 @@ class EditTaskFragment :
         super.onDestroyView()
         binding = null
         listExtension = null
+    }
+
+    override fun onDoneButtonClick() {
+        viewModel.onSaveClick()
+    }
+
+    override fun onBackButtonClick() {
+        viewModel.onBackButtonClick()
     }
 
     override fun onTextInputDataChange(listItem: ListItem) {
@@ -113,30 +120,6 @@ class EditTaskFragment :
         hideKeyboard()
     }
 
-    override fun onTextInputSelectionClick(listItem: ListItem) {
-        when (listItem.id) {
-            ListItemIds.TASK_TIME_START -> {
-                isTaskTimeTypeStart = true
-                openTimePicker()
-            }
-            ListItemIds.TASK_TIME_END -> {
-                isTaskTimeTypeStart = false
-                openTimePicker()
-            }
-            ListItemIds.TASK_DATE ->
-                openDatePicker()
-        }
-    }
-
-    override fun onChipClick(listItem: ListItem) {
-        val chipData = listItem.data as ChipData
-
-        when (listItem.id) {
-            ListItemIds.TASK_PROJECTS -> viewModel.onCategoryChipChanged(chipData)
-            ListItemIds.TASK_PRIORITIES -> viewModel.onPriorityChipChanged(chipData)
-        }
-    }
-
     override fun onTaskClick(task: Task) {
         viewModel.onTaskSelected(task)
     }
@@ -160,6 +143,16 @@ class EditTaskFragment :
     override fun onDateSet(datePicker: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val milliseconds = TimeHelper.getDateInMilliseconds(year, month, dayOfMonth)
         viewModel.onTaskDateChanged(milliseconds)
+    }
+
+    override fun onActionClickListener(actionIconId: Int) {
+        when (actionIconId) {
+            ActionIcon.ICON_PRIORITY -> viewModel.onIconPriorityClick()
+            ActionIcon.ICON_DATE -> viewModel.onIconDateClick()
+            ActionIcon.ICON_TIME_START -> viewModel.onIconTimeStartClick()
+            ActionIcon.ICON_TIME_END -> viewModel.onIconTimeEndClick()
+            ActionIcon.ICON_PROJECTS -> viewModel.onIconProjectsClick()
+        }
     }
 
     private fun openDatePicker() {
@@ -194,6 +187,19 @@ class EditTaskFragment :
         viewModel.onCompletedSubtasksNumberChanged(number)
     }
 
+    private fun showActionsIcons(icons: ActionIcons) {
+        val listItem: ListItem = generator.createActionsIconsListItem(icons)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setActionsIconsListItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setActionsIconsListItem(listItem)
+        }
+    }
+
     private fun showAddSubtaskButton() {
         val listItem: ListItem = generator.createAddSubtaskButton()
 
@@ -220,34 +226,8 @@ class EditTaskFragment :
         }
     }
 
-    private fun showPriorities(chips: ChipsData) {
-        val listItem: ListItem = generator.createPrioritiesChipsListItems(chips)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setPrioritiesChipListItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setPrioritiesChipListItem(listItem)
-        }
-    }
-
-    private fun showProjects(chips: ChipsData) {
-        val listItem: ListItem = generator.createProjectsChipsListItems(chips)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setProjectChipListItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setProjectChipListItem(listItem)
-        }
-    }
-
-    private fun showTitleField(field: Field<String>) {
-        val listItem: ListItem = generator.createTitleListItem(field)
+    private fun showTaskTitle(task: Task) {
+        val listItem: ListItem = generator.createTitleListItem(task.taskTitle)
 
         if (binding?.editTasksList?.isComputingLayout == false) {
             adapter.setTitleItem(listItem)
@@ -259,50 +239,21 @@ class EditTaskFragment :
         }
     }
 
-    private fun showEditableTaskInfo(task: Task) {
+    private fun showActionsHeader(headerActions: HeaderActions) {
+        val listItem: ListItem = generator.createActionsHeaderListItem(headerActions)
+
+        if (binding?.editTasksList?.isComputingLayout == false) {
+            adapter.setActionsHeaderItem(listItem)
+            return
+        }
+
+        binding?.editTasksList?.post {
+            adapter.setActionsHeaderItem(listItem)
+        }
+    }
+
+    private fun showDescription(task: Task) {
         setDescription(task)
-        setStartTime(task)
-        setEndTime(task)
-        setDate(task)
-    }
-
-    private fun setDate(task: Task) {
-        val listItem: ListItem = generator.createTaskDateListItem(task.date)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setDateItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setDateItem(listItem)
-        }
-    }
-
-    private fun setEndTime(task: Task) {
-        val listItem: ListItem = generator.createTaskEndTimeListItem(task.endTimeInMinutes)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setEndTimeItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setEndTimeItem(listItem)
-        }
-    }
-
-    private fun setStartTime(task: Task) {
-        val listItem: ListItem = generator.createTaskStartTimeListItem(task.startTimeInMinutes)
-
-        if (binding?.editTasksList?.isComputingLayout == false) {
-            adapter.setStartTimeItem(listItem)
-            return
-        }
-
-        binding?.editTasksList?.post {
-            adapter.setStartTimeItem(listItem)
-        }
     }
 
     private fun setDescription(task: Task) {
@@ -323,10 +274,10 @@ class EditTaskFragment :
             viewModel = viewModel,
             layoutInflater = layoutInflater,
             textInputListener = this,
-            textInputSelectionListener = this,
-            projectViewHolderListener = this,
             onTaskClickListener = this,
-            onAddSubtaskListener = this
+            onAddSubtaskListener = this,
+            actionIconClickListener = this,
+            addProjectActionsClickListener = this
         )
 
         listExtension = ListExtension(binding?.editTasksList)
@@ -335,20 +286,20 @@ class EditTaskFragment :
     }
 
     private fun initObservers() {
-        viewModel.taskInfoLiveData.observe(viewLifecycleOwner) { task ->
-            showEditableTaskInfo(task)
+        viewModel.taskActionsHeader.observe(viewLifecycleOwner) { headerActions ->
+            showActionsHeader(headerActions)
         }
 
-        viewModel.titleField.observe(viewLifecycleOwner) { field ->
-            showTitleField(field)
+        viewModel.taskDescription.observe(viewLifecycleOwner) { task ->
+            showDescription(task)
         }
 
-        viewModel.projectsChips.observe(viewLifecycleOwner) { projectsChips ->
-            showProjects(projectsChips)
+        viewModel.taskTitle.observe(viewLifecycleOwner) { task ->
+            showTaskTitle(task)
         }
 
-        viewModel.prioritiesChips.observe(viewLifecycleOwner) { prioritiesChips ->
-            showPriorities(prioritiesChips)
+        viewModel.actionsIcons.observe(viewLifecycleOwner) { icons ->
+            showActionsIcons(icons)
         }
 
         viewModel.subtasks.observe(viewLifecycleOwner) { subtasks ->
@@ -359,15 +310,26 @@ class EditTaskFragment :
         }
     }
 
-    private fun initResultListener() {
+    private fun initResultListeners() {
         setFragmentResultListener(ExtraCodes.IGNORE_CLICKED_REQUEST) { _, _ ->
             viewModel.saveTask()
+        }
+
+        setFragmentResultListener(ExtraCodes.PRIORITY_REQUEST) { requestKey, bundle ->
+            val result = bundle.getInt(requestKey)
+            viewModel.onPriorityChanged(result)
+        }
+
+        setFragmentResultListener(ExtraCodes.PROJECT_REQUEST) { requestKey, bundle ->
+            val result = bundle.getInt(requestKey)
+            viewModel.onProjectChanged(result)
         }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.tasksEvent.collect { event ->
             when (event) {
+
                 is TasksEvent.NavigateBack -> {
                     findNavController().popBackStack()
                 }
@@ -392,18 +354,43 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.ShowAnalyticMessageDialog -> {
-                    val action = EditTaskFragmentDirections.actionAddEditTaskToAnalyticsMessagesDialog(
-                        messages = event.messages
+                    val action =
+                        EditTaskFragmentDirections.actionAddEditTaskToAnalyticsMessagesDialog(
+                            messages = event.messages
+                        )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.NavigateToPriorityDialog -> {
+                    val action = EditTaskFragmentDirections.actionAddEditTaskToPriority(
+                        // todo (method for analytics which returns what technique we need to use for the display of priority)
+                        // ActiveAnalytics.getPrincipleIdForPriorityDisplay
+                        selectedPriorityId = event.priorityId,
+                    )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.ShowDatePicker -> {
+                    openDatePicker()
+                }
+
+                is TasksEvent.ShowTimeStartPicker -> {
+                    isTaskTimeTypeStart = true
+                    openTimePicker()
+                }
+
+                is TasksEvent.ShowTimeEndPicker -> {
+                    isTaskTimeTypeStart = false
+                    openTimePicker()
+                }
+
+                is TasksEvent.NavigateToProjectsDialog -> {
+                    val action = EditTaskFragmentDirections.actionEditTaskToProjectsDialog(
+                        selectedProjectId = event.projectId
                     )
                     navigateTo(action)
                 }
             }
-        }
-    }
-
-    private fun initListeners() {
-        binding?.doneButton?.setOnClickListener {
-            viewModel.onSaveClick()
         }
     }
 }

@@ -2,9 +2,9 @@ package start.up.tracker.ui.list.generators.upcoming
 
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
-import start.up.tracker.ui.data.entities.Header
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
+import start.up.tracker.ui.data.entities.header.Header
 import start.up.tracker.ui.list.generators.base.BaseTasksGenerator
 import start.up.tracker.utils.TimeHelper
 

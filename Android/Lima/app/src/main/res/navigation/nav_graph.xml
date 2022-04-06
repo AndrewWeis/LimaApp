@@ -5,8 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <fragment
-        android:id="@+id/addEditTaskFragment"
+    <dialog
+        android:id="@+id/editTaskFragment"
         android:name="start.up.tracker.ui.fragments.edit_task.EditTaskFragment"
         android:label="{title}"
         tools:layout="@layout/edit_task_fragment">
@@ -24,7 +24,7 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_addEditTask_self"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
         <argument
             android:name="parentTaskId"
             app:argType="integer"
@@ -32,7 +32,13 @@
         <action
             android:id="@+id/action_addEditTask_to_analyticsMessagesDialog"
             app:destination="@id/analyticsMessagesDialogFragment" />
-    </fragment>
+        <action
+            android:id="@+id/action_addEditTask_to_priority"
+            app:destination="@id/priorityDialogFragment" />
+        <action
+            android:id="@+id/action_editTask_to_projectsDialog"
+            app:destination="@id/projectsDialogFragment" />
+    </dialog>
     <fragment
         android:id="@+id/analyticsFragment"
         android:name="start.up.tracker.ui.fragments.analytics.AnalyticsFragment"
@@ -82,7 +88,7 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_projectTasks_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
         <argument
             android:name="title"
             app:argType="string" />
@@ -102,7 +108,7 @@
             app:argType="string" />
         <action
             android:id="@+id/action_today_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/todayTasksFragment"
@@ -111,7 +117,7 @@
         tools:layout="@layout/fragment_today_tasks">
         <action
             android:id="@+id/action_todayTasks_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/upcomingFragment"
@@ -120,7 +126,7 @@
         tools:layout="@layout/upcoming_fragment" >
         <action
             android:id="@+id/action_upcoming_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/techniquesFragment"
@@ -163,5 +169,28 @@
         <argument
             android:name="message"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessage" />
+    </dialog>
+    <dialog
+        android:id="@+id/priorityDialogFragment"
+        android:name="start.up.tracker.ui.fragments.edit_task.dialogs.PriorityDialogFragment"
+        android:label="PriorityDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="principleId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="selectedPriorityId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </dialog>
+    <dialog
+        android:id="@+id/projectsDialogFragment"
+        android:name="start.up.tracker.ui.fragments.edit_task.dialogs.ProjectsDialogFragment"
+        android:label="ProjectsDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedProjectId"
+            app:argType="integer" />
     </dialog>
 </navigation>

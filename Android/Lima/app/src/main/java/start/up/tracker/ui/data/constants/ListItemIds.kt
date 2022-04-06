@@ -34,4 +34,6 @@ object ListItemIds {
     const val UPCOMING = "upcoming"
 
     const val PROJECTS = "projects"
+
+    const val ACTIONS_ICONS = "actions_icons"
 }

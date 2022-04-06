@@ -11,16 +11,5 @@
         android:id="@+id/edit_tasks_list"
         style="@style/MM" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/done_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/spacing_normal"
-        android:layout_marginBottom="@dimen/spacing_normal"
-        android:contentDescription="@string/fab"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_done" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

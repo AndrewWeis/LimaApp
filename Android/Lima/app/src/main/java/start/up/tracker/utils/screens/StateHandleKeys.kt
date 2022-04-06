@@ -7,4 +7,9 @@ object StateHandleKeys {
 
     const val PROJECT_ID = "projectId"
     const val TECHNIQUE = "technique"
+
+    const val SELECTED_PRIORITY_ID = "selectedPriorityId"
+    const val PRINCIPLE_ID = "principleId"
+
+    const val SELECTED_PROJECT_ID = "selectedProjectId"
 }

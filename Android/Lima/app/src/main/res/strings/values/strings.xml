@@ -18,6 +18,11 @@
     <string name="priority_medium">Medium</string>
     <string name="priority_low">Low</string>
 
+    <string name="urgent_important">Urgent, important</string>
+    <string name="not_urgent_important">Not urgent, important</string>
+    <string name="urgent_not_important">Urgent, not important</string>
+    <string name="not_urgent_not_important">Not urgent, not important</string>
+
     <!-- settings -->
     <string name="appearance_text">Appearance</string>
     <string name="techniques_text">Time-management techniques</string>
