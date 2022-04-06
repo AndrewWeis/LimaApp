@@ -89,6 +89,8 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
         lifecycleScope.launch {
             timerState = viewModel.getTimerState()
 
+            currentPhaseText()
+
             if (timerState == TIMER_STATE_STOPPED)
                 setNewTimerLength()
             else
@@ -131,6 +133,7 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
             }
         }
 
+        currentPhaseText()
         setNewTimerLength()
 
         lifecycleScope.launch {
@@ -156,6 +159,20 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
                 updateCountdownUI()
             }
         }.start()
+    }
+
+    private fun currentPhaseText() {
+        when (currentPhase) {
+            CURRENT_PHASE_POMODORO -> {
+                textView_current_phase.text = "Pomodoro phase"
+            }
+            CURRENT_PHASE_SHORT_REST -> {
+                textView_current_phase.text = "Short rest phase"
+            }
+            else -> {
+                textView_current_phase.text = "Long rest phase"
+            }
+        }
     }
 
     private fun setNewTimerLength() {
@@ -311,9 +328,9 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
         const val TIMER_STATE_RUNNING = 2
         const val TIMER_STATE_DISABLED = 3
 
-        const val CURRENT_PHASE_POMODORO = 3
-        const val CURRENT_PHASE_SHORT_REST = 4
-        const val CURRENT_PHASE_LONG_REST = 5
+        const val CURRENT_PHASE_POMODORO = 4
+        const val CURRENT_PHASE_SHORT_REST = 5
+        const val CURRENT_PHASE_LONG_REST = 6
 
         const val LENGTH_POMODORO = 25
         const val LENGTH_SHORT_REST = 5

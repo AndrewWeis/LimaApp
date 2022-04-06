@@ -67,4 +67,13 @@
         android:layout_gravity="center"
         android:layout_marginTop="200dp"/>
 
+    <TextView
+        android:id="@+id/textView_current_phase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="task name"
+        android:textSize="15sp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="75dp"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
