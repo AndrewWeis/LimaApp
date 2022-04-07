@@ -10,6 +10,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
@@ -409,6 +410,10 @@ class EditTaskFragment :
                         selectedProjectId = event.projectId
                     )
                     navigateTo(action)
+                }
+
+                is TasksEvent.ShowError -> {
+                    Snackbar.make(requireView(), event.error, Snackbar.LENGTH_LONG).show()
                 }
             }
         }

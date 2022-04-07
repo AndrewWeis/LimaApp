@@ -16,4 +16,5 @@ sealed class TasksEvent {
     data class ShowTimeStartPicker(val timeStart: Int?) : TasksEvent()
     data class ShowTimeEndPicker(val timeEnd: Int?) : TasksEvent()
     data class NavigateToProjectsDialog(val projectId: Int) : TasksEvent()
+    data class ShowError(val error: String) : TasksEvent()
 }

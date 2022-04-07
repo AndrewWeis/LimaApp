@@ -18,6 +18,7 @@ import start.up.tracker.ui.data.entities.edit_task.ActionIcon
 import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.data.entities.tasks.TasksData
+import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
@@ -71,6 +72,12 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onSaveClick() = viewModelScope.launch {
+        val timeMessage = validateTime()
+        if (timeMessage != null) {
+            tasksEventChannel.send(TasksEvent.ShowError(timeMessage))
+            return@launch
+        }
+
         if (isEditMode) {
             checkPrinciplesComplianceOnEditTask()
         } else {
@@ -218,6 +225,36 @@ class EditTaskViewModel @Inject constructor(
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
+    }
+
+    private suspend fun validateTime(): String? {
+        if (task.startTimeInMinutes != null && task.endTimeInMinutes == null) {
+            return ResourcesUtils.getString(R.string.error_start_time)
+        }
+
+        if (task.endTimeInMinutes != null && task.startTimeInMinutes == null) {
+            return ResourcesUtils.getString(R.string.error_end_time)
+        }
+
+        if (task.startTimeInMinutes == null && task.endTimeInMinutes == null) {
+            return null
+        }
+
+        if (task.endTimeInMinutes!! - task.startTimeInMinutes!! < 30) {
+            return ResourcesUtils.getString(R.string.error_time_duration)
+        }
+
+        val doesTimeIntersect = taskDao.doesTimeIntersect(
+            startTime = task.startTimeInMinutes!!,
+            endTime = task.endTimeInMinutes!!,
+            today = TimeHelper.getCurrentDayInMilliseconds()
+        )
+
+        if (doesTimeIntersect) {
+            return ResourcesUtils.getString(R.string.error_time_does_intersect)
+        }
+
+        return null
     }
 
     private fun isAddOrEditMode() {
