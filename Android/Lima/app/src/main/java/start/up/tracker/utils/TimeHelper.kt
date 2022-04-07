@@ -26,6 +26,27 @@ object TimeHelper {
         return calendar.timeInMillis
     }
 
+    fun getCurrentYearFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.YEAR]
+    }
+
+    fun getCurrentMonthFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.MONTH]
+    }
+
+    fun getCurrentDayFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.DAY_OF_MONTH]
+    }
+
     /**
      * Получить дату в миллисекундах
      *
@@ -67,11 +88,7 @@ object TimeHelper {
      * @return часы
      */
     fun getHoursOfCurrentDay(): Int {
-        return if (isSystem24Hour) {
-            Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        } else {
-            Calendar.getInstance().get(Calendar.HOUR)
-        }
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     }
 
     /**

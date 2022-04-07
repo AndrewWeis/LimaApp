@@ -10,6 +10,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
@@ -157,10 +158,18 @@ class EditTaskFragment :
 
     private fun openDatePicker() {
         val calendar = Calendar.getInstance()
+        var year = calendar[Calendar.YEAR]
+        var month = calendar[Calendar.MONTH]
+        var day = calendar[Calendar.DAY_OF_MONTH]
+
+        viewModel.task.date?.let {
+            year = TimeHelper.getCurrentYearFromMillis(it)
+            month = TimeHelper.getCurrentMonthFromMillis(it)
+            day = TimeHelper.getCurrentDayFromMillis(it)
+        }
 
         val datePickerDialog = DatePickerDialog(
-            requireContext(), R.style.DatePicker, this,
-            calendar[Calendar.YEAR], calendar[Calendar.MONTH], calendar[Calendar.DAY_OF_MONTH]
+            requireContext(), R.style.DatePicker, this, year, month, day
         )
 
         datePickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
@@ -170,10 +179,22 @@ class EditTaskFragment :
 
     private fun openTimePicker() {
         val calendar = Calendar.getInstance()
+        var hours = calendar[Calendar.HOUR_OF_DAY]
+        var minutes = 0
+
+        if (isTaskTimeTypeStart && viewModel.task.startTimeInMinutes != null) {
+            hours = viewModel.task.startTimeInMinutes!! / 60
+            minutes = viewModel.task.startTimeInMinutes!! % 60
+        }
+
+        if (!isTaskTimeTypeStart && viewModel.task.endTimeInMinutes != null) {
+            hours = viewModel.task.endTimeInMinutes!! / 60
+            minutes = viewModel.task.endTimeInMinutes!! % 60
+        }
 
         val timePickerDialog = TimePickerDialog(
             requireContext(), R.style.DatePicker, this,
-            calendar[Calendar.HOUR_OF_DAY], calendar[Calendar.MINUTE], TimeHelper.isSystem24Hour
+            hours, minutes, TimeHelper.isSystem24Hour
         )
 
         timePickerDialog.show()
@@ -389,6 +410,10 @@ class EditTaskFragment :
                         selectedProjectId = event.projectId
                     )
                     navigateTo(action)
+                }
+
+                is TasksEvent.ShowError -> {
+                    Snackbar.make(requireView(), event.error, Snackbar.LENGTH_LONG).show()
                 }
             }
         }

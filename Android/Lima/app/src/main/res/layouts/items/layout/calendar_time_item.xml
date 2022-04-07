@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calendar_time_text"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/RobotoRegular.Black.Size14.M_H20"
+    android:layout_marginBottom="40dp"
+    tools:text="12:00" />

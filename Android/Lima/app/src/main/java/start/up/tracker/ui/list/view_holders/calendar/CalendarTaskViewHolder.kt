@@ -1,12 +1,12 @@
-package start.up.tracker.ui.list.view_holders.tasks
+package start.up.tracker.ui.list.view_holders.calendar
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import start.up.tracker.R
 import start.up.tracker.databinding.CalendarTaskItemBinding
 import start.up.tracker.entities.Task
-import start.up.tracker.ui.data.constants.TIME_OFFSET
 import start.up.tracker.ui.data.entities.ListItem
+import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.tasks.base.BaseTaskViewHolder
 import start.up.tracker.utils.resources.ResourcesUtils
 
@@ -37,25 +37,19 @@ class CalendarTaskViewHolder(
         }
 
         val layoutParams = binding.cardTaskCalendar.layoutParams as ViewGroup.MarginLayoutParams
-        var cardHeight = task.endTimeInMinutes!! - task.startTimeInMinutes!!
+        val cardHeight = task.endTimeInMinutes!! - task.startTimeInMinutes!!
 
         // разница между нижней границей текущего таска и верхней границей следующего
-        var space = 0
+        var bottomMargin = 0
         nextTask?.let {
-            space = it.startTimeInMinutes?.minus(task.endTimeInMinutes!!) ?: 0
-            if (space == 0) {
-                space = 2
-                cardHeight -= 4
-            }
+            bottomMargin = it.startTimeInMinutes!! - task.endTimeInMinutes!!
         }
 
-        layoutParams.bottomMargin = ResourcesUtils.getPxByDp(space.toFloat())
-        layoutParams.height = ResourcesUtils.getPxByDp(cardHeight.toFloat())
+        layoutParams.bottomMargin = ResourcesUtils.getPxByDp(bottomMargin + 2F)
+        layoutParams.height = ResourcesUtils.getPxByDp(cardHeight - 2F)
 
-        // у самого первого таска должен быть отступ сверху
-        if (position == 0 && task.startTimeInMinutes!! > TIME_OFFSET) {
-            layoutParams.topMargin =
-                ResourcesUtils.getPxByDp((task.startTimeInMinutes!! - TIME_OFFSET))
+        if (position == 0) {
+            layoutParams.topMargin = ResourcesUtils.getPxByDp((task.startTimeInMinutes!!.toFloat()))
         }
 
         binding.cardTaskCalendar.requestLayout()
