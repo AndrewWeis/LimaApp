@@ -2,14 +2,11 @@ package start.up.tracker.ui.fragments.pomodoro_timer
 
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.View
-import androidx.core.content.ContentProviderCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -73,11 +70,9 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
 
         }
 
-        // Вот так записывать данные. Далее аналогично
         viewModel.setPreviousTimerLengthSeconds(timerLengthSeconds)
         viewModel.setSecondsRemaining(secondsRemaining)
         viewModel.setTimerState(timerState)
-
     }
 
     override fun onDestroyView() {
@@ -112,7 +107,7 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
                 startTimer()
 
             updateButtons()
-            updateCountdownUI()
+            updateCountDownTimeText()
         }
     }
 
@@ -145,7 +140,7 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
         secondsRemaining = timerLengthSeconds
 
         updateButtons()
-        updateCountdownUI()
+        updateCountDownTimeText()
     }
 
     private fun startTimer() {
@@ -156,7 +151,7 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
 
             override fun onTick(millisUntilFinished: Long) {
                 secondsRemaining = millisUntilFinished / 1000
-                updateCountdownUI()
+                updateCountDownTimeText()
             }
         }.start()
     }
@@ -164,13 +159,13 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
     private fun currentPhaseText() {
         when (currentPhase) {
             CURRENT_PHASE_POMODORO -> {
-                textView_current_phase.text = "Pomodoro phase"
+                binding?.currentPhaseText?.text = "Pomodoro phase"
             }
             CURRENT_PHASE_SHORT_REST -> {
-                textView_current_phase.text = "Short rest phase"
+                binding?.currentPhaseText?.text = "Short rest phase"
             }
             else -> {
-                textView_current_phase.text = "Long rest phase"
+                binding?.currentPhaseText?.text = "Long rest phase"
             }
         }
     }
@@ -199,29 +194,29 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
     }
 
     private fun initListeners() {
-        timer_start_button.setOnClickListener {
+        binding?.timerStartButton?.setOnClickListener {
             startTimer()
             timerState = TIMER_STATE_RUNNING
             updateButtons()
         }
 
-        timer_pause_button.setOnClickListener {
+        binding?.timerPauseButton?.setOnClickListener {
             timer.cancel()
             timerState = TIMER_STATE_PAUSED
             updateButtons()
         }
 
-        timer_stop_button.setOnClickListener {
+        binding?.timerStopButton?.setOnClickListener {
             timer.cancel()
             onTimerFinished(true)
         }
     }
 
-    private fun updateCountdownUI() {
+    private fun updateCountDownTimeText() {
         val minutesUntilFinished = secondsRemaining / 60
         val secondsInMinutesUntilFinished = secondsRemaining - minutesUntilFinished * 60
         val secondStr = secondsInMinutesUntilFinished.toString()
-        textView_countdown.text = "$minutesUntilFinished:${
+        binding?.timeText?.text = "$minutesUntilFinished:${
             if (secondStr.length == 2)
                 secondStr
             else
@@ -261,17 +256,17 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
      * Также крестик, по нажатию на который мы прервём привязку к таске. В таком случае вызывается
      * taskNotMatchedCase. Старт таймера доступен сразу
      */
-    private fun taskMatchedCase(taskToMatch : Task) {
+    private fun taskMatchedCase(taskToMatch: Task) {
         pomodoroNumber = viewModel.fromEndTimeToPomodoro(taskToMatch)!!
 
         // TODO Отрисовать плашку с автоматически выбранной активностью с числом помодорок у этой таски
         // предварительно
         // TODO
-        textView_taskFound.text = "${taskToMatch.taskTitle}"
+        binding?.taskFoundText?.text = "${taskToMatch.taskTitle}"
         // TODO
-        textView_startTime.text = "${TimeHelper.formatMinutesOfCurrentDay(taskToMatch.startTimeInMinutes)}"
+        binding?.startTimeText?.text = "${TimeHelper.formatMinutesOfCurrentDay(taskToMatch.startTimeInMinutes)}"
         // TODO
-        textView_pomodoros.text = "$pomodoroNumber"
+        binding?.pomodorosText?.text = "$pomodoroNumber"
 
         timerState = TIMER_STATE_STOPPED
         updateButtons()
@@ -283,12 +278,12 @@ class PomodoroTimer : Fragment(R.layout.pomodoro_timer_fragment) {
      */
     private fun taskNotMatchedCase() {
         // временно для дебага
-        textView_taskFound.text = "no task found"
+        binding?.taskFoundText?.text = "no task found"
 
         // пока так
         pomodoroNumber = 3
 
-        textView_pomodoros.text = "$pomodoroNumber"
+        binding?.pomodorosText?.text = "$pomodoroNumber"
 
         // TODO какая-то кнопочка для выставления помодорок. Не выставив помодорки, нельзя нажимать кнопочки старта таймера
         /*timer_..._button.setOnClickListener {

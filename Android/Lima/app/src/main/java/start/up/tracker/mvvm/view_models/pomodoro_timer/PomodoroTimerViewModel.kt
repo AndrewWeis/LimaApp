@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import start.up.tracker.analytics.ActiveAnalytics
-import start.up.tracker.analytics.principles.Pareto
 import start.up.tracker.analytics.principles.Pomodoro
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TimerDataStore
@@ -53,12 +51,12 @@ class PomodoroTimerViewModel @Inject constructor(
     }
 
     suspend fun findTaskToMatch(): Task? {
-        val a = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
-        return a.findTaskToMatch()
+        val pomodoro = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
+        return pomodoro.findTaskToMatch()
     }
 
-    fun fromEndTimeToPomodoro(task : Task): Int? {
-        val a = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
-        return a.fromEndTimeToPomodoro(task)
+    fun fromEndTimeToPomodoro(task: Task): Int? {
+        val pomodoro = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
+        return pomodoro.fromEndTimeToPomodoro(task)
     }
 }
