@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/calendar_scroll"
     style="@style/MM">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout style="@style/MM">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        style="@style/MM">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calendar_list"
             style="@style/MW"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
             android:id="@+id/time_indicator_view"
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="2dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             style="@style/LHMW">
 
             <ImageView
@@ -29,5 +38,16 @@
                 android:background="@color/primaryColor" />
         </LinearLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <View
+            android:id="@+id/scroll_offset_view"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="300dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@android:color/transparent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

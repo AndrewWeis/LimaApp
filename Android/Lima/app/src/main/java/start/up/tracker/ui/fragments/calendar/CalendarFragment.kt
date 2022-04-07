@@ -20,8 +20,8 @@ import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.tasks.ProjectTasksFragmentDirections
 import start.up.tracker.ui.fragments.tasks.base.BaseTasksFragment
 import start.up.tracker.ui.fragments.today.TodayFragmentDirections
-import start.up.tracker.ui.list.adapters.calendar.CalendarTasksAdapter
-import start.up.tracker.ui.list.adapters.calendar.CalendarTimesAdapter
+import start.up.tracker.ui.list.adapters.calendar.CalendarAdapter
+import start.up.tracker.ui.list.generators.calendar.CalendarGenerator
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
@@ -35,18 +35,15 @@ class CalendarFragment :
 
     private var binding: CalendarFragmentBinding? = null
 
-    private lateinit var calendarTimesAdapter: CalendarTimesAdapter
-    private var calendarTimesListExtension: ListExtension? = null
-
-    private lateinit var calendarTasksAdapter: CalendarTasksAdapter
-    private var calendarTasksListExtension: ListExtension? = null
+    private lateinit var adapter: CalendarAdapter
+    private var listExtension: ListExtension? = null
+    private val generator = CalendarGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = CalendarFragmentBinding.bind(view)
 
-        initCalendarTimesAdapter()
-        initCalendarTasksAdapter()
+        initAdapter()
         initObservers()
         initTaskEventListener()
         initCurrentTimeIndicator()
@@ -57,8 +54,7 @@ class CalendarFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
-        calendarTimesListExtension = null
-        calendarTasksListExtension = null
+        listExtension = null
     }
 
     override fun onTaskClick(task: Task) {
@@ -94,13 +90,29 @@ class CalendarFragment :
     }
 
     private fun showTasks(calendarTasksData: CalendarTasksData) {
-        val tasksListItems = calendarTasksData.values.map { ListItem(data = it) }
-        calendarTasksAdapter.updateItems(tasksListItems)
+        val listItem: ListItem = generator.createTasksListItem(calendarTasksData)
+
+        if (binding?.calendarList?.isComputingLayout == false) {
+            adapter.setTaskItem(listItem)
+            return
+        }
+
+        binding?.calendarList?.post {
+            adapter.setTaskItem(listItem)
+        }
     }
 
     private fun showTimes(calendarTimes: CalendarTimesData) {
-        val timesListItems = calendarTimes.values.map { ListItem(data = it) }
-        calendarTimesAdapter.updateItems(timesListItems)
+        val listItem: ListItem = generator.createTimesListItem(calendarTimes)
+
+        if (binding?.calendarList?.isComputingLayout == false) {
+            adapter.setTimeItem(listItem)
+            return
+        }
+
+        binding?.calendarList?.post {
+            adapter.setTimeItem(listItem)
+        }
     }
 
     private fun initTaskEventListener() = viewLifecycleOwner.lifecycleScope.launchWhenStarted {
@@ -149,25 +161,15 @@ class CalendarFragment :
         }
     }
 
-    private fun initCalendarTimesAdapter() {
-        calendarTimesAdapter = CalendarTimesAdapter(
+    private fun initAdapter() {
+        adapter = CalendarAdapter(
             layoutInflater = layoutInflater,
+            onTaskClickListener = this
         )
 
-        calendarTimesListExtension = ListExtension(binding?.calendarTimesList)
-        calendarTimesListExtension?.setVerticalLayoutManager()
-        calendarTimesListExtension?.setAdapter(calendarTimesAdapter)
-    }
-
-    private fun initCalendarTasksAdapter() {
-        calendarTasksAdapter = CalendarTasksAdapter(
-            layoutInflater = layoutInflater,
-            listener = this
-        )
-
-        calendarTasksListExtension = ListExtension(binding?.calendarTasksList)
-        calendarTasksListExtension?.setVerticalLayoutManager()
-        calendarTasksListExtension?.setAdapter(calendarTasksAdapter)
+        listExtension = ListExtension(binding?.calendarList)
+        listExtension?.setHorizontalLayoutManager()
+        listExtension?.setAdapter(adapter)
     }
 
     private fun initCurrentTimeIndicator() {
