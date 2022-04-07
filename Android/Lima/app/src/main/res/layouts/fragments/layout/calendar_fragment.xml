@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MM">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout style="@style/MM">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendar_list"
+            style="@style/MW"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
+
+        <LinearLayout
+            android:id="@+id/time_indicator_view"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="2dp"
+            style="@style/LHMW">
+
+            <ImageView
+                android:id="@+id/indicator_image"
+                style="@style/WW"
+                android:src="@drawable/ic_current_time_circle" />
+
+            <View
+                style="@style/W_H1"
+                android:layout_gravity="center"
+                android:background="@color/primaryColor" />
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.core.widget.NestedScrollView>
