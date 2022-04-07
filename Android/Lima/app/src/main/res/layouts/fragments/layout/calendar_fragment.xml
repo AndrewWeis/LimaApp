@@ -9,12 +9,21 @@
         style="@style/MM">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/calendar_list"
-            style="@style/MW"
+            android:id="@+id/calendar_times_list"
+            style="@style/WW"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendar_tasks_list"
+            style="@style/Zero_W"
+            android:layout_marginTop="26dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toEndOf="@id/calendar_times_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
