@@ -133,11 +133,6 @@ class HomeFragment :
         binding?.addProjectFab?.setOnClickListener {
             viewModel.onAddProjectClick()
         }
-
-        binding?.timerFab?.setOnClickListener {
-            val action = HomeFragmentDirections.actionHomeFragmentToPomodoroTimer()
-            navigateTo(action)
-        }
     }
 
     private fun initObservers() {

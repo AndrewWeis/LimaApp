@@ -18,20 +18,16 @@ class PomodoroTimerViewModel @Inject constructor(
     private val activeAnalytics: ActiveAnalytics
 ) : ViewModel() {
 
-    fun setPreviousTimerLengthSeconds(lengthInSec: Long) = viewModelScope.launch {
-        timerDataStore.setPreviousTimerLengthSeconds(lengthInSec)
-    }
-
-    fun setSecondsRemaining(secondsRemaining: Long) = viewModelScope.launch {
+    fun saveSecondsRemaining(secondsRemaining: Long) = viewModelScope.launch {
         timerDataStore.setSecondsRemaining(secondsRemaining)
     }
 
-    fun setTimerState(timerState: Int) = viewModelScope.launch {
+    fun saveTimerState(timerState: Int) = viewModelScope.launch {
         timerDataStore.setTimerState(timerState)
     }
 
-    fun setAlarmSetTime(time: Long) = viewModelScope.launch {
-        timerDataStore.setAlarmSetTime(time)
+    fun saveIteration(iteration: Int) = viewModelScope.launch {
+        timerDataStore.setTimerIteration(iteration)
     }
 
     suspend fun getTimerState(): Int {
@@ -42,12 +38,8 @@ class PomodoroTimerViewModel @Inject constructor(
         return timerDataStore.secondsRemaining.first()
     }
 
-    suspend fun getPreviousTimerLengthSeconds(): Long {
-        return timerDataStore.previousTimerLengthSeconds.first()
-    }
-
-    suspend fun getAlarmSetTime(): Long {
-        return timerDataStore.alarmSetTime.first()
+    suspend fun getTimerIteration(): Int {
+        return timerDataStore.timerIteration.first()
     }
 
     suspend fun findTaskToMatch(): Task? {

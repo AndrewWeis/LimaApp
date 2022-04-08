@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/pomodoroTimerFragment">
 
     <fragment
         android:id="@+id/addEditTaskFragment"
@@ -55,9 +55,6 @@
         <action
             android:id="@+id/action_project_to_upcoming"
             app:destination="@id/upcomingFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_pomodoroTimer"
-            app:destination="@id/pomodoroTimer" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -166,7 +163,7 @@
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessage" />
     </dialog>
     <fragment
-        android:id="@+id/pomodoroTimer"
-        android:name="start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer"
-        android:label="PomodoroTimer" />
+        android:id="@+id/pomodoroTimerFragment"
+        android:name="start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimerFragment"
+        android:label="PomodoroTimerFragment" />
 </navigation>

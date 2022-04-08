@@ -7,39 +7,30 @@ import androidx.datastore.preferences.preferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import start.up.tracker.database.TimerDataStore.TimerKeys.DATA_STORE_NAME
+import start.up.tracker.ui.fragments.pomodoro_timer.Timer
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
 
-    private val dataStore = context.createDataStore("timer_data_store")
-
-    val previousTimerLengthSeconds: Flow<Long>
-        get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.PREVIOUS_TIMER_LENGTH_SECONDS] ?: -1
-        }
+    private val dataStore = context.createDataStore(DATA_STORE_NAME)
 
     val secondsRemaining: Flow<Long>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.SECONDS_REMAINING] ?: -1
+            preferences[TimerKeys.SECONDS_REMAINING] ?: Timer.DEFAULT_TIME_IN_SECONDS
         }
 
     val timerState: Flow<Int>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.TIMER_STATE] ?: -1
+            preferences[TimerKeys.TIMER_STATE] ?: Timer.TIMER_STATE_INITIAL
         }
 
-    val alarmSetTime: Flow<Long>
+    val timerIteration: Flow<Int>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.ALARM_SET_TIME] ?: -1
+            preferences[TimerKeys.TIMER_ITERATION] ?: 0
         }
-
-    suspend fun setPreviousTimerLengthSeconds(lengthInSec: Long) {
-        dataStore.edit { preferences ->
-            preferences[TimerKeys.PREVIOUS_TIMER_LENGTH_SECONDS] = lengthInSec
-        }
-    }
 
     suspend fun setSecondsRemaining(secondsRemaining: Long) {
         dataStore.edit { preferences ->
@@ -53,16 +44,17 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
         }
     }
 
-    suspend fun setAlarmSetTime(state: Long) {
+    suspend fun setTimerIteration(iteration: Int) {
         dataStore.edit { preferences ->
-            preferences[TimerKeys.ALARM_SET_TIME] = state
+            preferences[TimerKeys.TIMER_ITERATION] = iteration
         }
     }
 
     private object TimerKeys {
-        val PREVIOUS_TIMER_LENGTH_SECONDS = preferencesKey<Long>("previous_timer_length_seconds")
+        const val DATA_STORE_NAME = "timer_data_store"
+
         val SECONDS_REMAINING = preferencesKey<Long>("seconds_remaining")
         val TIMER_STATE = preferencesKey<Int>("timer_state")
-        val ALARM_SET_TIME = preferencesKey<Long>("alarm_set_time")
+        val TIMER_ITERATION = preferencesKey<Int>("timer_iteration")
     }
 }

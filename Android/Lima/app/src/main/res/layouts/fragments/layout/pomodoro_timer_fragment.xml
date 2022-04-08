@@ -23,6 +23,16 @@
         android:src="@drawable/ic_play"
         app:tint="@color/white" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_continue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="64dp"
+        android:text="Continue"
+        app:icon="@drawable/ic_play"
+        app:tint="@color/white" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/timer_pause_button"
         android:layout_width="wrap_content"
