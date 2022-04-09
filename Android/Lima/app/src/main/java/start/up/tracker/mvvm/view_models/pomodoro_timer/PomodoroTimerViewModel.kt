@@ -1,5 +1,7 @@
 package start.up.tracker.mvvm.view_models.pomodoro_timer
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +28,9 @@ class PomodoroTimerViewModel @Inject constructor(
 
     val timer = PomodoroTimer(timerDataStore)
 
+    private val _timerMode: MutableLiveData<Int> = MutableLiveData()
+    val timerMode: LiveData<Int> get() = _timerMode
+
     suspend fun findTaskToMatch(): Task? {
         val pomodoro = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
         return pomodoro.findTaskToMatch()
@@ -41,7 +46,18 @@ class PomodoroTimerViewModel @Inject constructor(
         timerEventChannel.send(TimerEvent.NavigateToRestTimeDialog(restTime))
     }
 
+    fun onModeButtonClick() = viewModelScope.launch {
+        val mode = timerDataStore.timerMode.first()
+        timerEventChannel.send(TimerEvent.NavigateToModeDialog(mode))
+    }
+
+    fun handleTimerMode(timerMode: Int) = viewModelScope.launch {
+        timerDataStore.saveTimerMode(timerMode)
+        _timerMode.postValue(timerMode)
+    }
+
     sealed class TimerEvent {
         data class NavigateToRestTimeDialog(val restTime: Long) : TimerEvent()
+        data class NavigateToModeDialog(val mode: Int) : TimerEvent()
     }
 }

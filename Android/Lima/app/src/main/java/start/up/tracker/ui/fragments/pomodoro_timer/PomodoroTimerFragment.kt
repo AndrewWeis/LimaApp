@@ -55,33 +55,20 @@ class PomodoroTimerFragment :
         viewModel.timer.secondsRemaining.observe(viewLifecycleOwner) { secondsRemaining ->
             updateCurrentTimeText(secondsRemaining)
         }
+
+        viewModel.timerMode.observe(viewLifecycleOwner) { mode ->
+            updateTimerMode(mode)
+        }
     }
 
-    private fun setupListeners() {
-        binding?.timerStartButton?.setOnClickListener {
-            viewModel.timer.initCountDownTimer()
-            viewModel.timer.startTimer()
-        }
+    private fun updateTimerMode(mode: Int) {
+        when (mode) {
+            THE_CLOSEST_TASK_MODE -> {
 
-        binding?.timerPauseButton?.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.timer.pauseTimer()
             }
-        }
+            FREE_MODE -> {
 
-        binding?.timerStopButton?.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.timer.stopTimer()
             }
-        }
-
-        binding?.timerContinueButton?.setOnClickListener {
-            viewModel.timer.initCountDownTimer(viewModel.timer.secondsRemaining.value!!)
-            viewModel.timer.startTimer()
-        }
-
-        binding?.timerRestTimeButton?.setOnClickListener {
-            viewModel.onRestTimeButtonClick()
         }
     }
 
@@ -126,12 +113,51 @@ class PomodoroTimerFragment :
         binding?.timerContinueButton?.visibility = View.GONE
     }
 
+    private fun setupListeners() {
+        binding?.timerStartButton?.setOnClickListener {
+            viewModel.timer.initCountDownTimer()
+            viewModel.timer.startTimer()
+        }
+
+        binding?.timerPauseButton?.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.timer.pauseTimer()
+            }
+        }
+
+        binding?.timerStopButton?.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.timer.stopTimer()
+            }
+        }
+
+        binding?.timerContinueButton?.setOnClickListener {
+            viewModel.timer.initCountDownTimer(viewModel.timer.secondsRemaining.value!!)
+            viewModel.timer.startTimer()
+        }
+
+        binding?.timerRestTimeButton?.setOnClickListener {
+            viewModel.onRestTimeButtonClick()
+        }
+
+        binding?.timerModeButton?.setOnClickListener {
+            viewModel.onModeButtonClick()
+        }
+    }
+
     private fun setupEventsListeners() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.timerEvents.collect { event ->
             when (event) {
                 is TimerEvent.NavigateToRestTimeDialog -> {
                     val action = PomodoroTimerFragmentDirections.actionPomodoroTimerToRestTime(
                         restTime = event.restTime
+                    )
+                    navigateTo(action)
+                }
+
+                is TimerEvent.NavigateToModeDialog -> {
+                    val action = PomodoroTimerFragmentDirections.actionPomodoroTimerToTimerMode(
+                        mode = event.mode
                     )
                     navigateTo(action)
                 }
@@ -146,5 +172,15 @@ class PomodoroTimerFragment :
                 viewModel.timer.handleRestTime(restTime)
             }
         }
+
+        setFragmentResultListener(ExtraCodes.TIMER_MODE_REQUEST) { requestKey, bundle ->
+            val timerMode = bundle.getInt(requestKey)
+            viewModel.handleTimerMode(timerMode)
+        }
+    }
+
+    companion object {
+        const val THE_CLOSEST_TASK_MODE = 1
+        const val FREE_MODE = 2
     }
 }

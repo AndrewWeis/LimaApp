@@ -40,6 +40,13 @@
         android:layout_gravity="bottom|end"
         android:text="Rest time" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_mode_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:text="Mode" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/timer_pause_button"
         android:layout_width="wrap_content"

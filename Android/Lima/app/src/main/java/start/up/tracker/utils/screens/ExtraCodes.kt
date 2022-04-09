@@ -5,4 +5,6 @@ object ExtraCodes {
     const val IGNORE_CLICKED_RESULT = "ignore_clicked_result"
 
     const val REST_TIME_REQUEST = "rest_time_request"
+
+    const val TIMER_MODE_REQUEST = "timer_mode_request"
 }

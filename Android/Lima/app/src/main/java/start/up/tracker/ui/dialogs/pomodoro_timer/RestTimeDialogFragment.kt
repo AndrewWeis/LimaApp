@@ -8,20 +8,20 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import start.up.tracker.R
-import start.up.tracker.databinding.RestTimeDialogFragmentBinding
+import start.up.tracker.databinding.TimerRestTimeDialogFragmentBinding
 import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import start.up.tracker.utils.screens.ExtraCodes
 
-class RestTimeDialog :
-    DialogFragment(R.layout.rest_time_dialog_fragment) {
+class RestTimeDialogFragment :
+    DialogFragment(R.layout.timer_rest_time_dialog_fragment) {
 
-    private var binding: RestTimeDialogFragmentBinding? = null
+    private var binding: TimerRestTimeDialogFragmentBinding? = null
 
-    private val args by navArgs<RestTimeDialogArgs>()
+    private val args by navArgs<RestTimeDialogFragmentArgs>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = RestTimeDialogFragmentBinding.bind(view)
+        binding = TimerRestTimeDialogFragmentBinding.bind(view)
 
         setupListeners()
         setupSelectedRestTime()

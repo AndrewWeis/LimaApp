@@ -99,9 +99,9 @@ class PomodoroTimer(
     }
 
     private suspend fun saveTimerState() {
-        timerDataStore.setTimerIteration(iteration)
-        timerDataStore.setSecondsRemaining(secondsRemaining.value!!)
-        timerDataStore.setTimerState(_timerState.value!!)
+        timerDataStore.saveTimerIteration(iteration)
+        timerDataStore.saveSecondsRemaining(secondsRemaining.value!!)
+        timerDataStore.saveTimerState(_timerState.value!!)
     }
 
     private suspend fun recoverTimerIteration() {
@@ -114,7 +114,7 @@ class PomodoroTimer(
     }
 
     private suspend fun saveRestTime(restTime: Long) {
-        timerDataStore.setRestTime(restTime)
+        timerDataStore.saveRestTime(restTime)
     }
 
     private fun onTimerFinished() {
