@@ -8,7 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import start.up.tracker.database.TimerDataStore.TimerKeys.DATA_STORE_NAME
-import start.up.tracker.ui.fragments.pomodoro_timer.Timer
+import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -19,12 +19,12 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
 
     val secondsRemaining: Flow<Long>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.SECONDS_REMAINING] ?: Timer.DEFAULT_TIME_IN_SECONDS
+            preferences[TimerKeys.SECONDS_REMAINING] ?: PomodoroTimer.POMODORO_WORK_TIME
         }
 
     val timerState: Flow<Int>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.TIMER_STATE] ?: Timer.TIMER_STATE_INITIAL
+            preferences[TimerKeys.TIMER_STATE] ?: PomodoroTimer.TIMER_STATE_INITIAL
         }
 
     val timerIteration: Flow<Int>
