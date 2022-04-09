@@ -33,6 +33,13 @@
         app:icon="@drawable/ic_play"
         app:tint="@color/white" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_rest_time_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:text="Rest time" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/timer_pause_button"
         android:layout_width="wrap_content"
@@ -50,41 +57,5 @@
         android:layout_marginBottom="128dp"
         android:textSize="70sp"
         tools:text="10:00" />
-
-    <TextView
-        android:id="@+id/task_found_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:textSize="20sp"
-        tools:text="task name" />
-
-    <TextView
-        android:id="@+id/start_time_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="150dp"
-        android:textSize="15sp"
-        tools:text="task name" />
-
-    <TextView
-        android:id="@+id/pomodoros_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="200dp"
-        android:textSize="15sp"
-        tools:text="task name" />
-
-    <TextView
-        android:id="@+id/current_phase_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="75dp"
-        android:textSize="15sp"
-        tools:text="task name" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

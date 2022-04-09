@@ -165,5 +165,19 @@
     <fragment
         android:id="@+id/pomodoroTimerFragment"
         android:name="start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimerFragment"
-        android:label="PomodoroTimerFragment" />
+        android:label="PomodoroTimerFragment"
+        tools:layout="@layout/pomodoro_timer_fragment">
+        <action
+            android:id="@+id/action_pomodoroTimer_to_restTime"
+            app:destination="@id/restTimeDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/restTimeDialog"
+        android:name="start.up.tracker.ui.dialogs.pomodoro_timer.RestTimeDialog"
+        android:label="RestTimeDialog"
+        tools:layout="@layout/rest_time_dialog_fragment">
+        <argument
+            android:name="restTime"
+            app:argType="long" />
+    </dialog>
 </navigation>

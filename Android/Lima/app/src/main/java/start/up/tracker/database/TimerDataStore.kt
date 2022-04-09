@@ -32,6 +32,11 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
             preferences[TimerKeys.TIMER_ITERATION] ?: 0
         }
 
+    val timerRestTime: Flow<Long>
+        get() = dataStore.data.map { preferences ->
+            preferences[TimerKeys.TIMER_REST_TIME] ?: PomodoroTimer.POMODORO_REST_SHORT
+        }
+
     suspend fun setSecondsRemaining(secondsRemaining: Long) {
         dataStore.edit { preferences ->
             preferences[TimerKeys.SECONDS_REMAINING] = secondsRemaining
@@ -50,11 +55,18 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
         }
     }
 
+    suspend fun setRestTime(restTime: Long) {
+        dataStore.edit { preferences ->
+            preferences[TimerKeys.TIMER_REST_TIME] = restTime
+        }
+    }
+
     private object TimerKeys {
         const val DATA_STORE_NAME = "timer_data_store"
 
         val SECONDS_REMAINING = preferencesKey<Long>("seconds_remaining")
         val TIMER_STATE = preferencesKey<Int>("timer_state")
         val TIMER_ITERATION = preferencesKey<Int>("timer_iteration")
+        val TIMER_REST_TIME = preferencesKey<Long>("timer_rest_time")
     }
 }

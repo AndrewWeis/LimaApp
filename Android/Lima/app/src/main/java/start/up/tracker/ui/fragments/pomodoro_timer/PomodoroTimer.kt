@@ -20,6 +20,7 @@ class PomodoroTimer(
     private val _secondsRemaining: MutableLiveData<Long> = MutableLiveData()
     val secondsRemaining: MutableLiveData<Long> get() = _secondsRemaining
 
+    var restTime = POMODORO_REST_SHORT
     var iteration: Int = 0
     var timerLength: Long = POMODORO_WORK_TIME
 
@@ -27,6 +28,7 @@ class PomodoroTimer(
         recoverTimerIteration()
         recoverSecondsRemaining()
         recoverTimerState()
+        recoverRestTime()
     }
 
     suspend fun pauseTimer() {
@@ -44,20 +46,37 @@ class PomodoroTimer(
         saveTimerState()
     }
 
+    suspend fun handleRestTime(restTime: Long) {
+        saveRestTime(restTime)
+
+        this.restTime = restTime
+
+        // if it is rest time
+        if (iteration % 2 == 1) {
+            setupTimerLength()
+        }
+
+        if (timerState.value!! != TIMER_STATE_PAUSED) {
+            _secondsRemaining.postValue(timerLength)
+        }
+    }
+
     fun startTimer() {
         countDownTimer.start()
         _timerState.postValue(TIMER_STATE_RUNNING)
     }
 
     fun setupTimerLength() {
+        // even - work time, odd - rest time
         timerLength = if (iteration % 2 == 0) {
             POMODORO_WORK_TIME
         } else {
-            POMODORO_REST_SHORT
+            restTime
         }
     }
 
     fun initCountDownTimer(initialSeconds: Long = timerLength) {
+        // todo (later fix bug when initial seconds = 0)
         countDownTimer = object : CountDownTimer(initialSeconds * SECOND, SECOND) {
             override fun onFinish() {
                 onTimerFinished()
@@ -90,9 +109,19 @@ class PomodoroTimer(
         iteration = savedIteration
     }
 
+    private suspend fun recoverRestTime() {
+        restTime = timerDataStore.timerRestTime.first()
+    }
+
+    private suspend fun saveRestTime(restTime: Long) {
+        timerDataStore.setRestTime(restTime)
+    }
+
     private fun onTimerFinished() {
         iteration++
+
         _timerState.postValue(TIMER_STATE_STOPPED)
+
         setupTimerLength()
         _secondsRemaining.postValue(timerLength)
     }
@@ -106,7 +135,7 @@ class PomodoroTimer(
         const val SECOND = 1000L
 
         const val POMODORO_WORK_TIME = 6L
-        const val POMODORO_REST_SHORT = 3L
-        const val POMODORO_REST_LONG = 20L
+        const val POMODORO_REST_SHORT = 2L
+        const val POMODORO_REST_LONG = 4L
     }
 }

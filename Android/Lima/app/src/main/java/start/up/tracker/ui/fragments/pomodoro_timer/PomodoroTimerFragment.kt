@@ -2,17 +2,22 @@ package start.up.tracker.ui.fragments.pomodoro_timer
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.databinding.PomodoroTimerFragmentBinding
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel
+import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel.TimerEvent
+import start.up.tracker.ui.fragments.base.BaseNavigationFragment
+import start.up.tracker.utils.screens.ExtraCodes
 
 @AndroidEntryPoint
-class PomodoroTimerFragment : Fragment(R.layout.pomodoro_timer_fragment) {
+class PomodoroTimerFragment :
+    BaseNavigationFragment(R.layout.pomodoro_timer_fragment) {
 
     private var binding: PomodoroTimerFragmentBinding? = null
     private val viewModel: PomodoroTimerViewModel by viewModels()
@@ -25,6 +30,8 @@ class PomodoroTimerFragment : Fragment(R.layout.pomodoro_timer_fragment) {
 
         setupObservers()
         setupListeners()
+        setupEventsListeners()
+        setupResultListeners()
 
         setupButtons()
     }
@@ -69,9 +76,12 @@ class PomodoroTimerFragment : Fragment(R.layout.pomodoro_timer_fragment) {
         }
 
         binding?.timerContinueButton?.setOnClickListener {
-
             viewModel.timer.initCountDownTimer(viewModel.timer.secondsRemaining.value!!)
             viewModel.timer.startTimer()
+        }
+
+        binding?.timerRestTimeButton?.setOnClickListener {
+            viewModel.onRestTimeButtonClick()
         }
     }
 
@@ -114,5 +124,27 @@ class PomodoroTimerFragment : Fragment(R.layout.pomodoro_timer_fragment) {
         binding?.timerPauseButton?.visibility = View.GONE
         binding?.timerStopButton?.visibility = View.GONE
         binding?.timerContinueButton?.visibility = View.GONE
+    }
+
+    private fun setupEventsListeners() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+        viewModel.timerEvents.collect { event ->
+            when (event) {
+                is TimerEvent.NavigateToRestTimeDialog -> {
+                    val action = PomodoroTimerFragmentDirections.actionPomodoroTimerToRestTime(
+                        restTime = event.restTime
+                    )
+                    navigateTo(action)
+                }
+            }
+        }
+    }
+
+    private fun setupResultListeners() {
+        setFragmentResultListener(ExtraCodes.REST_TIME_REQUEST) { requestKey, bundle ->
+            val restTime = bundle.getLong(requestKey)
+            lifecycleScope.launch {
+                viewModel.timer.handleRestTime(restTime)
+            }
+        }
     }
 }
