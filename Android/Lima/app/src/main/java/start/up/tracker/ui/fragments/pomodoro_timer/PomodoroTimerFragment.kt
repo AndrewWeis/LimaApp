@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.databinding.PomodoroTimerFragmentBinding
+import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel.TimerEvent
 import start.up.tracker.ui.fragments.base.BaseNavigationFragment
@@ -61,15 +62,23 @@ class PomodoroTimerFragment :
         }
     }
 
-    private fun updateTimerMode(mode: Int) {
+    private fun updateTimerMode(mode: Int) = lifecycleScope.launch {
         when (mode) {
             THE_CLOSEST_TASK_MODE -> {
-
+                val firstTask = viewModel.getClosestTasksOfToday().first()
+                showClosestTask(firstTask)
             }
             FREE_MODE -> {
 
             }
         }
+    }
+
+    private fun showClosestTask(task: Task) {
+        binding?.task?.closestTaskTitleText?.text = task.taskTitle
+
+        val pomodorosText = "${task.completedPomodoros}/${task.pomodoros}"
+        binding?.task?.closestTaskPomodorosText?.text = pomodorosText
     }
 
     private fun updateCurrentTimeText(secondsRemaining: Long) {

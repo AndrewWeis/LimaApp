@@ -31,14 +31,13 @@ class PomodoroTimerViewModel @Inject constructor(
     private val _timerMode: MutableLiveData<Int> = MutableLiveData()
     val timerMode: LiveData<Int> get() = _timerMode
 
-    suspend fun findTaskToMatch(): Task? {
-        val pomodoro = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
-        return pomodoro.findTaskToMatch()
+    init {
+        setupTimerMode()
     }
 
-    fun fromEndTimeToPomodoro(task: Task): Int? {
-        val pomodoro = activeAnalytics.getPrinciple(TechniquesIds.POMODORO) as Pomodoro
-        return pomodoro.fromEndTimeToPomodoro(task)
+    suspend fun getClosestTasksOfToday(): List<Task> {
+        val pomodoro = activeAnalytics.principlesMap[TechniquesIds.POMODORO] as Pomodoro
+        return pomodoro.getClosestTasksOfToday()
     }
 
     fun onRestTimeButtonClick() = viewModelScope.launch {
@@ -54,6 +53,11 @@ class PomodoroTimerViewModel @Inject constructor(
     fun handleTimerMode(timerMode: Int) = viewModelScope.launch {
         timerDataStore.saveTimerMode(timerMode)
         _timerMode.postValue(timerMode)
+    }
+
+    private fun setupTimerMode() = viewModelScope.launch {
+        val savedMode = timerDataStore.timerMode.first()
+        _timerMode.postValue(savedMode)
     }
 
     sealed class TimerEvent {

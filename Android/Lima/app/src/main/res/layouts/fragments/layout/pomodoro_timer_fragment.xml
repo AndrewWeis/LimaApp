@@ -5,6 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/task"
+        android:layout_marginTop="128dp"
+        layout="@layout/timer_closest_task_item"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/timer_stop_button"
         android:layout_width="wrap_content"

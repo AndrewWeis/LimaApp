@@ -1,13 +1,10 @@
 package start.up.tracker.analytics.principles
 
 import start.up.tracker.analytics.entities.AnalyticsMessage
-import start.up.tracker.analytics.holders.AnalyticsMessageHolder
 import start.up.tracker.analytics.principles.base.Principle
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import start.up.tracker.utils.TimeHelper
-import java.lang.RuntimeException
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
@@ -34,90 +31,42 @@ class Pomodoro(
     }
 
     /**
-     * Метод находит активность, которая на текущий момент идёт или начнётся через 5 минут
+     * Возвращает задачи назначенные на сегодня в определенном порядке.
+     * Сначала показывает задачи, у которых выставлено время.
+     * Далее задачи на сегодня без времени, отсорированные по приоритету
      */
-    suspend fun findTaskToMatch(): Task? {
-        val currentDay = TimeHelper.getCurrentDayInMilliseconds()
-        val tasksOfDay = taskDao.getTasksOfDay(currentDay)
+    suspend fun getClosestTasksOfToday(): List<Task> {
+        val today = TimeHelper.getCurrentDayInMilliseconds()
+        val todayInMinutes = TimeHelper.getMinutesOfCurrentDay()
 
-        var min = 60 * 24
-        var minTask: Task? = null
+        val tasksOfToday = taskDao.getTasksOfDay(today)
 
-        for (taskOfDay in tasksOfDay) {
-            if (taskOfDay.startTimeInMinutes == null) {
-                continue
+        // firstly we show tasks which have time start and time end
+        val tasksWithTime = tasksOfToday
+            .filter { task ->
+                task.startTimeInMinutes != null &&
+                task.startTimeInMinutes + 5 >= todayInMinutes &&
+                task.pomodoros != null
             }
-            if (taskOfDay.startTimeInMinutes < min && fromEndTimeToPomodoro(taskOfDay) != null &&
-                TimeHelper.isTaskUnderway(taskOfDay, 300000, 0)
-            ) {
-                min = taskOfDay.startTimeInMinutes
-                minTask = taskOfDay
+            .sortedBy { task ->
+                task.startTimeInMinutes
             }
-        }
 
-        return minTask
-    }
-
-    // TODO Андрею при записи в бд
-    fun fromPomodoroToEndTime(task: Task, pomodoroNumber: Int): Int? {
-        // TODO на стороне Андрея убеждаться или кидать Toast, что помидорки могут выставляться
-        // TODO только совместно временем начала активности
-        if (task.startTimeInMinutes == null || pomodoroNumber == 0) {
-            return null
-        }
-
-        return task.startTimeInMinutes + pomodoroNumber * 25 + (pomodoroNumber - 1) * 5 +
-                (pomodoroNumber - 1) / 4 * 15
-    }
-
-    // TODO Андрею при получении из бд
-    fun fromEndTimeToPomodoro(task: Task): Int? {
-        if (task.startTimeInMinutes == null || task.endTimeInMinutes == null) {
-            return null
-        }
-
-        var c = task.endTimeInMinutes - task.startTimeInMinutes
-        var pomCounter = 0
-
-        while (c > 0) {
-            pomCounter++
-            c -= 25
-
-            if (c != 0) {
-                c -= if (pomCounter % 4 == 0)
-                    20
-                else
-                    5
+        // todo(move priority list to Task + change priority order)
+        // then we show tasks which don't have time start and time end
+        val tasksWithoutTime = tasksOfToday
+            .filter { task ->
+                task.startTimeInMinutes == null &&
+                task.pomodoros != null
             }
-        }
-
-        return pomCounter
-    }
-
-    fun fromEndTimeToPomodoroTest(task: Task, pomodoroNumber: Int): Int? {
-
-        if (task.startTimeInMinutes == null || pomodoroNumber == 0) {
-            return null
-        }
-
-        val b = task.startTimeInMinutes + pomodoroNumber * 25 + (pomodoroNumber - 1) * 5 +
-                (pomodoroNumber - 1) / 4 * 15
-
-        var c = b - task.startTimeInMinutes
-
-        var pomCounter = 0
-        while (c > 0) {
-            pomCounter++
-            c -= 25
-
-            if (c != 0) {
-                c -= if (pomCounter % 4 == 0)
-                    20
-                else
-                    5
+            .sortedBy { task ->
+                task.priority
             }
-        }
 
-        return pomCounter
+        val tasks: MutableList<Task> = mutableListOf()
+        tasks.addAll(tasksWithTime)
+        tasks.addAll(tasksWithoutTime)
+
+        return tasks
     }
 }
