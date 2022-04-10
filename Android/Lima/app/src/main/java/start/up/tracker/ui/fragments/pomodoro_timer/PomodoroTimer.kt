@@ -20,6 +20,9 @@ class PomodoroTimer(
     private val _secondsRemaining: MutableLiveData<Long> = MutableLiveData()
     val secondsRemaining: MutableLiveData<Long> get() = _secondsRemaining
 
+    private val _timerIteration: MutableLiveData<Int> = MutableLiveData()
+    val timerIteration: MutableLiveData<Int> get() = _timerIteration
+
     var restTime = POMODORO_REST_SHORT
     var iteration: Int = 0
     var timerLength: Long = POMODORO_WORK_TIME
@@ -117,8 +120,16 @@ class PomodoroTimer(
         timerDataStore.saveRestTime(restTime)
     }
 
+    suspend fun updateTimerIteration(pomodoros: Int) {
+        timerDataStore.saveTimerIteration(pomodoros)
+        iteration = pomodoros
+        _timerIteration.postValue(iteration)
+    }
+
     private fun onTimerFinished() {
         iteration++
+
+        _timerIteration.postValue(iteration)
 
         _timerState.postValue(TIMER_STATE_STOPPED)
 

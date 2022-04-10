@@ -64,6 +64,19 @@ class PomodoroTimerFragment :
         viewModel.closestTask.observe(viewLifecycleOwner) { task ->
             task?.let { showClosestTask(it) } ?: showClosestTasksNotFoundMessage()
         }
+
+        viewModel.timer.timerIteration.observe(viewLifecycleOwner) { iteration ->
+            if (iteration % 2 == 1) { updateTaskPomodoros() }
+        }
+    }
+
+    private fun updateTaskPomodoros() {
+        val completedPomodoros = viewModel.closestTask.value?.completedPomodoros!! + 1
+        val totalPomodoros = viewModel.closestTask.value?.pomodoros
+        val pomodorosText = "$completedPomodoros / $totalPomodoros"
+
+        binding?.task?.closestTaskPomodorosText?.text = pomodorosText
+        viewModel.updateCompletedPomodoros(completedPomodoros)
     }
 
     private fun updateTimerMode(mode: Int) {

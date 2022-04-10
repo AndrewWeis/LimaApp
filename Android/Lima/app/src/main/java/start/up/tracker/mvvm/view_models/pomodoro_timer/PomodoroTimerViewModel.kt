@@ -13,6 +13,7 @@ import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.principles.Pomodoro
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TimerDataStore
+import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
 import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
@@ -20,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PomodoroTimerViewModel @Inject constructor(
     private val activeAnalytics: ActiveAnalytics,
+    private val taskDao: TaskDao,
     private val timerDataStore: TimerDataStore,
 ) : ViewModel() {
 
@@ -47,7 +49,23 @@ class PomodoroTimerViewModel @Inject constructor(
             return@launch
         }
 
-        _closestTask.postValue(tasks.first())
+        val closestTask = tasks.first()
+        _closestTask.postValue(closestTask)
+
+        val iteration = timerDataStore.timerIteration.first()
+        if (iteration % 2 == 1) {
+            timer.updateTimerIteration(closestTask.completedPomodoros!! * 2 + 1)
+        } else {
+            timer.updateTimerIteration(closestTask.completedPomodoros!! * 2)
+        }
+    }
+
+    fun updateCompletedPomodoros(pomodoros: Int) = viewModelScope.launch {
+        val closestTask = _closestTask.value?.copy(completedPomodoros = pomodoros)
+        closestTask?.let {
+            taskDao.updateTask(it)
+            _closestTask.postValue(closestTask)
+        }
     }
 
     fun onRestTimeButtonClick() = viewModelScope.launch {
