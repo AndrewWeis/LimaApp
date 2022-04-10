@@ -2,4 +2,6 @@
 <resources>
     <string name="error_invalid_value">Некорректное значение</string>
     <string name="error_required_value">Поле обязательно для заполнения</string>
+
+    <string name="error_timer_settings">Please set it after the timer ends</string>
 </resources>
