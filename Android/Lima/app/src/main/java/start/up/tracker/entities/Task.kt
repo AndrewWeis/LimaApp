@@ -30,6 +30,9 @@ data class Task(
     val projectId: Int = -1,
     val projectName: String? = null,
     val projectColor: Int? = null,
+
+    val pomodoros: Int? = null,
+    val completedPomodoros: Int? = null,
 ) : Parcelable {
 
     // todo (вынестим в отдельный класс)

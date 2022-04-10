@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/task"
+        android:layout_marginTop="128dp"
+        layout="@layout/timer_closest_task_item"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/timer_stop_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="64dp"
+        android:src="@drawable/ic_stop"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/timer_start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="64dp"
+        android:src="@drawable/ic_play"
+        app:tint="@color/white" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_continue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_margin="64dp"
+        android:text="Continue"
+        app:icon="@drawable/ic_play"
+        app:tint="@color/white" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_rest_time_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:text="Rest time" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_mode_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:text="Mode" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/timer_pause_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="64dp"
+        android:src="@drawable/ic_pause"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="128dp"
+        android:textSize="70sp"
+        tools:text="10:00" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

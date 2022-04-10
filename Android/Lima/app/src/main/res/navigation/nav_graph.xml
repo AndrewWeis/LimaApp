@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/pomodoroTimerFragment">
 
     <dialog
         android:id="@+id/editTaskFragment"
@@ -155,8 +155,7 @@
     <dialog
         android:id="@+id/analyticsMessagesDialogFragment"
         android:name="start.up.tracker.ui.dialogs.analytics_messages.AnalyticsMessagesDialogFragment"
-        android:label="AnalyticsMessagesDialogFragment"
-        tools:layout="@layout/analytics_messages_dialog_fragment">
+        android:label="AnalyticsMessagesDialogFragment">
         <argument
             android:name="messages"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessages" />
@@ -164,12 +163,39 @@
     <dialog
         android:id="@+id/compatibilityDialogFragment"
         android:name="start.up.tracker.ui.dialogs.analytics_messages.CompatibilityDialogFragment"
-        android:label="CompatibilityDialogFragment"
-        tools:layout="@layout/compatibility_dialog_fragment">
+        android:label="CompatibilityDialogFragment">
         <argument
             android:name="message"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessage" />
     </dialog>
+    <fragment
+        android:id="@+id/pomodoroTimerFragment"
+        android:name="start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimerFragment"
+        android:label="PomodoroTimerFragment"
+        tools:layout="@layout/pomodoro_timer_fragment">
+        <action
+            android:id="@+id/action_pomodoroTimer_to_restTime"
+            app:destination="@id/restTimeDialogFragment" />
+        <action
+            android:id="@+id/action_pomodoroTimer_to_timerMode"
+            app:destination="@id/timerModeDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/restTimeDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.pomodoro_timer.RestTimeDialogFragment"
+        android:label="RestTimeDialog"
+        tools:layout="@layout/timer_rest_time_dialog_fragment">
+        <argument
+            android:name="restTime"
+            app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/timerModeDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.pomodoro_timer.TimerModeDialogFragment"
+        android:label="TimerModeDialogFragment"
+        tools:layout="@layout/timer_mode_dialog_fragment">
+        <argument
+            android:name="mode"
     <dialog
         android:id="@+id/priorityDialogFragment"
         android:name="start.up.tracker.ui.fragments.edit_task.dialogs.PriorityDialogFragment"

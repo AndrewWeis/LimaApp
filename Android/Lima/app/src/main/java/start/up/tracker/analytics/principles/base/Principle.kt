@@ -9,8 +9,10 @@ import start.up.tracker.utils.resources.ResourcesUtils
 
 interface Principle {
 
-    suspend fun checkComplianceOnAddTask(task: Task): AnalyticsMessage?
-    suspend fun checkComplianceOnEditTask(task: Task): AnalyticsMessage?
+    suspend fun validateOnAddTask(task: Task): AnalyticsMessage?
+    suspend fun validateOnEditTask(task: Task): AnalyticsMessage?
+
+    suspend fun getIsOverridesPriority(): Boolean
 
     suspend fun checkCompatibility(
         activePrinciplesIds: List<Int>,
