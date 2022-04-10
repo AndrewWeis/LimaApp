@@ -68,6 +68,21 @@ interface TaskDao {
     )
     suspend fun countTasksOfProject(projectId: Int): Int
 
+    @Query(
+        """
+        SELECT CASE WHEN EXISTS (
+            SELECT *
+            FROM task_table
+            WHERE ((:today == date) AND 
+                ((:startTime >= startTimeInMinutes AND :startTime <= endTimeInMinutes) OR
+                (:endTime >= startTimeInMinutes AND :endTime <= endTimeInMinutes)))
+        )
+        THEN CAST(1 AS BIT)
+        ELSE CAST(0 AS BIT) END
+    """
+    )
+    suspend fun doesTimeIntersect(startTime: Int, endTime: Int, today: Long): Boolean
+
     @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
 

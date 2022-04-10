@@ -7,4 +7,7 @@ object ExtraCodes {
     const val REST_TIME_REQUEST = "rest_time_request"
 
     const val TIMER_MODE_REQUEST = "timer_mode_request"
+
+    const val PRIORITY_REQUEST = "priority_request"
+    const val PROJECT_REQUEST = "project_request"
 }

@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/task_title_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/task_title_text"
-        app:srcCompat="@drawable/ic_priority_3" />
+        app:srcCompat="@drawable/ic_priority_fire_1" />
 
     <ImageView
         android:id="@+id/task_project_image"

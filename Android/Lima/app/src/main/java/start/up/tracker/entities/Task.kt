@@ -12,7 +12,7 @@ data class Task(
     val taskId: Int = 0,
     val taskTitle: String = "",
     val description: String = "",
-    val priority: Int = 0,
+    val priority: Int = NO_PRIORITY,
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     val startTimeInMinutes: Int? = null,
@@ -33,4 +33,18 @@ data class Task(
 
     val pomodoros: Int? = null,
     val completedPomodoros: Int? = null,
-) : Parcelable
+) : Parcelable {
+
+    // todo (вынестим в отдельный класс)
+    companion object Ids {
+        const val NO_PRIORITY = 0
+        const val PRIORITY_HIGH = 1
+        const val PRIORITY_MEDIUM = 2
+        const val PRIORITY_LOW = 3
+
+        const val URGENT_IMPORTANT = 4
+        const val NOT_URGENT_IMPORTANT = 5
+        const val URGENT_NOT_IMPORTANT = 6
+        const val NOT_URGENT_NOT_IMPORTANT = 7
+    }
+}

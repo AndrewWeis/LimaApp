@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardTaskCalendar"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:layout_marginBottom="4dp"
+    android:minHeight="30dp"
+    android:layout_height="30dp"
     android:backgroundTint="@color/calendarTask"
     app:cardCornerRadius="8dp"
     app:cardElevation="0dp">
@@ -18,7 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_little"
-            android:layout_marginTop="0dp"
             android:minWidth="0dp"
             android:minHeight="0dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +46,4 @@
             tools:background="@color/priority_high"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.cardview.widget.CardView>
