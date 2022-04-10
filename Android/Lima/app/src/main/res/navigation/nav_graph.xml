@@ -196,6 +196,8 @@
         tools:layout="@layout/timer_mode_dialog_fragment">
         <argument
             android:name="mode"
+            app:argType="integer"/>
+    </dialog>
     <dialog
         android:id="@+id/priorityDialogFragment"
         android:name="start.up.tracker.ui.fragments.edit_task.dialogs.PriorityDialogFragment"

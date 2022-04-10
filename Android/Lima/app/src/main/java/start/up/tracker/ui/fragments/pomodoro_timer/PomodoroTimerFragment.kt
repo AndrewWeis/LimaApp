@@ -107,7 +107,6 @@ class PomodoroTimerFragment :
     }
 
     private fun hideTimerRelatedButtons() {
-        binding?.timerRestTimeButton?.visibility = View.GONE
         binding?.timerContinueButton?.visibility = View.GONE
         binding?.timerStopButton?.visibility = View.GONE
         binding?.timerStartButton?.visibility = View.GONE
