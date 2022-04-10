@@ -33,7 +33,7 @@ class TimerModeDialogFragment :
     }
 
     private fun setupSelectedTimerMode() {
-        if (args.mode == PomodoroTimerFragment.THE_CLOSEST_TASK_MODE) {
+        if (args.mode == PomodoroTimerFragment.CLOSEST_TASK_MODE) {
             binding?.theClosestTaskImage?.visibility = View.VISIBLE
             binding?.freeModeImage?.visibility = View.GONE
         } else {
@@ -46,7 +46,7 @@ class TimerModeDialogFragment :
         binding?.theClosestTaskLayout?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.TIMER_MODE_REQUEST,
-                result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimerFragment.THE_CLOSEST_TASK_MODE)
+                result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimerFragment.CLOSEST_TASK_MODE)
             )
             findNavController().popBackStack()
         }

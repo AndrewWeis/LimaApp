@@ -60,18 +60,21 @@ class PomodoroTimerFragment :
         viewModel.timerMode.observe(viewLifecycleOwner) { mode ->
             updateTimerMode(mode)
         }
+
+        viewModel.closestTask.observe(viewLifecycleOwner) { task ->
+            task?.let { showClosestTask(it) } ?: showClosestTasksNotFoundMessage()
+        }
     }
 
-    private fun updateTimerMode(mode: Int) = lifecycleScope.launch {
+    private fun updateTimerMode(mode: Int) {
         when (mode) {
-            THE_CLOSEST_TASK_MODE -> {
-                val firstTask = viewModel.getClosestTasksOfToday().first()
-                showClosestTask(firstTask)
-            }
-            FREE_MODE -> {
-
-            }
+            CLOSEST_TASK_MODE -> { viewModel.onClosestTaskModeSelected() }
+            FREE_MODE -> {}
         }
+    }
+
+    private fun showClosestTasksNotFoundMessage() {
+        binding?.task?.closestTaskTitleText?.text = "No task on today"
     }
 
     private fun showClosestTask(task: Task) {
@@ -189,7 +192,7 @@ class PomodoroTimerFragment :
     }
 
     companion object {
-        const val THE_CLOSEST_TASK_MODE = 1
+        const val CLOSEST_TASK_MODE = 1
         const val FREE_MODE = 2
     }
 }

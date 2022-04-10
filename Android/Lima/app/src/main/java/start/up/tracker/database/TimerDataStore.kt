@@ -40,7 +40,7 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
 
     val timerMode: Flow<Int>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.TIMER_MODE] ?: PomodoroTimerFragment.THE_CLOSEST_TASK_MODE
+            preferences[TimerKeys.TIMER_MODE] ?: PomodoroTimerFragment.CLOSEST_TASK_MODE
         }
 
     suspend fun saveSecondsRemaining(secondsRemaining: Long) {
