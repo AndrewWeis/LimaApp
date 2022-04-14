@@ -46,4 +46,14 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="TaskCheckBox">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="TaskCheckBox.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 </resources>

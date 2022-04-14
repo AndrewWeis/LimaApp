@@ -7,10 +7,8 @@
 
     <include
         android:id="@+id/task"
-        android:layout_marginTop="128dp"
         layout="@layout/timer_closest_task_item"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        style="@style/MW"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/timer_stop_button"
