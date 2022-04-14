@@ -5,4 +5,9 @@
     <string name="button_ignore">Ignore</string>
     <string name="button_edit">Edit</string>
     <string name="button_got_it">Got it</string>
+    
+    <string name="button_5_minutes">5 minutes</string>
+    <string name="button_20_minutes">20 minutes</string>
+    <string name="button_closest_task_mode">The closest task mode</string>
+    <string name="button_free_mode">Free mode</string>
 </resources>
