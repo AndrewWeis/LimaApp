@@ -78,7 +78,7 @@ class PomodoroTimerFragment :
         val totalPomodoros = viewModel.closestTask.value?.pomodoros
         val pomodorosText = "$completedPomodoros / $totalPomodoros"
 
-        binding?.task?.closestTaskPomodorosText?.text = pomodorosText
+        // binding?.task?.closestTaskPomodorosText?.text = pomodorosText
         viewModel.updateCompletedPomodoros(completedPomodoros)
 
         if (completedPomodoros == totalPomodoros) {
@@ -114,14 +114,14 @@ class PomodoroTimerFragment :
     }
 
     private fun showClosestTasksNotFoundMessage() {
-        binding?.task?.closestTaskTitleText?.text = "No task on today"
+        // binding?.task?.closestTaskTitleText?.text = "No task on today"
     }
 
     private fun showClosestTask(task: Task) {
-        binding?.task?.closestTaskTitleText?.text = task.taskTitle
+        // binding?.task?.closestTaskTitleText?.text = task.taskTitle
 
         val pomodorosText = "${task.completedPomodoros}/${task.pomodoros}"
-        binding?.task?.closestTaskPomodorosText?.text = pomodorosText
+        // binding?.task?.closestTaskPomodorosText?.text = pomodorosText
     }
 
     private fun updateCurrentTimeText(secondsRemaining: Long) {

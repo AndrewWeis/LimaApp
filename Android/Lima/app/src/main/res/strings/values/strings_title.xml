@@ -16,4 +16,6 @@
 
     <string name="title_timer_mode">Timer mode</string>
     <string name="title_rest_time">Rest time</string>
+
+    <string name="title_pomodoro_timer">Pomodoro timer</string>
 </resources>

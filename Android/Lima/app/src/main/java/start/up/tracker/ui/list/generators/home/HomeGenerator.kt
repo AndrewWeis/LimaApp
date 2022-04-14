@@ -1,11 +1,13 @@
 package start.up.tracker.ui.list.generators.home
 
+import start.up.tracker.R
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.data.entities.header.Header
 import start.up.tracker.ui.data.entities.home.HomeSection
 import start.up.tracker.ui.data.entities.home.ProjectsData
+import start.up.tracker.utils.resources.ResourcesUtils
 
 class HomeGenerator {
 
@@ -30,6 +32,19 @@ class HomeGenerator {
             id = ListItemIds.UPCOMING,
             type = ListItemTypes.HOME_BLOCK,
             data = homeSection
+        )
+    }
+
+    fun createPomodoroSectionListItem(): ListItem {
+        val pomodoroSection = HomeSection(
+            iconRes = R.drawable.ic_timer,
+            title = ResourcesUtils.getString(R.string.title_pomodoro_timer)
+        )
+
+        return ListItem(
+            id = ListItemIds.POMODORO,
+            type = ListItemTypes.HOME_BLOCK,
+            data = pomodoroSection
         )
     }
 

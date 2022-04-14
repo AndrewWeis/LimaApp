@@ -7,9 +7,11 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
+import start.up.tracker.database.TechniquesIds
 import start.up.tracker.databinding.HomeFragmentBinding
 import start.up.tracker.entities.Project
 import start.up.tracker.mvvm.view_models.home.HomeViewModel
+import start.up.tracker.mvvm.view_models.home.HomeViewModel.HomeEvents
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.header.Header
 import start.up.tracker.ui.data.entities.home.HomeSection
@@ -61,6 +63,27 @@ class HomeFragment :
 
     override fun onProjectClick(project: Project) {
         viewModel.onProjectClicked(project)
+    }
+
+    private fun showPrinciplesSections(principlesIds: List<Int>) {
+        principlesIds.forEach { principlesId ->
+            when (principlesId) {
+                TechniquesIds.POMODORO -> showPomodoroSection()
+            }
+        }
+    }
+
+    private fun showPomodoroSection() {
+        val listItem: ListItem = generator.createPomodoroSectionListItem()
+
+        if (binding?.homeList?.isComputingLayout == false) {
+            adapter.setPomodoroListItem(listItem)
+            return
+        }
+
+        binding?.homeList?.post {
+            adapter.setPomodoroListItem(listItem)
+        }
     }
 
     private fun showProjectsHeader() {
@@ -152,6 +175,10 @@ class HomeFragment :
         viewModel.upcomingSection.observe(viewLifecycleOwner) { upcoming ->
             showUpcomingSection(upcoming)
         }
+
+        viewModel.principlesSections.observe(viewLifecycleOwner) { principlesIds ->
+            showPrinciplesSections(principlesIds)
+        }
     }
 
     private fun initAdapter() {
@@ -170,7 +197,7 @@ class HomeFragment :
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
         viewModel.projectEvents.collect { event ->
             when (event) {
-                is HomeViewModel.HomeEvents.NavigateToProject -> {
+                is HomeEvents.NavigateToProject -> {
                     val action = HomeFragmentDirections.actionProjectToProjectTasks(
                         event.project.projectId,
                         event.project.projectTitle
@@ -178,19 +205,24 @@ class HomeFragment :
                     navigateTo(action)
                 }
 
-                is HomeViewModel.HomeEvents.NavigateToAddProject -> {
+                is HomeEvents.NavigateToAddProject -> {
                     val action = HomeFragmentDirections.actionProjectToAddProject()
                     navigateTo(action)
                 }
 
-                is HomeViewModel.HomeEvents.NavigateToToday -> {
+                is HomeEvents.NavigateToToday -> {
                     val today = TimeHelper.getTodayAsString(TimeHelper.DateFormats.DD_MMM_EEEE)
                     val action = HomeFragmentDirections.actionProjectToToday(today)
                     navigateTo(action)
                 }
 
-                is HomeViewModel.HomeEvents.NavigateToUpcoming -> {
+                is HomeEvents.NavigateToUpcoming -> {
                     val action = HomeFragmentDirections.actionProjectToUpcoming()
+                    navigateTo(action)
+                }
+
+                is HomeEvents.NavigateToPomodoro -> {
+                    val action = HomeFragmentDirections.actionHomeToPomodoroTimer()
                     navigateTo(action)
                 }
             }

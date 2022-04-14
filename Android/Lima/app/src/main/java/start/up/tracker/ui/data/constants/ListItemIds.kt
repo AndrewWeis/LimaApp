@@ -16,6 +16,7 @@ object ListItemIds {
     const val INBOX = "inbox"
     const val TODAY = "today"
     const val UPCOMING = "upcoming"
+    const val POMODORO = "pomodoro"
 
     const val PROJECTS = "projects"
 
