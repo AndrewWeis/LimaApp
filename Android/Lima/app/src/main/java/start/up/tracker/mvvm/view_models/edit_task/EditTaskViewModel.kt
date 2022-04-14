@@ -10,7 +10,9 @@ import start.up.tracker.R
 import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
+import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.database.dao.TechniquesDao
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
@@ -27,6 +29,7 @@ import javax.inject.Inject
 class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val activeAnalytics: ActiveAnalytics,
+    private val principlesDao: TechniquesDao,
     @Assisted private val state: SavedStateHandle,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
@@ -174,6 +177,10 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateToProjectsDialog(task.projectId))
     }
 
+    fun onIconPomodoroClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToPomodoroDialog(task.pomodoros))
+    }
+
     fun onBackButtonClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
@@ -211,7 +218,7 @@ class EditTaskViewModel @Inject constructor(
         _subtasks = subtasksFlow.asLiveData()
     }
 
-    private fun showActionIcons() {
+    private fun showActionIcons() = viewModelScope.launch {
         val icons: MutableList<ActionIcon> = mutableListOf()
 
         icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
@@ -222,6 +229,15 @@ class EditTaskViewModel @Inject constructor(
         // показываем проекты только если это задача = (в подзадачах не показываем)
         if (task.parentTaskId == -1) {
             icons.add(ActionIcon(id = ActionIcon.ICON_PROJECTS, iconRes = R.drawable.ic_project))
+        }
+
+        val pomodoroActionIcon = ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
+
+        val principlesIds = principlesDao.getActiveTechniquesIds()
+        principlesIds.forEach { principlesId ->
+            when (principlesId) {
+                TechniquesIds.POMODORO -> icons.add(pomodoroActionIcon)
+            }
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
