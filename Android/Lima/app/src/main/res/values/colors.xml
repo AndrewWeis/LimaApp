@@ -20,6 +20,9 @@
     <color name="gray">#D3D8E0</color>
     <color name="gray2">#8A8C8F</color>
 
+    <color name="transparent">#00ffffff</color>
+    <color name="black_alpha_47">#CC000000</color>
+
     <color name="calendarTask">#F2F7F8</color>
 
     <color name="priority_high">#FC3131</color>

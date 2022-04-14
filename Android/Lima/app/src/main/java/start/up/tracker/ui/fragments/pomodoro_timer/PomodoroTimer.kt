@@ -69,6 +69,11 @@ class PomodoroTimer(
         _timerState.postValue(TIMER_STATE_RUNNING)
     }
 
+    fun skipTimer() {
+        countDownTimer.cancel()
+        onTimerFinished()
+    }
+
     fun setupTimerLength() {
         // even - work time, odd - rest time
         timerLength = if (iteration % 2 == 0) {

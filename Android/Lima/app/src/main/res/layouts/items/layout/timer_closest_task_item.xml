@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MW"
     app:cardElevation="0dp"
-    app:cardCornerRadius="12dp">
+    app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/closest_task_layout"
@@ -67,7 +67,7 @@
             <TextView
                 style="@style/WorkSans.Red.Size12.WW"
                 android:fontFamily="@font/work_sans_light"
-                tools:text="/"/>
+                android:text="/"/>
 
             <ImageView
                 style="@style/W12_H12"
