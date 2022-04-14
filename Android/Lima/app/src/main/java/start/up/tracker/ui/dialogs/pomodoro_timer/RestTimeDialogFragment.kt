@@ -34,16 +34,16 @@ class RestTimeDialogFragment :
 
     private fun setupSelectedRestTime() {
         if (args.restTime == PomodoroTimer.POMODORO_REST_SHORT) {
-            binding?.rest5SelectionImage?.visibility = View.VISIBLE
-            binding?.rest20SelectionImage?.visibility = View.GONE
+            binding?.restFor5SelectedImage?.visibility = View.VISIBLE
+            binding?.restFor20SelectedImage?.visibility = View.GONE
         } else {
-            binding?.rest5SelectionImage?.visibility = View.GONE
-            binding?.rest20SelectionImage?.visibility = View.VISIBLE
+            binding?.restFor5SelectedImage?.visibility = View.GONE
+            binding?.restFor20SelectedImage?.visibility = View.VISIBLE
         }
     }
 
     private fun setupListeners() {
-        binding?.rest5SelectionLayout?.setOnClickListener {
+        binding?.restFor5Layout?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.REST_TIME_REQUEST,
                 result = bundleOf(ExtraCodes.REST_TIME_REQUEST to PomodoroTimer.POMODORO_REST_SHORT)
@@ -51,7 +51,7 @@ class RestTimeDialogFragment :
             findNavController().popBackStack()
         }
 
-        binding?.rest20SelectionLayout?.setOnClickListener {
+        binding?.restFor20Layout?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.REST_TIME_REQUEST,
                 result = bundleOf(ExtraCodes.REST_TIME_REQUEST to PomodoroTimer.POMODORO_REST_LONG)
