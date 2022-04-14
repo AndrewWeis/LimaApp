@@ -15,14 +15,14 @@
 
         <Button
             android:id="@+id/edit_button"
-            style="@style/Contained.RobotoRegular.Size14.Gray.M_H42"
+            style="@style/Contained.PublicSans.Size14.Gray.M_H42"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:text="@string/button_edit" />
 
         <Button
             android:id="@+id/ignore_button"
-            style="@style/OutlineButton.RobotoRegular.Size14.Gray.M_H42"
+            style="@style/OutlineButton.PublicSans.Size14.Gray.M_H42"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:text="@string/button_ignore" />

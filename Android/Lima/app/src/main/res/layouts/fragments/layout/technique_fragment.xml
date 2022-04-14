@@ -9,7 +9,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/technique_title_text"
-        style="@style/RobotoRegular.Black.Size20.Zero_W"
+        style="@style/PublicSans.Black.Size20.Zero_W"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,7 +18,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/technique_body_text"
-        style="@style/RobotoRegular.Black.Size12.MW"
+        style="@style/PublicSans.Black.Size12.MW"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

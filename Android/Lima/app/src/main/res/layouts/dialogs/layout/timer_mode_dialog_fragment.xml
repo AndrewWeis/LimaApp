@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/dialog_title_text"
-        style="@style/RobotoRegular.Black.Size20.Zero_W"
+        style="@style/PublicSans.Black.Size20.Zero_W"
         android:gravity="center"
         android:text="@string/title_timer_mode"
         android:textStyle="bold"
@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/closest_task_title_text"
-        style="@style/RobotoRegular.Black.Size16.Zero_W"
+        style="@style/PublicSans.Black.Size16.Zero_W"
         android:layout_marginHorizontal="16dp"
         android:lineSpacingExtra="1sp"
         android:text="@string/button_closest_task_mode"
@@ -57,7 +57,7 @@
 
     <TextView
         android:id="@+id/free_mode_title_text"
-        style="@style/RobotoRegular.Black.Size16.Zero_W"
+        style="@style/PublicSans.Black.Size16.Zero_W"
         android:layout_marginHorizontal="16dp"
         android:lineSpacingExtra="1sp"
         android:text="@string/button_free_mode"

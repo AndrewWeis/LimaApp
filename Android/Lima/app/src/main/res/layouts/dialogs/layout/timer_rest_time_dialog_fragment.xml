@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/dialog_title_text"
-        style="@style/RobotoRegular.Black.Size20.Zero_W"
+        style="@style/PublicSans.Black.Size20.Zero_W"
         android:gravity="center"
         android:text="@string/title_rest_time"
         android:textStyle="bold"
@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/rest_for_5_title_text"
-        style="@style/RobotoRegular.Black.Size16.Zero_W"
+        style="@style/PublicSans.Black.Size16.Zero_W"
         android:layout_marginHorizontal="16dp"
         android:lineSpacingExtra="1sp"
         android:text="@string/button_rest_for_5_minutes"
@@ -57,7 +57,7 @@
 
     <TextView
         android:id="@+id/rest_for_20_title_text"
-        style="@style/RobotoRegular.Black.Size16.Zero_W"
+        style="@style/PublicSans.Black.Size16.Zero_W"
         android:layout_marginHorizontal="16dp"
         android:lineSpacingExtra="1sp"
         android:text="@string/button_rest_for_20_minutes"

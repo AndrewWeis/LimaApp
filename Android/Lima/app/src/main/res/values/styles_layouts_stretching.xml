@@ -98,4 +98,9 @@
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
     </style>
+
+    <style name="W12_H12">
+        <item name="android:layout_width">12dp</item>
+        <item name="android:layout_height">12dp</item>
+    </style>
 </resources>

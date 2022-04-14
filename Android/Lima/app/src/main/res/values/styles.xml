@@ -9,8 +9,6 @@
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
 
-        <item name="android:fontFamily">@font/public_sans_regular</item>
-        <item name="fontFamily">@font/public_sans_regular</item>
         <item name="textAppearanceBody1">@style/CustomBody1</item>
         <item name="textAppearanceSubtitle2">@style/CustomSubtitle2</item>
         <item name="textAppearanceHeadline6">@style/CustomHeadLine6</item>
