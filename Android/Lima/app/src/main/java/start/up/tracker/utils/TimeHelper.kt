@@ -155,7 +155,7 @@ object TimeHelper {
      * @return форматированная дата
      */
     fun getTodayAsString(format: String): String {
-        val currentDayMillis = TimeHelper.getCurrentDayInMilliseconds()
+        val currentDayMillis = getCurrentDayInMilliseconds()
         return formatMillisecondToDate(currentDayMillis, format) ?: ""
     }
 
@@ -220,30 +220,6 @@ object TimeHelper {
                 getCurrentDayInMilliseconds()
             }
         }
-    }
-
-    /**
-     * Метод проверяет, что активность идёт в данный момент времени с возможностью вылезти
-     * за временные рамки до и после времени начала и окончания соотвественно активностей
-     * @param task активность
-     * @param before время до начала активности в миллисекундах
-     * @param after время после начала активности в миллесекундах
-     * @return идёт ли в данный момент активность или нет
-     */
-    fun isTaskUnderway(task: Task, before: Long, after: Long): Boolean {
-        if (task.date == null) {
-            return true
-        }
-        if (task.startTimeInMinutes == null) {
-            val currentDay = getCurrentDayInMilliseconds()
-            return currentDay == task.date
-        }
-        val currentTime = getCurrentTimeInMilliseconds()
-        if (task.endTimeInMinutes == null) {
-            return (computeStartDate(task) - currentTime) < before
-        }
-        return (currentTime + before - computeStartDate(task)) > 0 &&
-                (computeEndDate(task) - currentTime - after) > 0
     }
 
     object DateFormats {

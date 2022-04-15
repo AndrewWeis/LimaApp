@@ -17,5 +17,7 @@ data class ActionIcon(
         const val ICON_TIME_END = 4
         const val ICON_PROJECTS = 5
         const val ICON_REPEATS = 6
+
+        const val ICON_POMODORO = 7
     }
 }

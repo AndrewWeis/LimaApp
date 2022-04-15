@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/RobotoRegular.Black.Size16.WW"
+        style="@style/PublicSans.Black.Size16.WW"
         android:text="@string/title_add_project"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,7 +26,7 @@
 
     <Button
         android:id="@+id/done_button"
-        style="@style/TextButton.RobotoRegular.Size14.Black.WW"
+        style="@style/TextButton.PublicSans.Size14.Black.WW"
         android:text="@string/button_done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

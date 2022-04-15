@@ -10,6 +10,9 @@ interface TechniquesDao {
     @Query("SELECT id FROM technique_table WHERE isEnabled == 1")
     suspend fun getActiveTechniquesIds(): List<Int>
 
+    @Query("SELECT id FROM technique_table WHERE isEnabled == 1")
+    fun getActivePrinciplesIds(): Flow<List<Int>>
+
     @Query("SELECT * FROM technique_table")
     fun getTechniques(): Flow<List<Technique>>
 

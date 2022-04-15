@@ -34,16 +34,16 @@ class TimerModeDialogFragment :
 
     private fun setupSelectedTimerMode() {
         if (args.mode == PomodoroTimerFragment.CLOSEST_TASK_MODE) {
-            binding?.theClosestTaskImage?.visibility = View.VISIBLE
-            binding?.freeModeImage?.visibility = View.GONE
+            binding?.closestTaskSelectedImage?.visibility = View.VISIBLE
+            binding?.freeModeSelectedImage?.visibility = View.GONE
         } else {
-            binding?.theClosestTaskImage?.visibility = View.GONE
-            binding?.freeModeImage?.visibility = View.VISIBLE
+            binding?.closestTaskSelectedImage?.visibility = View.GONE
+            binding?.freeModeSelectedImage?.visibility = View.VISIBLE
         }
     }
 
     private fun setupListeners() {
-        binding?.theClosestTaskLayout?.setOnClickListener {
+        binding?.closestTaskLayout?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.TIMER_MODE_REQUEST,
                 result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimerFragment.CLOSEST_TASK_MODE)

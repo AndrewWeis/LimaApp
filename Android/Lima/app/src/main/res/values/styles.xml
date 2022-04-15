@@ -9,8 +9,6 @@
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorSecondaryVariant">@color/secondaryDarkColor</item>
 
-        <item name="android:fontFamily">@font/public_sans_regular</item>
-        <item name="fontFamily">@font/public_sans_regular</item>
         <item name="textAppearanceBody1">@style/CustomBody1</item>
         <item name="textAppearanceSubtitle2">@style/CustomSubtitle2</item>
         <item name="textAppearanceHeadline6">@style/CustomHeadLine6</item>
@@ -44,6 +42,16 @@
 
     <style name="DatePickerButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TaskCheckBox">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="TaskCheckBox.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>

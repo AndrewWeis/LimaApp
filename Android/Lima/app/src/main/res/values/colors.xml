@@ -20,11 +20,17 @@
     <color name="gray">#D3D8E0</color>
     <color name="gray2">#8A8C8F</color>
 
+    <color name="transparent">#00ffffff</color>
+    <color name="black_alpha_47">#CC000000</color>
+
     <color name="calendarTask">#F2F7F8</color>
 
     <color name="priority_high">#FC3131</color>
     <color name="priority_medium">#FC8631</color>
     <color name="priority_low">#40C686</color>
+    
+    <color name="red_F94F4F">#F94F4F</color>
+    <color name="red_FEDCDC">#FEDCDC</color>
 
     <color name="color_ripple">#DADCE1</color>
 </resources>

@@ -33,7 +33,8 @@ class Pomodoro(
     /**
      * Возвращает задачи назначенные на сегодня в определенном порядке.
      * Сначала показывает задачи, у которых выставлено время.
-     * Далее задачи на сегодня без времени, отсорированные по приоритету
+     * Далее задачи на сегодня без времени, отсорированные по приоритету.
+     * В обоих случаях обязательно должны быть выставленны pomodoros
      */
     suspend fun getClosestTasksOfToday(): List<Task> {
         val today = TimeHelper.getCurrentDayInMilliseconds()
@@ -45,8 +46,8 @@ class Pomodoro(
         val tasksWithTime = tasksOfToday
             .filter { task ->
                 task.startTimeInMinutes != null &&
-                task.startTimeInMinutes + 5 >= todayInMinutes &&
-                task.pomodoros != null
+                task.pomodoros != null &&
+                task.startTimeInMinutes + 5 >= todayInMinutes - (task.endTimeInMinutes!! - task.startTimeInMinutes)
             }
             .sortedBy { task ->
                 task.startTimeInMinutes

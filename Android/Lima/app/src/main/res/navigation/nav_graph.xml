@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/pomodoroTimerFragment">
+    app:startDestination="@id/homeFragment">
 
     <dialog
         android:id="@+id/editTaskFragment"
@@ -61,6 +61,9 @@
         <action
             android:id="@+id/action_project_to_upcoming"
             app:destination="@id/upcomingFragment" />
+        <action
+            android:id="@+id/action_home_to_pomodoroTimer"
+            app:destination="@id/pomodoroTimerFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

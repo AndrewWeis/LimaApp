@@ -153,6 +153,7 @@ class EditTaskFragment :
             ActionIcon.ICON_TIME_START -> viewModel.onIconTimeStartClick()
             ActionIcon.ICON_TIME_END -> viewModel.onIconTimeEndClick()
             ActionIcon.ICON_PROJECTS -> viewModel.onIconProjectsClick()
+            ActionIcon.ICON_POMODORO -> viewModel.onIconPomodoroClick()
         }
     }
 
@@ -414,6 +415,10 @@ class EditTaskFragment :
 
                 is TasksEvent.ShowError -> {
                     Snackbar.make(requireView(), event.error, Snackbar.LENGTH_LONG).show()
+                }
+
+                is TasksEvent.NavigateToPomodoroDialog -> {
+                    // navigate to
                 }
             }
         }

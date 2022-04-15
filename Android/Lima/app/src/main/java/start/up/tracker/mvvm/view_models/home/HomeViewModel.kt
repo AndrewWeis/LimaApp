@@ -12,10 +12,7 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import start.up.tracker.R
-import start.up.tracker.database.dao.ProjectsDao
-import start.up.tracker.database.dao.TaskDao
-import start.up.tracker.database.dao.TodayTasksDao
-import start.up.tracker.database.dao.UpcomingTasksDao
+import start.up.tracker.database.dao.*
 import start.up.tracker.entities.Project
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
@@ -29,6 +26,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val projectsDao: ProjectsDao,
+    private val principlesDao: TechniquesDao,
     todayTasksDao: TodayTasksDao,
     upcomingTasksDao: UpcomingTasksDao,
 ) : ViewModel() {
@@ -69,6 +67,9 @@ class HomeViewModel @Inject constructor(
     }
     val upcomingSection = upcomingSectionFlow.asLiveData()
 
+    private val principlesSectionsFlow: Flow<List<Int>> = principlesDao.getActivePrinciplesIds()
+    val principlesSections = principlesSectionsFlow.asLiveData()
+
     fun updateNumberOfTasks() = viewModelScope.launch {
         projects.value?.projects?.forEach { project ->
             val number = taskDao.countTasksOfProject(project.projectId)
@@ -95,6 +96,8 @@ class HomeViewModel @Inject constructor(
                 projectEventsChannel.send(HomeEvents.NavigateToToday)
             ListItemIds.UPCOMING ->
                 projectEventsChannel.send(HomeEvents.NavigateToUpcoming)
+            ListItemIds.POMODORO ->
+                projectEventsChannel.send(HomeEvents.NavigateToPomodoro)
         }
     }
 
@@ -126,6 +129,7 @@ class HomeViewModel @Inject constructor(
         object NavigateToAddProject : HomeEvents()
         object NavigateToToday : HomeEvents()
         object NavigateToUpcoming : HomeEvents()
+        object NavigateToPomodoro : HomeEvents()
     }
 
     private companion object {
