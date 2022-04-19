@@ -338,13 +338,17 @@ class EditTaskFragment :
         }
 
         setFragmentResultListener(ExtraCodes.PRIORITY_REQUEST) { requestKey, bundle ->
-            val result = bundle.getInt(requestKey)
-            viewModel.onPriorityChanged(result)
+            viewModel.onPriorityChanged(bundle.getInt(requestKey))
         }
 
         setFragmentResultListener(ExtraCodes.PROJECT_REQUEST) { requestKey, bundle ->
-            val result = bundle.getInt(requestKey)
-            viewModel.onProjectChanged(result)
+            viewModel.onProjectChanged(bundle.getInt(requestKey))
+        }
+
+        setFragmentResultListener(ExtraCodes.POMODORO_REQUEST) { _, bundle ->
+            viewModel.onTaskStartTimeChanged(bundle.getInt(ExtraCodes.POMODORO_START_TIME))
+            viewModel.onTaskEndTimeChanged(bundle.getInt(ExtraCodes.POMODORO_END_TIME))
+            viewModel.onPomodorosNumberChanged(bundle.getInt(ExtraCodes.POMODORO_POMODOROS))
         }
     }
 

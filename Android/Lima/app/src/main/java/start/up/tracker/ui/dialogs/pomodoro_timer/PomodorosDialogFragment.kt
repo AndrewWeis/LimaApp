@@ -5,12 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
 import android.widget.TimePicker
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import start.up.tracker.R
 import start.up.tracker.databinding.PomodorosDialogFragmentBinding
 import start.up.tracker.mvvm.view_models.edit_task.dialogs.PomodorosViewModel
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.screens.ExtraCodes
 import java.util.*
 
 class PomodorosDialogFragment :
@@ -53,33 +57,51 @@ class PomodorosDialogFragment :
         binding?.timeStartButton?.setOnClickListener {
             openTimePicker()
         }
+
+        binding?.doneButton?.setOnClickListener {
+            val startTime = viewModel.pomodorosData.value!!.second
+            val endTime = viewModel.currentEndTime.value!!
+            val pomodoros = viewModel.pomodorosData.value!!.first
+
+            setFragmentResult(
+                requestKey = ExtraCodes.POMODORO_REQUEST,
+                result = bundleOf(
+                    ExtraCodes.POMODORO_START_TIME to startTime,
+                    ExtraCodes.POMODORO_END_TIME to endTime,
+                    ExtraCodes.POMODORO_POMODOROS to pomodoros,
+                )
+            )
+
+            findNavController().popBackStack()
+        }
     }
 
     private fun setupObservers() {
         viewModel.pomodorosData.observe(viewLifecycleOwner) { data ->
             updateIndicator(data.first)
             updateStartTime(data.second)
-            updateEndTime(data.first, data.second)
+
+            viewModel.updateEndDate(data.first, data.second)
+        }
+
+        viewModel.currentEndTime.observe(viewLifecycleOwner) { endTime ->
+            updateEndTime(endTime)
         }
     }
 
-    private fun updateEndTime(pomodoros: Int, startTime: Int) {
-        val endTime = startTime + pomodoros * 30
-
-        if (pomodoros != EMPTY && startTime != EMPTY) {
-            binding?.timeEndButton?.text = TimeHelper.formatMinutesOfCurrentDay(endTime)
-        }
+    private fun updateEndTime(endTime: Int) {
+        binding?.timeEndButton?.text = TimeHelper.formatMinutesOfCurrentDay(endTime)
     }
 
     private fun updateIndicator(pomodoros: Int) {
-        if (pomodoros != EMPTY) {
+        if (pomodoros != -1) {
             binding?.pomodorosIndicator?.progress = pomodoros
             binding?.pomodorosNumberText?.text = pomodoros.toString()
         }
     }
 
     private fun updateStartTime(startTime: Int) {
-        if (startTime != EMPTY) {
+        if (startTime != -1) {
             binding?.timeStartButton?.text = TimeHelper.formatMinutesOfCurrentDay(startTime)
         }
     }
@@ -95,9 +117,5 @@ class PomodorosDialogFragment :
         )
 
         timePickerDialog.show()
-    }
-
-    companion object {
-        const val EMPTY = -1
     }
 }

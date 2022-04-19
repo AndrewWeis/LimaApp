@@ -126,27 +126,22 @@ class EditTaskViewModel @Inject constructor(
 
     fun onTaskStartTimeChanged(minutes: Int) {
         task = task.copy(startTimeInMinutes = minutes)
-        // show start time
     }
 
     fun onTaskEndTimeChanged(minutes: Int) {
         task = task.copy(endTimeInMinutes = minutes)
-        // show end time
     }
 
     fun onTaskDateChanged(milliseconds: Long) {
         task = task.copy(date = milliseconds)
-        // show date
     }
 
     fun onProjectChanged(projectId: Int) {
         task = task.copy(projectId = projectId)
-        // show project
     }
 
     fun onPriorityChanged(priorityId: Int) {
         task = task.copy(priority = priorityId)
-        // show priority
     }
 
     fun onSubtasksNumberChanged(number: Int) {
@@ -155,6 +150,10 @@ class EditTaskViewModel @Inject constructor(
 
     fun onCompletedSubtasksNumberChanged(number: Int) {
         task = task.copy(completedSubtasksNumber = number)
+    }
+
+    fun onPomodorosNumberChanged(number: Int) {
+        task = task.copy(pomodoros = number, completedPomodoros = 0)
     }
 
     fun onIconPriorityClick() = viewModelScope.launch {
