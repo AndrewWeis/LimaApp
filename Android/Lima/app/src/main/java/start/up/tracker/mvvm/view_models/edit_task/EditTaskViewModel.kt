@@ -178,7 +178,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onIconPomodoroClick() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToPomodoroDialog(task.pomodoros))
+        tasksEventChannel.send(TasksEvent.NavigateToPomodoroDialog(task.pomodoros, task.startTimeInMinutes))
     }
 
     fun onBackButtonClick() = viewModelScope.launch {

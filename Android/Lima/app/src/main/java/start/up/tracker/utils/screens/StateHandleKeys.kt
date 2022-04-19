@@ -12,4 +12,7 @@ object StateHandleKeys {
     const val PRINCIPLE_ID = "principleId"
 
     const val SELECTED_PROJECT_ID = "selectedProjectId"
+
+    const val CURRENT_START_TIME = "currentStartTime"
+    const val CURRENT_POMODOROS = "currentPomodoros"
 }

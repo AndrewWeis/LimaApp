@@ -418,7 +418,11 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.NavigateToPomodoroDialog -> {
-                    // navigate to
+                    val action = EditTaskFragmentDirections.actionEditTaskToPomodorosDialog(
+                        currentPomodoros = event.pomodoros ?: -1,
+                        currentStartTime = event.startTime ?: -1
+                    )
+                    navigateTo(action)
                 }
             }
         }

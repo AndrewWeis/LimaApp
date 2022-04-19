@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MW"
+    android:minWidth="300dp"
     android:padding="24dp">
 
     <com.google.android.material.textview.MaterialTextView
@@ -54,14 +55,13 @@
         style="@style/Contained.WorkSans.Size16.Black.Zero_H48"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/primary_alpha_6"
+        android:backgroundTint="@color/lightGray"
+        android:enabled="false"
+        android:text=""
         android:textAlignment="textStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/time_start_button"
-        app:layout_constraintTop_toBottomOf="@id/time_hint_text"
-        app:strokeColor="@color/primaryColor"
-        app:strokeWidth="1dp"
-        tools:text="14:00" />
+        app:layout_constraintTop_toBottomOf="@id/time_hint_text" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/pomodoros_hint_text"
@@ -81,13 +81,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:max="30"
+        android:progress="0"
         android:progressBackgroundTint="@color/primary_alpha_40"
         android:progressTint="@color/primaryColor"
         android:thumbTint="@color/primaryColor"
         app:layout_constraintEnd_toStartOf="@id/pomodoros_number_image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pomodoros_hint_text"
-        tools:progress="45" />
+        app:layout_constraintTop_toBottomOf="@id/pomodoros_hint_text" />
 
     <ImageView
         android:id="@+id/pomodoros_number_image"
@@ -102,11 +103,11 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/pomodoros_number_text"
         style="@style/WorkSans.Black.Size16.WW"
+        android:text="0"
         app:layout_constraintBottom_toBottomOf="@id/pomodoros_number_image"
         app:layout_constraintEnd_toEndOf="@id/pomodoros_number_image"
         app:layout_constraintStart_toStartOf="@id/pomodoros_number_image"
-        app:layout_constraintTop_toTopOf="@id/pomodoros_number_image"
-        tools:text="12" />
+        app:layout_constraintTop_toTopOf="@id/pomodoros_number_image" />
 
     <com.google.android.material.button.MaterialButton
         style="@style/Contained.PublicSans.Size14.White.Zero_H42"

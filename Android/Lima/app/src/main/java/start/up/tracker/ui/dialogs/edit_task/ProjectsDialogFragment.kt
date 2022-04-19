@@ -1,4 +1,4 @@
-package start.up.tracker.ui.fragments.edit_task.dialogs
+package start.up.tracker.ui.dialogs.edit_task
 
 import android.os.Bundle
 import android.view.View
