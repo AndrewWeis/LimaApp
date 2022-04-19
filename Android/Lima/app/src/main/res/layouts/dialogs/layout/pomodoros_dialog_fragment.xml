@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MW"
+    android:padding="24dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title_text"
+        style="@style/PublicSans.Black.Size20.Zero_W"
+        android:fontFamily="@font/public_sans_bold"
+        android:text="@string/title_pomodoro_dialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/desc_text"
+        style="@style/PublicSans.Black.Size16.Zero_W"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/public_sans_medium"
+        android:text="@string/pomodoro_dialog_desc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_text" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/time_hint_text"
+        style="@style/PublicSans.Primary.Size14.Zero_W"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/public_sans_semi_bold"
+        android:text="@string/pomodoro_time"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/desc_text" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/time_start_button"
+        style="@style/Contained.WorkSans.Size16.Black.Zero_H48"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:backgroundTint="@color/primary_alpha_6"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toStartOf="@id/time_end_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time_hint_text"
+        app:strokeColor="@color/primaryColor"
+        app:strokeWidth="1dp"
+        tools:text="14:00" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/time_end_button"
+        style="@style/Contained.WorkSans.Size16.Black.Zero_H48"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/primary_alpha_6"
+        android:textAlignment="textStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/time_start_button"
+        app:layout_constraintTop_toBottomOf="@id/time_hint_text"
+        app:strokeColor="@color/primaryColor"
+        app:strokeWidth="1dp"
+        tools:text="14:00" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/pomodoros_hint_text"
+        style="@style/PublicSans.Primary.Size14.Zero_W"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/public_sans_semi_bold"
+        android:text="@string/pomodoro_pomodoros"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time_start_button" />
+
+
+    <SeekBar
+        android:id="@+id/pomodoros_indicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:progressBackgroundTint="@color/primary_alpha_40"
+        android:progressTint="@color/primaryColor"
+        android:thumbTint="@color/primaryColor"
+        app:layout_constraintEnd_toStartOf="@id/pomodoros_number_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pomodoros_hint_text"
+        tools:progress="45" />
+
+    <ImageView
+        android:id="@+id/pomodoros_number_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pomodoros_number"
+        app:layout_constraintBottom_toBottomOf="@id/pomodoros_indicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/pomodoros_indicator"
+        app:layout_constraintTop_toTopOf="@id/pomodoros_indicator" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/pomodoros_number_text"
+        style="@style/WorkSans.Black.Size16.WW"
+        app:layout_constraintBottom_toBottomOf="@id/pomodoros_number_image"
+        app:layout_constraintEnd_toEndOf="@id/pomodoros_number_image"
+        app:layout_constraintStart_toStartOf="@id/pomodoros_number_image"
+        app:layout_constraintTop_toTopOf="@id/pomodoros_number_image"
+        tools:text="12" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Contained.PublicSans.Size14.White.Zero_H42"
+        android:layout_marginTop="24dp"
+        android:text="@string/button_done"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pomodoros_number_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

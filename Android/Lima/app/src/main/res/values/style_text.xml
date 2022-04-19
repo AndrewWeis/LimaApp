@@ -14,6 +14,10 @@
         <item name="android:textColor">@color/red_F94F4F</item>
     </style>
 
+    <style name="WorkSans.Black">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="PublicSans.White">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -26,15 +30,15 @@
         <item name="android:textColor">@color/gray2</item>
     </style>
 
-    <style name="PublicSans.SecondaryDark">
-        <item name="android:textColor">@color/secondaryDarkColor</item>
+    <style name="PublicSans.Primary">
+        <item name="android:textColor">@color/primaryColor</item>
     </style>
 
     <style name="PublicSans.White.Size48">
         <item name="android:textSize">48sp</item>
     </style>
 
-    <style name="PublicSans.SecondaryDark.Size14">
+    <style name="PublicSans.Primary.Size14">
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -62,12 +66,21 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="WorkSans.Black.Size16">
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="PublicSans.White.Size48.WW">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="WorkSans.Red.Size12.WW">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="WorkSans.Black.Size16.WW">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -112,8 +125,13 @@
         <item name="android:layout_height">20dp</item>
     </style>
 
-    <style name="PublicSans.SecondaryDark.Size14.MW" >
+    <style name="PublicSans.Primary.Size14.MW" >
         <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="PublicSans.Primary.Size14.Zero_W" >
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 

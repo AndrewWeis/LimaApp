@@ -18,4 +18,5 @@
     <string name="title_rest_time">Rest time</string>
 
     <string name="title_pomodoro_timer">Pomodoro timer</string>
+    <string name="title_pomodoro_dialog">Select pomodoros</string>
 </resources>
