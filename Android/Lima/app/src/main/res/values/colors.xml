@@ -19,6 +19,7 @@
 
     <color name="gray">#D3D8E0</color>
     <color name="gray2">#8A8C8F</color>
+    <color name="gray_B7B6B7">#B7B6B7</color>
 
     <color name="transparent">#00ffffff</color>
     <color name="black_alpha_47">#CC000000</color>
