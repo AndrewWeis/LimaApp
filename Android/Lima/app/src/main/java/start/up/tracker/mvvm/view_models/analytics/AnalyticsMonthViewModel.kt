@@ -9,16 +9,23 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
+import start.up.tracker.entities.DayStat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class AnalyticsMonthViewModel @Inject constructor(
     private val dao: AnalyticsDao
 ) : ViewModel() {
 
-    val data: MutableList<DataEntry> = ArrayList()
+    inner class ChartData(d: MutableList<DataEntry>, t: String) {
+        val data = d
+        val title = t
+    }
+
+    val charDataList : MutableList<ChartData> = ArrayList()
 
     private var _statMonth: MutableLiveData<Boolean> = MutableLiveData(false)
     val statMonth: LiveData<Boolean>
@@ -30,11 +37,21 @@ class AnalyticsMonthViewModel @Inject constructor(
     val currentMonthName: String = SimpleDateFormat("MMMM").format(calendar.time)
 
     init {
-        loadStatMonth()
+        loadTasks()
     }
 
-    private fun loadStatMonth() = viewModelScope.launch {
+    private fun loadTasks() = viewModelScope.launch {
         val stats = dao.getStatMonth(currentYear, currentMonth)
+
+        loadCompletedTasks(stats)
+        loadAllTasks(stats)
+        loadCompletedTasks(stats)
+
+        _statMonth.value = true
+    }
+
+    private fun loadCompletedTasks(stats: List<DayStat>) {
+        val data: MutableList<DataEntry> = ArrayList()
 
         calendar.set(currentYear, currentMonth, 1)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -53,6 +70,29 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        _statMonth.value = true
+        charDataList.add(ChartData(data, "Completed tasks", ))
+    }
+
+    private fun loadAllTasks(stats: List<DayStat>) {
+        val data: MutableList<DataEntry> = ArrayList()
+
+        calendar.set(currentYear, currentMonth, 1)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        val monthList: MutableMap<Int, Int> = mutableMapOf()
+
+        for (i in 1..maxDay) {
+            monthList[i] = 0
+        }
+
+        stats.forEach {
+            monthList[it.day] = it.allTasks
+        }
+
+        monthList.forEach {
+            data.add(ValueDataEntry(it.key.toString(), it.value))
+        }
+
+        charDataList.add(ChartData(data, "All tasks", ))
     }
 }

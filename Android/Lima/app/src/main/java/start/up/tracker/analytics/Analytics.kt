@@ -16,7 +16,7 @@ class Analytics @Inject constructor(
     private val analyticsDao: AnalyticsDao,
 ) {
 
-    suspend fun addTaskToStatistic() = withContext(Dispatchers.Default) {
+    suspend fun addTaskToStatisticOnCompletion() = withContext(Dispatchers.Default) {
         val calendar = Calendar.getInstance()
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
@@ -31,5 +31,34 @@ class Analytics @Inject constructor(
             val newDayStat = dayStat.copy(completedTasks = dayStat.completedTasks + 1)
             analyticsDao.updateDayStat(newDayStat)
         }
+    }
+
+    suspend fun addTaskToStatisticOnCreate() = withContext(Dispatchers.Default) {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+
+        var dayStat: DayStat? = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
+
+        if (dayStat == null) {
+            dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear)
+            analyticsDao.insertDayStat(dayStat)
+        } else {
+            val newDayStat = dayStat.copy(allTasks = dayStat.allTasks + 1)
+            analyticsDao.updateDayStat(newDayStat)
+        }
+    }
+
+    suspend fun addTaskToStatisticOnEdit() = withContext(Dispatchers.Default) {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val dayStat: DayStat = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
+
+        val newDayStat = dayStat.copy(allTasks = dayStat.allTasks + 1)
+        analyticsDao.updateDayStat(newDayStat)
     }
 }

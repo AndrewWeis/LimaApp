@@ -88,11 +88,13 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
-    fun saveTask() {
+    suspend fun saveTask() {
         if (isEditMode) {
             updateTask()
+            analytics.addTaskToStatisticOnCreate()
         } else {
             createTask()
+            analytics.addTaskToStatisticOnCreate()
         }
     }
 
@@ -226,7 +228,8 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
         val principlesIds = principlesDao.getActiveTechniquesIds()
 
-        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY,
+            iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
 
         if (!principlesIds.contains(TechniquesIds.POMODORO)) {
@@ -239,7 +242,8 @@ class EditTaskViewModel @Inject constructor(
             icons.add(ActionIcon(id = ActionIcon.ICON_PROJECTS, iconRes = R.drawable.ic_project))
         }
 
-        val pomodoroActionIcon = ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
+        val pomodoroActionIcon =
+            ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
 
         if (principlesIds.contains(TechniquesIds.POMODORO)) {
             icons.add(pomodoroActionIcon)

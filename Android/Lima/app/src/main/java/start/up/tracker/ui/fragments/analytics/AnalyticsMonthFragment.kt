@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.anychart.APIlib
 import com.anychart.AnyChart
+import com.anychart.AnyChartView
 import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode
 import com.anychart.enums.Position
@@ -20,6 +21,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private val viewModel: AnalyticsMonthViewModel by viewModels()
     private var binding: FragmentAnalyticsMonthBinding? = null
+    private var chartViews: MutableList<AnyChartView?> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,9 +37,13 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     }
 
     private fun initData() {
-        binding?.lineChartMonthAllTasks?.setProgressBar(binding!!.progressBar)
-        binding?.lineChartMonthCompletedTasks?.setProgressBar(binding!!.progressBar)
-        binding?.lineChartMonthUncompletedTasks?.setProgressBar(binding!!.progressBar)
+        chartViews = mutableListOf(
+            binding?.lineChartMonthAllTasks,
+            binding?.lineChartMonthCompletedTasks,
+            binding?.lineChartMonthUncompletedTasks)
+        //binding?.lineChartMonthAllTasks?.setProgressBar(binding!!.progressBar)
+        //binding?.lineChartMonthCompletedTasks?.setProgressBar(binding!!.progressBar)
+        //binding?.lineChartMonthUncompletedTasks?.setProgressBar(binding!!.progressBar)
     }
 
     private fun initObservers() {
@@ -49,36 +55,40 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     }
 
     private fun initTasksChart() {
-        APIlib.getInstance().setActiveAnyChartView(binding?.lineChartMonthAllTasks);
-        val chart = AnyChart.column()
-        val column = chart.column(viewModel.data)
+        for (i in viewModel.charDataList.indices) {
+            chartViews[i]!!.setProgressBar(binding!!.progressBar)
 
-        column.tooltip()
-            .titleFormat("{%X}")
-            .position(Position.CENTER_BOTTOM)
-            .anchor(Anchor.CENTER_BOTTOM)
-            .offsetX(5.0)
-            .offsetY(5.0)
-            .format("Tasks: {%Value}{groupsSeparator: }");
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i]);
+            val chart = AnyChart.column()
+            val column = chart.column(viewModel.charDataList[i].data)
 
-        chart.xAxis(0).labels().fontSize(10)
-        chart.xAxis(0).title(viewModel.currentMonthName)
+            column.tooltip()
+                .titleFormat("{%X}")
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(5.0)
+                .offsetY(5.0)
+                .format("Tasks: {%Value}{groupsSeparator: }");
 
-        chart.yScale().minimumGap(1)
-        chart.yAxis(0).labels().fontSize(10)
+            chart.xAxis(0).labels().fontSize(10)
+            chart.xAxis(0).title(viewModel.currentMonthName)
 
-        chart.title("Completed tasks")
-        chart.title().fontSize(12)
-        chart.title().fontColor("#858585")
+            chart.yScale().minimumGap(1)
+            chart.yAxis(0).labels().fontSize(10)
 
-        chart.animation(true)
+            chart.title(viewModel.charDataList[i].title)
+            chart.title().fontSize(12)
+            chart.title().fontColor("#858585")
 
-        chart.tooltip().positionMode(TooltipPositionMode.POINT)
-        chart.interactivity().hoverMode(HoverMode.BY_X)
+            chart.animation(true)
 
-        binding?.lineChartMonthAllTasks?.setChart(chart)
+            chart.tooltip().positionMode(TooltipPositionMode.POINT)
+            chart.interactivity().hoverMode(HoverMode.BY_X)
 
-        APIlib.getInstance().setActiveAnyChartView(binding?.lineChartMonthCompletedTasks);
+            chartViews[i]!!.setChart(chart)
+        }
+
+        /*APIlib.getInstance().setActiveAnyChartView(binding?.lineChartMonthCompletedTasks);
         val chart2 = AnyChart.column()
         val column2 = chart2.column(viewModel.data)
 
@@ -105,13 +115,13 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chart2.tooltip().positionMode(TooltipPositionMode.POINT)
         chart2.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding?.lineChartMonthCompletedTasks?.setChart(chart2)
+        binding?.lineChartMonthCompletedTasks?.setChart(chart2)*/
 
         /////////////////
 
-        APIlib.getInstance().setActiveAnyChartView(binding?.lineChartMonthUncompletedTasks);
+        /*APIlib.getInstance().setActiveAnyChartView(binding?.lineChartMonthUncompletedTasks);
         val chart3 = AnyChart.column()
-        val column3 = chart3.column(viewModel.data)
+        val column3 = chart3.column(viewModel.charDataList)
 
         column3.tooltip()
             .titleFormat("{%X}")
@@ -136,6 +146,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chart3.tooltip().positionMode(TooltipPositionMode.POINT)
         chart3.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding?.lineChartMonthUncompletedTasks?.setChart(chart3)
+        binding?.lineChartMonthUncompletedTasks?.setChart(chart3)*/
     }
 }
