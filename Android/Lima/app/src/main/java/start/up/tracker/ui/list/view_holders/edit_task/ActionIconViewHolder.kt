@@ -34,13 +34,8 @@ class ActionIconViewHolder(
     }
 
     private fun setupIcon() {
-        binding.actionImage.setImageDrawable(
-            ResourcesUtils.getDrawable(data.iconRes)
-        )
-
-        binding.actionImage.setColorFilter(
-            ResourcesUtils.getColor(R.color.black)
-        )
+        binding.actionImage.setImageDrawable(ResourcesUtils.getDrawable(data.iconRes))
+        binding.actionImage.setColorFilter(ResourcesUtils.getColor(data.iconColor))
     }
 
     interface ActionIconClickListener {

@@ -11,10 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/TrackerTheme">
-        <receiver
-            android:name=".ui.fragments.pomodoro_timer.TimerExpiredReceiver"
-            android:enabled="true"
-            android:exported="false"></receiver>
 
         <activity
             android:name=".ui.activities.MainActivity"

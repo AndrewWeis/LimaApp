@@ -124,29 +124,24 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(description = "")
     }
 
-    fun onTaskStartTimeChanged(minutes: Int) {
+    fun onTaskStartTimeChanged(minutes: Int?) {
         task = task.copy(startTimeInMinutes = minutes)
-        // show start time
     }
 
-    fun onTaskEndTimeChanged(minutes: Int) {
+    fun onTaskEndTimeChanged(minutes: Int?) {
         task = task.copy(endTimeInMinutes = minutes)
-        // show end time
     }
 
     fun onTaskDateChanged(milliseconds: Long) {
         task = task.copy(date = milliseconds)
-        // show date
     }
 
     fun onProjectChanged(projectId: Int) {
         task = task.copy(projectId = projectId)
-        // show project
     }
 
     fun onPriorityChanged(priorityId: Int) {
         task = task.copy(priority = priorityId)
-        // show priority
     }
 
     fun onSubtasksNumberChanged(number: Int) {
@@ -155,6 +150,10 @@ class EditTaskViewModel @Inject constructor(
 
     fun onCompletedSubtasksNumberChanged(number: Int) {
         task = task.copy(completedSubtasksNumber = number)
+    }
+
+    fun onPomodorosNumberChanged(number: Int?) {
+        task = task.copy(pomodoros = number, completedPomodoros = 0)
     }
 
     fun onIconPriorityClick() = viewModelScope.launch {
@@ -178,7 +177,12 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onIconPomodoroClick() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToPomodoroDialog(task.pomodoros))
+        tasksEventChannel.send(
+            TasksEvent.NavigateToPomodoroDialog(
+                task.pomodoros,
+                task.startTimeInMinutes
+            )
+        )
     }
 
     fun onBackButtonClick() = viewModelScope.launch {
@@ -220,11 +224,15 @@ class EditTaskViewModel @Inject constructor(
 
     private fun showActionIcons() = viewModelScope.launch {
         val icons: MutableList<ActionIcon> = mutableListOf()
+        val principlesIds = principlesDao.getActiveTechniquesIds()
 
         icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
-        icons.add(ActionIcon(id = ActionIcon.ICON_TIME_START, iconRes = R.drawable.ic_time))
-        icons.add(ActionIcon(id = ActionIcon.ICON_TIME_END, iconRes = R.drawable.ic_time))
+
+        if (!principlesIds.contains(TechniquesIds.POMODORO)) {
+            icons.add(ActionIcon(id = ActionIcon.ICON_TIME_START, iconRes = R.drawable.ic_time))
+            icons.add(ActionIcon(id = ActionIcon.ICON_TIME_END, iconRes = R.drawable.ic_time))
+        }
 
         // показываем проекты только если это задача = (в подзадачах не показываем)
         if (task.parentTaskId == -1) {
@@ -233,11 +241,8 @@ class EditTaskViewModel @Inject constructor(
 
         val pomodoroActionIcon = ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
 
-        val principlesIds = principlesDao.getActiveTechniquesIds()
-        principlesIds.forEach { principlesId ->
-            when (principlesId) {
-                TechniquesIds.POMODORO -> icons.add(pomodoroActionIcon)
-            }
+        if (principlesIds.contains(TechniquesIds.POMODORO)) {
+            icons.add(pomodoroActionIcon)
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))

@@ -338,13 +338,25 @@ class EditTaskFragment :
         }
 
         setFragmentResultListener(ExtraCodes.PRIORITY_REQUEST) { requestKey, bundle ->
-            val result = bundle.getInt(requestKey)
-            viewModel.onPriorityChanged(result)
+            viewModel.onPriorityChanged(bundle.getInt(requestKey))
         }
 
         setFragmentResultListener(ExtraCodes.PROJECT_REQUEST) { requestKey, bundle ->
-            val result = bundle.getInt(requestKey)
-            viewModel.onProjectChanged(result)
+            viewModel.onProjectChanged(bundle.getInt(requestKey))
+        }
+
+        setFragmentResultListener(ExtraCodes.POMODORO_REQUEST) { _, bundle ->
+            var timeStart: Int? = bundle.getInt(ExtraCodes.POMODORO_START_TIME)
+            if (timeStart == -1) timeStart = null
+            viewModel.onTaskStartTimeChanged(timeStart)
+
+            var timeEnd: Int? = bundle.getInt(ExtraCodes.POMODORO_END_TIME)
+            if (timeEnd == -1) timeEnd = null
+            viewModel.onTaskEndTimeChanged(timeEnd)
+
+            var pomodoros: Int? = bundle.getInt(ExtraCodes.POMODORO_POMODOROS)
+            if (pomodoros == -1) pomodoros = null
+            viewModel.onPomodorosNumberChanged(pomodoros)
         }
     }
 
@@ -418,7 +430,11 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.NavigateToPomodoroDialog -> {
-                    // navigate to
+                    val action = EditTaskFragmentDirections.actionEditTaskToPomodorosDialog(
+                        currentPomodoros = event.pomodoros ?: -1,
+                        currentStartTime = event.startTime ?: -1
+                    )
+                    navigateTo(action)
                 }
             }
         }

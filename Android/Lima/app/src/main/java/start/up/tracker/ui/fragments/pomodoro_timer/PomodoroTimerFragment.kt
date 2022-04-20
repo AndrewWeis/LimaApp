@@ -70,8 +70,15 @@ class PomodoroTimerFragment :
         viewModel.timer.timerIteration.observe(viewLifecycleOwner) { iteration ->
             if (viewModel.timerMode.value!! == CLOSEST_TASK_MODE && iteration % 2 == 1) {
                 updateTaskPomodoros()
+                startTimerAfterWorkTime()
             }
         }
+    }
+
+    private fun startTimerAfterWorkTime() {
+        binding?.timerStartButton?.visibility = View.GONE
+        viewModel.timer.initCountDownTimer()
+        viewModel.timer.startTimer()
     }
 
     private fun updateClosestTask(task: Task?) {
@@ -83,20 +90,14 @@ class PomodoroTimerFragment :
         } else {
             setClosestTaskVisibility(false)
             setNotFoundMessageVisibility(true)
+            hideTimerRelatedButtons()
         }
     }
 
     private fun updateTaskPomodoros() {
-        val completedPomodoros = viewModel.closestTask.value?.completedPomodoros!!
-        val totalPomodoros = viewModel.closestTask.value?.pomodoros
-
-        binding?.task?.completedPomodorosText?.text = completedPomodoros.toString()
-        binding?.task?.totalPomodorosText?.text = totalPomodoros.toString()
-        viewModel.updateCompletedPomodoros(completedPomodoros)
-
-        if (completedPomodoros == totalPomodoros) {
-            hideTimerRelatedButtons()
-        }
+        binding?.task?.completedPomodorosText?.text = viewModel.getCompletedPomodoros().toString()
+        binding?.task?.totalPomodorosText?.text = viewModel.getTotalPomodoros().toString()
+        viewModel.updateCompletedPomodoros(viewModel.getCompletedPomodoros() + 1)
     }
 
     private fun updateTimerMode(mode: Int) {
@@ -108,6 +109,7 @@ class PomodoroTimerFragment :
             }
             FREE_MODE -> {
                 isClosestTaskVisible(false)
+                setNotFoundMessageVisibility(false)
                 setupTimer()
             }
         }
@@ -143,6 +145,7 @@ class PomodoroTimerFragment :
 
     private fun showClosestTask(task: Task) {
         binding?.task?.taskTitleText?.text = task.taskTitle
+        binding?.task?.taskCheckBox?.isChecked = false
 
         binding?.task?.completedPomodorosText?.text = task.completedPomodoros.toString()
         binding?.task?.totalPomodorosText?.text = task.pomodoros.toString()
@@ -152,6 +155,8 @@ class PomodoroTimerFragment :
             val endTime = TimeHelper.formatMinutesOfCurrentDay(task.endTimeInMinutes)
             val time = "$startTime - $endTime"
             binding?.task?.taskTimeText?.text = time
+        } else {
+            binding?.task?.taskTimeText?.text = ""
         }
     }
 
@@ -244,6 +249,14 @@ class PomodoroTimerFragment :
                 return@setOnClickListener
             }
             viewModel.onModeButtonClick()
+        }
+
+        binding?.task?.taskCheckBox?.let { checkBox ->
+            checkBox.setOnClickListener {
+                if (checkBox.isChecked) {
+                    viewModel.onClosestTaskCheckedChanged()
+                }
+            }
         }
     }
 

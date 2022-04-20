@@ -83,9 +83,23 @@ class PomodoroTimerViewModel @Inject constructor(
         _timerMode.postValue(timerMode)
     }
 
+    fun getCompletedPomodoros(): Int {
+        return closestTask.value!!.completedPomodoros!!
+    }
+
+    fun getTotalPomodoros(): Int? {
+        return closestTask.value!!.pomodoros
+    }
+
     private fun setupTimerMode() = viewModelScope.launch {
         val savedMode = timerDataStore.timerMode.first()
         _timerMode.postValue(savedMode)
+    }
+
+    fun onClosestTaskCheckedChanged() = viewModelScope.launch {
+        val closestTask = _closestTask.value?.copy(completed = true)
+        closestTask?.let { taskDao.updateTask(it) }
+        onClosestTaskModeSelected()
     }
 
     sealed class TimerEvent {

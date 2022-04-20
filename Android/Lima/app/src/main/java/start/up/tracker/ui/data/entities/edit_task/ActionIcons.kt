@@ -1,6 +1,8 @@
 package start.up.tracker.ui.data.entities.edit_task
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import start.up.tracker.R
 
 data class ActionIcons(
     val icons: List<ActionIcon>
@@ -9,6 +11,7 @@ data class ActionIcons(
 data class ActionIcon(
     val id: Int,
     @DrawableRes val iconRes: Int,
+    @ColorRes val iconColor: Int = R.color.gray_B7B6B7
 ) {
     companion object Ids {
         const val ICON_PRIORITY = 1
