@@ -70,6 +70,9 @@ class PomodoroTimerFragment :
         viewModel.timer.timerIteration.observe(viewLifecycleOwner) { iteration ->
             if (viewModel.timerMode.value!! == CLOSEST_TASK_MODE && iteration % 2 == 1) {
                 updateTaskPomodoros()
+            }
+
+            if (iteration % 2 == 1) {
                 startTimerAfterWorkTime()
             }
         }
