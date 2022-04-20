@@ -34,7 +34,8 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     }
 
     private fun initData() {
-        binding?.lineChartMonth?.setProgressBar(binding!!.progressBar)
+        binding?.lineChartMonthAllTasks?.setProgressBar(binding!!.progressBar)
+        binding?.lineChartMonthCompletedTasks
     }
 
     private fun initObservers() {
@@ -72,6 +73,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chart.tooltip().positionMode(TooltipPositionMode.POINT)
         chart.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding?.lineChartMonth?.setChart(chart)
+        binding?.lineChartMonthAllTasks?.setChart(chart)
+        //binding?.lineChartMonthCompletedTasks?.setChart(chart)
     }
 }

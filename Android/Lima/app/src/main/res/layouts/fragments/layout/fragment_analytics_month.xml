@@ -9,12 +9,18 @@
 
 
     <com.anychart.AnyChartView
-        android:id="@+id/line_chart_month"
+        android:id="@+id/line_chart_month_all_tasks"
         style="@style/M_H250"
-        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart_month_completed_tasks"
+        android:layout_marginTop="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
