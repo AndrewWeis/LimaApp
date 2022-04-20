@@ -13,7 +13,7 @@ interface AnalyticsDao {
     suspend fun getStatYear(year: Int): List<DayStat>
 
     @Query("SELECT * FROM daystat WHERE year =:year AND month =:month AND day =:day")
-    suspend fun getStatDay(year: Int, month: Int, day: Int): DayStat
+    suspend fun getStatDay(year: Int, month: Int, day: Int): DayStat?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDayStat(dayStat: DayStat)

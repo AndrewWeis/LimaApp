@@ -290,8 +290,9 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
+            val beforeDate = taskDao.getTaskById(task.taskId)[0].date
             updateTask()
-            analytics.addTaskToStatisticOnCreate()
+            analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
             return
         }
 
@@ -303,7 +304,7 @@ class EditTaskViewModel @Inject constructor(
 
         if (analyticsMessages.messages.isEmpty()) {
             createTask()
-            analytics.addTaskToStatisticOnCreate()
+            analytics.addTaskToStatisticOnCreate(task.date)
             return
         }
 
