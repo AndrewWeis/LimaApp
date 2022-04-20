@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 @HiltViewModel
-class AnalyticsMonthViewModel @Inject constructor(
+class AnalyticsWeekViewModel @Inject constructor(
     private val dao: AnalyticsDao
 ) : ViewModel() {
 
@@ -27,9 +27,9 @@ class AnalyticsMonthViewModel @Inject constructor(
 
     val chartDataList : MutableList<ChartData> = ArrayList()
 
-    private var _statMonth: MutableLiveData<Boolean> = MutableLiveData(false)
+    private var _statWeek: MutableLiveData<Boolean> = MutableLiveData(false)
     val statMonth: LiveData<Boolean>
-        get() = _statMonth
+        get() = _statWeek
 
     private val calendar = Calendar.getInstance()
     private val currentYear: Int = calendar.get(Calendar.YEAR)
@@ -47,7 +47,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         loadAllTasks(stats)
         loadCompletedTasks(stats)
 
-        _statMonth.value = true
+        _statWeek.value = true
     }
 
     private fun loadCompletedTasks(stats: List<DayStat>) {

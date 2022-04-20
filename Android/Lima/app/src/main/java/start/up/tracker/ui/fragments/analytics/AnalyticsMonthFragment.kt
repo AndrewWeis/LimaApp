@@ -41,9 +41,10 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             binding?.lineChartMonthAllTasks,
             binding?.lineChartMonthCompletedTasks,
             binding?.lineChartMonthUncompletedTasks)
-        //binding?.lineChartMonthAllTasks?.setProgressBar(binding!!.progressBar)
-        //binding?.lineChartMonthCompletedTasks?.setProgressBar(binding!!.progressBar)
-        //binding?.lineChartMonthUncompletedTasks?.setProgressBar(binding!!.progressBar)
+
+        for (i in chartViews.indices) {
+            chartViews[i]!!.setProgressBar(binding!!.progressBar)
+        }
     }
 
     private fun initObservers() {
@@ -55,12 +56,10 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     }
 
     private fun initTasksChart() {
-        for (i in viewModel.charDataList.indices) {
-            chartViews[i]!!.setProgressBar(binding!!.progressBar)
-
+        for (i in viewModel.chartDataList.indices) {
             APIlib.getInstance().setActiveAnyChartView(chartViews[i]);
             val chart = AnyChart.column()
-            val column = chart.column(viewModel.charDataList[i].data)
+            val column = chart.column(viewModel.chartDataList[i].data)
 
             column.tooltip()
                 .titleFormat("{%X}")
@@ -76,7 +75,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             chart.yScale().minimumGap(1)
             chart.yAxis(0).labels().fontSize(10)
 
-            chart.title(viewModel.charDataList[i].title)
+            chart.title(viewModel.chartDataList[i].title)
             chart.title().fontSize(12)
             chart.title().fontColor("#858585")
 

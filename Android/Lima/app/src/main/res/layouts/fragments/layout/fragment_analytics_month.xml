@@ -11,7 +11,7 @@
         tools:context=".ui.fragments.analytics.AnalyticsMonthFragment">
 
         <com.anychart.AnyChartView
-            android:id="@+id/line_chart_month_all_tasks"
+            android:id="@+id/line_chart_month_completed_tasks"
             style="@style/M_H250"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -19,12 +19,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.anychart.AnyChartView
-            android:id="@+id/line_chart_month_completed_tasks"
+            android:id="@+id/line_chart_month_all_tasks"
             style="@style/M_H250"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_chart_month_all_tasks" />
+            app:layout_constraintTop_toBottomOf="@id/line_chart_month_completed_tasks" />
 
         <com.anychart.AnyChartView
             android:id="@+id/line_chart_month_uncompleted_tasks"
@@ -32,7 +32,7 @@
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_chart_month_completed_tasks" />
+            app:layout_constraintTop_toBottomOf="@id/line_chart_month_all_tasks" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

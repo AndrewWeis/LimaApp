@@ -8,6 +8,7 @@ data class DayStat (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val day: Int,
+    val week: Int,
     val month: Int,
     val year: Int,
     val allTasks: Int = 0,

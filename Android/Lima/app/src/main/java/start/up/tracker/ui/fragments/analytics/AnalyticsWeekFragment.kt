@@ -3,7 +3,9 @@ package start.up.tracker.ui.fragments.analytics
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.anychart.AnyChart
+import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.enums.Anchor
@@ -12,21 +14,48 @@ import com.anychart.enums.Position
 import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
+import start.up.tracker.databinding.FragmentAnalyticsMonthBinding
 import start.up.tracker.databinding.FragmentAnalyticsWeekBinding
+import start.up.tracker.mvvm.view_models.analytics.AnalyticsMonthViewModel
+import start.up.tracker.mvvm.view_models.analytics.AnalyticsWeekViewModel
 import java.util.*
 
 @AndroidEntryPoint
 class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
 
-    private lateinit var binding: FragmentAnalyticsWeekBinding
+    private val viewModel: AnalyticsWeekViewModel by viewModels()
+    private var binding: FragmentAnalyticsWeekBinding? = null
+    private var chartViews: MutableList<AnyChartView?> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentAnalyticsWeekBinding.bind(view)
 
-        binding.lineChartWeek.setProgressBar(binding.progressBar)
+        initData()
+        initObservers()
+    }
 
-        initTasksChart()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    private fun initData() {
+        chartViews = mutableListOf(
+            binding?.lineChartWeekAllTasks,
+            binding?.lineChartWeekCompletedTasks)
+
+        for (i in chartViews.indices) {
+            chartViews[i]!!.setProgressBar(binding!!.progressBar)
+        }
+    }
+
+    private fun initObservers() {
+        viewModel.statMonth.observe(viewLifecycleOwner) {
+            if (it == true) {
+                initTasksChart()
+            }
+        }
     }
 
     private fun initTasksChart() {
@@ -64,6 +93,6 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
         cartesian.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding.lineChartWeek.setChart(cartesian)
+        binding!!.lineChartWeekAllTasks.setChart(cartesian)
     }
 }

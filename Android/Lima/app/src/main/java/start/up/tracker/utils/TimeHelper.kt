@@ -40,6 +40,13 @@ object TimeHelper {
         return calendar[Calendar.MONTH]
     }
 
+    fun getCurrentWeekFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.WEEK_OF_YEAR]
+    }
+
     fun getCurrentDayFromMillis(millis: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.clear()

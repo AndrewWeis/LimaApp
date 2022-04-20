@@ -6,6 +6,9 @@ import start.up.tracker.entities.DayStat
 @Dao
 interface AnalyticsDao {
 
+    @Query("SELECT * FROM daystat WHERE year =:year AND week =:week")
+    suspend fun getStatWeek(year: Int, week: Int): List<DayStat>
+
     @Query("SELECT * FROM daystat WHERE year =:year AND month =:month")
     suspend fun getStatMonth(year: Int, month: Int): List<DayStat>
 
