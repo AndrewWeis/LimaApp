@@ -177,7 +177,12 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onIconPomodoroClick() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToPomodoroDialog(task.pomodoros, task.startTimeInMinutes))
+        tasksEventChannel.send(
+            TasksEvent.NavigateToPomodoroDialog(
+                task.pomodoros,
+                task.startTimeInMinutes
+            )
+        )
     }
 
     fun onBackButtonClick() = viewModelScope.launch {
@@ -219,11 +224,15 @@ class EditTaskViewModel @Inject constructor(
 
     private fun showActionIcons() = viewModelScope.launch {
         val icons: MutableList<ActionIcon> = mutableListOf()
+        val principlesIds = principlesDao.getActiveTechniquesIds()
 
         icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
-        icons.add(ActionIcon(id = ActionIcon.ICON_TIME_START, iconRes = R.drawable.ic_time))
-        icons.add(ActionIcon(id = ActionIcon.ICON_TIME_END, iconRes = R.drawable.ic_time))
+
+        if (!principlesIds.contains(TechniquesIds.POMODORO)) {
+            icons.add(ActionIcon(id = ActionIcon.ICON_TIME_START, iconRes = R.drawable.ic_time))
+            icons.add(ActionIcon(id = ActionIcon.ICON_TIME_END, iconRes = R.drawable.ic_time))
+        }
 
         // показываем проекты только если это задача = (в подзадачах не показываем)
         if (task.parentTaskId == -1) {
@@ -232,11 +241,8 @@ class EditTaskViewModel @Inject constructor(
 
         val pomodoroActionIcon = ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
 
-        val principlesIds = principlesDao.getActiveTechniquesIds()
-        principlesIds.forEach { principlesId ->
-            when (principlesId) {
-                TechniquesIds.POMODORO -> icons.add(pomodoroActionIcon)
-            }
+        if (principlesIds.contains(TechniquesIds.POMODORO)) {
+            icons.add(pomodoroActionIcon)
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
