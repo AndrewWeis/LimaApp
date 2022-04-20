@@ -88,13 +88,11 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveTask() {
+    fun saveTask() {
         if (isEditMode) {
             updateTask()
-            analytics.addTaskToStatisticOnCreate()
         } else {
             createTask()
-            analytics.addTaskToStatisticOnCreate()
         }
     }
 
@@ -293,6 +291,7 @@ class EditTaskViewModel @Inject constructor(
 
         if (analyticsMessages.messages.isEmpty()) {
             updateTask()
+            analytics.addTaskToStatisticOnCreate()
             return
         }
 
@@ -304,6 +303,7 @@ class EditTaskViewModel @Inject constructor(
 
         if (analyticsMessages.messages.isEmpty()) {
             createTask()
+            analytics.addTaskToStatisticOnCreate()
             return
         }
 

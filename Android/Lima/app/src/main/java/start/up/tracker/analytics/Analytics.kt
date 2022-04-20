@@ -42,7 +42,7 @@ class Analytics @Inject constructor(
         var dayStat: DayStat? = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
 
         if (dayStat == null) {
-            dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear)
+            dayStat = DayStat(day = currentDay, month = currentMonth, year = currentYear, allTasks = 1)
             analyticsDao.insertDayStat(dayStat)
         } else {
             val newDayStat = dayStat.copy(allTasks = dayStat.allTasks + 1)

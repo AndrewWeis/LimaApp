@@ -10,6 +10,6 @@ data class DayStat (
     val day: Int,
     val month: Int,
     val year: Int,
-    val allTasks: Int = 1,
-    val completedTasks: Int = 1,
+    val allTasks: Int = 0,
+    val completedTasks: Int = 0,
 )
