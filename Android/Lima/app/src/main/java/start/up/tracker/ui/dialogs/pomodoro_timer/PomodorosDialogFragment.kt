@@ -58,6 +58,10 @@ class PomodorosDialogFragment :
             openTimePicker()
         }
 
+        binding?.clearButton?.setOnClickListener {
+            viewModel.clear()
+        }
+
         binding?.doneButton?.setOnClickListener {
             val startTime = viewModel.pomodorosData.value!!.second
             val endTime = viewModel.currentEndTime.value!!
@@ -78,7 +82,7 @@ class PomodorosDialogFragment :
 
     private fun setupObservers() {
         viewModel.pomodorosData.observe(viewLifecycleOwner) { data ->
-            updateIndicator(data.first)
+            updateIndicator(data.first, data.second)
             updateStartTime(data.second)
 
             viewModel.updateEndDate(data.first, data.second)
@@ -90,10 +94,20 @@ class PomodorosDialogFragment :
     }
 
     private fun updateEndTime(endTime: Int) {
-        binding?.timeEndButton?.text = TimeHelper.formatMinutesOfCurrentDay(endTime)
+        if (endTime != -1) {
+            binding?.timeEndButton?.text = TimeHelper.formatMinutesOfCurrentDay(endTime)
+            return
+        }
+
+        binding?.timeEndButton?.text = ""
     }
 
-    private fun updateIndicator(pomodoros: Int) {
+    private fun updateIndicator(pomodoros: Int, startTime: Int) {
+        if (startTime != -1) {
+            val availablePomodoros: Int = (1440 - startTime) / 30
+            binding?.pomodorosIndicator?.max = availablePomodoros
+        }
+
         if (pomodoros != -1) {
             binding?.pomodorosIndicator?.progress = pomodoros
             binding?.pomodorosNumberText?.text = pomodoros.toString()
@@ -103,7 +117,10 @@ class PomodorosDialogFragment :
     private fun updateStartTime(startTime: Int) {
         if (startTime != -1) {
             binding?.timeStartButton?.text = TimeHelper.formatMinutesOfCurrentDay(startTime)
+            return
         }
+
+        binding?.timeStartButton?.text = ""
     }
 
     private fun openTimePicker() {

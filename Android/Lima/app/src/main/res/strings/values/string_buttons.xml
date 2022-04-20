@@ -2,6 +2,7 @@
 <resources>
     <string name="button_add_subtask">Add subtask</string>
     <string name="button_done">Done</string>
+    <string name="button_clear">Clear</string>
     <string name="button_ignore">Ignore</string>
     <string name="button_edit">Edit</string>
     <string name="button_got_it">Got it</string>

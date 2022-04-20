@@ -124,11 +124,11 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(description = "")
     }
 
-    fun onTaskStartTimeChanged(minutes: Int) {
+    fun onTaskStartTimeChanged(minutes: Int?) {
         task = task.copy(startTimeInMinutes = minutes)
     }
 
-    fun onTaskEndTimeChanged(minutes: Int) {
+    fun onTaskEndTimeChanged(minutes: Int?) {
         task = task.copy(endTimeInMinutes = minutes)
     }
 
@@ -152,7 +152,7 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(completedSubtasksNumber = number)
     }
 
-    fun onPomodorosNumberChanged(number: Int) {
+    fun onPomodorosNumberChanged(number: Int?) {
         task = task.copy(pomodoros = number, completedPomodoros = 0)
     }
 

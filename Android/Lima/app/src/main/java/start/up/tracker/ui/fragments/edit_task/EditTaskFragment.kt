@@ -346,9 +346,17 @@ class EditTaskFragment :
         }
 
         setFragmentResultListener(ExtraCodes.POMODORO_REQUEST) { _, bundle ->
-            viewModel.onTaskStartTimeChanged(bundle.getInt(ExtraCodes.POMODORO_START_TIME))
-            viewModel.onTaskEndTimeChanged(bundle.getInt(ExtraCodes.POMODORO_END_TIME))
-            viewModel.onPomodorosNumberChanged(bundle.getInt(ExtraCodes.POMODORO_POMODOROS))
+            var timeStart: Int? = bundle.getInt(ExtraCodes.POMODORO_START_TIME)
+            if (timeStart == -1) timeStart = null
+            viewModel.onTaskStartTimeChanged(timeStart)
+
+            var timeEnd: Int? = bundle.getInt(ExtraCodes.POMODORO_END_TIME)
+            if (timeEnd == -1) timeEnd = null
+            viewModel.onTaskEndTimeChanged(timeEnd)
+
+            var pomodoros: Int? = bundle.getInt(ExtraCodes.POMODORO_POMODOROS)
+            if (pomodoros == -1) pomodoros = null
+            viewModel.onPomodorosNumberChanged(pomodoros)
         }
     }
 

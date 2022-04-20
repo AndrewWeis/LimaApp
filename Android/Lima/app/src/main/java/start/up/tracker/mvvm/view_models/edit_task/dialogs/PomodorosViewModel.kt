@@ -28,8 +28,14 @@ class PomodorosViewModel(
 
     fun updateEndDate(pomodoros: Int, startTime: Int) {
         val endTime = startTime + pomodoros * 30
-        if (pomodoros != -1 && endTime != -1) {
+        if (pomodoros != -1 && startTime != -1) {
             currentEndTime.postValue(endTime)
         }
+    }
+
+    fun clear() {
+        currentStartTime.postValue(-1)
+        currentEndTime.postValue(-1)
+        currentPomodoros.postValue(0)
     }
 }
