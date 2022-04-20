@@ -11,7 +11,7 @@ class PomodorosViewModel(
     private val currentStartTime = state.getLiveData<Int>(StateHandleKeys.CURRENT_START_TIME)
     private val currentPomodoros = state.getLiveData<Int>(StateHandleKeys.CURRENT_POMODOROS)
 
-    val currentEndTime: MutableLiveData<Int> = MutableLiveData()
+    val currentEndTime: MutableLiveData<Int> = MutableLiveData(-1)
 
     val pomodorosData = currentPomodoros.asFlow()
         .combine(currentStartTime.asFlow()) { currentPomodoros, currentStartTime ->
