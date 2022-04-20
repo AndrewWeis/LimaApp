@@ -101,7 +101,7 @@ interface TaskDao {
     @Query("DELETE FROM task_table WHERE projectId =:projectId")
     suspend fun deleteTaskOfProject(projectId: Int)
 
-    @Query("SELECT * FROM task_table WHERE date =:day")
+    @Query("SELECT * FROM task_table WHERE date =:day AND completed == 0")
     suspend fun getTasksOfDay(day: Long): List<Task>
 
     @Query("SELECT * FROM task_table")

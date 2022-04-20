@@ -95,17 +95,9 @@ class PomodoroTimerFragment :
     }
 
     private fun updateTaskPomodoros() {
-        val completedPomodoros = viewModel.closestTask.value?.completedPomodoros!!
-        val totalPomodoros = viewModel.closestTask.value?.pomodoros
-
-        binding?.task?.completedPomodorosText?.text = completedPomodoros.toString()
-        binding?.task?.totalPomodorosText?.text = totalPomodoros.toString()
-        viewModel.updateCompletedPomodoros(completedPomodoros + 1)
-
-        if (completedPomodoros + 1 == totalPomodoros) {
-            hideTimerRelatedButtons()
-            // todo (doesn't hide)
-        }
+        binding?.task?.completedPomodorosText?.text = viewModel.getCompletedPomodoros().toString()
+        binding?.task?.totalPomodorosText?.text = viewModel.getTotalPomodoros().toString()
+        viewModel.updateCompletedPomodoros(viewModel.getCompletedPomodoros() + 1)
     }
 
     private fun updateTimerMode(mode: Int) {
@@ -153,6 +145,7 @@ class PomodoroTimerFragment :
 
     private fun showClosestTask(task: Task) {
         binding?.task?.taskTitleText?.text = task.taskTitle
+        binding?.task?.taskCheckBox?.isChecked = false
 
         binding?.task?.completedPomodorosText?.text = task.completedPomodoros.toString()
         binding?.task?.totalPomodorosText?.text = task.pomodoros.toString()
@@ -162,6 +155,8 @@ class PomodoroTimerFragment :
             val endTime = TimeHelper.formatMinutesOfCurrentDay(task.endTimeInMinutes)
             val time = "$startTime - $endTime"
             binding?.task?.taskTimeText?.text = time
+        } else {
+            binding?.task?.taskTimeText?.text = ""
         }
     }
 
@@ -254,6 +249,14 @@ class PomodoroTimerFragment :
                 return@setOnClickListener
             }
             viewModel.onModeButtonClick()
+        }
+
+        binding?.task?.taskCheckBox?.let { checkBox ->
+            checkBox.setOnClickListener {
+                if (checkBox.isChecked) {
+                    viewModel.onClosestTaskCheckedChanged()
+                }
+            }
         }
     }
 
