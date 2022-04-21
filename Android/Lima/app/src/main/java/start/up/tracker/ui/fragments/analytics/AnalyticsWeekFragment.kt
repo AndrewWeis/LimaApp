@@ -44,7 +44,10 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
     private fun initData() {
         chartViews = mutableListOf(
             binding?.lineChartWeekAllTasks,
-            binding?.lineChartWeekCompletedTasks)
+            binding?.lineChartWeekCompletedTasks,
+            binding?.lineChartWeekProductivity,
+            binding?.lineChartWeekProductivityTendency
+        )
 
         for (i in chartViews.indices) {
             chartViews[i]!!.setProgressBar(binding!!.progressBar)
@@ -76,13 +79,14 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
                 .anchor(Anchor.CENTER_BOTTOM)
                 .offsetX(5.0)
                 .offsetY(5.0)
-                .format("Tasks: {%Value}{groupsSeparator: }");
+                .format(viewModel.chartDataList[i].title + ": {%Value}{groupsSeparator: }");
 
             chart.xAxis(0).labels().fontSize(10)
 
             chart.yScale().minimumGap(1)
             chart.yScale().ticks().allowFractional(false);
             chart.yAxis(0).labels().fontSize(10)
+            chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 
             chart.title(viewModel.chartDataList[i].title)
             chart.title().fontSize(12)

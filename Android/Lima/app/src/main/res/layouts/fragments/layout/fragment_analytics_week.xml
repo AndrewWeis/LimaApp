@@ -17,7 +17,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/week_date"
@@ -42,6 +42,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line_chart_week_completed_tasks" />
+
+        <com.anychart.AnyChartView
+            android:id="@+id/line_chart_week_productivity"
+            style="@style/M_H250"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_chart_week_all_tasks" />
+
+        <com.anychart.AnyChartView
+            android:id="@+id/line_chart_week_productivity_tendency"
+            style="@style/M_H250"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_chart_week_productivity" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

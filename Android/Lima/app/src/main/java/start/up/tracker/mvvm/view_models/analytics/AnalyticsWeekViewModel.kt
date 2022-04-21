@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
 import start.up.tracker.utils.TimeHelper
 import java.lang.StringBuilder
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -20,11 +22,12 @@ class AnalyticsWeekViewModel @Inject constructor(
     private val dao: AnalyticsDao,
 ) : ViewModel() {
 
-    inner class ChartData(d: MutableList<DataEntry>, t: String, a: Int, i: String) {
+    inner class ChartData(d: MutableList<DataEntry>, t: String, a: Double, i: String, f: String) {
         val data = d
         val title = t
-        val average = a
+        val average = formatDouble(1, a)
         val date = i
+        val format = f
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -41,6 +44,8 @@ class AnalyticsWeekViewModel @Inject constructor(
     private fun loadTasks() = viewModelScope.launch {
         loadCompletedTasks()
         loadAllTasks()
+        loadProductivity()
+        loadProductivityTendency()
 
         _statWeek.value = true
     }
@@ -54,16 +59,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
         val data: MutableList<DataEntry> = ArrayList()
-        val currentDate =
-            StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis,
-                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis,
-                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis,
-                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
-                .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis,
-                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .toString()
+        val currentDate = getCurrentDate(calendar, currentYear)
 
         calendar.set(currentYear, currentMonth, currentDay)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
@@ -87,7 +83,8 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Completed tasks", average, currentDate))
+        chartDataList.add(ChartData(data, "Completed tasks", average.toDouble(), currentDate,
+            "{%value}"))
     }
 
     private suspend fun loadAllTasks() {
@@ -99,16 +96,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
         val data: MutableList<DataEntry> = ArrayList()
-        val currentDate =
-            StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis,
-                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis,
-                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis,
-                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
-                .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis,
-                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .toString()
+        val currentDate = getCurrentDate(calendar, currentYear)
 
         calendar.set(currentYear, currentMonth, currentDay)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
@@ -132,6 +120,132 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "All tasks", average, currentDate))
+        chartDataList.add(ChartData(data, "All tasks", average.toDouble(), currentDate,
+            "{%value}"))
+    }
+
+    private suspend fun loadProductivity() {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+        val stats = dao.getStatWeek(currentYear, currentWeek)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentDate = getCurrentDate(calendar, currentYear)
+
+        calendar.set(currentYear, currentMonth, currentDay)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
+
+        val weekList: MutableMap<String, Double> = mutableMapOf()
+
+        for (i in 0 until maxDay) {
+            weekList[daysName[i]] = 0.0
+        }
+
+        var sum = 0.0
+        var nonEmptyCounter = 0
+
+        stats.forEach {
+            if (it.completedTasks == 0 || it.allTasks == 0) {
+                weekList[daysName[it.dayOfWeek - 1]] = 0.0
+                sum += 1.0
+            } else {
+                weekList[daysName[it.dayOfWeek - 1]] =
+                    it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+            }
+            if (sum != 0.0) {
+                sum += weekList[daysName[it.dayOfWeek - 1]]!!
+                nonEmptyCounter++
+            }
+        }
+
+        val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
+            0.0
+        } else {
+            sum / nonEmptyCounter
+        }
+
+        weekList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        chartDataList.add(ChartData(data, "Productivity", average, currentDate,
+            "{%value}%"))
+    }
+
+    private suspend fun loadProductivityTendency() {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+        val stats = dao.getStatWeek(currentYear, currentWeek)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentDate = getCurrentDate(calendar, currentYear)
+
+        calendar.set(currentYear, currentMonth, currentDay)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
+
+        val weekList: MutableMap<String, Double> = mutableMapOf()
+
+        for (i in 0 until maxDay) {
+            weekList[daysName[i]] = 0.0
+        }
+
+        var sum = 0.0
+        var nonEmptyCounter = 0
+        var buf = 0.0
+
+        stats.forEach {
+            if (buf == 0.0) {
+                buf = 100.0
+            }
+            if (it.completedTasks == 0 || it.allTasks == 0) {
+                weekList[daysName[it.dayOfWeek - 1]] = 0.0
+                sum += 1.0
+            } else {
+                weekList[daysName[it.dayOfWeek - 1]] =
+                    it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+            }
+
+            buf = weekList[daysName[it.dayOfWeek - 1]]!!
+
+            if (sum != 0.0) {
+                sum += weekList[daysName[it.dayOfWeek - 1]]!!
+                nonEmptyCounter++
+            }
+        }
+
+        val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
+            0.0
+        } else {
+            sum / nonEmptyCounter
+        }
+
+        weekList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        chartDataList.add(ChartData(data, "Productivity Tendency", average, currentDate,
+            "{%value}%"))
+    }
+
+    private fun formatDouble(digits: Int, number: Double): Double {
+        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    }
+
+    private fun getCurrentDate(calendar: Calendar, currentYear : Int) : String {
+        return StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis,
+            (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+            .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis,
+                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
+            .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis,
+                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+            .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis,
+                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+            .append(currentYear).toString()
     }
 }
