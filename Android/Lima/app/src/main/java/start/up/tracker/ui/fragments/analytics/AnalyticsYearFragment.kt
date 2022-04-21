@@ -49,6 +49,7 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
         chart.xAxis(0).title(viewModel.currentYear);
 
         chart.yScale().minimumGap(1)
+        chart.yScale().ticks().allowFractional(false);
         chart.yAxis(0).labels().fontSize(10)
 
         chart.title("Completed tasks")

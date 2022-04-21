@@ -34,8 +34,15 @@ class AnalyticsFragment :
 
         TabLayoutMediator(binding!!.tabLayout, binding!!.viewPager2) { tab, position ->
             when (position) {
-                0 -> { tab.text = "Week" }
-                1 -> { tab.text = "Month" }
+                0 -> {
+                    tab.text = "Week"
+                }
+                1 -> {
+                    tab.text = "Month"
+                }
+                2 -> {
+                    tab.text = "Year"
+                }
             }
         }.attach()
     }

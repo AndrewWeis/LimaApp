@@ -11,7 +11,7 @@ import start.up.tracker.ui.fragments.analytics.AnalyticsWeekFragment
 class AnalyticsViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
-        return 2
+        return 3
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -21,6 +21,9 @@ class AnalyticsViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lif
             }
             1 -> {
                 AnalyticsMonthFragment()
+            }
+            2 -> {
+                AnalyticsYearFragment()
             }
             else -> {
                 Fragment()

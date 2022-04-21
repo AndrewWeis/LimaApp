@@ -57,7 +57,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private fun initTasksChart() {
         for (i in viewModel.chartDataList.indices) {
-            APIlib.getInstance().setActiveAnyChartView(chartViews[i]);
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i])
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
 
@@ -70,9 +70,10 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
                 .format("Tasks: {%Value}{groupsSeparator: }");
 
             chart.xAxis(0).labels().fontSize(10)
-            chart.xAxis(0).title(viewModel.currentMonthName)
+            chart.xAxis(0).title(viewModel.chartDataList[i].monthName)
 
             chart.yScale().minimumGap(1)
+            chart.yScale().ticks().allowFractional(false);
             chart.yAxis(0).labels().fontSize(10)
 
             chart.title(viewModel.chartDataList[i].title)

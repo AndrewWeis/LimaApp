@@ -20,9 +20,10 @@ class AnalyticsMonthViewModel @Inject constructor(
     private val dao: AnalyticsDao
 ) : ViewModel() {
 
-    inner class ChartData(d: MutableList<DataEntry>, t: String) {
+    inner class ChartData(d: MutableList<DataEntry>, t: String, m : String) {
         val data = d
         val title = t
+        val monthName = m
     }
 
     val chartDataList : MutableList<ChartData> = ArrayList()
@@ -31,26 +32,28 @@ class AnalyticsMonthViewModel @Inject constructor(
     val statMonth: LiveData<Boolean>
         get() = _statMonth
 
-    private val calendar = Calendar.getInstance()
-    private val currentYear: Int = calendar.get(Calendar.YEAR)
-    private val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-    val currentMonthName: String = SimpleDateFormat("MMMM").format(calendar.time)
-
     init {
         loadTasks()
     }
 
     private fun loadTasks() = viewModelScope.launch {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+
         val stats = dao.getStatMonth(currentYear, currentMonth)
 
-        loadCompletedTasks(stats)
-        loadAllTasks(stats)
-        loadCompletedTasks(stats)
+        loadCompletedTasks(stats, calendar)
+        loadAllTasks(stats, calendar)
+        loadCompletedTasks(stats, calendar)
 
         _statMonth.value = true
     }
 
-    private fun loadCompletedTasks(stats: List<DayStat>) {
+    private fun loadCompletedTasks(stats: List<DayStat>, calendar : Calendar) {
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentMonthName: String = SimpleDateFormat("MMMM").format(calendar.time)
         val data: MutableList<DataEntry> = ArrayList()
 
         calendar.set(currentYear, currentMonth, 1)
@@ -70,10 +73,13 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "Completed tasks", ))
+        chartDataList.add(ChartData(data, "Completed tasks", currentMonthName))
     }
 
-    private fun loadAllTasks(stats: List<DayStat>) {
+    private fun loadAllTasks(stats: List<DayStat>, calendar: Calendar) {
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentMonthName: String = SimpleDateFormat("MMMM").format(calendar.time)
         val data: MutableList<DataEntry> = ArrayList()
 
         calendar.set(currentYear, currentMonth, 1)
@@ -93,6 +99,6 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "All tasks", ))
+        chartDataList.add(ChartData(data, "All tasks", currentMonthName))
     }
 }

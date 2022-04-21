@@ -62,7 +62,7 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
     private fun initTasksChart() {
 
         for (i in viewModel.chartDataList.indices) {
-            APIlib.getInstance().setActiveAnyChartView(chartViews[i]);
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i])
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
 
@@ -77,6 +77,7 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
             chart.xAxis(0).labels().fontSize(10)
 
             chart.yScale().minimumGap(1)
+            chart.yScale().ticks().allowFractional(false);
             chart.yAxis(0).labels().fontSize(10)
 
             chart.title(viewModel.chartDataList[i].title)
@@ -90,40 +91,5 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
 
             chartViews[i]!!.setChart(chart)
         }
-
-        /* data: MutableList<DataEntry> = ArrayList()
-        data.add(ValueDataEntry("Mon", 7))
-        data.add(ValueDataEntry("Tue", 10))
-        data.add(ValueDataEntry("Wed", 6))
-        data.add(ValueDataEntry("Thu", 9))
-        data.add(ValueDataEntry("Fri", 7))
-        data.add(ValueDataEntry("Sat", 4))
-        data.add(ValueDataEntry("Sun", 2))
-
-        val cartesian = AnyChart.column()
-        val column = cartesian.column(data)
-
-        column.tooltip()
-            .titleFormat("{%X}")
-            .position(Position.CENTER_BOTTOM)
-            .anchor(Anchor.CENTER_BOTTOM)
-            .offsetX(5.0)
-            .offsetY(5.0)
-            .format("Tasks: {%Value}{groupsSeparator: }");
-
-
-        cartesian.title("Completed tasks")
-        cartesian.title().fontSize(12)
-        cartesian.title().fontColor("#858585")
-
-
-        cartesian.animation(true)
-        cartesian.yScale().maximumGap(1)
-
-
-        cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
-        cartesian.interactivity().hoverMode(HoverMode.BY_X)
-
-        binding!!.lineChartWeekAllTasks.setChart(cartesian)*/
     }
 }
