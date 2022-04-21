@@ -63,6 +63,10 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
 
         for (i in viewModel.chartDataList.indices) {
             APIlib.getInstance().setActiveAnyChartView(chartViews[i])
+
+            binding!!.weekDate.text = viewModel.chartDataList[i].date
+            binding!!.weekAverage.text = viewModel.chartDataList[i].average.toString()
+
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
 

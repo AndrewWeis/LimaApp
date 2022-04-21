@@ -38,9 +38,9 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private fun initData() {
         chartViews = mutableListOf(
-            binding?.lineChartMonthAllTasks,
-            binding?.lineChartMonthCompletedTasks,
-            binding?.lineChartMonthUncompletedTasks)
+            binding!!.lineChartMonthAllTasks,
+            binding!!.lineChartMonthCompletedTasks,
+            binding!!.lineChartMonthUncompletedTasks)
 
         for (i in chartViews.indices) {
             chartViews[i]!!.setProgressBar(binding!!.progressBar)
@@ -58,6 +58,10 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     private fun initTasksChart() {
         for (i in viewModel.chartDataList.indices) {
             APIlib.getInstance().setActiveAnyChartView(chartViews[i])
+
+            binding!!.monthDate.text = viewModel.chartDataList[i].date
+            binding!!.monthAverage.text = viewModel.chartDataList[i].average.toString()
+
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
 

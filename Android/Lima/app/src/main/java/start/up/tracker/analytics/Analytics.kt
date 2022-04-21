@@ -20,7 +20,7 @@ class Analytics @Inject constructor(
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
-        val currentDayOfWeek: Int = calendar.get(Calendar.DAY_OF_WEEK)
+        val currentDayOfWeek: Int = (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
         var dayStat: DayStat? = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
@@ -53,7 +53,7 @@ class Analytics @Inject constructor(
             currentYear = calendar.get(Calendar.YEAR)
             currentMonth = calendar.get(Calendar.MONTH) + 1
             currentWeek = calendar.get(Calendar.WEEK_OF_YEAR) + 1
-            currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+            currentDayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7
             currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         } else {
             currentYear = TimeHelper.getCurrentYearFromMillis(date)
@@ -96,7 +96,7 @@ class Analytics @Inject constructor(
                 currentYear = calendar.get(Calendar.YEAR)
                 currentMonth = calendar.get(Calendar.MONTH) + 1
                 currentWeek = calendar.get(Calendar.WEEK_OF_YEAR) + 1
-                currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+                currentDayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7
                 currentDay = calendar.get(Calendar.DAY_OF_MONTH)
             } else {
                 currentYear = TimeHelper.getCurrentYearFromMillis(beforeDate)
@@ -128,7 +128,7 @@ class Analytics @Inject constructor(
                 currentYear = calendar.get(Calendar.YEAR)
                 currentMonth = calendar.get(Calendar.MONTH) + 1
                 currentWeek = calendar.get(Calendar.WEEK_OF_YEAR) + 1
-                currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+                currentDayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7
                 currentDay = calendar.get(Calendar.DAY_OF_MONTH)
             } else {
                 currentYear = TimeHelper.getCurrentYearFromMillis(afterDate)

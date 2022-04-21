@@ -11,13 +11,29 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         tools:context=".ui.fragments.analytics.AnalyticsWeekFragment">
 
+        <TextView
+            android:id="@+id/week_average"
+            style="@style/PublicSans.Black.Size14.Zero_W"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/week_date"
+            style="@style/PublicSans.Black.Size14.Zero_W"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/week_average" />
+
         <com.anychart.AnyChartView
             android:id="@+id/line_chart_week_completed_tasks"
             style="@style/M_H250"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/week_date" />
 
         <com.anychart.AnyChartView
             android:id="@+id/line_chart_week_all_tasks"
