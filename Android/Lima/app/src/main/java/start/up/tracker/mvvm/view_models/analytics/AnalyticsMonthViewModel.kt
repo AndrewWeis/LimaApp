@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
 import start.up.tracker.entities.DayStat
 import java.lang.StringBuilder
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -21,12 +23,26 @@ class AnalyticsMonthViewModel @Inject constructor(
     private val dao: AnalyticsDao,
 ) : ViewModel() {
 
-    inner class ChartData(d: MutableList<DataEntry>, t: String, n: String, a: Int, i: String) {
+    inner class ChartData(
+        d: MutableList<DataEntry>,
+        t: String,
+        n: String,
+        a: Double,
+        i: String,
+        l: Boolean,
+        f: String,
+    ) {
         val data = d
         val title = t
         val monthName = n
-        val average = a
+        val average = formatDouble(1, a)
         val date = i
+        val isLogarithmic = l
+        val format = f
+    }
+
+    private fun formatDouble(digits: Int, number: Double): Double {
+        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -42,7 +58,7 @@ class AnalyticsMonthViewModel @Inject constructor(
     private fun loadTasks() = viewModelScope.launch {
         loadCompletedTasks()
         loadAllTasks()
-        loadCompletedTasks()
+        loadProductivity()
 
         _statMonth.value = true
     }
@@ -80,8 +96,8 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "Completed tasks", currentMonthName, average,
-            currentDate))
+        chartDataList.add(ChartData(data, "Completed tasks", currentMonthName, average.toDouble(),
+            currentDate, false, "{%value}"))
     }
 
     private suspend fun loadAllTasks() {
@@ -116,7 +132,47 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "All tasks", currentMonthName, average,
-            currentDate))
+        chartDataList.add(ChartData(data, "All tasks", currentMonthName, average.toDouble(),
+            currentDate, false, "{%value}"))
+    }
+
+    private suspend fun loadProductivity() {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
+        val currentDate =
+            StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
+
+        calendar.set(currentYear, currentMonth, 1)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        val monthList: MutableMap<Int, Double> = mutableMapOf()
+
+        for (i in 1..maxDay) {
+            monthList[i] = 0.0
+        }
+
+        var sum = 0.0
+
+        stats.forEach {
+            if (it.completedTasks == 0 || it.allTasks == 0) {
+                monthList[it.day] = 0.0
+            } else {
+                monthList[it.day] = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+            }
+            sum += monthList[it.day]!!
+        }
+
+        val average = sum / maxDay
+
+        monthList.forEach {
+            data.add(ValueDataEntry(it.key.toString(), it.value))
+        }
+
+        chartDataList.add(ChartData(data, "Productivity", currentMonthName, average,
+            currentDate, false, "{%value}%"))
     }
 }

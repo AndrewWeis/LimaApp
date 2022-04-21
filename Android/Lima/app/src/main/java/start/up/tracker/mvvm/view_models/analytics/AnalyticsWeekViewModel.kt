@@ -9,10 +9,8 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
-import start.up.tracker.entities.DayStat
 import start.up.tracker.utils.TimeHelper
 import java.lang.StringBuilder
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -56,11 +54,15 @@ class AnalyticsWeekViewModel @Inject constructor(
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
         val data: MutableList<DataEntry> = ArrayList()
-        val currentDate = // TODO норм дата
-            StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
-                .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+        val currentDate =
+            StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis,
+                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+                .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis,
+                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+                .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis,
+                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
+                .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis,
+                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
                 .toString()
 
         calendar.set(currentYear, currentMonth, currentDay)
@@ -97,11 +99,15 @@ class AnalyticsWeekViewModel @Inject constructor(
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
         val data: MutableList<DataEntry> = ArrayList()
-        val currentDate = // TODO норм дата
-            StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
-                .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
-                .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis, (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+        val currentDate =
+            StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis,
+                (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+                .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis,
+                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
+                .append(TimeHelper.getEndOfWeekDayFromMillis(calendar.timeInMillis,
+                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" - ")
+                .append(TimeHelper.getEndOfWeekMonthNameFromMillis(calendar.timeInMillis,
+                    (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
                 .toString()
 
         calendar.set(currentYear, currentMonth, currentDay)

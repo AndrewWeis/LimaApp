@@ -40,7 +40,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chartViews = mutableListOf(
             binding!!.lineChartMonthAllTasks,
             binding!!.lineChartMonthCompletedTasks,
-            binding!!.lineChartMonthUncompletedTasks)
+            binding!!.lineChartMonthProductivity)
 
         for (i in chartViews.indices) {
             chartViews[i]!!.setProgressBar(binding!!.progressBar)
@@ -71,7 +71,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
                 .anchor(Anchor.CENTER_BOTTOM)
                 .offsetX(5.0)
                 .offsetY(5.0)
-                .format("Tasks: {%Value}{groupsSeparator: }");
+                .format(viewModel.chartDataList[i].title + ": {%Value}{groupsSeparator: }");
 
             chart.xAxis(0).labels().fontSize(10)
             chart.xAxis(0).title(viewModel.chartDataList[i].monthName)
@@ -79,6 +79,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             chart.yScale().minimumGap(1)
             chart.yScale().ticks().allowFractional(false);
             chart.yAxis(0).labels().fontSize(10)
+            chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 
             chart.title(viewModel.chartDataList[i].title)
             chart.title().fontSize(12)
