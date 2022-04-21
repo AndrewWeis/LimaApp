@@ -42,49 +42,12 @@ class AnalyticsWeekViewModel @Inject constructor(
     }
 
     private fun loadTasks() = viewModelScope.launch {
-        loadCompletedTasks()
         loadAllTasks()
+        loadCompletedTasks()
         loadProductivity()
         loadProductivityTendency()
 
         _statWeek.value = true
-    }
-
-    private suspend fun loadCompletedTasks() {
-        val calendar = Calendar.getInstance()
-        val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
-        val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
-        val stats = dao.getStatWeek(currentYear, currentWeek)
-
-        val data: MutableList<DataEntry> = ArrayList()
-        val currentDate = getCurrentDate(calendar, currentYear)
-
-        calendar.set(currentYear, currentMonth, currentDay)
-        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
-
-        val weekList: MutableMap<String, Int> = mutableMapOf()
-
-        for (i in 0 until maxDay) {
-            weekList[daysName[i]] = 0
-        }
-
-        var sum = 0
-
-        stats.forEach {
-            weekList[daysName[it.dayOfWeek - 1]] = it.completedTasks
-            sum += it.completedTasks
-        }
-
-        val average = sum / maxDay
-
-        weekList.forEach {
-            data.add(ValueDataEntry(it.key, it.value))
-        }
-
-        chartDataList.add(ChartData(data, "Completed tasks", average.toDouble(), currentDate,
-            "{%value}"))
     }
 
     private suspend fun loadAllTasks() {
@@ -124,6 +87,43 @@ class AnalyticsWeekViewModel @Inject constructor(
             "{%value}"))
     }
 
+    private suspend fun loadCompletedTasks() {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
+        val stats = dao.getStatWeek(currentYear, currentWeek)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentDate = getCurrentDate(calendar, currentYear)
+
+        calendar.set(currentYear, currentMonth, currentDay)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
+
+        val weekList: MutableMap<String, Int> = mutableMapOf()
+
+        for (i in 0 until maxDay) {
+            weekList[daysName[i]] = 0
+        }
+
+        var sum = 0
+
+        stats.forEach {
+            weekList[daysName[it.dayOfWeek - 1]] = it.completedTasks
+            sum += it.completedTasks
+        }
+
+        val average = sum / maxDay
+
+        weekList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        chartDataList.add(ChartData(data, "Completed tasks", average.toDouble(), currentDate,
+            "{%value}"))
+    }
+
     private suspend fun loadProductivity() {
         val calendar = Calendar.getInstance()
         val currentYear: Int = calendar.get(Calendar.YEAR)
@@ -154,8 +154,6 @@ class AnalyticsWeekViewModel @Inject constructor(
             } else {
                 weekList[daysName[it.dayOfWeek - 1]] =
                     it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
-            }
-            if (sum != 0.0) {
                 sum += weekList[daysName[it.dayOfWeek - 1]]!!
                 nonEmptyCounter++
             }
@@ -208,15 +206,12 @@ class AnalyticsWeekViewModel @Inject constructor(
                 sum += 1.0
             } else {
                 weekList[daysName[it.dayOfWeek - 1]] =
-                    it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
-            }
-
-            buf = weekList[daysName[it.dayOfWeek - 1]]!!
-
-            if (sum != 0.0) {
+                    (it.completedTasks.toDouble() / it.allTasks.toDouble() * 100) / buf * 100
                 sum += weekList[daysName[it.dayOfWeek - 1]]!!
                 nonEmptyCounter++
             }
+
+            buf = weekList[daysName[it.dayOfWeek - 1]]!!
         }
 
         val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {

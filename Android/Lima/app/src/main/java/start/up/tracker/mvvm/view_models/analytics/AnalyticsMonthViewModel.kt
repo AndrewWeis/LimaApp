@@ -39,10 +39,6 @@ class AnalyticsMonthViewModel @Inject constructor(
         val format = f
     }
 
-    private fun formatDouble(digits: Int, number: Double): Double {
-        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
-    }
-
     val chartDataList: MutableList<ChartData> = ArrayList()
 
     private var _statMonth: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -54,12 +50,48 @@ class AnalyticsMonthViewModel @Inject constructor(
     }
 
     private fun loadTasks() = viewModelScope.launch {
-        loadCompletedTasks()
         loadAllTasks()
+        loadCompletedTasks()
         loadProductivity()
         loadProductivityTendency()
 
         _statMonth.value = true
+    }
+
+    private suspend fun loadAllTasks() {
+        val calendar = Calendar.getInstance()
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
+        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
+        val currentDate =
+            StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
+
+        calendar.set(currentYear, currentMonth, 1)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        val monthList: MutableMap<Int, Int> = mutableMapOf()
+
+        for (i in 1..maxDay) {
+            monthList[i] = 0
+        }
+
+        var sum = 0
+
+        stats.forEach {
+            monthList[it.day] = it.allTasks
+            sum += it.allTasks
+        }
+
+        val average = sum / maxDay
+
+        monthList.forEach {
+            data.add(ValueDataEntry(it.key.toString(), it.value))
+        }
+
+        chartDataList.add(ChartData(data, "All tasks", currentMonthName, average.toDouble(),
+            currentDate, "{%value}"))
     }
 
     private suspend fun loadCompletedTasks() {
@@ -99,42 +131,6 @@ class AnalyticsMonthViewModel @Inject constructor(
             currentDate, "{%value}"))
     }
 
-    private suspend fun loadAllTasks() {
-        val calendar = Calendar.getInstance()
-        val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
-        val data: MutableList<DataEntry> = ArrayList()
-        val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
-        val currentDate =
-            StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
-
-        calendar.set(currentYear, currentMonth, 1)
-        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-
-        val monthList: MutableMap<Int, Int> = mutableMapOf()
-
-        for (i in 1..maxDay) {
-            monthList[i] = 0
-        }
-
-        var sum = 0
-
-        stats.forEach {
-            monthList[it.day] = it.allTasks
-            sum += it.allTasks
-        }
-
-        val average = sum / maxDay
-
-        monthList.forEach {
-            data.add(ValueDataEntry(it.key.toString(), it.value))
-        }
-
-        chartDataList.add(ChartData(data, "All tasks", currentMonthName, average.toDouble(),
-            currentDate, "{%value}"))
-    }
-
     private suspend fun loadProductivity() {
         val calendar = Calendar.getInstance()
         val currentYear: Int = calendar.get(Calendar.YEAR)
@@ -163,8 +159,6 @@ class AnalyticsMonthViewModel @Inject constructor(
                 sum += 1.0
             } else {
                 monthList[it.day] = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
-            }
-            if (sum != 0.0) {
                 sum += monthList[it.day]!!
                 nonEmptyCounter++
             }
@@ -216,14 +210,11 @@ class AnalyticsMonthViewModel @Inject constructor(
             } else {
                 monthList[it.day] =
                     (it.completedTasks.toDouble() / it.allTasks.toDouble() * 100) / buf * 100
-            }
-
-            buf = monthList[it.day]!!
-
-            if (sum != 0.0) {
                 sum += monthList[it.day]!!
                 nonEmptyCounter++
             }
+
+            buf = monthList[it.day]!!
         }
 
         val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
@@ -238,5 +229,10 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         chartDataList.add(ChartData(data, "Productivity Tendency", currentMonthName, average,
             currentDate, "{%value}%"))
+
+    }
+
+    private fun formatDouble(digits: Int, number: Double): Double {
+        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     }
 }
