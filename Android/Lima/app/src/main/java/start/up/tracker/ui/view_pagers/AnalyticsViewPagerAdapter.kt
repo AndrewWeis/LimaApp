@@ -6,19 +6,25 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import start.up.tracker.ui.fragments.analytics.AnalyticsYearFragment
 import start.up.tracker.ui.fragments.analytics.AnalyticsMonthFragment
+import start.up.tracker.ui.fragments.analytics.AnalyticsWeekFragment
 
-class AnalyticsViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fragmentManager, lifecycle) {
+class AnalyticsViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
         return 2
     }
 
     override fun createFragment(position: Int): Fragment {
-        return when(position){
-            0 -> { AnalyticsMonthFragment() }
-            1 -> { AnalyticsYearFragment()
+        return when (position) {
+            0 -> {
+                AnalyticsWeekFragment()
             }
-            /*2 -> { AnalyticsWeekFragment() }*/
-            else -> { Fragment() }
+            1 -> {
+                AnalyticsMonthFragment()
+            }
+            else -> {
+                Fragment()
+            }
         }
     }
 }

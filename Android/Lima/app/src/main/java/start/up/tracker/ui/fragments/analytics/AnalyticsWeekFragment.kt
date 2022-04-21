@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
@@ -60,7 +61,37 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
 
     private fun initTasksChart() {
 
-        val data: MutableList<DataEntry> = ArrayList()
+        for (i in viewModel.chartDataList.indices) {
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i]);
+            val chart = AnyChart.column()
+            val column = chart.column(viewModel.chartDataList[i].data)
+
+            column.tooltip()
+                .titleFormat("{%X}")
+                .position(Position.CENTER_BOTTOM)
+                .anchor(Anchor.CENTER_BOTTOM)
+                .offsetX(5.0)
+                .offsetY(5.0)
+                .format("Tasks: {%Value}{groupsSeparator: }");
+
+            chart.xAxis(0).labels().fontSize(10)
+
+            chart.yScale().minimumGap(1)
+            chart.yAxis(0).labels().fontSize(10)
+
+            chart.title(viewModel.chartDataList[i].title)
+            chart.title().fontSize(12)
+            chart.title().fontColor("#858585")
+
+            chart.animation(true)
+
+            chart.tooltip().positionMode(TooltipPositionMode.POINT)
+            chart.interactivity().hoverMode(HoverMode.BY_X)
+
+            chartViews[i]!!.setChart(chart)
+        }
+
+        /* data: MutableList<DataEntry> = ArrayList()
         data.add(ValueDataEntry("Mon", 7))
         data.add(ValueDataEntry("Tue", 10))
         data.add(ValueDataEntry("Wed", 6))
@@ -93,6 +124,6 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT)
         cartesian.interactivity().hoverMode(HoverMode.BY_X)
 
-        binding!!.lineChartWeekAllTasks.setChart(cartesian)
+        binding!!.lineChartWeekAllTasks.setChart(cartesian)*/
     }
 }

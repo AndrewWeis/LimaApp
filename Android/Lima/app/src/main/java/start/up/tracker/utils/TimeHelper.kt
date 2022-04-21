@@ -47,6 +47,13 @@ object TimeHelper {
         return calendar[Calendar.WEEK_OF_YEAR]
     }
 
+    fun getCurrentDayOfWeekFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.DAY_OF_WEEK]
+    }
+
     fun getCurrentDayFromMillis(millis: Long): Int {
         val calendar = Calendar.getInstance()
         calendar.clear()

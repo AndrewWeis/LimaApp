@@ -3,10 +3,7 @@ package start.up.tracker.analytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import start.up.tracker.database.dao.AnalyticsDao
-import start.up.tracker.database.dao.TaskAnalyticsDao
 import start.up.tracker.entities.DayStat
-import start.up.tracker.entities.Task
-import start.up.tracker.entities.TaskAnalytics
 import start.up.tracker.utils.TimeHelper
 import java.util.*
 import javax.inject.Inject
@@ -23,6 +20,7 @@ class Analytics @Inject constructor(
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        val currentDayOfWeek: Int = calendar.get(Calendar.DAY_OF_WEEK)
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
         var dayStat: DayStat? = analyticsDao.getStatDay(currentYear, currentMonth, currentDay)
@@ -30,6 +28,7 @@ class Analytics @Inject constructor(
         if (dayStat == null) {
             dayStat = DayStat(
                 day = currentDay,
+                dayOfWeek = currentDayOfWeek,
                 week = currentWeek,
                 month = currentMonth,
                 year = currentYear,
@@ -47,17 +46,20 @@ class Analytics @Inject constructor(
         val currentYear: Int
         val currentMonth: Int
         val currentWeek: Int
+        val currentDayOfWeek: Int
         val currentDay: Int
 
         if (date == null) {
             currentYear = calendar.get(Calendar.YEAR)
             currentMonth = calendar.get(Calendar.MONTH) + 1
             currentWeek = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+            currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
             currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         } else {
             currentYear = TimeHelper.getCurrentYearFromMillis(date)
             currentMonth = TimeHelper.getCurrentMonthFromMillis(date) + 1
             currentWeek = TimeHelper.getCurrentWeekFromMillis(date) + 1
+            currentDayOfWeek = TimeHelper.getCurrentDayOfWeekFromMillis(date)
             currentDay = TimeHelper.getCurrentDayFromMillis(date)
         }
 
@@ -67,6 +69,7 @@ class Analytics @Inject constructor(
             dayStat =
                 DayStat(
                     day = currentDay,
+                    dayOfWeek = currentDayOfWeek,
                     week = currentWeek,
                     month = currentMonth,
                     year = currentYear,
@@ -85,6 +88,7 @@ class Analytics @Inject constructor(
             var currentYear: Int
             var currentMonth: Int
             var currentWeek: Int
+            var currentDayOfWeek: Int
             var currentDay: Int
             var dayStat: DayStat?
 
@@ -92,11 +96,13 @@ class Analytics @Inject constructor(
                 currentYear = calendar.get(Calendar.YEAR)
                 currentMonth = calendar.get(Calendar.MONTH) + 1
                 currentWeek = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+                currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
                 currentDay = calendar.get(Calendar.DAY_OF_MONTH)
             } else {
                 currentYear = TimeHelper.getCurrentYearFromMillis(beforeDate)
                 currentMonth = TimeHelper.getCurrentMonthFromMillis(beforeDate) + 1
                 currentWeek = TimeHelper.getCurrentWeekFromMillis(beforeDate) + 1
+                currentDayOfWeek = TimeHelper.getCurrentDayOfWeekFromMillis(beforeDate)
                 currentDay = TimeHelper.getCurrentDayFromMillis(beforeDate)
             }
 
@@ -105,6 +111,7 @@ class Analytics @Inject constructor(
             if (dayStat == null) {
                 dayStat = DayStat(
                     day = currentDay,
+                    dayOfWeek = currentDayOfWeek,
                     week = currentWeek,
                     month = currentMonth,
                     year = currentYear,
@@ -121,11 +128,13 @@ class Analytics @Inject constructor(
                 currentYear = calendar.get(Calendar.YEAR)
                 currentMonth = calendar.get(Calendar.MONTH) + 1
                 currentWeek = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+                currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
                 currentDay = calendar.get(Calendar.DAY_OF_MONTH)
             } else {
                 currentYear = TimeHelper.getCurrentYearFromMillis(afterDate)
                 currentMonth = TimeHelper.getCurrentMonthFromMillis(afterDate) + 1
                 currentWeek = TimeHelper.getCurrentWeekFromMillis(afterDate) + 1
+                currentDayOfWeek = TimeHelper.getCurrentDayOfWeekFromMillis(afterDate)
                 currentDay = TimeHelper.getCurrentDayFromMillis(afterDate)
             }
 
@@ -134,6 +143,7 @@ class Analytics @Inject constructor(
             if (dayStat == null) {
                 dayStat = DayStat(
                     day = currentDay,
+                    dayOfWeek = currentDayOfWeek,
                     week = currentWeek,
                     month = currentMonth,
                     year = currentYear,

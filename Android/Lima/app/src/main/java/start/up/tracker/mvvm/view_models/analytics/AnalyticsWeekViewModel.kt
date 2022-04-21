@@ -26,6 +26,7 @@ class AnalyticsWeekViewModel @Inject constructor(
     }
 
     val chartDataList : MutableList<ChartData> = ArrayList()
+    private val daysName = listOf("Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun")
 
     private var _statWeek: MutableLiveData<Boolean> = MutableLiveData(false)
     val statMonth: LiveData<Boolean>
@@ -34,18 +35,18 @@ class AnalyticsWeekViewModel @Inject constructor(
     private val calendar = Calendar.getInstance()
     private val currentYear: Int = calendar.get(Calendar.YEAR)
     private val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-    val currentMonthName: String = SimpleDateFormat("MMMM").format(calendar.time)
+    private val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+    private val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
     init {
         loadTasks()
     }
 
     private fun loadTasks() = viewModelScope.launch {
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val stats = dao.getStatWeek(currentYear, currentWeek)
 
         loadCompletedTasks(stats)
         loadAllTasks(stats)
-        loadCompletedTasks(stats)
 
         _statWeek.value = true
     }
@@ -53,21 +54,21 @@ class AnalyticsWeekViewModel @Inject constructor(
     private fun loadCompletedTasks(stats: List<DayStat>) {
         val data: MutableList<DataEntry> = ArrayList()
 
-        calendar.set(currentYear, currentMonth, 1)
-        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendar.set(currentYear, currentMonth, currentDay)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
 
-        val monthList: MutableMap<Int, Int> = mutableMapOf()
+        val weekList: MutableMap<String, Int> = mutableMapOf()
 
-        for (i in 1..maxDay) {
-            monthList[i] = 0
+        for (i in 0 until maxDay) {
+            weekList[daysName[i]] = 0
         }
 
         stats.forEach {
-            monthList[it.day] = it.completedTasks
+            weekList[daysName[it.dayOfWeek - 1]] = it.completedTasks
         }
 
-        monthList.forEach {
-            data.add(ValueDataEntry(it.key.toString(), it.value))
+        weekList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
         }
 
         chartDataList.add(ChartData(data, "Completed tasks", ))
@@ -76,21 +77,21 @@ class AnalyticsWeekViewModel @Inject constructor(
     private fun loadAllTasks(stats: List<DayStat>) {
         val data: MutableList<DataEntry> = ArrayList()
 
-        calendar.set(currentYear, currentMonth, 1)
-        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendar.set(currentYear, currentMonth, currentDay)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_WEEK)
 
-        val monthList: MutableMap<Int, Int> = mutableMapOf()
+        val weekList: MutableMap<String, Int> = mutableMapOf()
 
-        for (i in 1..maxDay) {
-            monthList[i] = 0
+        for (i in 0 until maxDay) {
+            weekList[daysName[i]] = 0
         }
 
         stats.forEach {
-            monthList[it.day] = it.allTasks
+            weekList[daysName[it.dayOfWeek - 1]] = it.allTasks
         }
 
-        monthList.forEach {
-            data.add(ValueDataEntry(it.key.toString(), it.value))
+        weekList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
         }
 
         chartDataList.add(ChartData(data, "All tasks", ))
