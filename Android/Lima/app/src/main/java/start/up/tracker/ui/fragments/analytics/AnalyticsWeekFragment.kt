@@ -82,9 +82,13 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
                 .format(viewModel.chartDataList[i].title + ": {%Value}{groupsSeparator: }");
 
             chart.xAxis(0).labels().fontSize(10)
+            chart.xAxis(0).overlapMode("allowOverlap")
 
             chart.yScale().minimumGap(1)
-            chart.yScale().ticks().allowFractional(false);
+            chart.yScale().ticks().allowFractional(false)
+            if (viewModel.chartDataList[i].isSoftMaximum) {
+                chart.yScale().softMaximum(100)
+            }
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 

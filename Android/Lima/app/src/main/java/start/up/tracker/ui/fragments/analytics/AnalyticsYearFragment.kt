@@ -77,9 +77,13 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
 
             chart.xAxis(0).labels().fontSize(10)
             chart.xAxis(0).title(viewModel.chartDataList[i].yearName)
+            chart.xAxis(0).overlapMode("allowOverlap")
 
             chart.yScale().minimumGap(1)
-            chart.yScale().ticks().allowFractional(false);
+            chart.yScale().ticks().allowFractional(false)
+            if (viewModel.chartDataList[i].isSoftMaximum) {
+                chart.yScale().softMaximum(100)
+            }
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 

@@ -30,6 +30,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         a: Double,
         i: String,
         f: String,
+        s: Boolean
     ) {
         val data = d
         val title = t
@@ -37,6 +38,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         val average = formatDouble(1, a)
         val date = i
         val format = f
+        val isSoftMaximum = s
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -91,7 +93,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "All tasks", currentMonthName, average.toDouble(),
-            currentDate, "{%value}"))
+            currentDate, "{%value}", false))
     }
 
     private suspend fun loadCompletedTasks() {
@@ -128,7 +130,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Completed tasks", currentMonthName, average.toDouble(),
-            currentDate, "{%value}"))
+            currentDate, "{%value}", false))
     }
 
     private suspend fun loadProductivity() {
@@ -175,7 +177,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Productivity", currentMonthName, average,
-            currentDate, "{%value}%"))
+            currentDate, "{%value}%", true))
     }
 
     private suspend fun loadProductivityTendency() {
@@ -228,7 +230,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Productivity Tendency", currentMonthName, average,
-            currentDate, "{%value}%"))
+            currentDate, "{%value}%", true))
 
     }
 

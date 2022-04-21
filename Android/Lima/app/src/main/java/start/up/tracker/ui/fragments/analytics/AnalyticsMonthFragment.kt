@@ -79,7 +79,10 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             chart.xAxis(0).title(viewModel.chartDataList[i].monthName)
 
             chart.yScale().minimumGap(1)
-            chart.yScale().ticks().allowFractional(false);
+            chart.yScale().ticks().allowFractional(false)
+            if (viewModel.chartDataList[i].isSoftMaximum) {
+                chart.yScale().softMaximum(100)
+            }
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 

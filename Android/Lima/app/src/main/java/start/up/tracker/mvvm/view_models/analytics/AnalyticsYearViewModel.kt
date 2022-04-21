@@ -28,6 +28,7 @@ class AnalyticsYearViewModel @Inject constructor(
         a: Double,
         i: String,
         f: String,
+        s: Boolean
     ) {
         val data = d
         val title = t
@@ -35,6 +36,7 @@ class AnalyticsYearViewModel @Inject constructor(
         val average = formatDouble(1, a)
         val date = i
         val format = f
+        val isSoftMaximum = s
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -88,7 +90,7 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "All tasks", currentYearName, average.toDouble(),
-            currentYearName, "{%value}"))
+            currentYearName, "{%value}", false))
     }
 
     private suspend fun loadCompletedTasks() {
@@ -120,7 +122,7 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Completed tasks", currentYearName, average.toDouble(),
-            currentYearName, "{%value}"))
+            currentYearName, "{%value}", false))
     }
 
     private suspend fun loadProductivity() {
@@ -171,7 +173,7 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Productivity", currentYearName, average,
-            currentYearName, "{%value}%"))
+            currentYearName, "{%value}%", true))
     }
 
     private suspend fun loadProductivityTendency() {
@@ -227,8 +229,8 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity", currentYearName, average,
-            currentYearName, "{%value}%"))
+        chartDataList.add(ChartData(data, "Productivity Tendency", currentYearName, average,
+            currentYearName, "{%value}%", true))
     }
 
     private fun formatDouble(digits: Int, number: Double): Double {

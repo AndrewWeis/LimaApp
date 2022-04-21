@@ -22,12 +22,20 @@ class AnalyticsWeekViewModel @Inject constructor(
     private val dao: AnalyticsDao,
 ) : ViewModel() {
 
-    inner class ChartData(d: MutableList<DataEntry>, t: String, a: Double, i: String, f: String) {
+    inner class ChartData(
+        d: MutableList<DataEntry>,
+        t: String,
+        a: Double,
+        i: String,
+        f: String,
+        s: Boolean,
+    ) {
         val data = d
         val title = t
         val average = formatDouble(1, a)
         val date = i
         val format = f
+        val isSoftMaximum = s
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -84,7 +92,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "All tasks", average.toDouble(), currentDate,
-            "{%value}"))
+            "{%value}", false))
     }
 
     private suspend fun loadCompletedTasks() {
@@ -121,7 +129,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Completed tasks", average.toDouble(), currentDate,
-            "{%value}"))
+            "{%value}", false))
     }
 
     private suspend fun loadProductivity() {
@@ -170,7 +178,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Productivity", average, currentDate,
-            "{%value}%"))
+            "{%value}%", true))
     }
 
     private suspend fun loadProductivityTendency() {
@@ -225,14 +233,14 @@ class AnalyticsWeekViewModel @Inject constructor(
         }
 
         chartDataList.add(ChartData(data, "Productivity Tendency", average, currentDate,
-            "{%value}%"))
+            "{%value}%", true))
     }
 
     private fun formatDouble(digits: Int, number: Double): Double {
         return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
     }
 
-    private fun getCurrentDate(calendar: Calendar, currentYear : Int) : String {
+    private fun getCurrentDate(calendar: Calendar, currentYear: Int): String {
         return StringBuilder().append(TimeHelper.getStartOfWeekDayFromMillis(calendar.timeInMillis,
             (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)).append(" ")
             .append(TimeHelper.getStartOfWeekMonthNameFromMillis(calendar.timeInMillis,
