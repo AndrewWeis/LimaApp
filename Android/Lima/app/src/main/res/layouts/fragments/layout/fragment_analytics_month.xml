@@ -50,6 +50,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/line_chart_month_all_tasks" />
 
+        <com.anychart.AnyChartView
+            android:id="@+id/line_chart_month_productivity_tendency"
+            style="@style/M_H250"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_chart_month_productivity" />
+
         <ProgressBar
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"

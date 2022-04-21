@@ -40,7 +40,9 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chartViews = mutableListOf(
             binding!!.lineChartMonthAllTasks,
             binding!!.lineChartMonthCompletedTasks,
-            binding!!.lineChartMonthProductivity)
+            binding!!.lineChartMonthProductivity,
+            binding!!.lineChartMonthProductivityTendency
+        )
 
         for (i in chartViews.indices) {
             chartViews[i]!!.setProgressBar(binding!!.progressBar)
