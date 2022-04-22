@@ -121,6 +121,9 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
             if (viewModel.chartDataList[i].isSoftMaximum) {
                 chart.yScale().softMaximum(100)
             }
+            if (viewModel.chartDataList[i].isSoftMinimum) {
+                chart.yScale().softMinimum(-100)
+            }
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 

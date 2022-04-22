@@ -29,7 +29,8 @@ class AnalyticsMonthViewModel @Inject constructor(
         av: String,
         de: String,
         fo: String,
-        so: Boolean,
+        smax: Boolean,
+        smin: Boolean,
         sh: Int,
         dn: String,
     ) {
@@ -38,7 +39,8 @@ class AnalyticsMonthViewModel @Inject constructor(
         var average = av
         var date = de
         val format = fo
-        val isSoftMaximum = so
+        val isSoftMaximum = smax
+        val isSoftMinimum = smin
         var shift = sh
         val description = dn
     }
@@ -118,7 +120,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "All tasks", formatDouble(1, average).toString(),
-            currentDate, "{%value}", false, shift,
+            currentDate, "{%value}", false, false, shift,
             "Number of all your tasks in the month"
         ))
     }
@@ -158,7 +160,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(),
-            currentDate, "{%value}", false, shift,
+            currentDate, "{%value}", false, false, shift,
             "Number of your completed tasks in the month"
         ))
     }
@@ -209,7 +211,7 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         return (ChartData(data, "Productivity",
             formatDouble(1, average).toString() + "%",
-            currentDate, "{%value}%", true, shift,
+            currentDate, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in the month to all created tasks"
         ))
     }
@@ -239,19 +241,21 @@ class AnalyticsMonthViewModel @Inject constructor(
         var buf = 0.0
 
         stats.forEach {
-            if (buf == 0.0) {
-                buf = 100.0
-            }
             if (it.completedTasks == 0 || it.allTasks == 0) {
                 monthList[it.day] = 0.0
+                buf = 0.0
             } else {
-                monthList[it.day] =
-                    (it.completedTasks.toDouble() / it.allTasks.toDouble() * 100) / buf * 100
+                val new = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+                if (new == 0.0) {
+                    monthList[it.day] = 0.0
+                    buf = 0.0
+                } else {
+                    monthList[it.day] = (new - buf) / new * 100
+                    buf = new
+                }
                 sum += monthList[it.day]!!
                 nonEmptyCounter++
             }
-
-            buf = monthList[it.day]!!
         }
 
         val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
@@ -266,7 +270,7 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         return (ChartData(data, "Productivity Tendency",
             formatDouble(1, average).toString() + "%",
-            currentDate, "{%value}%", true, shift,
+            currentDate, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous day of the month"
         ))
 

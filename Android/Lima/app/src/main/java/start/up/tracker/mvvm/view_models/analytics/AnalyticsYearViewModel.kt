@@ -27,7 +27,8 @@ class AnalyticsYearViewModel @Inject constructor(
         av: String,
         de: String,
         fo: String,
-        so: Boolean,
+        smax: Boolean,
+        smin: Boolean,
         sh: Int,
         dn: String,
     ) {
@@ -36,7 +37,8 @@ class AnalyticsYearViewModel @Inject constructor(
         var average = av
         var date = de
         val format = fo
-        val isSoftMaximum = so
+        val isSoftMaximum = smax
+        val isSoftMinimum = smin
         var shift = sh
         val description = dn
     }
@@ -115,7 +117,7 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         return ChartData(data, "All tasks", formatDouble(1, average).toString(),
-            currentYearName, "{%value}", false, shift,
+            currentYearName, "{%value}", false, false, shift,
             "Number of all your tasks in months of the year"
         )
     }
@@ -150,7 +152,7 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(),
-            currentYearName, "{%value}", false, shift,
+            currentYearName, "{%value}", false, false, shift,
             "Number of your completed tasks in months of the year"
         ))
     }
@@ -196,14 +198,18 @@ class AnalyticsYearViewModel @Inject constructor(
             }
         }
 
-        val average = sum / nonEmptyCounter
+        val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
+            0.0
+        } else {
+            sum / nonEmptyCounter
+        }
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
         return (ChartData(data, "Productivity", formatDouble(1, average).toString() + "%",
-            currentYearName, "{%value}%", true, shift,
+            currentYearName, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in months of the year to all created tasks"
         ))
     }
@@ -240,22 +246,29 @@ class AnalyticsYearViewModel @Inject constructor(
         var buf = 0.0
 
         for (i in 1..12) {
-            if (buf == 0.0) {
-                buf = 100.0
-            }
             if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
                 yearList[month[i - 1]] = 0.0
+                buf = 0.0
             } else {
-                yearList[month[i - 1]] = (yearListCompleted[month[i - 1]]!!.toDouble() /
-                        yearListAll[month[i - 1]]!!.toDouble() * 100) / buf * 100
+                val new = yearListCompleted[month[i - 1]]!!.toDouble() /
+                        yearListAll[month[i - 1]]!!.toDouble() * 100
+                if (new == 0.0) {
+                    yearList[month[i - 1]] = 0.0
+                    buf = 0.0
+                } else {
+                    yearList[month[i - 1]] = (new - buf) / new * 100
+                    buf = new
+                }
                 sum += yearList[month[i - 1]]!!
                 nonEmptyCounter++
             }
-
-            buf = yearList[month[i - 1]]!!
         }
 
-        val average = sum / nonEmptyCounter
+        val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
+            0.0
+        } else {
+            sum / nonEmptyCounter
+        }
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
@@ -263,7 +276,7 @@ class AnalyticsYearViewModel @Inject constructor(
 
         return (ChartData(data, "Productivity Tendency",
             formatDouble(1, average).toString() + "%",
-            currentYearName, "{%value}%", true, shift,
+            currentYearName, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous month of the year"
         ))
     }
