@@ -78,7 +78,7 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
             }
             chartViews[i]!!.rightButton.setOnClickListener {
                 viewModel.update(i, 1)
-                viewModel.statWeek.observe(viewLifecycleOwner) {
+                viewModel.statWeek2.observe(viewLifecycleOwner) {
                     if (it == true) {
                         drawTasksChart(i)
                     }
