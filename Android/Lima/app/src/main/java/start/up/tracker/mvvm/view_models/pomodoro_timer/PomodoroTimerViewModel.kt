@@ -15,7 +15,7 @@ import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.TimerDataStore
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.entities.Task
-import start.up.tracker.ui.dialogs.pomodoro_timer.PomodoroTimer
+import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
 
 @HiltViewModel

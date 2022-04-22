@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import start.up.tracker.R
 import start.up.tracker.databinding.TimerModeDialogFragmentBinding
+import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import start.up.tracker.utils.screens.ExtraCodes
 
 class TimerModeDialogFragment :

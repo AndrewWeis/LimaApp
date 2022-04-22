@@ -12,8 +12,6 @@ import start.up.tracker.databinding.PomodoroTimerFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel.TimerEvent
-import start.up.tracker.ui.dialogs.pomodoro_timer.BaseTimer
-import start.up.tracker.ui.dialogs.pomodoro_timer.PomodoroTimer
 import start.up.tracker.ui.fragments.base.BaseNavigationFragment
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils

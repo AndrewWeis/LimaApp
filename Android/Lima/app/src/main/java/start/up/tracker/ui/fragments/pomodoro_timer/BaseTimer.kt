@@ -1,4 +1,4 @@
-package start.up.tracker.ui.dialogs.pomodoro_timer
+package start.up.tracker.ui.fragments.pomodoro_timer
 
 import android.os.CountDownTimer
 import androidx.lifecycle.LiveData

@@ -8,8 +8,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import start.up.tracker.database.TimerDataStore.TimerKeys.DATA_STORE_NAME
-import start.up.tracker.ui.dialogs.pomodoro_timer.BaseTimer
-import start.up.tracker.ui.dialogs.pomodoro_timer.PomodoroTimer
+import start.up.tracker.ui.fragments.pomodoro_timer.BaseTimer
+import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
 import javax.inject.Singleton
 
