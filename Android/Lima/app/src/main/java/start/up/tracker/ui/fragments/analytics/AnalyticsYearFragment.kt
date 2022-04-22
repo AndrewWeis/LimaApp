@@ -13,6 +13,7 @@ import com.anychart.enums.Position
 import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
+import start.up.tracker.databinding.ChartLayoutBinding
 import start.up.tracker.databinding.FragmentAnalyticsYearBinding
 import start.up.tracker.mvvm.view_models.analytics.AnalyticsYearViewModel
 
@@ -21,7 +22,7 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
 
     private val viewModel: AnalyticsYearViewModel by viewModels()
     private var binding: FragmentAnalyticsYearBinding? = null
-    private var chartViews: MutableList<AnyChartView?> = ArrayList()
+    private var chartViews: MutableList<ChartLayoutBinding?> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,6 +30,7 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
 
         initData()
         initObservers()
+        initListeners()
     }
 
     override fun onDestroyView() {
@@ -38,14 +40,14 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
 
     private fun initData() {
         chartViews = mutableListOf(
-            binding!!.lineChartYearAllTasks,
-            binding!!.lineChartYearCompletedTasks,
-            binding!!.lineChartYearProductivity,
-            binding!!.lineChartYearProductivityTendency
+            binding!!.graphAllTasks,
+            binding!!.graphCompletedTasks,
+            binding!!.graphProductivity,
+            binding!!.graphProductivityTendency
         )
 
         for (i in chartViews.indices) {
-            chartViews[i]!!.setProgressBar(binding!!.progressBar)
+            chartViews[i]!!.chart.setProgressBar(binding!!.progressBar)
         }
     }
     
@@ -57,12 +59,27 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
         }
     }
 
+    private fun initListeners() {
+        /*for (i in chartViews.indices) {
+            chartViews[i]!!.leftButton.setOnClickListener{
+                viewModel.chartDataList[i].updateAllTasks(-1)
+            }
+            chartViews[i]!!.rightButton .setOnClickListener{
+                viewModel.chartDataList[i].updateAllTasks(-1)
+            }
+        }*/
+    }
+
     private fun initTasksChart() {
         for (i in viewModel.chartDataList.indices) {
-            APIlib.getInstance().setActiveAnyChartView(chartViews[i])
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
 
-            binding!!.yearDate.text = viewModel.chartDataList[i].date
-            binding!!.yearAverage.text = viewModel.chartDataList[i].average.toString()
+            chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
+            chartViews[i]!!.descriptionText.text = "Description"
+            chartViews[i]!!.leftButton.text = "left"
+            chartViews[i]!!.rightButton.text = "right"
+            chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
+            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
 
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
@@ -76,7 +93,6 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
                 .format(viewModel.chartDataList[i].title + ": {%Value}{groupsSeparator: }");
 
             chart.xAxis(0).labels().fontSize(10)
-            chart.xAxis(0).title(viewModel.chartDataList[i].yearName)
             chart.xAxis(0).overlapMode("allowOverlap")
 
             chart.yScale().minimumGap(1)
@@ -87,7 +103,6 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 
-            chart.title(viewModel.chartDataList[i].title)
             chart.title().fontSize(12)
             chart.title().fontColor("#858585")
 
@@ -96,7 +111,7 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
             chart.tooltip().positionMode(TooltipPositionMode.POINT)
             chart.interactivity().hoverMode(HoverMode.BY_X)
 
-            chartViews[i]!!.setChart(chart)
+            chartViews[i]!!.chart.setChart(chart)
         }
     }
 }

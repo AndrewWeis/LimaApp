@@ -90,9 +90,13 @@
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/activities/layout/activity_main.xml" value="0.14375" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/add_project_fragment.xml" value="0.14375" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_month.xml" value="0.152" />
+        <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_month2.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_week.xml" value="0.11503623188405797" />
+        <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_week2.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_year.xml" value="0.10960144927536232" />
+        <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_year2.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/calendar_task_item.xml" value="0.14375" />
+        <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/chart_layout.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_categories.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_today_tasks.xml" value="0.3625" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/fragment_upcoming.xml" value="0.3625" />

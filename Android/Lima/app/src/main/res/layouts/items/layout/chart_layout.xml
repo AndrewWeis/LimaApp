@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/title_text"
+        style="@style/PublicSans.Black.Size14.Zero_W"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Average"/>
+
+    <TextView
+        android:id="@+id/description_text"
+        style="@style/PublicSans.Black.Size14.Zero_W"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_text"
+        tools:text="Average"/>
+
+    <TextView
+        android:id="@+id/average_text"
+        style="@style/PublicSans.Black.Size14.Zero_W"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/description_text"
+        tools:text="Average"/>
+
+    <TextView
+        android:id="@+id/date_text"
+        style="@style/PublicSans.Black.Size14.Zero_W"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@id/right_button"
+        app:layout_constraintStart_toEndOf="@id/left_button"
+        app:layout_constraintTop_toBottomOf="@id/average_text"
+        tools:text="Date"/>
+
+    <Button
+        android:id="@+id/left_button"
+        style="@style/Contained.WorkSans.Size16.Black"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        app:layout_constraintEnd_toStartOf="@id/date_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/average_text" />
+
+    <Button
+        android:id="@+id/right_button"
+        style="@style/Contained.WorkSans.Size16.Black"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/date_text"
+        app:layout_constraintTop_toBottomOf="@id/average_text" />
+
+    <com.anychart.AnyChartView
+        android:id="@+id/chart"
+        style="@style/M_H250"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

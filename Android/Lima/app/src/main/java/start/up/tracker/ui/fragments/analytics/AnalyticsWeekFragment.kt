@@ -15,6 +15,7 @@ import com.anychart.enums.Position
 import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
+import start.up.tracker.databinding.ChartLayoutBinding
 import start.up.tracker.databinding.FragmentAnalyticsMonthBinding
 import start.up.tracker.databinding.FragmentAnalyticsWeekBinding
 import start.up.tracker.mvvm.view_models.analytics.AnalyticsMonthViewModel
@@ -26,7 +27,7 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
 
     private val viewModel: AnalyticsWeekViewModel by viewModels()
     private var binding: FragmentAnalyticsWeekBinding? = null
-    private var chartViews: MutableList<AnyChartView?> = ArrayList()
+    private var chartViews: MutableList<ChartLayoutBinding?> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -43,14 +44,14 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
 
     private fun initData() {
         chartViews = mutableListOf(
-            binding?.lineChartWeekAllTasks,
-            binding?.lineChartWeekCompletedTasks,
-            binding?.lineChartWeekProductivity,
-            binding?.lineChartWeekProductivityTendency
+            binding!!.graphAllTasks,
+            binding!!.graphCompletedTasks,
+            binding!!.graphProductivity,
+            binding!!.graphProductivityTendency
         )
 
         for (i in chartViews.indices) {
-            chartViews[i]!!.setProgressBar(binding!!.progressBar)
+            chartViews[i]!!.chart.setProgressBar(binding!!.progressBar)
         }
     }
 
@@ -65,10 +66,14 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
     private fun initTasksChart() {
 
         for (i in viewModel.chartDataList.indices) {
-            APIlib.getInstance().setActiveAnyChartView(chartViews[i])
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
 
-            binding!!.weekDate.text = viewModel.chartDataList[i].date
-            binding!!.weekAverage.text = viewModel.chartDataList[i].average.toString()
+            chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
+            chartViews[i]!!.descriptionText.text = "Description"
+            chartViews[i]!!.leftButton.text = "left"
+            chartViews[i]!!.rightButton.text = "right"
+            chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
+            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
 
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
@@ -92,7 +97,6 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 
-            chart.title(viewModel.chartDataList[i].title)
             chart.title().fontSize(12)
             chart.title().fontColor("#858585")
 
@@ -101,7 +105,7 @@ class AnalyticsWeekFragment : Fragment(R.layout.fragment_analytics_week) {
             chart.tooltip().positionMode(TooltipPositionMode.POINT)
             chart.interactivity().hoverMode(HoverMode.BY_X)
 
-            chartViews[i]!!.setChart(chart)
+            chartViews[i]!!.chart.setChart(chart)
         }
     }
 }

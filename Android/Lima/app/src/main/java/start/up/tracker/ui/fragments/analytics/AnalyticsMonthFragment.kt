@@ -13,6 +13,7 @@ import com.anychart.enums.Position
 import com.anychart.enums.TooltipPositionMode
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
+import start.up.tracker.databinding.ChartLayoutBinding
 import start.up.tracker.databinding.FragmentAnalyticsMonthBinding
 import start.up.tracker.mvvm.view_models.analytics.AnalyticsMonthViewModel
 
@@ -21,7 +22,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private val viewModel: AnalyticsMonthViewModel by viewModels()
     private var binding: FragmentAnalyticsMonthBinding? = null
-    private var chartViews: MutableList<AnyChartView?> = ArrayList()
+    private var chartViews: MutableList<ChartLayoutBinding?> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,14 +39,14 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private fun initData() {
         chartViews = mutableListOf(
-            binding!!.lineChartMonthAllTasks,
-            binding!!.lineChartMonthCompletedTasks,
-            binding!!.lineChartMonthProductivity,
-            binding!!.lineChartMonthProductivityTendency
+            binding!!.graphAllTasks,
+            binding!!.graphCompletedTasks,
+            binding!!.graphProductivity,
+            binding!!.graphProductivityTendency
         )
 
         for (i in chartViews.indices) {
-            chartViews[i]!!.setProgressBar(binding!!.progressBar)
+            chartViews[i]!!.chart.setProgressBar(binding!!.progressBar)
         }
     }
 
@@ -59,10 +60,14 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
     private fun initTasksChart() {
         for (i in viewModel.chartDataList.indices) {
-            APIlib.getInstance().setActiveAnyChartView(chartViews[i])
+            APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
 
-            binding!!.monthDate.text = viewModel.chartDataList[i].date
-            binding!!.monthAverage.text = viewModel.chartDataList[i].average.toString()
+            chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
+            chartViews[i]!!.descriptionText.text = "Description"
+            chartViews[i]!!.leftButton.text = "left"
+            chartViews[i]!!.rightButton.text = "right"
+            chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
+            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
 
             val chart = AnyChart.column()
             val column = chart.column(viewModel.chartDataList[i].data)
@@ -76,7 +81,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
                 .format(viewModel.chartDataList[i].title + ": {%Value}{groupsSeparator: }");
 
             chart.xAxis(0).labels().fontSize(10)
-            chart.xAxis(0).title(viewModel.chartDataList[i].monthName)
 
             chart.yScale().minimumGap(1)
             chart.yScale().ticks().allowFractional(false)
@@ -86,7 +90,6 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             chart.yAxis(0).labels().fontSize(10)
             chart.yAxis(0).labels().format(viewModel.chartDataList[i].format)
 
-            chart.title(viewModel.chartDataList[i].title)
             chart.title().fontSize(12)
             chart.title().fontColor("#858585")
 
@@ -95,7 +98,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             chart.tooltip().positionMode(TooltipPositionMode.POINT)
             chart.interactivity().hoverMode(HoverMode.BY_X)
 
-            chartViews[i]!!.setChart(chart)
+            chartViews[i]!!.chart.setChart(chart)
         }
 
     }

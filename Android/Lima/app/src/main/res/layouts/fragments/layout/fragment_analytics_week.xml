@@ -5,59 +5,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MW">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        style="@style/MM"
+    <LinearLayout
+        style="@style/LVMW"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
-        tools:context=".ui.fragments.analytics.AnalyticsWeekFragment">
+        tools:context=".ui.fragments.analytics.AnalyticsYearFragment">
 
-        <TextView
-            android:id="@+id/week_average"
-            style="@style/PublicSans.Black.Size14.Zero_W"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <include layout="@layout/chart_layout"
+            android:id="@+id/graph_all_tasks"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            style="@style/MW" />
 
-        <TextView
-            android:id="@+id/week_date"
-            style="@style/PublicSans.Black.Size14.Zero_W"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week_average" />
+        <include layout="@layout/chart_layout"
+            android:id="@+id/graph_completed_tasks"
+            style="@style/MW" />
 
-        <com.anychart.AnyChartView
-            android:id="@+id/line_chart_week_completed_tasks"
-            style="@style/M_H250"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/week_date" />
+        <include layout="@layout/chart_layout"
+            android:id="@+id/graph_productivity"
+            style="@style/MW" />
 
-        <com.anychart.AnyChartView
-            android:id="@+id/line_chart_week_all_tasks"
-            style="@style/M_H250"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_chart_week_completed_tasks" />
-
-        <com.anychart.AnyChartView
-            android:id="@+id/line_chart_week_productivity"
-            style="@style/M_H250"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_chart_week_all_tasks" />
-
-        <com.anychart.AnyChartView
-            android:id="@+id/line_chart_week_productivity_tendency"
-            style="@style/M_H250"
-            android:layout_marginTop="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/line_chart_week_productivity" />
+        <include layout="@layout/chart_layout"
+            android:id="@+id/graph_productivity_tendency"
+            style="@style/MW" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -68,6 +37,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </ScrollView>
