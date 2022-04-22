@@ -8,8 +8,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import start.up.tracker.database.TimerDataStore.TimerKeys.DATA_STORE_NAME
-import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
-import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimerFragment
+import start.up.tracker.ui.dialogs.pomodoro_timer.BaseTimer
+import start.up.tracker.ui.dialogs.pomodoro_timer.PomodoroTimer
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +25,7 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
 
     val timerState: Flow<Int>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.TIMER_STATE] ?: PomodoroTimer.TIMER_STATE_INITIAL
+            preferences[TimerKeys.TIMER_STATE] ?: BaseTimer.TIMER_STATE_INITIAL
         }
 
     val timerIteration: Flow<Int>
@@ -35,12 +35,12 @@ class TimerDataStore @Inject constructor(@ApplicationContext context: Context) {
 
     val timerRestTime: Flow<Long>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.TIMER_REST_TIME] ?: PomodoroTimer.POMODORO_REST_SHORT
+            preferences[TimerKeys.TIMER_REST_TIME] ?: PomodoroTimer.POMODORO_REST_LONG
         }
 
     val timerMode: Flow<Int>
         get() = dataStore.data.map { preferences ->
-            preferences[TimerKeys.TIMER_MODE] ?: PomodoroTimerFragment.CLOSEST_TASK_MODE
+            preferences[TimerKeys.TIMER_MODE] ?: PomodoroTimer.CLOSEST_TASK_MODE
         }
 
     suspend fun saveSecondsRemaining(secondsRemaining: Long) {

@@ -7,12 +7,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.databinding.PomodoroTimerFragmentBinding
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel
 import start.up.tracker.mvvm.view_models.pomodoro_timer.PomodoroTimerViewModel.TimerEvent
+import start.up.tracker.ui.dialogs.pomodoro_timer.BaseTimer
+import start.up.tracker.ui.dialogs.pomodoro_timer.PomodoroTimer
 import start.up.tracker.ui.fragments.base.BaseNavigationFragment
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
@@ -25,11 +26,11 @@ class PomodoroTimerFragment :
     private var binding: PomodoroTimerFragmentBinding? = null
     private val viewModel: PomodoroTimerViewModel by viewModels()
 
+    private var isInRestoreState = true
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = PomodoroTimerFragmentBinding.bind(view)
-
-        setupTimer()
 
         setupObservers()
         setupListeners()
@@ -44,22 +45,20 @@ class PomodoroTimerFragment :
         binding = null
     }
 
-    private fun setupTimer() = lifecycleScope.launch {
-        viewModel.timer.recoverSavedState()
-        viewModel.timer.setupTimerLength()
-        viewModel.timer.initCountDownTimer()
-    }
-
     private fun setupObservers() {
         viewModel.timer.timerState.observe(viewLifecycleOwner) { state ->
             updateButtons(state)
+
+            if (state == BaseTimer.TIMER_STATE_STOPPED) {
+                viewModel.saveTimerState()
+            }
         }
 
         viewModel.timer.secondsRemaining.observe(viewLifecycleOwner) { secondsRemaining ->
             updateCurrentTimeText(secondsRemaining)
         }
 
-        viewModel.timerMode.observe(viewLifecycleOwner) { mode ->
+        viewModel.timer.timerMode.observe(viewLifecycleOwner) { mode ->
             updateTimerMode(mode)
         }
 
@@ -68,20 +67,30 @@ class PomodoroTimerFragment :
         }
 
         viewModel.timer.timerIteration.observe(viewLifecycleOwner) { iteration ->
-            if (viewModel.timerMode.value!! == CLOSEST_TASK_MODE && iteration % 2 == 1) {
-                updateTaskPomodoros()
+            if (isInRestoreState) {
+                return@observe
             }
 
-            if (iteration % 2 == 1) {
-                startTimerAfterWorkTime()
+            viewModel.timer.handlePhases(iteration)
+
+            if (viewModel.timer.isRestPhase(iteration)) {
+                updateTaskPomodoros()
             }
+        }
+
+        viewModel.timer.timerPhase.observe(viewLifecycleOwner) { phase ->
+            updateButtonsDependingOnPhase(phase)
         }
     }
 
-    private fun startTimerAfterWorkTime() {
-        binding?.timerStartButton?.visibility = View.GONE
-        viewModel.timer.initCountDownTimer()
-        viewModel.timer.startTimer()
+    private fun updateButtonsDependingOnPhase(phase: Int) {
+        if (phase == PomodoroTimer.REST_PHASE) {
+            binding?.timerPauseButton?.visibility = View.GONE
+            binding?.timerSkipButton?.visibility = View.VISIBLE
+            return
+        }
+
+        binding?.timerSkipButton?.visibility = View.GONE
     }
 
     private fun updateClosestTask(task: Task?) {
@@ -98,30 +107,28 @@ class PomodoroTimerFragment :
     }
 
     private fun updateTaskPomodoros() {
-        binding?.task?.completedPomodorosText?.text = viewModel.getCompletedPomodoros().toString()
-        binding?.task?.totalPomodorosText?.text = viewModel.getTotalPomodoros().toString()
-        viewModel.updateCompletedPomodoros(viewModel.getCompletedPomodoros() + 1)
+        val completed = viewModel.getCompletedPomodoros()
+        val total = viewModel.getTotalPomodoros()
+        if (completed != null && total != null) {
+            binding?.task?.completedPomodorosText?.text = completed.toString()
+            binding?.task?.totalPomodorosText?.text = total.toString()
+            viewModel.updateCompletedPomodoros(completed + 1)
+        }
     }
 
     private fun updateTimerMode(mode: Int) {
         when (mode) {
-            CLOSEST_TASK_MODE -> {
-                isClosestTaskVisible(true)
-                viewModel.onClosestTaskModeSelected()
-                setupTimer()
+            PomodoroTimer.CLOSEST_TASK_MODE -> {
+                viewModel.closestTaskModeWasSelected(isInRestoreState)
             }
-            FREE_MODE -> {
-                isClosestTaskVisible(false)
+            PomodoroTimer.FREE_MODE -> {
+                setClosestTaskVisibility(false)
                 setNotFoundMessageVisibility(false)
-                setupTimer()
+                viewModel.freeModeWasSelected(isInRestoreState)
             }
         }
-    }
 
-    private fun isClosestTaskVisible(isVisible: Boolean) {
-        binding?.task?.closestTaskLayout?.apply {
-            visibility = if (isVisible) View.VISIBLE else View.GONE
-        }
+        isInRestoreState = false
     }
 
     private fun hideTimerRelatedButtons() {
@@ -176,27 +183,21 @@ class PomodoroTimerFragment :
 
     private fun updateButtons(state: Int) {
         when (state) {
-            PomodoroTimer.TIMER_STATE_INITIAL, PomodoroTimer.TIMER_STATE_STOPPED -> {
+            BaseTimer.TIMER_STATE_INITIAL, BaseTimer.TIMER_STATE_STOPPED -> {
                 binding?.timerStartButton?.visibility = View.VISIBLE
                 binding?.timerPauseButton?.visibility = View.GONE
                 binding?.timerStopButton?.visibility = View.GONE
                 binding?.timerContinueButton?.visibility = View.GONE
                 binding?.timerSkipButton?.visibility = View.GONE
             }
-            PomodoroTimer.TIMER_STATE_RUNNING -> {
+            BaseTimer.TIMER_STATE_RUNNING -> {
                 binding?.timerStartButton?.visibility = View.GONE
                 binding?.timerPauseButton?.visibility = View.VISIBLE
                 binding?.timerStopButton?.visibility = View.GONE
                 binding?.timerContinueButton?.visibility = View.GONE
                 binding?.timerSkipButton?.visibility = View.GONE
-
-                // if it is the rest iteration
-                if (viewModel.timer.iteration % 2 == 1) {
-                    binding?.timerPauseButton?.visibility = View.GONE
-                    binding?.timerSkipButton?.visibility = View.VISIBLE
-                }
             }
-            PomodoroTimer.TIMER_STATE_PAUSED -> {
+            BaseTimer.TIMER_STATE_PAUSED -> {
                 binding?.timerStartButton?.visibility = View.GONE
                 binding?.timerPauseButton?.visibility = View.GONE
                 binding?.timerStopButton?.visibility = View.VISIBLE
@@ -215,43 +216,39 @@ class PomodoroTimerFragment :
 
     private fun setupListeners() {
         binding?.timerStartButton?.setOnClickListener {
-            viewModel.timer.initCountDownTimer()
-            viewModel.timer.startTimer()
+            viewModel.onTimerStartButtonClicked()
         }
 
         binding?.timerPauseButton?.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.timer.pauseTimer()
-            }
+            viewModel.onTimerPauseButtonClicked()
+            viewModel.saveTimerState()
         }
 
         binding?.timerStopButton?.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.timer.stopTimer()
-            }
+            viewModel.onTimerStopButtonClicked()
+            viewModel.saveTimerState()
         }
 
         binding?.timerContinueButton?.setOnClickListener {
-            viewModel.timer.initCountDownTimer(viewModel.timer.secondsRemaining.value!!)
-            viewModel.timer.startTimer()
+            viewModel.onContinueButtonClicked()
         }
 
         binding?.timerSkipButton?.setOnClickListener {
-            viewModel.timer.skipTimer()
+            viewModel.onSkipButtonClicked()
         }
 
         binding?.timerRestTimeButton?.setOnClickListener {
             if (!areTimerSettingsAvailable()) {
                 return@setOnClickListener
             }
-            viewModel.onRestTimeButtonClick()
+            viewModel.onRestTimeButtonClicked()
         }
 
         binding?.timerModeButton?.setOnClickListener {
             if (!areTimerSettingsAvailable()) {
                 return@setOnClickListener
             }
-            viewModel.onModeButtonClick()
+            viewModel.onModeButtonClicked()
         }
 
         binding?.task?.taskCheckBox?.let { checkBox ->
@@ -264,8 +261,8 @@ class PomodoroTimerFragment :
     }
 
     private fun areTimerSettingsAvailable(): Boolean {
-        val timerState = viewModel.timer.timerState.value!!
-        if (timerState == PomodoroTimer.TIMER_STATE_RUNNING || timerState == PomodoroTimer.TIMER_STATE_PAUSED) {
+        val timerState = viewModel.timer.getTimerState()
+        if (timerState == BaseTimer.TIMER_STATE_RUNNING || timerState == BaseTimer.TIMER_STATE_PAUSED) {
             makeSnackbar(ResourcesUtils.getString(R.string.error_timer_settings))
             return false
         }
@@ -295,19 +292,12 @@ class PomodoroTimerFragment :
     private fun setupResultListeners() {
         setFragmentResultListener(ExtraCodes.REST_TIME_REQUEST) { requestKey, bundle ->
             val restTime = bundle.getLong(requestKey)
-            lifecycleScope.launch {
-                viewModel.timer.handleRestTime(restTime)
-            }
+            viewModel.onTimerRestTimeChanged(restTime)
         }
 
         setFragmentResultListener(ExtraCodes.TIMER_MODE_REQUEST) { requestKey, bundle ->
             val timerMode = bundle.getInt(requestKey)
-            viewModel.handleTimerMode(timerMode)
+            viewModel.onTimerModeChanged(timerMode)
         }
-    }
-
-    companion object {
-        const val CLOSEST_TASK_MODE = 1
-        const val FREE_MODE = 2
     }
 }
