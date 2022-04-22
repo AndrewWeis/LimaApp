@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
+import com.anychart.charts.Cartesian
 import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode
 import com.anychart.enums.Position
@@ -23,6 +24,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
     private val viewModel: AnalyticsMonthViewModel by viewModels()
     private var binding: FragmentAnalyticsMonthBinding? = null
     private var chartViews: MutableList<ChartLayoutBinding?> = ArrayList()
+    private var charts: MutableList<Cartesian> = ArrayList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,6 +32,7 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
         initData()
         initObservers()
+        initListeners()
     }
 
     override fun onDestroyView() {
@@ -58,18 +61,42 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         }
     }
 
+    private fun initListeners() {
+        for (i in chartViews.indices) {
+            chartViews[i]!!.leftButton.setOnClickListener {
+                viewModel.update(i, -1)
+                viewModel.statMonth2.observe(viewLifecycleOwner) {
+                    if (it == true) {
+                        drawTasksChart(i)
+                    }
+                }
+            }
+            chartViews[i]!!.rightButton.setOnClickListener {
+                viewModel.update(i, 1)
+                viewModel.statMonth2.observe(viewLifecycleOwner) {
+                    if (it == true) {
+                        drawTasksChart(i)
+                    }
+                }
+            }
+        }
+    }
+
     private fun initTasksChart() {
         for (i in viewModel.chartDataList.indices) {
             APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
 
             chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
-            chartViews[i]!!.descriptionText.text = "Description"
+            chartViews[i]!!.descriptionText.text = viewModel.chartDataList[i].description
             chartViews[i]!!.leftButton.text = "left"
             chartViews[i]!!.rightButton.text = "right"
             chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
             chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
 
             val chart = AnyChart.column()
+
+            charts.add(chart)
+
             val column = chart.column(viewModel.chartDataList[i].data)
 
             column.tooltip()
@@ -100,6 +127,18 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
 
             chartViews[i]!!.chart.setChart(chart)
         }
+    }
 
+    private fun drawTasksChart(i: Int) {
+        APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
+
+        chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
+        chartViews[i]!!.descriptionText.text = viewModel.chartDataList[i].description
+        chartViews[i]!!.leftButton.text = "left"
+        chartViews[i]!!.rightButton.text = "right"
+        chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
+        chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average
+
+        charts[i].data(viewModel.chartDataList[i].data)
     }
 }

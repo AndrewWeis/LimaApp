@@ -86,11 +86,11 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
             APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
 
             chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
-            chartViews[i]!!.descriptionText.text = "Description"
+            chartViews[i]!!.descriptionText.text = viewModel.chartDataList[i].description
             chartViews[i]!!.leftButton.text = "left"
             chartViews[i]!!.rightButton.text = "right"
             chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
-            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
+            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average
 
             val chart = AnyChart.column()
 
@@ -133,11 +133,11 @@ class AnalyticsYearFragment : Fragment(R.layout.fragment_analytics_year) {
         APIlib.getInstance().setActiveAnyChartView(chartViews[i]!!.chart)
 
         chartViews[i]!!.titleText.text = viewModel.chartDataList[i].title
-        chartViews[i]!!.descriptionText.text = "Description"
+        chartViews[i]!!.descriptionText.text = viewModel.chartDataList[i].description
         chartViews[i]!!.leftButton.text = "left"
         chartViews[i]!!.rightButton.text = "right"
         chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
-        chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
+        chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average
 
         charts[i].data(viewModel.chartDataList[i].data)
     }

@@ -24,21 +24,41 @@ class AnalyticsMonthViewModel @Inject constructor(
 ) : ViewModel() {
 
     inner class ChartData(
-        d: MutableList<DataEntry>,
-        t: String,
-        n: String,
-        a: Double,
-        i: String,
-        f: String,
-        s: Boolean
+        da: MutableList<DataEntry>,
+        ti: String,
+        av: String,
+        de: String,
+        fo: String,
+        so: Boolean,
+        sh: Int,
+        dn: String,
     ) {
-        val data = d
-        val title = t
-        val monthName = n
-        val average = formatDouble(1, a)
-        val date = i
-        val format = f
-        val isSoftMaximum = s
+        var data = da
+        val title = ti
+        var average = av
+        var date = de
+        val format = fo
+        val isSoftMaximum = so
+        var shift = sh
+        val description = dn
+    }
+
+    fun update(id: Int, sh: Int) = viewModelScope.launch {
+        when (chartDataList[id].title) {
+            "All tasks" -> {
+                chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
+            }
+            "Completed tasks" -> {
+                chartDataList[id] = loadCompletedTasks(sh + chartDataList[id].shift)
+            }
+            "Productivity" -> {
+                chartDataList[id] = loadProductivity(sh + chartDataList[id].shift)
+            }
+            "Productivity Tendency" ->
+                chartDataList[id] = loadProductivityTendency(sh + chartDataList[id].shift)
+        }
+
+        _statMonth2.value = true
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -47,21 +67,26 @@ class AnalyticsMonthViewModel @Inject constructor(
     val statMonth: LiveData<Boolean>
         get() = _statMonth
 
+    private var _statMonth2: MutableLiveData<Boolean> = MutableLiveData(false)
+    val statMonth2: LiveData<Boolean>
+        get() = _statMonth2
+
     init {
         loadTasks()
     }
 
     private fun loadTasks() = viewModelScope.launch {
-        loadAllTasks()
-        loadCompletedTasks()
-        loadProductivity()
-        loadProductivityTendency()
+        chartDataList.add(loadAllTasks(0))
+        chartDataList.add(loadCompletedTasks(0))
+        chartDataList.add(loadProductivity(0))
+        chartDataList.add(loadProductivityTendency(0))
 
         _statMonth.value = true
     }
 
-    private suspend fun loadAllTasks() {
+    private suspend fun loadAllTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val stats = dao.getStatMonth(currentYear, currentMonth)
@@ -86,18 +111,21 @@ class AnalyticsMonthViewModel @Inject constructor(
             sum += it.allTasks
         }
 
-        val average = sum / maxDay
+        val average = sum.toDouble() / maxDay.toDouble()
 
         monthList.forEach {
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "All tasks", currentMonthName, average.toDouble(),
-            currentDate, "{%value}", false))
+        return (ChartData(data, "All tasks", formatDouble(1, average).toString(),
+            currentDate, "{%value}", false, shift,
+            "Number of all your tasks in the month"
+        ))
     }
 
-    private suspend fun loadCompletedTasks() {
+    private suspend fun loadCompletedTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val stats = dao.getStatMonth(currentYear, currentMonth)
@@ -123,18 +151,21 @@ class AnalyticsMonthViewModel @Inject constructor(
             sum += it.completedTasks
         }
 
-        val average = sum / maxDay
+        val average = sum.toDouble() / maxDay.toDouble()
 
         monthList.forEach {
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "Completed tasks", currentMonthName, average.toDouble(),
-            currentDate, "{%value}", false))
+        return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(),
+            currentDate, "{%value}", false, shift,
+            "Number of your completed tasks in the month"
+        ))
     }
 
-    private suspend fun loadProductivity() {
+    private suspend fun loadProductivity(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val stats = dao.getStatMonth(currentYear, currentMonth)
@@ -176,12 +207,16 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity", currentMonthName, average,
-            currentDate, "{%value}%", true))
+        return (ChartData(data, "Productivity",
+            formatDouble(1, average).toString() + "%",
+            currentDate, "{%value}%", true, shift,
+            "The ratio of all tasks you completed in the month to all created tasks"
+        ))
     }
 
-    private suspend fun loadProductivityTendency() {
+    private suspend fun loadProductivityTendency(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val stats = dao.getStatMonth(currentYear, currentMonth)
@@ -229,8 +264,11 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity Tendency", currentMonthName, average,
-            currentDate, "{%value}%", true))
+        return (ChartData(data, "Productivity Tendency",
+            formatDouble(1, average).toString() + "%",
+            currentDate, "{%value}%", true, shift,
+            "The ratio of your productivity compared to the previous day of the month"
+        ))
 
     }
 

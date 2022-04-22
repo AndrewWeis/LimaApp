@@ -23,40 +23,42 @@ class AnalyticsWeekViewModel @Inject constructor(
 ) : ViewModel() {
 
     inner class ChartData(
-        d: MutableList<DataEntry>,
-        t: String,
-        a: Double,
-        i: String,
-        f: String,
-        s: Boolean,
-        h: Int,
+        da: MutableList<DataEntry>,
+        ti: String,
+        av: String,
+        de: String,
+        fo: String,
+        so: Boolean,
+        sh: Int,
+        dn: String,
     ) {
-        val data = d
-        val title = t
-        val average = formatDouble(1, a)
-        val date = i
-        val format = f
-        val isSoftMaximum = s
-        var shift = h
+        var data = da
+        val title = ti
+        var average = av
+        var date = de
+        val format = fo
+        val isSoftMaximum = so
+        var shift = sh
+        val description = dn
     }
 
-        fun update(id: Int, sh: Int) = viewModelScope.launch {
-            when (chartDataList[id].title) {
-                "All tasks" -> {
-                    chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
-                }
-                "Completed tasks" -> {
-                    chartDataList[id] = loadCompletedTasks(sh + chartDataList[id].shift)
-                }
-                "Productivity" -> {
-                    chartDataList[id] = loadProductivity(sh + chartDataList[id].shift)
-                }
-                "Productivity Tendency" ->
-                    chartDataList[id] = loadProductivityTendency(sh + chartDataList[id].shift)
+    fun update(id: Int, sh: Int) = viewModelScope.launch {
+        when (chartDataList[id].title) {
+            "All tasks" -> {
+                chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
             }
-
-            _statWeek2.value = true
+            "Completed tasks" -> {
+                chartDataList[id] = loadCompletedTasks(sh + chartDataList[id].shift)
+            }
+            "Productivity" -> {
+                chartDataList[id] = loadProductivity(sh + chartDataList[id].shift)
+            }
+            "Productivity Tendency" ->
+                chartDataList[id] = loadProductivityTendency(sh + chartDataList[id].shift)
         }
+
+        _statWeek2.value = true
+    }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
     private val daysName = listOf("Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun")
@@ -110,14 +112,16 @@ class AnalyticsWeekViewModel @Inject constructor(
             sum += it.allTasks
         }
 
-        val average = sum / maxDay
+        val average = sum.toDouble() / maxDay.toDouble()
 
         weekList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "All tasks", average.toDouble(), currentDate,
-            "{%value}", false, shift))
+        return (ChartData(data, "All tasks", formatDouble(1, average).toString(), currentDate,
+            "{%value}", false, shift,
+            "Number of all your tasks in the week"
+        ))
     }
 
     private suspend fun loadCompletedTasks(shift: Int): ChartData {
@@ -148,14 +152,16 @@ class AnalyticsWeekViewModel @Inject constructor(
             sum += it.completedTasks
         }
 
-        val average = sum / maxDay
+        val average = sum.toDouble() / maxDay.toDouble()
 
         weekList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Completed tasks", average.toDouble(), currentDate,
-            "{%value}", false, shift))
+        return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(), currentDate,
+            "{%value}", false, shift,
+            "Number of your completed tasks in the week"
+        ))
     }
 
     private suspend fun loadProductivity(shift: Int): ChartData {
@@ -204,8 +210,10 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity", average, currentDate,
-            "{%value}%", true, shift))
+        return (ChartData(data, "Productivity", formatDouble(1, average).toString() + "%",
+            currentDate, "{%value}%", true, shift,
+            "The ratio of all tasks you completed in the week to all created tasks"
+        ))
     }
 
     private suspend fun loadProductivityTendency(shift: Int): ChartData {
@@ -260,8 +268,11 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity Tendency", average, currentDate,
-            "{%value}%", true, shift))
+        return (ChartData(data, "Productivity Tendency",
+            formatDouble(1, average).toString() + "%",
+            currentDate, "{%value}%", true, shift,
+            "The ratio of your productivity compared to the previous day of the week"
+        ))
     }
 
     private fun formatDouble(digits: Int, number: Double): Double {

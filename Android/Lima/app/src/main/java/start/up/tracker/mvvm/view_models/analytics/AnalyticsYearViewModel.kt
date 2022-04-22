@@ -22,24 +22,26 @@ class AnalyticsYearViewModel @Inject constructor(
 ) : ViewModel() {
 
     inner class ChartData(
-        d: MutableList<DataEntry>,
-        t: String,
-        a: Double,
-        i: String,
-        f: String,
-        s: Boolean,
-        h: Int
+        da: MutableList<DataEntry>,
+        ti: String,
+        av: String,
+        de: String,
+        fo: String,
+        so: Boolean,
+        sh: Int,
+        dn: String,
     ) {
-        var data = d
-        val title = t
-        var average = formatDouble(1, a)
-        var date = i
-        val format = f
-        val isSoftMaximum = s
-        var shift = h
+        var data = da
+        val title = ti
+        var average = av
+        var date = de
+        val format = fo
+        val isSoftMaximum = so
+        var shift = sh
+        val description = dn
     }
 
-    fun update(id : Int, sh: Int) = viewModelScope.launch {
+    fun update(id: Int, sh: Int) = viewModelScope.launch {
         when (chartDataList[id].title) {
             "All tasks" -> {
                 chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
@@ -106,14 +108,16 @@ class AnalyticsYearViewModel @Inject constructor(
             sum += yearList[month[it.month - 1]]!!
         }
 
-        val average = sum / 12
+        val average = sum.toDouble() / 12
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return ChartData(data, "All tasks", average.toDouble(),
-            currentYearName, "{%value}", false, shift)
+        return ChartData(data, "All tasks", formatDouble(1, average).toString(),
+            currentYearName, "{%value}", false, shift,
+            "Number of all your tasks in months of the year"
+        )
     }
 
     private suspend fun loadCompletedTasks(shift: Int): ChartData {
@@ -139,14 +143,16 @@ class AnalyticsYearViewModel @Inject constructor(
             sum += yearList[month[it.month - 1]]!!
         }
 
-        val average = sum / 12
+        val average = sum.toDouble() / 12
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Completed tasks", average.toDouble(),
-            currentYearName, "{%value}", false, shift))
+        return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(),
+            currentYearName, "{%value}", false, shift,
+            "Number of your completed tasks in months of the year"
+        ))
     }
 
     private suspend fun loadProductivity(shift: Int): ChartData {
@@ -182,7 +188,6 @@ class AnalyticsYearViewModel @Inject constructor(
         for (i in 1..12) {
             if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
                 yearList[month[i - 1]] = 0.0
-                sum += 1.0
             } else {
                 yearList[month[i - 1]] = yearListCompleted[month[i - 1]]!!.toDouble() /
                         yearListAll[month[i - 1]]!!.toDouble() * 100
@@ -191,14 +196,16 @@ class AnalyticsYearViewModel @Inject constructor(
             }
         }
 
-        val average = sum / 12
+        val average = sum / nonEmptyCounter
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity", average,
-            currentYearName, "{%value}%", true, shift))
+        return (ChartData(data, "Productivity", formatDouble(1, average).toString() + "%",
+            currentYearName, "{%value}%", true, shift,
+            "The ratio of all tasks you completed in months of the year to all created tasks"
+        ))
     }
 
     private suspend fun loadProductivityTendency(shift: Int): ChartData {
@@ -238,7 +245,6 @@ class AnalyticsYearViewModel @Inject constructor(
             }
             if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
                 yearList[month[i - 1]] = 0.0
-                sum += 1.0
             } else {
                 yearList[month[i - 1]] = (yearListCompleted[month[i - 1]]!!.toDouble() /
                         yearListAll[month[i - 1]]!!.toDouble() * 100) / buf * 100
@@ -249,14 +255,17 @@ class AnalyticsYearViewModel @Inject constructor(
             buf = yearList[month[i - 1]]!!
         }
 
-        val average = sum / 12
+        val average = sum / nonEmptyCounter
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity Tendency", average,
-            currentYearName, "{%value}%", true, shift))
+        return (ChartData(data, "Productivity Tendency",
+            formatDouble(1, average).toString() + "%",
+            currentYearName, "{%value}%", true, shift,
+            "The ratio of your productivity compared to the previous month of the year"
+        ))
     }
 
     private fun formatDouble(digits: Int, number: Double): Double {
