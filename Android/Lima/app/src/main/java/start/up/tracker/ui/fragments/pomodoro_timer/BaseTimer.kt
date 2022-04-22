@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.first
 import start.up.tracker.database.TimerDataStore
+import start.up.tracker.utils.TimeHelper
 
 open class BaseTimer(
     private val timerDataStore: TimerDataStore,
@@ -23,7 +24,7 @@ open class BaseTimer(
     var timerLength = DEFAULT_TIMER_LENGTH
 
     open suspend fun recoverTimerState() {
-        _timerIteration.postValue(timerDataStore.timerIteration.first())
+        _timerIteration.value = timerDataStore.timerIteration.first()
 
         val seconds = timerDataStore.secondsRemaining.first()
         timerLength = seconds
@@ -36,6 +37,7 @@ open class BaseTimer(
         timerDataStore.saveTimerIteration(getTimerIteration())
         timerDataStore.saveSecondsRemaining(getSecondsRemaining())
         timerDataStore.saveTimerState(getTimerState())
+        timerDataStore.saveLeftTime(TimeHelper.getCurrentTimeInMilliseconds() / 1000L)
     }
 
     open fun initCountDownTimer() {
@@ -86,8 +88,17 @@ open class BaseTimer(
         startTimer()
     }
 
-    fun restoreRunningState() {
-        timerLength = getSecondsRemaining()
+    suspend fun restoreRunningState() {
+        val leftTime = timerDataStore.leftTime.first()
+        val currentTime = TimeHelper.getCurrentTimeInMilliseconds() / 1000L
+        val difference = currentTime - leftTime
+
+        timerLength = if (leftTime != 0L || difference <= getSecondsRemaining()) {
+            getSecondsRemaining() - difference
+        } else {
+            getSecondsRemaining()
+        }
+
         initCountDownTimer()
         startTimer()
     }

@@ -129,7 +129,7 @@ class PomodoroTimerViewModel @Inject constructor(
         timer.saveTimerState()
     }
 
-    fun onRunningStateRestore() {
+    fun onRunningStateRestore() = viewModelScope.launch {
         timer.restoreRunningState()
     }
 

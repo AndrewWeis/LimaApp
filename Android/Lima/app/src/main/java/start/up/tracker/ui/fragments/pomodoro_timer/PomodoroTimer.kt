@@ -22,6 +22,11 @@ class PomodoroTimer(
         super.recoverTimerState()
         _timerMode.postValue(timerDataStore.timerMode.first())
         restTime = timerDataStore.timerRestTime.first()
+        _timerPhase.value = getPhaseFromIteration(getTimerIteration())
+    }
+
+    private fun getPhaseFromIteration(iteration: Int): Int {
+        return if (iteration % 2 == 1) REST_PHASE else WORK_PHASE
     }
 
     override fun stopTimer() {
@@ -69,6 +74,10 @@ class PomodoroTimer(
         _timerMode.postValue(mode)
     }
 
+    fun getTimerPhase(): Int {
+        return timerPhase.value!!
+    }
+
     private fun getTimerLengthOfPhase(): Long {
         return if (isRestPhase(getTimerIteration())) {
             restTime
@@ -88,9 +97,9 @@ class PomodoroTimer(
     }
 
     companion object {
-        const val POMODORO_WORK_TIME = 6L
-        const val POMODORO_REST_SHORT = 2L
-        const val POMODORO_REST_LONG = 4L
+        const val POMODORO_WORK_TIME = 12L
+        const val POMODORO_REST_SHORT = 4L
+        const val POMODORO_REST_LONG = 8L
 
         const val CLOSEST_TASK_MODE = 1
         const val FREE_MODE = 2

@@ -203,6 +203,8 @@ class PomodoroTimerFragment :
                 binding?.timerStopButton?.visibility = View.GONE
                 binding?.timerContinueButton?.visibility = View.GONE
                 binding?.timerSkipButton?.visibility = View.GONE
+
+                updateButtonsDependingOnPhase(viewModel.timer.getTimerPhase())
             }
             BaseTimer.TIMER_STATE_PAUSED -> {
                 binding?.timerStartButton?.visibility = View.GONE
