@@ -129,6 +129,10 @@ class PomodoroTimerViewModel @Inject constructor(
         timer.saveTimerState()
     }
 
+    fun onRunningStateRestore() {
+        timer.restoreRunningState()
+    }
+
     sealed class TimerEvent {
         data class NavigateToRestTimeDialog(val restTime: Long) : TimerEvent()
         data class NavigateToModeDialog(val mode: Int) : TimerEvent()

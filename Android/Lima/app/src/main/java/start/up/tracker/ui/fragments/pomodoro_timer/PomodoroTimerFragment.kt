@@ -50,10 +50,15 @@ class PomodoroTimerFragment :
             if (state == BaseTimer.TIMER_STATE_STOPPED) {
                 viewModel.saveTimerState()
             }
+
+            if (state == BaseTimer.TIMER_STATE_RUNNING && isInRestoreState) {
+                viewModel.onRunningStateRestore()
+            }
         }
 
         viewModel.timer.secondsRemaining.observe(viewLifecycleOwner) { secondsRemaining ->
             updateCurrentTimeText(secondsRemaining)
+            viewModel.saveTimerState()
         }
 
         viewModel.timer.timerMode.observe(viewLifecycleOwner) { mode ->
@@ -66,6 +71,10 @@ class PomodoroTimerFragment :
 
         viewModel.timer.timerIteration.observe(viewLifecycleOwner) { iteration ->
             if (isInRestoreState) {
+                // обновить кнопки при восстановлении состояния для фазы отдыха
+                if (viewModel.timer.isRestPhase(iteration)) {
+                    updateButtonsDependingOnPhase(PomodoroTimer.REST_PHASE)
+                }
                 return@observe
             }
 

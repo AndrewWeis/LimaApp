@@ -86,6 +86,12 @@ open class BaseTimer(
         startTimer()
     }
 
+    fun restoreRunningState() {
+        timerLength = getSecondsRemaining()
+        initCountDownTimer()
+        startTimer()
+    }
+
     fun setSecondsRemaining(seconds: Long) {
         _secondsRemaining.postValue(seconds)
     }
