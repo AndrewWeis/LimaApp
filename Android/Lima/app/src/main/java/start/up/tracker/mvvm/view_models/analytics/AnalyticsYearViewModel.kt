@@ -28,6 +28,7 @@ class AnalyticsYearViewModel @Inject constructor(
         i: String,
         f: String,
         s: Boolean,
+        h: Int
     ) {
         var data = d
         val title = t
@@ -35,40 +36,25 @@ class AnalyticsYearViewModel @Inject constructor(
         var date = i
         val format = f
         val isSoftMaximum = s
+        var shift = h
+    }
 
-        suspend fun updateAllTasks(shift: Int) {
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - shift)
-            val currentYear: Int = calendar.get(Calendar.YEAR)
-            val stats = dao.getStatYear(currentYear)
-
-            val data: MutableList<DataEntry> = ArrayList()
-            val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
-
-            val yearList: MutableMap<String, Int> = mutableMapOf()
-
-            for (i in 0 until 12) {
-                yearList[month[i]] = 0
+    fun update(id : Int, sh: Int) = viewModelScope.launch {
+        when (chartDataList[id].title) {
+            "All tasks" -> {
+                chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
             }
-
-            var sum = 0
-
-            stats.forEach {
-                val currentValue = yearList[month[it.month - 1]]
-                yearList[month[it.month - 1]] = currentValue!! + it.allTasks
-                sum += yearList[month[it.month - 1]]!!
+            "Completed tasks" -> {
+                chartDataList[id] = loadCompletedTasks(sh + chartDataList[id].shift)
             }
-
-            val average = sum / 12
-
-            yearList.forEach {
-                data.add(ValueDataEntry(it.key, it.value))
+            "Productivity" -> {
+                chartDataList[id] = loadProductivity(sh + chartDataList[id].shift)
             }
-
-            this.data = data
-            this.average = average.toDouble()
-            this.date = currentYearName
+            "Productivity Tendency" ->
+                chartDataList[id] = loadProductivityTendency(sh + chartDataList[id].shift)
         }
+
+        _statYear2.value = true
     }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
@@ -80,22 +66,26 @@ class AnalyticsYearViewModel @Inject constructor(
     val statYear: LiveData<Boolean>
         get() = _statYear
 
+    private var _statYear2: MutableLiveData<Boolean> = MutableLiveData()
+    val statYear2: LiveData<Boolean>
+        get() = _statYear2
+
     init {
         loadTasks()
     }
 
     private fun loadTasks() = viewModelScope.launch {
-        loadAllTasks(0)
-        loadCompletedTasks(0)
-        loadProductivity(0)
-        loadProductivityTendency(0)
+        chartDataList.add(loadAllTasks(0))
+        chartDataList.add(loadCompletedTasks(0))
+        chartDataList.add(loadProductivity(0))
+        chartDataList.add(loadProductivityTendency(0))
 
         _statYear.value = true
     }
 
-    private suspend fun loadAllTasks(shift: Int) {
+    private suspend fun loadAllTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - shift)
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val stats = dao.getStatYear(currentYear)
 
@@ -122,13 +112,13 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "All tasks", average.toDouble(),
-            currentYearName, "{%value}", false))
+        return ChartData(data, "All tasks", average.toDouble(),
+            currentYearName, "{%value}", false, shift)
     }
 
-    private suspend fun loadCompletedTasks(shift: Int) {
+    private suspend fun loadCompletedTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - shift)
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val stats = dao.getStatYear(currentYear)
 
@@ -155,13 +145,13 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Completed tasks", average.toDouble(),
-            currentYearName, "{%value}", false))
+        return (ChartData(data, "Completed tasks", average.toDouble(),
+            currentYearName, "{%value}", false, shift))
     }
 
-    private suspend fun loadProductivity(shift: Int) {
+    private suspend fun loadProductivity(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - shift)
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val stats = dao.getStatYear(currentYear)
 
@@ -207,13 +197,13 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity", average,
-            currentYearName, "{%value}%", true))
+        return (ChartData(data, "Productivity", average,
+            currentYearName, "{%value}%", true, shift))
     }
 
-    private suspend fun loadProductivityTendency(shift: Int) {
+    private suspend fun loadProductivityTendency(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - shift)
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val stats = dao.getStatYear(currentYear)
 
@@ -265,8 +255,8 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity Tendency", average,
-            currentYearName, "{%value}%", true))
+        return (ChartData(data, "Productivity Tendency", average,
+            currentYearName, "{%value}%", true, shift))
     }
 
     private fun formatDouble(digits: Int, number: Double): Double {
