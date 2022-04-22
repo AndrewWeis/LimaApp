@@ -119,7 +119,7 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        return (ChartData(data, "All tasks", formatDouble(1, average).toString(),
+        return (ChartData(data, "All tasks", formatDouble(average),
             currentDate, "{%value}", false, false, shift,
             "Number of all your tasks in the month"
         ))
@@ -159,7 +159,7 @@ class AnalyticsMonthViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(),
+        return (ChartData(data, "Completed tasks", formatDouble(average),
             currentDate, "{%value}", false, false, shift,
             "Number of your completed tasks in the month"
         ))
@@ -210,7 +210,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity",
-            formatDouble(1, average).toString() + "%",
+            formatDouble(average) + "%",
             currentDate, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in the month to all created tasks"
         ))
@@ -269,14 +269,20 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity Tendency",
-            formatDouble(1, average).toString() + "%",
+            formatDouble(average) + "%",
             currentDate, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous day of the month"
         ))
 
     }
 
-    private fun formatDouble(digits: Int, number: Double): Double {
-        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    private fun formatDouble(number: Double): String {
+        val str = BigDecimal(number).setScale(1, RoundingMode.HALF_EVEN).toString()
+        val lastSymbol = str.substring(str.length - 1)
+        return if (lastSymbol == "0") {
+            str.substring(0, str.length - 2);
+        } else {
+            str
+        }
     }
 }

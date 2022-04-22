@@ -116,7 +116,7 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return ChartData(data, "All tasks", formatDouble(1, average).toString(),
+        return ChartData(data, "All tasks", formatDouble(average),
             currentYearName, "{%value}", false, false, shift,
             "Number of all your tasks in months of the year"
         )
@@ -151,7 +151,7 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(),
+        return (ChartData(data, "Completed tasks", formatDouble(average),
             currentYearName, "{%value}", false, false, shift,
             "Number of your completed tasks in months of the year"
         ))
@@ -208,7 +208,7 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity", formatDouble(1, average).toString() + "%",
+        return (ChartData(data, "Productivity", formatDouble(average) + "%",
             currentYearName, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in months of the year to all created tasks"
         ))
@@ -274,14 +274,19 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity Tendency",
-            formatDouble(1, average).toString() + "%",
+        return (ChartData(data, "Productivity Tendency", formatDouble(average) + "%",
             currentYearName, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous month of the year"
         ))
     }
 
-    private fun formatDouble(digits: Int, number: Double): Double {
-        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    private fun formatDouble(number: Double): String {
+        val str = BigDecimal(number).setScale(1, RoundingMode.HALF_EVEN).toString()
+        val lastSymbol = str.substring(str.length - 1)
+        return if (lastSymbol == "0") {
+            str.substring(0, str.length - 2);
+        } else {
+            str
+        }
     }
 }

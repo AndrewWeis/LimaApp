@@ -88,7 +88,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
     private suspend fun loadAllTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -120,7 +120,7 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "All tasks", formatDouble(1, average).toString(), currentDate,
+        return (ChartData(data, "All tasks", formatDouble(average), currentDate,
             "{%value}", false, false, shift,
             "Number of all your tasks in the week"
         ))
@@ -128,7 +128,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
     private suspend fun loadCompletedTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -160,7 +160,7 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Completed tasks", formatDouble(1, average).toString(), currentDate,
+        return (ChartData(data, "Completed tasks", formatDouble( average), currentDate,
             "{%value}", false,false, shift,
             "Number of your completed tasks in the week"
         ))
@@ -168,7 +168,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
     private suspend fun loadProductivity(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -212,7 +212,7 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity", formatDouble(1, average).toString() + "%",
+        return (ChartData(data, "Productivity", formatDouble(average) + "%",
             currentDate, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in the week to all created tasks"
         ))
@@ -220,7 +220,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
     private suspend fun loadProductivityTendency(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
-        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -272,15 +272,20 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Productivity Tendency",
-            formatDouble(1, average).toString() + "%",
+        return (ChartData(data, "Productivity Tendency", formatDouble(average) + "%",
             currentDate, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous day of the week"
         ))
     }
 
-    private fun formatDouble(digits: Int, number: Double): Double {
-        return BigDecimal(number).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
+    private fun formatDouble(number: Double): String {
+        val str = BigDecimal(number).setScale(1, RoundingMode.HALF_EVEN).toString()
+        val lastSymbol = str.substring(str.length - 1)
+        return if (lastSymbol == "0") {
+            str.substring(0, str.length - 2);
+        } else {
+            str
+        }
     }
 
     private fun getCurrentDate(calendar: Calendar, currentYear: Int): String {
