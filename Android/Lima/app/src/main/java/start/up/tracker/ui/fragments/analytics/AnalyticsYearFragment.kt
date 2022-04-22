@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.anychart.APIlib
 import com.anychart.AnyChart
-import com.anychart.AnyChartView
 import com.anychart.charts.Cartesian
 import com.anychart.enums.Anchor
 import com.anychart.enums.HoverMode

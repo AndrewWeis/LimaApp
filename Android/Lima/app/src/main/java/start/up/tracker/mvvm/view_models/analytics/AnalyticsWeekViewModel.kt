@@ -29,6 +29,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         i: String,
         f: String,
         s: Boolean,
+        h: Int,
     ) {
         val data = d
         val title = t
@@ -36,30 +37,54 @@ class AnalyticsWeekViewModel @Inject constructor(
         val date = i
         val format = f
         val isSoftMaximum = s
+        var shift = h
     }
+
+        fun update(id: Int, sh: Int) = viewModelScope.launch {
+            when (chartDataList[id].title) {
+                "All tasks" -> {
+                    chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
+                }
+                "Completed tasks" -> {
+                    chartDataList[id] = loadCompletedTasks(sh + chartDataList[id].shift)
+                }
+                "Productivity" -> {
+                    chartDataList[id] = loadProductivity(sh + chartDataList[id].shift)
+                }
+                "Productivity Tendency" ->
+                    chartDataList[id] = loadProductivityTendency(sh + chartDataList[id].shift)
+            }
+
+            _statWeek2.value = true
+        }
 
     val chartDataList: MutableList<ChartData> = ArrayList()
     private val daysName = listOf("Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun")
 
     private var _statWeek: MutableLiveData<Boolean> = MutableLiveData(false)
-    val statMonth: LiveData<Boolean>
+    val statWeek: LiveData<Boolean>
         get() = _statWeek
+
+    private var _statWeek2: MutableLiveData<Boolean> = MutableLiveData(false)
+    val statWeek2: LiveData<Boolean>
+        get() = _statWeek2
 
     init {
         loadTasks()
     }
 
     private fun loadTasks() = viewModelScope.launch {
-        loadAllTasks()
-        loadCompletedTasks()
-        loadProductivity()
-        loadProductivityTendency()
+        chartDataList.add(loadAllTasks(0))
+        chartDataList.add(loadCompletedTasks(0))
+        chartDataList.add(loadProductivity(0))
+        chartDataList.add(loadProductivityTendency(0))
 
         _statWeek.value = true
     }
 
-    private suspend fun loadAllTasks() {
+    private suspend fun loadAllTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -91,12 +116,13 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "All tasks", average.toDouble(), currentDate,
-            "{%value}", false))
+        return (ChartData(data, "All tasks", average.toDouble(), currentDate,
+            "{%value}", false, shift))
     }
 
-    private suspend fun loadCompletedTasks() {
+    private suspend fun loadCompletedTasks(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -128,12 +154,13 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Completed tasks", average.toDouble(), currentDate,
-            "{%value}", false))
+        return (ChartData(data, "Completed tasks", average.toDouble(), currentDate,
+            "{%value}", false, shift))
     }
 
-    private suspend fun loadProductivity() {
+    private suspend fun loadProductivity(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -177,12 +204,13 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity", average, currentDate,
-            "{%value}%", true))
+        return (ChartData(data, "Productivity", average, currentDate,
+            "{%value}%", true, shift))
     }
 
-    private suspend fun loadProductivityTendency() {
+    private suspend fun loadProductivityTendency(shift: Int): ChartData {
         val calendar = Calendar.getInstance()
+        calendar.timeInMillis = calendar.timeInMillis + 86400000 * shift * 7
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
@@ -232,8 +260,8 @@ class AnalyticsWeekViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        chartDataList.add(ChartData(data, "Productivity Tendency", average, currentDate,
-            "{%value}%", true))
+        return (ChartData(data, "Productivity Tendency", average, currentDate,
+            "{%value}%", true, shift))
     }
 
     private fun formatDouble(digits: Int, number: Double): Double {
