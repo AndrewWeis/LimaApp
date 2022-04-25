@@ -1,7 +1,11 @@
 package start.up.tracker.ui.fragments.edit_task
 
 import android.app.DatePickerDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.TimePickerDialog
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
@@ -154,6 +158,7 @@ class EditTaskFragment :
             ActionIcon.ICON_TIME_END -> viewModel.onIconTimeEndClick()
             ActionIcon.ICON_PROJECTS -> viewModel.onIconProjectsClick()
             ActionIcon.ICON_POMODORO -> viewModel.onIconPomodoroClick()
+            ActionIcon.ICON_NOTIFICATIONS -> viewModel.onIconNotificationsClick()
         }
     }
 
@@ -341,6 +346,10 @@ class EditTaskFragment :
             viewModel.onPriorityChanged(bundle.getInt(requestKey))
         }
 
+        setFragmentResultListener(ExtraCodes.NOTIFICATION_REQUEST) { requestKey, bundle ->
+            viewModel.onNotificationChanged(bundle.getInt(requestKey))
+        }
+
         setFragmentResultListener(ExtraCodes.PROJECT_REQUEST) { requestKey, bundle ->
             viewModel.onProjectChanged(bundle.getInt(requestKey))
         }
@@ -433,6 +442,13 @@ class EditTaskFragment :
                     val action = EditTaskFragmentDirections.actionEditTaskToPomodorosDialog(
                         currentPomodoros = event.pomodoros ?: -1,
                         currentStartTime = event.startTime ?: -1
+                    )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.NavigateToNotificationsDialog -> {
+                    val action = EditTaskFragmentDirections.actionEditTaskToNotificationsDialog(
+                        selectedNotificationId = event.notificationId
                     )
                     navigateTo(action)
                 }

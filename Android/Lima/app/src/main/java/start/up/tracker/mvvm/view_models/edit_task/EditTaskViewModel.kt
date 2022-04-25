@@ -35,6 +35,7 @@ class EditTaskViewModel @Inject constructor(
     analytics: Analytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
+
     private var isEditMode = true
 
     val projectId = state.get<Int>(StateHandleKeys.PROJECT_ID) ?: -1
@@ -59,6 +60,9 @@ class EditTaskViewModel @Inject constructor(
     private val _actionsIcons: MutableLiveData<ActionIcons> = MutableLiveData()
     val actionsIcons: LiveData<ActionIcons> get() = _actionsIcons
 
+
+
+
     init {
         isAddOrEditMode()
         setParentTaskId()
@@ -66,6 +70,7 @@ class EditTaskViewModel @Inject constructor(
         showFields()
         showActionIcons()
     }
+
 
     fun saveDataAboutSubtask() {
         if (isEditMode) {
@@ -144,6 +149,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(priority = priorityId)
     }
 
+    fun onNotificationChanged(notificationId: Int) {
+        task = task.copy(notification = notificationId)
+    }
+
     fun onSubtasksNumberChanged(number: Int) {
         task = task.copy(subtasksNumber = number)
     }
@@ -182,6 +191,12 @@ class EditTaskViewModel @Inject constructor(
                 task.pomodoros,
                 task.startTimeInMinutes
             )
+        )
+    }
+
+    fun onIconNotificationsClick() = viewModelScope.launch {
+        tasksEventChannel.send(
+            TasksEvent.NavigateToNotificationsDialog(task.notification)
         )
     }
 
@@ -244,6 +259,8 @@ class EditTaskViewModel @Inject constructor(
         if (principlesIds.contains(TechniquesIds.POMODORO)) {
             icons.add(pomodoroActionIcon)
         }
+
+        icons.add(ActionIcon(id = ActionIcon.ICON_NOTIFICATIONS, iconRes = R.drawable.ic_notifications))
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
     }

@@ -18,4 +18,5 @@ sealed class TasksEvent {
     data class NavigateToProjectsDialog(val projectId: Int) : TasksEvent()
     data class NavigateToPomodoroDialog(val pomodoros: Int?, val startTime: Int?) : TasksEvent()
     data class ShowError(val error: String) : TasksEvent()
+    data class NavigateToNotificationsDialog(val notificationId: Int) : TasksEvent()
 }

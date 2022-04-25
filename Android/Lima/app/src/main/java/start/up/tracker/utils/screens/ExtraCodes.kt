@@ -10,6 +10,7 @@ object ExtraCodes {
 
     const val PRIORITY_REQUEST = "priority_request"
     const val PROJECT_REQUEST = "project_request"
+    const val NOTIFICATION_REQUEST = "notification_request"
 
     const val POMODORO_REQUEST = "pomodoro_request"
     const val POMODORO_START_TIME = "pomodoro_start_time"

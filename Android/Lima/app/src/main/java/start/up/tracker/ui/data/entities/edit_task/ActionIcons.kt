@@ -22,5 +22,6 @@ data class ActionIcon(
         const val ICON_REPEATS = 6
 
         const val ICON_POMODORO = 7
+        const val ICON_NOTIFICATIONS = 8
     }
 }
