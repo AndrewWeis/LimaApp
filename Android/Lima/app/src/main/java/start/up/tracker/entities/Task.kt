@@ -13,7 +13,6 @@ data class Task(
     val taskTitle: String = "",
     val description: String = "",
     val priority: Int = NO_PRIORITY,
-    val notification: Int = NotificationIds.NO_NOTIFICATION,
     val completed: Boolean = false,
     val created: Long = System.currentTimeMillis(),
     val startTimeInMinutes: Int? = null,

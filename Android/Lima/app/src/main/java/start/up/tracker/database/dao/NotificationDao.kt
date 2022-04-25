@@ -4,6 +4,7 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import start.up.tracker.entities.Notification
 
+@Dao
 interface NotificationDao {
     @Query("SELECT * FROM notification_table")
     fun getNotifications(): Flow<List<Notification>>

@@ -17,6 +17,7 @@ import javax.inject.Provider
     entities = [
         Task::class,
         Project::class,
+        Notification::class,
         DayStat::class,
         Technique::class,
         TaskAnalytics::class,
