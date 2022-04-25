@@ -30,6 +30,7 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun techniqueDao(): TechniquesDao
     abstract fun analyticsDao(): AnalyticsDao
     abstract fun projectsDao(): ProjectsDao
+    abstract fun notificationsDao(): NotificationDao
     abstract fun todayTasksDao(): TodayTasksDao
     abstract fun calendarTasksDao(): CalendarTasksDao
     abstract fun upcomingTasksDao(): UpcomingTasksDao
