@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.first
 import start.up.tracker.database.TimerDataStore
-import start.up.tracker.entities.Task
+import start.up.tracker.utils.TimeHelper
 
 class PomodoroTimer(
     private val timerDataStore: TimerDataStore
@@ -18,11 +18,21 @@ class PomodoroTimer(
     private val _timerPhase: MutableLiveData<Int> = MutableLiveData()
     val timerPhase: LiveData<Int> get() = _timerPhase
 
+    var addPomodoro: Boolean = false
+
     override suspend fun recoverTimerState() {
         super.recoverTimerState()
-        _timerMode.postValue(timerDataStore.timerMode.first())
+        _timerMode.value = timerDataStore.timerMode.first()
         restTime = timerDataStore.timerRestTime.first()
         _timerPhase.value = getPhaseFromIteration(getTimerIteration())
+
+        if (getTimerState() == TIMER_STATE_RUNNING || getTimerState() == TIMER_STATE_PAUSED) {
+            isFinished = false
+        }
+
+        if (getTimerState() == TIMER_STATE_RUNNING) {
+            restoreRunningState()
+        }
     }
 
     private fun getPhaseFromIteration(iteration: Int): Int {
@@ -35,6 +45,39 @@ class PomodoroTimer(
         setSecondsRemaining(timerLength)
     }
 
+    override suspend fun restoreRunningState() {
+        val leftTime = timerDataStore.leftTime.first()
+        val currentTime = TimeHelper.getCurrentTimeInMilliseconds() / 1000L
+        val difference = currentTime - leftTime
+
+        if (getTimerPhase() == WORK_PHASE) {
+            when {
+                difference <= getSecondsRemaining() -> {
+                    restoreTimerSeconds(0, difference)
+                }
+                difference <= getSecondsRemaining() + restTime -> {
+                    restoreTimerSeconds(restTime, difference)
+                    _timerPhase.value = REST_PHASE
+                    incrementTimerIteration()
+                    incrementPomodoro()
+                }
+                else -> {
+                    resetMode()
+                    incrementPomodoro()
+                }
+            }
+        } else if (getTimerPhase() == REST_PHASE) {
+            when {
+                difference <= getSecondsRemaining() -> {
+                    restoreTimerSeconds(0, difference)
+                }
+                else -> {
+                    resetMode()
+                }
+            }
+        }
+    }
+
     fun skipTimer() {
         cancelTimer()
         finish()
@@ -42,13 +85,13 @@ class PomodoroTimer(
 
     fun handlePhases(iteration: Int) {
         if (isRestPhase(iteration)) {
-            _timerPhase.postValue(REST_PHASE)
+            _timerPhase.value = REST_PHASE
             startRestPhase()
             startTimer()
             return
         }
 
-        _timerPhase.postValue(WORK_PHASE)
+        _timerPhase.value = WORK_PHASE
         startWorkPhase()
     }
 
@@ -59,8 +102,8 @@ class PomodoroTimer(
         setIteration(0)
     }
 
-    fun closestModeWasSelected(task: Task) {
-        setIteration(task.completedPomodoros!! * 2)
+    fun closestModeWasSelected(completed: Int) {
+        setIteration(completed * 2)
         timerLength = getTimerLengthOfPhase()
         setSecondsRemaining(timerLength)
         setState(TIMER_STATE_INITIAL)
@@ -71,11 +114,32 @@ class PomodoroTimer(
     }
 
     fun setTimerMode(mode: Int) {
-        _timerMode.postValue(mode)
+        _timerMode.value = mode
     }
 
     fun getTimerPhase(): Int {
         return timerPhase.value!!
+    }
+
+    private fun incrementPomodoro() {
+        if (getTimerMode() == CLOSEST_TASK_MODE) {
+            addPomodoro = true
+        }
+    }
+
+    private fun resetMode() {
+        if (getTimerMode() == CLOSEST_TASK_MODE) {
+            closestModeWasSelected(0)
+        }
+        if (getTimerMode() == FREE_MODE) {
+            freeModeWasSelected()
+        }
+    }
+
+    private fun restoreTimerSeconds(restTime: Long, diff: Long) {
+        timerLength = getSecondsRemaining() + restTime - diff
+        initCountDownTimer()
+        startTimer()
     }
 
     private fun getTimerLengthOfPhase(): Long {
@@ -94,6 +158,10 @@ class PomodoroTimer(
     private fun startRestPhase() {
         timerLength = restTime
         initCountDownTimer()
+    }
+
+    private fun getTimerMode(): Int {
+        return timerMode.value!!
     }
 
     companion object {

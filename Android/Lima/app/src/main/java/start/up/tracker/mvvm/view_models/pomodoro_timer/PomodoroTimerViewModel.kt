@@ -64,7 +64,7 @@ class PomodoroTimerViewModel @Inject constructor(
         val closestTask = _closestTask.value?.copy(completedPomodoros = pomodoros)
         closestTask?.let {
             taskDao.updateTask(it)
-            _closestTask.postValue(closestTask)
+            _closestTask.value = closestTask
         }
     }
 
@@ -94,15 +94,15 @@ class PomodoroTimerViewModel @Inject constructor(
         val tasks = pomodoro.getClosestTasksOfToday()
 
         if (tasks.isEmpty()) {
-            _closestTask.postValue(null)
+            _closestTask.value = null
             return@launch
         }
 
         val closestTask = tasks.first()
-        _closestTask.postValue(closestTask)
+        _closestTask.value = closestTask
 
         if (!isInRestoreState) {
-            timer.closestModeWasSelected(closestTask)
+            timer.closestModeWasSelected(closestTask.completedPomodoros!!)
         }
     }
 

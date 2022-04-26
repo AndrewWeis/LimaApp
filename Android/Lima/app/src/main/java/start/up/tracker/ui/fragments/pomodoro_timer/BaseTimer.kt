@@ -19,9 +19,10 @@ open class BaseTimer(
     private val _timerIteration: MutableLiveData<Int> = MutableLiveData()
     val timerIteration: LiveData<Int> get() = _timerIteration
 
-    private lateinit var countDownTimer: CountDownTimer
+    private var countDownTimer: CountDownTimer? = null
 
     var timerLength = DEFAULT_TIMER_LENGTH
+    var isFinished: Boolean = true
 
     open suspend fun recoverTimerState() {
         _timerIteration.value = timerDataStore.timerIteration.first()
@@ -29,8 +30,8 @@ open class BaseTimer(
         val seconds = timerDataStore.secondsRemaining.first()
         timerLength = seconds
 
-        _secondsRemaining.postValue(seconds)
-        _timerState.postValue(timerDataStore.timerState.first())
+        _secondsRemaining.value = seconds
+        _timerState.value = timerDataStore.timerState.first()
     }
 
     open suspend fun saveTimerState() {
@@ -41,8 +42,7 @@ open class BaseTimer(
     }
 
     open fun initCountDownTimer() {
-        _secondsRemaining.postValue(timerLength)
-
+        _secondsRemaining.value = timerLength
         countDownTimer = object : CountDownTimer(
             timerLength * SECOND, SECOND
         ) {
@@ -51,35 +51,41 @@ open class BaseTimer(
             }
 
             override fun onTick(millisUntilFinished: Long) {
-                _secondsRemaining.postValue(millisUntilFinished / SECOND)
+                _secondsRemaining.value = millisUntilFinished / SECOND
             }
         }
     }
 
     open fun stopTimer() {
-        countDownTimer.cancel()
-        _timerState.postValue(TIMER_STATE_STOPPED)
-        _secondsRemaining.postValue(DEFAULT_TIMER_LENGTH)
+        countDownTimer?.let {
+            cancelTimer()
+        }
+
+        _timerState.value = TIMER_STATE_STOPPED
+        _secondsRemaining.value = DEFAULT_TIMER_LENGTH
     }
 
     fun cancelTimer() {
-        countDownTimer.cancel()
+        countDownTimer!!.cancel()
+        isFinished = true
     }
 
     fun finish() {
-        _timerIteration.postValue(getTimerIteration() + 1)
-        _secondsRemaining.postValue(timerLength)
-        _timerState.postValue(TIMER_STATE_STOPPED)
+        isFinished = true
+        _timerState.value = TIMER_STATE_STOPPED
+        _timerIteration.value = getTimerIteration() + 1
+        _secondsRemaining.value = timerLength
     }
 
     fun startTimer() {
-        countDownTimer.start()
-        _timerState.postValue(TIMER_STATE_RUNNING)
+        isFinished = false
+        countDownTimer!!.start()
+        _timerState.value = TIMER_STATE_RUNNING
     }
 
     fun pauseTimer() {
-        countDownTimer.cancel()
-        _timerState.postValue(TIMER_STATE_PAUSED)
+        cancelTimer()
+        _timerState.value = TIMER_STATE_PAUSED
     }
 
     fun continueTimer() {
@@ -88,7 +94,7 @@ open class BaseTimer(
         startTimer()
     }
 
-    suspend fun restoreRunningState() {
+    open suspend fun restoreRunningState() {
         val leftTime = timerDataStore.leftTime.first()
         val currentTime = TimeHelper.getCurrentTimeInMilliseconds() / 1000L
         val difference = currentTime - leftTime
@@ -104,15 +110,15 @@ open class BaseTimer(
     }
 
     fun setSecondsRemaining(seconds: Long) {
-        _secondsRemaining.postValue(seconds)
+        _secondsRemaining.value = seconds
     }
 
     fun setIteration(iteration: Int) {
-        _timerIteration.postValue(iteration)
+        _timerIteration.value = iteration
     }
 
     fun setState(state: Int) {
-        _timerState.postValue(state)
+        _timerState.value = state
     }
 
     fun getTimerIteration(): Int {
@@ -123,8 +129,12 @@ open class BaseTimer(
         return timerState.value!!
     }
 
-    private fun getSecondsRemaining(): Long {
+    fun getSecondsRemaining(): Long {
         return secondsRemaining.value!!
+    }
+
+    protected fun incrementTimerIteration() {
+        _timerIteration.value = getTimerIteration() + 1
     }
 
     companion object {

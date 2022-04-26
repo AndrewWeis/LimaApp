@@ -50,10 +50,6 @@ class PomodoroTimerFragment :
             if (state == BaseTimer.TIMER_STATE_STOPPED) {
                 viewModel.saveTimerState()
             }
-
-            if (state == BaseTimer.TIMER_STATE_RUNNING && isInRestoreState) {
-                viewModel.onRunningStateRestore()
-            }
         }
 
         viewModel.timer.secondsRemaining.observe(viewLifecycleOwner) { secondsRemaining ->
@@ -67,6 +63,11 @@ class PomodoroTimerFragment :
 
         viewModel.closestTask.observe(viewLifecycleOwner) { task ->
             updateClosestTask(task)
+
+            if (viewModel.timer.addPomodoro) {
+                viewModel.timer.addPomodoro = false
+                updateTaskPomodoros()
+            }
         }
 
         viewModel.timer.timerIteration.observe(viewLifecycleOwner) { iteration ->
@@ -78,7 +79,9 @@ class PomodoroTimerFragment :
                 return@observe
             }
 
-            viewModel.timer.handlePhases(iteration)
+            if (viewModel.timer.isFinished) {
+                viewModel.timer.handlePhases(iteration)
+            }
 
             if (viewModel.timer.isRestPhase(iteration)) {
                 updateTaskPomodoros()
