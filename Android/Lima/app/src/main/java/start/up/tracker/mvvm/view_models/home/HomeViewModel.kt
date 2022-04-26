@@ -98,10 +98,11 @@ class HomeViewModel @Inject constructor(
                 projectEventsChannel.send(HomeEvents.NavigateToUpcoming)
             ListItemIds.POMODORO ->
                 projectEventsChannel.send(HomeEvents.NavigateToPomodoro)
+            ListItemIds.EISENHOWER_MATRIX ->
+                projectEventsChannel.send(HomeEvents.NavigateToEisenhowerMatrix)
         }
     }
 
-    // todo (figure out how coroutines works)
     fun onProjectSwiped(listItem: ListItem) = viewModelScope.launch {
         withContext(Dispatchers.Default) {
             val project = listItem.data as Project
@@ -130,6 +131,7 @@ class HomeViewModel @Inject constructor(
         object NavigateToToday : HomeEvents()
         object NavigateToUpcoming : HomeEvents()
         object NavigateToPomodoro : HomeEvents()
+        object NavigateToEisenhowerMatrix : HomeEvents()
     }
 
     private companion object {

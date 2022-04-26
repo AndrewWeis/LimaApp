@@ -19,4 +19,6 @@
 
     <string name="title_pomodoro_timer">Pomodoro timer</string>
     <string name="title_pomodoro_dialog">Select pomodoros</string>
+
+    <string name="title_eisenhower_matrix">Eisenhower Matrix</string>
 </resources>

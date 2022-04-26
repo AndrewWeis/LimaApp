@@ -74,7 +74,7 @@ abstract class BaseTaskViewHolder(
     }
 
     private fun setPriority() {
-        if (task.priority == Task.NO_PRIORITY) {
+        if (task.priority == Task.NONE) {
             priorityImage.visibility = View.GONE
             return
         }
