@@ -250,7 +250,7 @@
         android:label="NotificationsDialogFragment"
         tools:layout="@layout/base_list_dialog_fragment">
         <argument
-            android:name="selectedNotificationId"
-            app:argType="integer" />
+            android:name="selectedNotificationType"
+            app:argType="start.up.tracker.entities.NotificationType" />
     </dialog>
 </navigation>

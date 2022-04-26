@@ -1,10 +1,7 @@
 package start.up.tracker.ui.dialogs.edit_task
 
-import android.app.Notification
-import android.app.NotificationManager
 import android.os.Bundle
 import android.view.View
-import androidx.core.app.NotificationCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
@@ -12,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.BaseListDialogFragmentBinding
+import start.up.tracker.entities.NotificationType
 import start.up.tracker.mvvm.view_models.edit_task.dialogs.NotificationsDialogViewModel
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
@@ -48,7 +46,8 @@ class NotificationsDialogFragment :
     }
 
     override fun onChoiceClick(choiceId: Int) {
-        viewModel.onNotificationClick(choiceId)
+        val type = NotificationType.getByTypeId(choiceId) ?: return
+        viewModel.onNotificationClick(type)
 
         setFragmentResult(
             requestKey = ExtraCodes.NOTIFICATION_REQUEST,
@@ -58,8 +57,8 @@ class NotificationsDialogFragment :
         findNavController().popBackStack()
     }
 
-    private fun showData(notificationId: Int) {
-        adapter.updateItems(generator.getDefaultNotificationListItems(notificationId))
+    private fun showData(notificationType: NotificationType) {
+        adapter.updateItems(generator.getDefaultNotificationListItems(notificationType))
     }
 
 
@@ -75,8 +74,8 @@ class NotificationsDialogFragment :
     }
 
     private fun setupObservers() {
-        viewModel.notificationId.observe(viewLifecycleOwner) { id ->
-            showData(id)
+        viewModel.notificationType.observe(viewLifecycleOwner) { type ->
+            showData(type)
         }
     }
 }

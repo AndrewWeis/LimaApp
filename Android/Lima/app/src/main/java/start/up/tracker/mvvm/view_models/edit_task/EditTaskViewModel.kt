@@ -4,6 +4,7 @@ import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import start.up.tracker.R
@@ -15,6 +16,7 @@ import start.up.tracker.database.dao.NotificationDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TechniquesDao
 import start.up.tracker.entities.Notification
+import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
@@ -62,9 +64,6 @@ class EditTaskViewModel @Inject constructor(
 
     private val _actionsIcons: MutableLiveData<ActionIcons> = MutableLiveData()
     val actionsIcons: LiveData<ActionIcons> get() = _actionsIcons
-
-
-
 
     init {
         isAddOrEditMode()
@@ -153,11 +152,12 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onNotificationChanged(notificationTypeId: Int) {
+        val notificationType = NotificationType.getByTypeId(notificationTypeId)?:return
         viewModelScope.launch {
             var notificationId = task.notificationId
             if (notificationId == -1L) {
                 notificationId =
-                    notificationDao.insertNotification(Notification(type = notificationTypeId))
+                    notificationDao.insertNotification(Notification(type = notificationType))
             }
             task = task.copy(notificationId = notificationId)
         }
@@ -205,8 +205,9 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onIconNotificationsClick() = viewModelScope.launch {
+        val type = if (task.notificationId == -1L) NotificationType.NONE else notificationDao.getNotificationById(task.notificationId).first().type
         tasksEventChannel.send(
-            TasksEvent.NavigateToNotificationsDialog(0)
+            TasksEvent.NavigateToNotificationsDialog(type)
         )
     }
 

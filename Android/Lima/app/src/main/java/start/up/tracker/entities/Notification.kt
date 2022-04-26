@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "notification_table")
 data class Notification(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val type: Int = NotificationIds.NO_NOTIFICATION,
+    val id: Long = 0,
+    val type: NotificationType = NotificationType.NONE,
     val triggerTime: Long = 0,
 ) : Parcelable

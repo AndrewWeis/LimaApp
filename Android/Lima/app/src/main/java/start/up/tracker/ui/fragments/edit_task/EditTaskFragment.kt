@@ -19,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.EditTaskFragmentBinding
+import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
@@ -448,7 +449,7 @@ class EditTaskFragment :
 
                 is TasksEvent.NavigateToNotificationsDialog -> {
                     val action = EditTaskFragmentDirections.actionEditTaskToNotificationsDialog(
-                        selectedNotificationId = event.notificationId
+                        selectedNotificationType = event.notificationType
                     )
                     navigateTo(action)
                 }

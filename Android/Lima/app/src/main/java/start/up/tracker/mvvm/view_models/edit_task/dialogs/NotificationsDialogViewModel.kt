@@ -3,6 +3,7 @@ package start.up.tracker.mvvm.view_models.edit_task.dialogs
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import start.up.tracker.entities.NotificationType
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
 
@@ -10,9 +11,9 @@ import javax.inject.Inject
 class NotificationsDialogViewModel @Inject constructor(
     @Assisted private val state: SavedStateHandle,
 ) : ViewModel() {
-    val notificationId = state.getLiveData<Int>(StateHandleKeys.SELECTED_NOTIFICATION_ID)
+    val notificationType = state.getLiveData<NotificationType>(StateHandleKeys.SELECTED_NOTIFICATION_TYPE)
 
-    fun onNotificationClick(selectedPriorityId: Int) {
-        notificationId.postValue(selectedPriorityId)
+    fun onNotificationClick(selectedNotificationType: NotificationType) {
+        notificationType.postValue(selectedNotificationType)
     }
 }
