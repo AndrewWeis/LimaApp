@@ -2,80 +2,66 @@ package start.up.tracker.ui.list.generators.eisenhower_matrix
 
 import start.up.tracker.R
 import start.up.tracker.entities.Task
+import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
-import start.up.tracker.ui.data.entities.Settings
-import start.up.tracker.ui.data.entities.tasks.ChoiceData
+import start.up.tracker.ui.data.entities.ListItemTypes
+import start.up.tracker.ui.data.entities.header.Header
+import start.up.tracker.ui.list.generators.base.BaseTasksGenerator
 import start.up.tracker.utils.resources.ResourcesUtils
 
-class EisenhowerMatrixGenerator {
+class EisenhowerMatrixGenerator : BaseTasksGenerator() {
 
-    fun getEisenhowerPrioritiesListItems(itemId: Int): List<ListItem> {
-        val listItems: MutableList<ListItem> = mutableListOf()
-        listItems.add(createNoneListItem(itemId))
-        listItems.add(createUrgentImportantListItem(itemId))
-        listItems.add(createImportantNotUrgentListItem(itemId))
-        listItems.add(createNotImportantUrgentListItem(itemId))
-        listItems.add(createNotImportantNotUrgentListItem(itemId))
-        return listItems
+    fun createListItems(tasks: List<Task>?): List<ListItem> {
+        if (tasks.isNullOrEmpty()) {
+            return listOf()
+        }
+
+        val list: MutableList<ListItem> = mutableListOf()
+
+        var currentOption = 1
+        while (currentOption != 5) {
+            val header = getHeaderListItem(currentOption)
+            list.add(header)
+
+            val tasksList = tasks.filter { task ->
+                task.eisenhowerMatrix == currentOption
+            }
+            list.addAll(getTasks(tasksList))
+
+            currentOption++
+        }
+
+        return list
     }
 
-    private fun createNoneListItem(itemId: Int): ListItem {
-        val settings = Settings()
+    private fun getTasks(tasks: List<Task>): List<ListItem> {
+        val list: MutableList<ListItem> = mutableListOf()
 
-        val data = ChoiceData(
-            id = Task.NONE,
-            title = ResourcesUtils.getString(R.string.none),
-            isSelected = Task.NONE == itemId
-        )
+        tasks.forEach {
+            list.add(getExtendedTaskListItem(it))
+        }
 
-        return ListItem(data = data, settings = settings)
+        return list
     }
 
-    private fun createUrgentImportantListItem(itemId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.URGENT_IMPORTANT,
-            title = ResourcesUtils.getString(R.string.important_urgent),
-            isSelected = Task.URGENT_IMPORTANT == itemId
+    private fun getHeaderListItem(optionId: Int): ListItem {
+        val header = Header(
+            title = getHeader(optionId)
         )
-
-        return ListItem(data = data, settings = settings)
+        return createListItem(
+            id = ListItemIds.SECTION_HEADER,
+            type = ListItemTypes.HEADER,
+            data = header
+        )
     }
 
-    private fun createImportantNotUrgentListItem(itemId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.IMPORTANT_NOT_URGENT,
-            title = ResourcesUtils.getString(R.string.important_not_urgent),
-            isSelected = Task.IMPORTANT_NOT_URGENT == itemId
-        )
-
-        return ListItem(data = data, settings = settings)
-    }
-
-    private fun createNotImportantUrgentListItem(priorityId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.NOT_IMPORTANT_URGENT,
-            title = ResourcesUtils.getString(R.string.not_important_urgent),
-            isSelected = Task.NOT_IMPORTANT_URGENT == priorityId
-        )
-
-        return ListItem(data = data, settings = settings)
-    }
-
-    private fun createNotImportantNotUrgentListItem(itemId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.NOT_IMPORTANT_NOT_URGENT,
-            title = ResourcesUtils.getString(R.string.not_important_not_urgent),
-            isSelected = Task.NOT_IMPORTANT_NOT_URGENT == itemId
-        )
-
-        return ListItem(data = data, settings = settings)
+    private fun getHeader(optionId: Int): String {
+        return when (optionId) {
+            Task.IMPORTANT_URGENT -> ResourcesUtils.getString(R.string.important_urgent)
+            Task.IMPORTANT_NOT_URGENT -> ResourcesUtils.getString(R.string.important_not_urgent)
+            Task.NOT_IMPORTANT_URGENT -> ResourcesUtils.getString(R.string.not_important_urgent)
+            Task.NOT_IMPORTANT_NOT_URGENT -> ResourcesUtils.getString(R.string.not_important_not_urgent)
+            else -> ""
+        }
     }
 }

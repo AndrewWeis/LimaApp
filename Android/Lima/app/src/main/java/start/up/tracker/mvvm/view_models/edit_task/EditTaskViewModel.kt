@@ -157,7 +157,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onEisenhowerMatrixItemChanged(itemId: Int) {
-        task = task.copy(eisenhowerMatrixId = itemId)
+        task = task.copy(eisenhowerMatrix = itemId)
     }
 
     fun onIconPriorityClick() = viewModelScope.launch {
@@ -190,7 +190,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onIconEisenhowerMatrixClick() = viewModelScope.launch {
-        tasksEventChannel.send(TasksEvent.NavigateToEisenhowerMatrixDialog(task.eisenhowerMatrixId))
+        tasksEventChannel.send(TasksEvent.NavigateToEisenhowerMatrixDialog(task.eisenhowerMatrix))
     }
 
     fun onBackButtonClick() = viewModelScope.launch {

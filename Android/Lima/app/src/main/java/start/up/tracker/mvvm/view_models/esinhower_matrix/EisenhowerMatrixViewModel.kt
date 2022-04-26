@@ -1,20 +1,42 @@
 package start.up.tracker.mvvm.view_models.esinhower_matrix
 
-import androidx.hilt.Assisted
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import start.up.tracker.utils.screens.StateHandleKeys
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import start.up.tracker.analytics.ActiveAnalytics
+import start.up.tracker.analytics.Analytics
+import start.up.tracker.database.PreferencesManager
+import start.up.tracker.database.dao.EisenhowerMatrixTasksDao
+import start.up.tracker.database.dao.ProjectsDao
+import start.up.tracker.database.dao.TaskDao
+import start.up.tracker.entities.Task
+import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
+import start.up.tracker.utils.ExtendedTasksMergeFlows
 import javax.inject.Inject
 
 @HiltViewModel
 class EisenhowerMatrixViewModel @Inject constructor(
-    @Assisted private val state: SavedStateHandle,
-) : ViewModel() {
+    taskDao: TaskDao,
+    preferencesManager: PreferencesManager,
+    analytics: Analytics,
+    projectsDao: ProjectsDao,
+    activeAnalytics: ActiveAnalytics,
+    eisenhowerMatrixTasksDao: EisenhowerMatrixTasksDao
 
-    val itemId = state.getLiveData<Int>(StateHandleKeys.SELECTED_EISENHOWER_MATRIX_ID)
+) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
-    fun onEisenhowerMatrixItemClick(selectedItemId: Int) {
-        itemId.value = selectedItemId
-    }
+    private val eisenhowerMatrixTasksFlow: Flow<List<Task>> =
+        eisenhowerMatrixTasksDao.getEisenhowerTasks()
+
+    private val projectsFlow = projectsDao.getProjects()
+
+    private val tasksFlow: Flow<List<Task>> = combine(
+        hideCompleted,
+        eisenhowerMatrixTasksFlow,
+        projectsFlow,
+        ExtendedTasksMergeFlows::mergeFlowsForExtendedTask
+    )
+
+    val eisenhowerMatrixTasks = tasksFlow.asLiveData()
 }

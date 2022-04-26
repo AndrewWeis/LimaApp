@@ -35,6 +35,7 @@ abstract class TaskDatabase : RoomDatabase() {
     abstract fun upcomingTasksDao(): UpcomingTasksDao
     abstract fun taskAnalyticsDao(): TaskAnalyticsDao
     abstract fun taskIdToTaskAnalyticsIdDao(): TaskIdToTaskAnalyticsIdDao
+    abstract fun eisenhowerMatrixTasksDao(): EisenhowerMatrixTasksDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,

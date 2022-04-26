@@ -34,7 +34,7 @@ data class Task(
     val pomodoros: Int? = null,
     val completedPomodoros: Int? = null,
 
-    val eisenhowerMatrixId: Int = NONE,
+    val eisenhowerMatrix: Int = NONE,
 ) : Parcelable {
 
     // todo (вынестим в отдельный класс)
@@ -44,9 +44,9 @@ data class Task(
         const val PRIORITY_MEDIUM = 2
         const val PRIORITY_LOW = 3
 
-        const val URGENT_IMPORTANT = 4
-        const val IMPORTANT_NOT_URGENT = 5
-        const val NOT_IMPORTANT_URGENT = 6
-        const val NOT_IMPORTANT_NOT_URGENT = 7
+        const val IMPORTANT_URGENT = 1
+        const val IMPORTANT_NOT_URGENT = 2
+        const val NOT_IMPORTANT_URGENT = 3
+        const val NOT_IMPORTANT_NOT_URGENT = 4
     }
 }

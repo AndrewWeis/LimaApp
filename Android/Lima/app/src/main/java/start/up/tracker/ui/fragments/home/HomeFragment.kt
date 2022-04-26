@@ -241,7 +241,8 @@ class HomeFragment :
                 }
 
                 is HomeEvents.NavigateToEisenhowerMatrix -> {
-                    // todo (add navigation)
+                    val action = HomeFragmentDirections.actionHomeToEisenhowerMatrix()
+                    navigateTo(action)
                 }
             }
         }

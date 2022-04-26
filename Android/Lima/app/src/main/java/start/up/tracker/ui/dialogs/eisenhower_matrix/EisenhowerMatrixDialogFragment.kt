@@ -9,11 +9,11 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.BaseListDialogFragmentBinding
-import start.up.tracker.mvvm.view_models.esinhower_matrix.EisenhowerMatrixViewModel
+import start.up.tracker.mvvm.view_models.esinhower_matrix.EisenhowerMatrixDialogViewModel
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
 import start.up.tracker.ui.list.adapters.edit_task.dialogs.DialogChoiceAdapter
-import start.up.tracker.ui.list.generators.eisenhower_matrix.EisenhowerMatrixGenerator
+import start.up.tracker.ui.list.generators.eisenhower_matrix.EisenhowerMatrixDialogGenerator
 import start.up.tracker.ui.list.view_holders.edit_task.dialogs.DialogChoiceViewHolder
 import start.up.tracker.utils.screens.ExtraCodes
 
@@ -22,13 +22,13 @@ class EisenhowerMatrixDialogFragment :
     BaseBottomSheetDialogFragment(R.layout.base_list_dialog_fragment),
     DialogChoiceViewHolder.DialogChoiceClickListener {
 
-    private val viewModel: EisenhowerMatrixViewModel by viewModels()
+    private val viewModel: EisenhowerMatrixDialogViewModel by viewModels()
 
     private var binding: BaseListDialogFragmentBinding? = null
 
     private lateinit var adapter: DialogChoiceAdapter
     private var listExtension: ListExtension? = null
-    private val generator = EisenhowerMatrixGenerator()
+    private val generator = EisenhowerMatrixDialogGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

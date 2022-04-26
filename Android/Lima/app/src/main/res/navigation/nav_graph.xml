@@ -70,6 +70,9 @@
         <action
             android:id="@+id/action_home_to_pomodoroTimer"
             app:destination="@id/pomodoroTimerFragment" />
+        <action
+            android:id="@+id/action_home_to_eisenhowerMatrix"
+            app:destination="@id/eisenhowerMatrixFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -253,4 +256,12 @@
             android:name="selectedEisenhowerMatrixId"
             app:argType="integer" />
     </dialog>
+    <fragment
+        android:id="@+id/eisenhowerMatrixFragment"
+        android:name="start.up.tracker.ui.fragments.eisenhower_matrix.EisenhowerMatrixFragment"
+        android:label="Eisenhower Matrix"
+        tools:layout="@layout/project_tasks_fragment"/>
+    <action
+        android:id="@+id/action_eisenhowerMatrix_to_addEditTask"
+        app:destination="@id/editTaskFragment" />
 </navigation>
