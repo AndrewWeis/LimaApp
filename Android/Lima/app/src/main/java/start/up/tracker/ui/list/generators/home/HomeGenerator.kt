@@ -48,6 +48,19 @@ class HomeGenerator {
         )
     }
 
+    fun createEisenhowerMatrixSectionListItem(): ListItem {
+        val eisenhowerMatrixSection = HomeSection(
+            iconRes = R.drawable.ic_eisenhower_matrix,
+            title = ResourcesUtils.getString(R.string.title_eisenhower_matrix)
+        )
+
+        return ListItem(
+            id = ListItemIds.EISENHOWER_MATRIX,
+            type = ListItemTypes.HOME_BLOCK,
+            data = eisenhowerMatrixSection
+        )
+    }
+
     fun createProjectsListItems(projectsData: ProjectsData): ListItem {
         return ListItem(
             id = ListItemIds.PROJECTS,

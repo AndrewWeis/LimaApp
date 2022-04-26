@@ -69,7 +69,21 @@ class HomeFragment :
         principlesIds.forEach { principlesId ->
             when (principlesId) {
                 TechniquesIds.POMODORO -> showPomodoroSection()
+                TechniquesIds.EISENHOWER_MATRIX -> showEisenhowerMatrixSection()
             }
+        }
+    }
+
+    private fun showEisenhowerMatrixSection() {
+        val listItem: ListItem = generator.createEisenhowerMatrixSectionListItem()
+
+        if (binding?.homeList?.isComputingLayout == false) {
+            adapter.setEisenhowerMatrixListItem(listItem)
+            return
+        }
+
+        binding?.homeList?.post {
+            adapter.setEisenhowerMatrixListItem(listItem)
         }
     }
 
@@ -224,6 +238,10 @@ class HomeFragment :
                 is HomeEvents.NavigateToPomodoro -> {
                     val action = HomeFragmentDirections.actionHomeToPomodoroTimer()
                     navigateTo(action)
+                }
+
+                is HomeEvents.NavigateToEisenhowerMatrix -> {
+                    // todo (add navigation)
                 }
             }
         }
