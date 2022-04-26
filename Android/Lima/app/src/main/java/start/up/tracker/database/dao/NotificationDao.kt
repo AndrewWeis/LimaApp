@@ -11,7 +11,7 @@ interface NotificationDao {
     fun getNotifications(): Flow<List<Notification>>
 
     @Query("SELECT * FROM notification_table WHERE id =:id")
-    fun getNotificationById(id: Int): Flow<Notification>
+    fun getNotificationById(id: Long): Flow<Notification>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotification(notification: Notification): Long
