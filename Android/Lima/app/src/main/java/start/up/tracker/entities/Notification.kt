@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
-import java.time.DayOfWeek
 
 @Parcelize
 @Entity(tableName = "notification_table")
@@ -13,5 +12,4 @@ data class Notification(
     val id: Int = 0,
     val type: Int = NotificationIds.NO_NOTIFICATION,
     val triggerTime: Long = 0,
-    val dayOfWeek: DayOfWeek
 ) : Parcelable

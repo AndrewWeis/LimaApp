@@ -11,8 +11,10 @@ import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.TechniquesIds
+import start.up.tracker.database.dao.NotificationDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TechniquesDao
+import start.up.tracker.entities.Notification
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
@@ -30,6 +32,7 @@ class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val activeAnalytics: ActiveAnalytics,
     private val principlesDao: TechniquesDao,
+    private val notificationDao: NotificationDao,
     @Assisted private val state: SavedStateHandle,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
@@ -149,8 +152,15 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(priority = priorityId)
     }
 
-    fun onNotificationChanged(notificationId: Int) {
-        task = task.copy(notification = notificationId)
+    fun onNotificationChanged(notificationTypeId: Int) {
+        viewModelScope.launch {
+            var notificationId = task.notificationId
+            if (notificationId == -1L) {
+                notificationId =
+                    notificationDao.insertNotification(Notification(type = notificationTypeId))
+            }
+            task = task.copy(notificationId = notificationId)
+        }
     }
 
     fun onSubtasksNumberChanged(number: Int) {
@@ -196,7 +206,7 @@ class EditTaskViewModel @Inject constructor(
 
     fun onIconNotificationsClick() = viewModelScope.launch {
         tasksEventChannel.send(
-            TasksEvent.NavigateToNotificationsDialog(task.notification)
+            TasksEvent.NavigateToNotificationsDialog(0)
         )
     }
 
