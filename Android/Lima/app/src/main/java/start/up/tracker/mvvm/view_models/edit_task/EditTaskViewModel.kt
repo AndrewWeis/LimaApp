@@ -158,6 +158,9 @@ class EditTaskViewModel @Inject constructor(
             if (notificationId == -1L) {
                 notificationId =
                     notificationDao.insertNotification(Notification(type = notificationType))
+            } else {
+                val notification = notificationDao.getNotificationById(notificationId).first()
+                notificationDao.updateNotification(notification.copy(type = notificationType))
             }
             task = task.copy(notificationId = notificationId)
         }
