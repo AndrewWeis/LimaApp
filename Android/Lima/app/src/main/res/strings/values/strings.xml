@@ -23,7 +23,7 @@
     <string name="urgent_not_important">Urgent, not important</string>
     <string name="not_urgent_not_important">Not urgent, not important</string>
 
-    <!-- notifications -->
+    <!-- notification type values -->
     <string name="notification_none">None</string>
     <string name="notification_task_time">At time of task</string>
     <string name="notification_5_before">5 minutes before</string>
@@ -33,6 +33,9 @@
     <string name="notification_1_hour_before">1 hour before</string>
     <string name="notification_2_hour_before">2 hour before</string>
     <string name="notification_1_day_before">1 day before</string>
+
+    <!-- notification -->
+    <string name="notification_title">Task notification</string>
 
     <!-- settings -->
     <string name="appearance_text">Appearance</string>

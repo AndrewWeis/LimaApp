@@ -1,5 +1,7 @@
 package start.up.tracker.mvvm.view_models.edit_task
 
+import android.app.NotificationManager
+import androidx.core.content.ContextCompat
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,6 +12,7 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
+import start.up.tracker.application.App
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.NotificationDao
@@ -25,6 +28,7 @@ import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.notifications.sendNotification
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
@@ -153,17 +157,31 @@ class EditTaskViewModel @Inject constructor(
 
     fun onNotificationChanged(notificationTypeId: Int) {
         val notificationType = NotificationType.getByTypeId(notificationTypeId)?:return
+        val notificationManager = ContextCompat.getSystemService(
+            App.context,
+            NotificationManager::class.java
+        ) as NotificationManager
+
         viewModelScope.launch {
-            var notificationId = task.notificationId
-            if (notificationId == -1L) {
-                notificationId =
-                    notificationDao.insertNotification(Notification(type = notificationType))
-            } else {
-                val notification = notificationDao.getNotificationById(notificationId).first()
-                notificationDao.updateNotification(notification.copy(type = notificationType))
-            }
+            val notificationId = updateTaskNotification(notificationType)
+            val notification = notificationDao.getNotificationById(notificationId).first()
             task = task.copy(notificationId = notificationId)
+            notificationManager.sendNotification(notification, App.context)
         }
+    }
+
+    private suspend fun updateTaskNotification(type: NotificationType): Long {
+        var notificationId = task.notificationId
+        if (notificationId != -1L) {
+            val notification = notificationDao.getNotificationById(notificationId).first()
+            notificationDao.updateNotification(notification.copy(type = type))
+        } else {
+            val notification = Notification(type = type)
+            notificationId =
+                notificationDao.insertNotification(notification)
+        }
+
+        return notificationId
     }
 
     fun onSubtasksNumberChanged(number: Int) {
