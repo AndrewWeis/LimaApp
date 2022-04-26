@@ -33,6 +33,8 @@ data class Task(
 
     val pomodoros: Int? = null,
     val completedPomodoros: Int? = null,
+
+    val eisenhowerMatrixId: Int? = null,
 ) : Parcelable {
 
     // todo (вынестим в отдельный класс)
