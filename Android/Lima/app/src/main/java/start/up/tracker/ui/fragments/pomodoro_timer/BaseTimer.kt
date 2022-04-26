@@ -42,6 +42,11 @@ open class BaseTimer(
     }
 
     open fun initCountDownTimer() {
+        if (timerLength == 0L) {
+            finish()
+            return
+        }
+
         _secondsRemaining.value = timerLength
         countDownTimer = object : CountDownTimer(
             timerLength * SECOND, SECOND
