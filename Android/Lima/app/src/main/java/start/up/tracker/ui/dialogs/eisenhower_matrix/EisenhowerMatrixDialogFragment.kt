@@ -1,4 +1,4 @@
-package start.up.tracker.ui.dialogs.edit_task
+package start.up.tracker.ui.dialogs.eisenhower_matrix
 
 import android.os.Bundle
 import android.view.View
@@ -9,26 +9,26 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.BaseListDialogFragmentBinding
-import start.up.tracker.mvvm.view_models.edit_task.dialogs.PriorityViewModel
+import start.up.tracker.mvvm.view_models.esinhower_matrix.EisenhowerMatrixViewModel
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
 import start.up.tracker.ui.list.adapters.edit_task.dialogs.DialogChoiceAdapter
-import start.up.tracker.ui.list.generators.edit_task.dialogs.PriorityGenerator
+import start.up.tracker.ui.list.generators.eisenhower_matrix.EisenhowerMatrixGenerator
 import start.up.tracker.ui.list.view_holders.edit_task.dialogs.DialogChoiceViewHolder
 import start.up.tracker.utils.screens.ExtraCodes
 
 @AndroidEntryPoint
-class PriorityDialogFragment :
+class EisenhowerMatrixDialogFragment :
     BaseBottomSheetDialogFragment(R.layout.base_list_dialog_fragment),
     DialogChoiceViewHolder.DialogChoiceClickListener {
 
-    private val viewModel: PriorityViewModel by viewModels()
+    private val viewModel: EisenhowerMatrixViewModel by viewModels()
 
     private var binding: BaseListDialogFragmentBinding? = null
 
     private lateinit var adapter: DialogChoiceAdapter
     private var listExtension: ListExtension? = null
-    private val generator = PriorityGenerator()
+    private val generator = EisenhowerMatrixGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,24 +45,18 @@ class PriorityDialogFragment :
     }
 
     override fun onChoiceClick(choiceId: Int) {
-        viewModel.onPriorityClick(choiceId)
+        viewModel.onEisenhowerMatrixItemClick(choiceId)
 
         setFragmentResult(
-            requestKey = ExtraCodes.PRIORITY_REQUEST,
-            result = bundleOf(ExtraCodes.PRIORITY_REQUEST to choiceId)
+            requestKey = ExtraCodes.EISENHOWER_MATRIX_REQUEST,
+            result = bundleOf(ExtraCodes.EISENHOWER_MATRIX_REQUEST to choiceId)
         )
 
         findNavController().popBackStack()
     }
 
-    private fun showData(priorityId: Int) {
-        when (viewModel.principleId) {
-            else -> showDefaultPrinciples(priorityId)
-        }
-    }
-
-    private fun showDefaultPrinciples(priorityId: Int) {
-        adapter.updateItems(generator.getDefaultPrioritiesListItems(priorityId))
+    private fun showData(itemId: Int) {
+        adapter.updateItems(generator.getEisenhowerPrioritiesListItems(itemId))
     }
 
     private fun setupAdapter() {
@@ -77,7 +71,7 @@ class PriorityDialogFragment :
     }
 
     private fun setupObservers() {
-        viewModel.priorityId.observe(viewLifecycleOwner) { id ->
+        viewModel.itemId.observe(viewLifecycleOwner) { id ->
             showData(id)
         }
     }

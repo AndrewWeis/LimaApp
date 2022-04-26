@@ -443,7 +443,10 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.NavigateToEisenhowerMatrixDialog -> {
-                    // todo (do navigation to dialog)
+                    val action = EditTaskFragmentDirections.actionEditTaskFragmentToEisenhowerMatrixDialogFragment(
+                        selectedEisenhowerMatrixId = event.optionId
+                    )
+                    navigateTo(action)
                 }
             }
         }

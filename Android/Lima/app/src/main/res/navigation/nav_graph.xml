@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_editTask_to_pomodorosDialog"
             app:destination="@id/pomodorosDialogFragment" />
+        <action
+            android:id="@+id/action_editTaskFragment_to_eisenhowerMatrixDialogFragment"
+            app:destination="@id/eisenhowerMatrixDialogFragment" />
     </dialog>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -240,5 +243,14 @@
             android:name="currentStartTime"
             app:argType="integer"
             android:defaultValue="-1" />
+    </dialog>
+    <dialog
+        android:id="@+id/eisenhowerMatrixDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.eisenhower_matrix.EisenhowerMatrixDialogFragment"
+        android:label="EisenhowerMatrixDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedEisenhowerMatrixId"
+            app:argType="integer" />
     </dialog>
 </navigation>
