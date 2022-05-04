@@ -193,6 +193,7 @@ class EditTaskFragment :
             ActionIcon.ICON_PROJECTS -> viewModel.onIconProjectsClick()
             ActionIcon.ICON_POMODORO -> viewModel.onIconPomodoroClick()
             ActionIcon.ICON_NOTIFICATIONS -> viewModel.onIconNotificationsClick()
+            ActionIcon.ICON_EISENHOWER_MATRIX -> viewModel.onIconEisenhowerMatrixClick()
         }
     }
 
@@ -401,6 +402,10 @@ class EditTaskFragment :
             if (pomodoros == -1) pomodoros = null
             viewModel.onPomodorosNumberChanged(pomodoros)
         }
+
+        setFragmentResultListener(ExtraCodes.EISENHOWER_MATRIX_REQUEST) { requestKey, bundle ->
+            viewModel.onEisenhowerMatrixItemChanged(bundle.getInt(requestKey))
+        }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
@@ -483,6 +488,13 @@ class EditTaskFragment :
                 is TasksEvent.NavigateToNotificationsDialog -> {
                     val action = EditTaskFragmentDirections.actionEditTaskToNotificationsDialog(
                         selectedNotificationType = event.notificationType
+                    )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.NavigateToEisenhowerMatrixDialog -> {
+                    val action = EditTaskFragmentDirections.actionEditTaskFragmentToEisenhowerMatrixDialogFragment(
+                        selectedEisenhowerMatrixId = event.optionId
                     )
                     navigateTo(action)
                 }

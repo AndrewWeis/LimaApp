@@ -196,6 +196,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(pomodoros = number, completedPomodoros = 0)
     }
 
+    fun onEisenhowerMatrixItemChanged(itemId: Int) {
+        task = task.copy(eisenhowerMatrix = itemId)
+    }
+
     fun onIconPriorityClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
     }
@@ -230,6 +234,10 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(
             TasksEvent.NavigateToNotificationsDialog(type)
         )
+    }
+
+    fun onIconEisenhowerMatrixClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToEisenhowerMatrixDialog(task.eisenhowerMatrix))
     }
 
     fun onBackButtonClick() = viewModelScope.launch {
@@ -273,7 +281,8 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
         val principlesIds = principlesDao.getActiveTechniquesIds()
 
-        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY,
+            iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
 
         if (!principlesIds.contains(TechniquesIds.POMODORO)) {
@@ -293,6 +302,11 @@ class EditTaskViewModel @Inject constructor(
         }
 
         icons.add(ActionIcon(id = ActionIcon.ICON_NOTIFICATIONS, iconRes = R.drawable.ic_notifications))
+
+        val eisenhowerMatrixActionIcon = ActionIcon(id = ActionIcon.ICON_EISENHOWER_MATRIX, iconRes = R.drawable.ic_eisenhower_matrix)
+        if (principlesIds.contains(TechniquesIds.EISENHOWER_MATRIX)) {
+            icons.add(eisenhowerMatrixActionIcon)
+        }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
     }
@@ -337,7 +351,9 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
+            val beforeDate = taskDao.getTaskById(task.taskId)[0].date
             updateTask()
+            analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
             return
         }
 
@@ -349,6 +365,7 @@ class EditTaskViewModel @Inject constructor(
 
         if (analyticsMessages.messages.isEmpty()) {
             createTask()
+            analytics.addTaskToStatisticOnCreate(task.date)
             return
         }
 

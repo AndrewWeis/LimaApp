@@ -9,7 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import start.up.tracker.R
 import start.up.tracker.databinding.TimerModeDialogFragmentBinding
-import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimerFragment
+import start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimer
 import start.up.tracker.utils.screens.ExtraCodes
 
 class TimerModeDialogFragment :
@@ -33,7 +33,7 @@ class TimerModeDialogFragment :
     }
 
     private fun setupSelectedTimerMode() {
-        if (args.mode == PomodoroTimerFragment.CLOSEST_TASK_MODE) {
+        if (args.mode == PomodoroTimer.CLOSEST_TASK_MODE) {
             binding?.closestTaskSelectedImage?.visibility = View.VISIBLE
             binding?.freeModeSelectedImage?.visibility = View.GONE
         } else {
@@ -46,7 +46,7 @@ class TimerModeDialogFragment :
         binding?.closestTaskLayout?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.TIMER_MODE_REQUEST,
-                result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimerFragment.CLOSEST_TASK_MODE)
+                result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimer.CLOSEST_TASK_MODE)
             )
             findNavController().popBackStack()
         }
@@ -54,7 +54,7 @@ class TimerModeDialogFragment :
         binding?.freeModeLayout?.setOnClickListener {
             setFragmentResult(
                 requestKey = ExtraCodes.TIMER_MODE_REQUEST,
-                result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimerFragment.FREE_MODE)
+                result = bundleOf(ExtraCodes.TIMER_MODE_REQUEST to PomodoroTimer.FREE_MODE)
             )
             findNavController().popBackStack()
         }
