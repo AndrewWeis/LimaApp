@@ -24,6 +24,20 @@
     <string name="not_important_urgent">Not important, urgent</string>
     <string name="not_important_not_urgent">Not important, not urgent</string>
 
+    <!-- notification type values -->
+    <string name="notification_none">None</string>
+    <string name="notification_task_time">At time of task</string>
+    <string name="notification_5_before">5 minutes before</string>
+    <string name="notification_10_before">10 minutes before</string>
+    <string name="notification_15_before">15 minutes before</string>
+    <string name="notification_30_before">30 minutes before</string>
+    <string name="notification_1_hour_before">1 hour before</string>
+    <string name="notification_2_hour_before">2 hour before</string>
+    <string name="notification_1_day_before">1 day before</string>
+
+    <!-- notification -->
+    <string name="notification_title">Task notification</string>
+
     <!-- settings -->
     <string name="appearance_text">Appearance</string>
     <string name="techniques_text">Time-management techniques</string>
@@ -77,4 +91,9 @@
     <string name="pomodoro_time">Time</string>
     <string name="pomodoro_pomodoros">Pomodoros</string>
 
+
+    <!-- notification channels -->
+    <string name="notification_channel_id" translatable="false">task_channel</string>
+    <string name="notification_channel_name" translatable="true">Task</string>
+    <string name="notification_channel_description">Task reminder</string>
 </resources>

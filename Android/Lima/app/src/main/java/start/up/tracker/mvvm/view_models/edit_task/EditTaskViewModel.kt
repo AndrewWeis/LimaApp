@@ -1,18 +1,25 @@
 package start.up.tracker.mvvm.view_models.edit_task
 
+import android.app.NotificationManager
+import androidx.core.content.ContextCompat
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
+import start.up.tracker.application.App
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.TechniquesIds
+import start.up.tracker.database.dao.NotificationDao
 import start.up.tracker.database.dao.TaskDao
 import start.up.tracker.database.dao.TechniquesDao
+import start.up.tracker.entities.Notification
+import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
 import start.up.tracker.ui.data.entities.TasksEvent
@@ -21,6 +28,7 @@ import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.notifications.sendNotification
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
 import javax.inject.Inject
@@ -30,10 +38,12 @@ class EditTaskViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val activeAnalytics: ActiveAnalytics,
     private val principlesDao: TechniquesDao,
+    private val notificationDao: NotificationDao,
     @Assisted private val state: SavedStateHandle,
     preferencesManager: PreferencesManager,
     analytics: Analytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
+
 
     private var isEditMode = true
 
@@ -66,6 +76,7 @@ class EditTaskViewModel @Inject constructor(
         showFields()
         showActionIcons()
     }
+
 
     fun saveDataAboutSubtask() {
         if (isEditMode) {
@@ -144,6 +155,35 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(priority = priorityId)
     }
 
+    fun onNotificationChanged(notificationTypeId: Int) {
+        val notificationType = NotificationType.getByTypeId(notificationTypeId)?:return
+        val notificationManager = ContextCompat.getSystemService(
+            App.context,
+            NotificationManager::class.java
+        ) as NotificationManager
+
+        viewModelScope.launch {
+            val notificationId = updateTaskNotification(notificationType)
+            val notification = notificationDao.getNotificationById(notificationId).first()
+            task = task.copy(notificationId = notificationId)
+            notificationManager.sendNotification(notification, App.context)
+        }
+    }
+
+    private suspend fun updateTaskNotification(type: NotificationType): Long {
+        var notificationId = task.notificationId
+        if (notificationId != -1L) {
+            val notification = notificationDao.getNotificationById(notificationId).first()
+            notificationDao.updateNotification(notification.copy(type = type))
+        } else {
+            val notification = Notification(type = type)
+            notificationId =
+                notificationDao.insertNotification(notification)
+        }
+
+        return notificationId
+    }
+
     fun onSubtasksNumberChanged(number: Int) {
         task = task.copy(subtasksNumber = number)
     }
@@ -186,6 +226,13 @@ class EditTaskViewModel @Inject constructor(
                 task.pomodoros,
                 task.startTimeInMinutes
             )
+        )
+    }
+
+    fun onIconNotificationsClick() = viewModelScope.launch {
+        val type = if (task.notificationId == -1L) NotificationType.NONE else notificationDao.getNotificationById(task.notificationId).first().type
+        tasksEventChannel.send(
+            TasksEvent.NavigateToNotificationsDialog(type)
         )
     }
 
@@ -253,6 +300,8 @@ class EditTaskViewModel @Inject constructor(
         if (principlesIds.contains(TechniquesIds.POMODORO)) {
             icons.add(pomodoroActionIcon)
         }
+
+        icons.add(ActionIcon(id = ActionIcon.ICON_NOTIFICATIONS, iconRes = R.drawable.ic_notifications))
 
         val eisenhowerMatrixActionIcon = ActionIcon(id = ActionIcon.ICON_EISENHOWER_MATRIX, iconRes = R.drawable.ic_eisenhower_matrix)
         if (principlesIds.contains(TechniquesIds.EISENHOWER_MATRIX)) {

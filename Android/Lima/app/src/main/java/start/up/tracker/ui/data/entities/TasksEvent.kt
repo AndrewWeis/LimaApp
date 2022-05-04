@@ -1,6 +1,7 @@
 package start.up.tracker.ui.data.entities
 
 import start.up.tracker.analytics.entities.AnalyticsMessages
+import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 
 sealed class TasksEvent {
@@ -19,4 +20,5 @@ sealed class TasksEvent {
     data class NavigateToPomodoroDialog(val pomodoros: Int?, val startTime: Int?) : TasksEvent()
     data class NavigateToEisenhowerMatrixDialog(val optionId: Int) : TasksEvent()
     data class ShowError(val error: String) : TasksEvent()
+    data class NavigateToNotificationsDialog(val notificationType: NotificationType) : TasksEvent()
 }

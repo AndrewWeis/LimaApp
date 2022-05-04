@@ -31,6 +31,9 @@ data class Task(
     val projectName: String? = null,
     val projectColor: Int? = null,
 
+    // notification link
+    val notificationId: Long = -1,
+
     val pomodoros: Int? = null,
     val completedPomodoros: Int? = null,
 

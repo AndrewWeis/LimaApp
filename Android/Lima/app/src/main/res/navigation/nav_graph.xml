@@ -42,6 +42,9 @@
             android:id="@+id/action_editTask_to_pomodorosDialog"
             app:destination="@id/pomodorosDialogFragment" />
         <action
+            android:id="@+id/action_editTask_to_notificationsDialog"
+            app:destination="@id/notificationsDialogFragment" />
+        <action
             android:id="@+id/action_editTaskFragment_to_eisenhowerMatrixDialogFragment"
             app:destination="@id/eisenhowerMatrixDialogFragment" />
     </dialog>
@@ -246,6 +249,15 @@
             android:name="currentStartTime"
             app:argType="integer"
             android:defaultValue="-1" />
+    </dialog>
+    <dialog
+        android:id="@+id/notificationsDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.edit_task.NotificationsDialogFragment"
+        android:label="NotificationsDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedNotificationType"
+            app:argType="start.up.tracker.entities.NotificationType" />
     </dialog>
     <dialog
         android:id="@+id/eisenhowerMatrixDialogFragment"
