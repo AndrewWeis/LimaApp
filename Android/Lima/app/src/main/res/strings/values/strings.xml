@@ -85,6 +85,10 @@
     <string name="importance_icon">Importance icon</string>
     <string name="hide_completed">Hide completed</string>
     <string name="delete_all_completed">Delete all completed</string>
+    <string name="total">TOTAL</string>
+    <string name="average_caps">AVERAGE</string>
+    <string name="tasks">tasks</string>
+
 
     <!-- pomodoro dialog -->
     <string name="pomodoro_dialog_desc">Description of pomodoro</string>
