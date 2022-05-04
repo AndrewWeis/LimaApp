@@ -13,7 +13,7 @@ import start.up.tracker.ui.data.entities.TasksEvent
 abstract class BaseTasksOperationsViewModel(
     private val taskDao: TaskDao,
     private val preferencesManager: PreferencesManager,
-    private val analytics: Analytics,
+    val analytics: Analytics,
     private val activeAnalytics: ActiveAnalytics
 ) : BaseTasksEventsViewModel(preferencesManager) {
 
@@ -32,7 +32,7 @@ abstract class BaseTasksOperationsViewModel(
         task: Task,
     ) = viewModelScope.launch {
         if (task.completed && !task.wasCompleted) {
-            analytics.addTaskToStatistic()
+            analytics.addTaskToStatisticOnCompletion()
         }
         taskDao.updateTask(task.copy(wasCompleted = true))
 

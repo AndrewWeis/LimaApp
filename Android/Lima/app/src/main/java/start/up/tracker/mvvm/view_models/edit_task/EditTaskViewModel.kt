@@ -234,7 +234,8 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
         val principlesIds = principlesDao.getActiveTechniquesIds()
 
-        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY,
+            iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
 
         if (!principlesIds.contains(TechniquesIds.POMODORO)) {
@@ -248,6 +249,7 @@ class EditTaskViewModel @Inject constructor(
         }
 
         val pomodoroActionIcon = ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
+
         if (principlesIds.contains(TechniquesIds.POMODORO)) {
             icons.add(pomodoroActionIcon)
         }
@@ -300,7 +302,9 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
+            val beforeDate = taskDao.getTaskById(task.taskId)[0].date
             updateTask()
+            analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
             return
         }
 
@@ -312,6 +316,7 @@ class EditTaskViewModel @Inject constructor(
 
         if (analyticsMessages.messages.isEmpty()) {
             createTask()
+            analytics.addTaskToStatisticOnCreate(task.date)
             return
         }
 
