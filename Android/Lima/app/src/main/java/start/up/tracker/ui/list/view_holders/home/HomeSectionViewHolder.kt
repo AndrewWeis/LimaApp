@@ -31,7 +31,10 @@ class HomeSectionViewHolder(
     private fun setupData() {
         binding.sectionImage.setImageResource(data.iconRes)
         binding.sectionTitleText.text = data.title
-        binding.tasksInsideNumberText.text = data.numberOfTasksInside.toString()
+
+        data.numberOfTasksInside?.let {
+            binding.tasksInsideNumberText.text = it.toString()
+        }
     }
 
     private fun setupListener() {

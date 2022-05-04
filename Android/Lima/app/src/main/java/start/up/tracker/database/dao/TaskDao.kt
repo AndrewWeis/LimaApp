@@ -68,6 +68,21 @@ interface TaskDao {
     )
     suspend fun countTasksOfProject(projectId: Int): Int
 
+    @Query(
+        """
+        SELECT CASE WHEN EXISTS (
+            SELECT *
+            FROM task_table
+            WHERE ((:today == date) AND 
+                ((:startTime >= startTimeInMinutes AND :startTime <= endTimeInMinutes) OR
+                (:endTime >= startTimeInMinutes AND :endTime <= endTimeInMinutes)))
+        )
+        THEN CAST(1 AS BIT)
+        ELSE CAST(0 AS BIT) END
+    """
+    )
+    suspend fun doesTimeIntersect(startTime: Int, endTime: Int, today: Long): Boolean
+
     @Query(" SELECT * FROM task_table WHERE parentTaskId = :id")
     fun getSubtasksByTaskId(id: Int): Flow<List<Task>>
 
@@ -83,11 +98,17 @@ interface TaskDao {
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
 
+    @Query("SELECT * FROM task_table WHERE taskId =:id")
+    suspend fun getTaskById(id: Int): List<Task>
+
     @Query("DELETE FROM task_table WHERE projectId =:projectId")
     suspend fun deleteTaskOfProject(projectId: Int)
 
-    @Query("SELECT * FROM task_table WHERE date =:day")
+    @Query("SELECT * FROM task_table WHERE date =:day AND completed == 0")
     suspend fun getTasksOfDay(day: Long): List<Task>
+
+    @Query("SELECT * FROM task_table")
+    suspend fun getAllTasks(): List<Task>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: Task)

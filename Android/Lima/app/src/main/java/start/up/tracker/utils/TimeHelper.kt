@@ -26,6 +26,69 @@ object TimeHelper {
         return calendar.timeInMillis
     }
 
+    fun getCurrentYearFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.YEAR]
+    }
+
+    fun getCurrentMonthFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.MONTH]
+    }
+
+    fun getCurrentWeekFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.WEEK_OF_YEAR]
+    }
+
+    fun getCurrentDayOfWeekFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return (calendar[Calendar.DAY_OF_WEEK] - 1) % 7
+    }
+
+    fun getCurrentDayFromMillis(millis: Long): Int {
+        val calendar = Calendar.getInstance()
+        calendar.clear()
+        calendar.timeInMillis = millis
+        return calendar[Calendar.DAY_OF_MONTH]
+    }
+
+    fun getStartOfWeekDayFromMillis(millis: Long, dayOfWeek: Int) : Int {
+        return getCurrentDayFromMillis(millis - 86400000 * (dayOfWeek - 1))
+    }
+
+    fun getEndOfWeekDayFromMillis(millis: Long, dayOfWeek: Int) : Int {
+        return getCurrentDayFromMillis(millis + 86400000 * (7 - dayOfWeek))
+    }
+
+    fun getStartOfWeekMonthFromMillis(millis: Long, dayOfWeek: Int) : Int {
+        return getCurrentMonthFromMillis(millis - 86400000 * (dayOfWeek - 1))
+    }
+
+    fun getStartOfWeekMonthNameFromMillis(millis: Long, dayOfWeek: Int) : String {
+        val month = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct",
+        "Nov", "Dec")
+        return month[getCurrentMonthFromMillis(millis - 86400000 * (dayOfWeek - 1))]
+    }
+
+    fun getEndOfWeekMonthFromMillis(millis: Long, dayOfWeek: Int) : Int {
+        return getCurrentMonthFromMillis(millis + 86400000 * (7 - dayOfWeek))
+    }
+
+    fun getEndOfWeekMonthNameFromMillis(millis: Long, dayOfWeek: Int) : String {
+        val month = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct",
+            "Nov", "Dec")
+        return month[getCurrentMonthFromMillis(millis + 86400000 * (7 - dayOfWeek))]
+    }
+
     /**
      * Получить дату в миллисекундах
      *
@@ -67,11 +130,7 @@ object TimeHelper {
      * @return часы
      */
     fun getHoursOfCurrentDay(): Int {
-        return if (isSystem24Hour) {
-            Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        } else {
-            Calendar.getInstance().get(Calendar.HOUR)
-        }
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     }
 
     /**
@@ -138,7 +197,7 @@ object TimeHelper {
      * @return форматированная дата
      */
     fun getTodayAsString(format: String): String {
-        val currentDayMillis = TimeHelper.getCurrentDayInMilliseconds()
+        val currentDayMillis = getCurrentDayInMilliseconds()
         return formatMillisecondToDate(currentDayMillis, format) ?: ""
     }
 
@@ -185,7 +244,7 @@ object TimeHelper {
 
     /**
      * Метод вычисляет дату начала активности в миллисекундах
-     * Если время начала в минутах вно не указано, то берётся за основу
+     * Если время начала в минутах явно не указано, то берётся за основу
      * начало дня
      */
     // todo(убрать лишнее как прийдет время)

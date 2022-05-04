@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="start.up.tracker">
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <application
         android:name=".application.App"
         android:allowBackup="true"
@@ -10,18 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/TrackerTheme">
+
         <activity
             android:name=".ui.activities.MainActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:exported="true"
             android:screenOrientation="portrait"
-            android:exported="true">
-
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

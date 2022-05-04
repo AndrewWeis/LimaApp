@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MM"
+    android:background="@drawable/img_galaxy">
+
+    <View
+        style="@style/Zero_Zero"
+        android:background="@drawable/timer_gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/no_tasks_view"
+        style="@style/Zero_H48"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/ic_timer_message_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/no_tasks_text"
+        style="@style/PublicSans.Black.Size16.WW"
+        android:fontFamily="@font/public_sans_semi_bold"
+        android:text="@string/error_no_tasks"
+        android:textColor="#99000000"
+        app:layout_constraintBottom_toBottomOf="@id/no_tasks_view"
+        app:layout_constraintEnd_toEndOf="@id/no_tasks_view"
+        app:layout_constraintStart_toStartOf="@id/no_tasks_view"
+        app:layout_constraintTop_toTopOf="@id/no_tasks_view" />
+
+    <include
+        android:id="@+id/task"
+        style="@style/MW"
+        layout="@layout/timer_closest_task_item"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="IncludeLayoutParam" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_stop_button"
+        style="@style/OutlineButton.WorkSans.Size14.White.Zero_H48"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/button_stop"
+        app:layout_constraintBottom_toTopOf="@id/timer_rest_time_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/timer_rest_time_button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_skip_button"
+        style="@style/OutlineButton.WorkSans.Size14.White.Zero_H48"
+        android:layout_marginHorizontal="90dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/button_skip_rest"
+        app:layout_constraintBottom_toTopOf="@id/timer_rest_time_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_start_button"
+        style="@style/ButtonWhite.WorkSans.Size14.Black.Zero_H48"
+        android:layout_marginHorizontal="90dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/button_start_to_focus"
+        app:icon="@drawable/ic_play"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@color/black"
+        app:layout_constraintBottom_toTopOf="@id/timer_rest_time_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_continue_button"
+        style="@style/ButtonWhite.WorkSans.Size14.Black.Zero_H48"
+        android:layout_marginStart="52dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/button_continue"
+        app:layout_constraintBottom_toTopOf="@id/timer_mode_button"
+        app:layout_constraintEnd_toEndOf="@id/timer_mode_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_rest_time_button"
+        style="@style/OutlineButton.WorkSans.Size14.White.Zero_H48"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/title_rest_time"
+        app:icon="@drawable/ic_rest_time"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/timer_mode_button" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_mode_button"
+        style="@style/OutlineButton.WorkSans.Size14.White.Zero_H48"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/title_timer_mode"
+        app:icon="@drawable/ic_timer_mode"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/timer_rest_time_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/timer_pause_button"
+        style="@style/OutlineButton.WorkSans.Size14.White.Zero_H48"
+        android:layout_marginHorizontal="90dp"
+        android:layout_marginBottom="32dp"
+        android:text="@string/button_pause"
+        app:layout_constraintBottom_toTopOf="@id/timer_mode_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/time_text"
+        style="@style/PublicSans.White.Size48.WW"
+        android:layout_gravity="center"
+        android:fontFamily="@font/public_sans_thin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10:00" />
+
+    <ImageView
+        style="@style/WW"
+        android:src="@drawable/ic_timer_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

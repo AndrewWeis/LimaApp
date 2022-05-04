@@ -15,7 +15,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/section_title_text"
-        style="@style/RobotoRegular.Black.Size14.Zero_W"
+        style="@style/PublicSans.Black.Size14.Zero_W"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="@id/section_image"
         app:layout_constraintEnd_toStartOf="@id/tasks_inside_number_text"
@@ -25,7 +25,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tasks_inside_number_text"
-        style="@style/RobotoRegular.Black.Size14.WW"
+        style="@style/PublicSans.Black.Size14.WW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

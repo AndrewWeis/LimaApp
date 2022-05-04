@@ -9,7 +9,8 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
-import start.up.tracker.entities.DayStat
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -17,52 +18,275 @@ import kotlin.collections.set
 
 @HiltViewModel
 class AnalyticsYearViewModel @Inject constructor(
-    private val dao: AnalyticsDao
+    private val dao: AnalyticsDao,
 ) : ViewModel() {
 
-    val data: MutableList<DataEntry> = ArrayList()
+    inner class ChartData(
+        da: MutableList<DataEntry>,
+        ti: String,
+        av: String,
+        de: String,
+        fo: String,
+        smax: Boolean,
+        smin: Boolean,
+        sh: Int,
+        dn: String,
+    ) {
+        var data = da
+        val title = ti
+        var average = av
+        var date = de
+        val format = fo
+        val isSoftMaximum = smax
+        val isSoftMinimum = smin
+        var shift = sh
+        val description = dn
+    }
+
+    fun update(id: Int, sh: Int) = viewModelScope.launch {
+        when (chartDataList[id].title) {
+            "All tasks" -> {
+                chartDataList[id] = loadAllTasks(sh + chartDataList[id].shift)
+            }
+            "Completed tasks" -> {
+                chartDataList[id] = loadCompletedTasks(sh + chartDataList[id].shift)
+            }
+            "Productivity" -> {
+                chartDataList[id] = loadProductivity(sh + chartDataList[id].shift)
+            }
+            "Productivity Tendency" ->
+                chartDataList[id] = loadProductivityTendency(sh + chartDataList[id].shift)
+        }
+
+        _statYear2.value = true
+    }
+
+    val chartDataList: MutableList<ChartData> = ArrayList()
+
+    val month = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct",
+        "Nov", "Dec")
 
     private var _statYear: MutableLiveData<Boolean> = MutableLiveData()
     val statYear: LiveData<Boolean>
         get() = _statYear
 
-    val currentYear: String = SimpleDateFormat("yyyy").format(Date())
+    private var _statYear2: MutableLiveData<Boolean> = MutableLiveData()
+    val statYear2: LiveData<Boolean>
+        get() = _statYear2
 
     init {
-        loadStatYear()
+        loadTasks()
     }
 
-    private fun loadStatYear() = viewModelScope.launch {
-        val stats = dao.getStatYear(currentYear.toInt())
-        initYearData(stats)
-    }
-
-    private fun initYearData(stats: List<DayStat>) {
-
-        val yearList: MutableMap<Int, Int> = mutableMapOf(
-            1 to 0, 2 to 0, 3 to 0, 4 to 0,
-            5 to 0, 6 to 0, 7 to 0, 8 to 0,
-            9 to 0, 10 to 0, 11 to 0, 12 to 0,
-        )
-
-        stats.forEach {
-            val currentValue = yearList[it.month]
-            yearList[it.month] = currentValue!! + it.completedTasks
-        }
-
-        data.add(ValueDataEntry("Jan", yearList[1]))
-        data.add(ValueDataEntry("Feb", yearList[2]))
-        data.add(ValueDataEntry("Mar", yearList[3]))
-        data.add(ValueDataEntry("Apr", yearList[4]))
-        data.add(ValueDataEntry("May", yearList[5]))
-        data.add(ValueDataEntry("Jun", yearList[6]))
-        data.add(ValueDataEntry("Jul", yearList[7]))
-        data.add(ValueDataEntry("Aug", yearList[8]))
-        data.add(ValueDataEntry("Sep", yearList[9]))
-        data.add(ValueDataEntry("Oct", yearList[10]))
-        data.add(ValueDataEntry("Nov", yearList[11]))
-        data.add(ValueDataEntry("Dec", yearList[12]))
+    private fun loadTasks() = viewModelScope.launch {
+        chartDataList.add(loadAllTasks(0))
+        chartDataList.add(loadCompletedTasks(0))
+        chartDataList.add(loadProductivity(0))
+        chartDataList.add(loadProductivityTendency(0))
 
         _statYear.value = true
+    }
+
+    private suspend fun loadAllTasks(shift: Int): ChartData {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val stats = dao.getStatYear(currentYear)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
+
+        val yearList: MutableMap<String, Int> = mutableMapOf()
+
+        for (i in 0 until 12) {
+            yearList[month[i]] = 0
+        }
+
+        var sum = 0
+
+        stats.forEach {
+            val currentValue = yearList[month[it.month - 1]]
+            yearList[month[it.month - 1]] = currentValue!! + it.allTasks
+            sum += yearList[month[it.month - 1]]!!
+        }
+
+        val average = sum.toDouble() / 12
+
+        yearList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        return ChartData(data, "All tasks", formatDouble(average),
+            currentYearName, "{%value}", false, false, shift,
+            "Number of all your tasks in months of the year"
+        )
+    }
+
+    private suspend fun loadCompletedTasks(shift: Int): ChartData {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val stats = dao.getStatYear(currentYear)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
+
+        val yearList: MutableMap<String, Int> = mutableMapOf()
+
+        for (i in 0 until 12) {
+            yearList[month[i]] = 0
+        }
+
+        var sum = 0
+
+        stats.forEach {
+            val currentValue = yearList[month[it.month - 1]]
+            yearList[month[it.month - 1]] = currentValue!! + it.completedTasks
+            sum += yearList[month[it.month - 1]]!!
+        }
+
+        val average = sum.toDouble() / 12
+
+        yearList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        return (ChartData(data, "Completed tasks", formatDouble(average),
+            currentYearName, "{%value}", false, false, shift,
+            "Number of your completed tasks in months of the year"
+        ))
+    }
+
+    private suspend fun loadProductivity(shift: Int): ChartData {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val stats = dao.getStatYear(currentYear)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
+
+        val yearList: MutableMap<String, Double> = mutableMapOf()
+        val yearListAll: MutableMap<String, Int> = mutableMapOf()
+        val yearListCompleted: MutableMap<String, Int> = mutableMapOf()
+
+        for (i in 0 until 12) {
+            yearList[month[i]] = 0.0
+            yearListAll[month[i]] = 0
+            yearListCompleted[month[i]] = 0
+        }
+
+        stats.forEach {
+            val currentValueAll = yearListAll[month[it.month - 1]]
+            yearListAll[month[it.month - 1]] = currentValueAll!! + it.allTasks
+
+            val currentValueCompleted = yearListCompleted[month[it.month - 1]]
+            yearListCompleted[month[it.month - 1]] = currentValueCompleted!! + it.completedTasks
+        }
+
+        var sum = 0.0
+        var nonEmptyCounter = 0
+
+        for (i in 1..12) {
+            if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
+                yearList[month[i - 1]] = 0.0
+            } else {
+                yearList[month[i - 1]] = yearListCompleted[month[i - 1]]!!.toDouble() /
+                        yearListAll[month[i - 1]]!!.toDouble() * 100
+                sum += yearList[month[i - 1]]!!
+                nonEmptyCounter++
+            }
+        }
+
+        val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
+            0.0
+        } else {
+            sum / nonEmptyCounter
+        }
+
+        yearList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        return (ChartData(data, "Productivity", formatDouble(average) + "%",
+            currentYearName, "{%value}%", true, false, shift,
+            "The ratio of all tasks you completed in months of the year to all created tasks"
+        ))
+    }
+
+    private suspend fun loadProductivityTendency(shift: Int): ChartData {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
+        val currentYear: Int = calendar.get(Calendar.YEAR)
+        val stats = dao.getStatYear(currentYear)
+
+        val data: MutableList<DataEntry> = ArrayList()
+        val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
+
+        val yearList: MutableMap<String, Double> = mutableMapOf()
+        val yearListAll: MutableMap<String, Int> = mutableMapOf()
+        val yearListCompleted: MutableMap<String, Int> = mutableMapOf()
+
+        for (i in 0 until 12) {
+            yearList[month[i]] = 0.0
+            yearListAll[month[i]] = 0
+            yearListCompleted[month[i]] = 0
+        }
+
+        stats.forEach {
+            val currentValueAll = yearListAll[month[it.month - 1]]
+            yearListAll[month[it.month - 1]] = currentValueAll!! + it.allTasks
+
+            val currentValueCompleted = yearListCompleted[month[it.month - 1]]
+            yearListCompleted[month[it.month - 1]] = currentValueCompleted!! + it.completedTasks
+        }
+
+        var sum = 0.0
+        var nonEmptyCounter = 0
+        var buf = 0.0
+
+        for (i in 1..12) {
+            if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
+                yearList[month[i - 1]] = 0.0
+                buf = 0.0
+            } else {
+                val new = yearListCompleted[month[i - 1]]!!.toDouble() /
+                        yearListAll[month[i - 1]]!!.toDouble() * 100
+                if (new == 0.0) {
+                    yearList[month[i - 1]] = 0.0
+                    buf = 0.0
+                } else {
+                    yearList[month[i - 1]] = (new - buf) / new * 100
+                    buf = new
+                }
+                sum += yearList[month[i - 1]]!!
+                nonEmptyCounter++
+            }
+        }
+
+        val average: Double = if (sum == 0.0 || nonEmptyCounter == 0) {
+            0.0
+        } else {
+            sum / nonEmptyCounter
+        }
+
+        yearList.forEach {
+            data.add(ValueDataEntry(it.key, it.value))
+        }
+
+        return (ChartData(data, "Productivity Tendency", formatDouble(average) + "%",
+            currentYearName, "{%value}%", true, true, shift,
+            "The ratio of your productivity compared to the previous month of the year"
+        ))
+    }
+
+    private fun formatDouble(number: Double): String {
+        val str = BigDecimal(number).setScale(1, RoundingMode.HALF_EVEN).toString()
+        val lastSymbol = str.substring(str.length - 1)
+        return if (lastSymbol == "0") {
+            str.substring(0, str.length - 2);
+        } else {
+            str
+        }
     }
 }

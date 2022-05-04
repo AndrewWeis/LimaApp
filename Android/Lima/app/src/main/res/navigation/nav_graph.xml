@@ -5,8 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
-    <fragment
-        android:id="@+id/addEditTaskFragment"
+    <dialog
+        android:id="@+id/editTaskFragment"
         android:name="start.up.tracker.ui.fragments.edit_task.EditTaskFragment"
         android:label="{title}"
         tools:layout="@layout/edit_task_fragment">
@@ -24,7 +24,7 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_addEditTask_self"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
         <argument
             android:name="parentTaskId"
             app:argType="integer"
@@ -32,7 +32,22 @@
         <action
             android:id="@+id/action_addEditTask_to_analyticsMessagesDialog"
             app:destination="@id/analyticsMessagesDialogFragment" />
-    </fragment>
+        <action
+            android:id="@+id/action_addEditTask_to_priority"
+            app:destination="@id/priorityDialogFragment" />
+        <action
+            android:id="@+id/action_editTask_to_projectsDialog"
+            app:destination="@id/projectsDialogFragment" />
+        <action
+            android:id="@+id/action_editTask_to_pomodorosDialog"
+            app:destination="@id/pomodorosDialogFragment" />
+        <action
+            android:id="@+id/action_editTask_to_notificationsDialog"
+            app:destination="@id/notificationsDialogFragment" />
+        <action
+            android:id="@+id/action_editTaskFragment_to_eisenhowerMatrixDialogFragment"
+            app:destination="@id/eisenhowerMatrixDialogFragment" />
+    </dialog>
     <fragment
         android:id="@+id/analyticsFragment"
         android:name="start.up.tracker.ui.fragments.analytics.AnalyticsFragment"
@@ -55,6 +70,12 @@
         <action
             android:id="@+id/action_project_to_upcoming"
             app:destination="@id/upcomingFragment" />
+        <action
+            android:id="@+id/action_home_to_pomodoroTimer"
+            app:destination="@id/pomodoroTimerFragment" />
+        <action
+            android:id="@+id/action_home_to_eisenhowerMatrix"
+            app:destination="@id/eisenhowerMatrixFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -82,7 +103,7 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_projectTasks_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
         <argument
             android:name="title"
             app:argType="string" />
@@ -102,7 +123,7 @@
             app:argType="string" />
         <action
             android:id="@+id/action_today_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/todayTasksFragment"
@@ -111,7 +132,7 @@
         tools:layout="@layout/fragment_today_tasks">
         <action
             android:id="@+id/action_todayTasks_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/upcomingFragment"
@@ -120,7 +141,7 @@
         tools:layout="@layout/upcoming_fragment" >
         <action
             android:id="@+id/action_upcoming_to_addEditTask"
-            app:destination="@id/addEditTaskFragment" />
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/techniquesFragment"
@@ -149,8 +170,7 @@
     <dialog
         android:id="@+id/analyticsMessagesDialogFragment"
         android:name="start.up.tracker.ui.dialogs.analytics_messages.AnalyticsMessagesDialogFragment"
-        android:label="AnalyticsMessagesDialogFragment"
-        tools:layout="@layout/analytics_messages_dialog_fragment">
+        android:label="AnalyticsMessagesDialogFragment">
         <argument
             android:name="messages"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessages" />
@@ -158,10 +178,102 @@
     <dialog
         android:id="@+id/compatibilityDialogFragment"
         android:name="start.up.tracker.ui.dialogs.analytics_messages.CompatibilityDialogFragment"
-        android:label="CompatibilityDialogFragment"
-        tools:layout="@layout/compatibility_dialog_fragment">
+        android:label="CompatibilityDialogFragment">
         <argument
             android:name="message"
             app:argType="start.up.tracker.analytics.entities.AnalyticsMessage" />
     </dialog>
+    <fragment
+        android:id="@+id/pomodoroTimerFragment"
+        android:name="start.up.tracker.ui.fragments.pomodoro_timer.PomodoroTimerFragment"
+        android:label="PomodoroTimerFragment"
+        tools:layout="@layout/pomodoro_timer_fragment">
+        <action
+            android:id="@+id/action_pomodoroTimer_to_restTime"
+            app:destination="@id/restTimeDialogFragment" />
+        <action
+            android:id="@+id/action_pomodoroTimer_to_timerMode"
+            app:destination="@id/timerModeDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/restTimeDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.pomodoro_timer.RestTimeDialogFragment"
+        android:label="RestTimeDialog"
+        tools:layout="@layout/timer_rest_time_dialog_fragment">
+        <argument
+            android:name="restTime"
+            app:argType="long" />
+    </dialog>
+    <dialog
+        android:id="@+id/timerModeDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.pomodoro_timer.TimerModeDialogFragment"
+        android:label="TimerModeDialogFragment"
+        tools:layout="@layout/timer_mode_dialog_fragment">
+        <argument
+            android:name="mode"
+            app:argType="integer"/>
+    </dialog>
+    <dialog
+        android:id="@+id/priorityDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.edit_task.PriorityDialogFragment"
+        android:label="PriorityDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="principleId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="selectedPriorityId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </dialog>
+    <dialog
+        android:id="@+id/projectsDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.edit_task.ProjectsDialogFragment"
+        android:label="ProjectsDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedProjectId"
+            app:argType="integer" />
+    </dialog>
+    <dialog
+        android:id="@+id/pomodorosDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.pomodoro_timer.PomodorosDialogFragment"
+        android:label="PomodorosDialogFragment"
+        tools:layout="@layout/pomodoros_dialog_fragment">
+        <argument
+            android:name="currentPomodoros"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="currentStartTime"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </dialog>
+    <dialog
+        android:id="@+id/notificationsDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.edit_task.NotificationsDialogFragment"
+        android:label="NotificationsDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedNotificationType"
+            app:argType="start.up.tracker.entities.NotificationType" />
+    </dialog>
+    <dialog
+        android:id="@+id/eisenhowerMatrixDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.eisenhower_matrix.EisenhowerMatrixDialogFragment"
+        android:label="EisenhowerMatrixDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedEisenhowerMatrixId"
+            app:argType="integer" />
+    </dialog>
+    <fragment
+        android:id="@+id/eisenhowerMatrixFragment"
+        android:name="start.up.tracker.ui.fragments.eisenhower_matrix.EisenhowerMatrixFragment"
+        android:label="Eisenhower Matrix"
+        tools:layout="@layout/project_tasks_fragment"/>
+    <action
+        android:id="@+id/action_eisenhowerMatrix_to_addEditTask"
+        app:destination="@id/editTaskFragment" />
 </navigation>

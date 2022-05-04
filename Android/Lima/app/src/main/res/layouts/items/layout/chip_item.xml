@@ -8,7 +8,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title_text"
-        style="@style/RobotoRegular.Black.Size12.WW"
+        style="@style/PublicSans.Black.Size12.WW"
         android:padding="8dp"
         tools:text="Project" />
 

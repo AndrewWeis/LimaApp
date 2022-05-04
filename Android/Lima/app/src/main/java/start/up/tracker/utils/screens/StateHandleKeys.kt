@@ -7,4 +7,15 @@ object StateHandleKeys {
 
     const val PROJECT_ID = "projectId"
     const val TECHNIQUE = "technique"
+
+    const val SELECTED_PRIORITY_ID = "selectedPriorityId"
+    const val PRINCIPLE_ID = "principleId"
+    const val SELECTED_NOTIFICATION_TYPE = "selectedNotificationType"
+
+    const val SELECTED_PROJECT_ID = "selectedProjectId"
+
+    const val CURRENT_START_TIME = "currentStartTime"
+    const val CURRENT_POMODOROS = "currentPomodoros"
+
+    const val SELECTED_EISENHOWER_MATRIX_ID = "selectedEisenhowerMatrixId"
 }

@@ -81,9 +81,9 @@ class ActiveAnalytics @Inject constructor(
     taskDao: TaskDao
 ) {
 
-    private val principlesMap: HashMap<Int, Principle> = hashMapOf(
+    val principlesMap: HashMap<Int, Principle> = hashMapOf(
         TechniquesIds.PARETO to Pareto(taskDao),
-        TechniquesIds.POMODORO to Pomodoro(),
+        TechniquesIds.POMODORO to Pomodoro(taskDao),
         TechniquesIds.EISENHOWER_MATRIX to EisenhowerMatrix()
     )
 
@@ -202,6 +202,23 @@ class ActiveAnalytics @Inject constructor(
     }
 
     /**
+     * Функция возвращает Id принципа, который перезаписывает приоритеты
+     * или Null, если такого принципа не имеется
+     */
+    // TODO Андрей
+    private suspend fun getPrincipleOverridingPriority(): Int? {
+        val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
+
+        for (principleId in activePrinciplesIds) {
+            if (principlesMap[principleId]!!.getIsOverridesPriority()) {
+                return principleId
+            }
+        }
+
+        return null
+    }
+
+    /**
      * Запускает логику проверок соответствия принципам при событии добавление задачи
      *
      * @param task задача
@@ -211,7 +228,7 @@ class ActiveAnalytics @Inject constructor(
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
         val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
-            principlesMap[id]!!.checkComplianceOnAddTask(task)
+            principlesMap[id]!!.validateOnAddTask(task)
         }
 
         return AnalyticsMessages(messages = analyticsMessages)
@@ -227,7 +244,7 @@ class ActiveAnalytics @Inject constructor(
         val activePrinciplesIds = techniquesDao.getActiveTechniquesIds()
 
         val analyticsMessages = activePrinciplesIds.mapNotNull { id ->
-            principlesMap[id]!!.checkComplianceOnEditTask(task)
+            principlesMap[id]!!.validateOnEditTask(task)
         }
 
         return AnalyticsMessages(messages = analyticsMessages)

@@ -12,7 +12,7 @@
         app:tint="@color/secondaryDarkColor" />
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/RobotoRegular.SecondaryDark.Size14.MW"
+        style="@style/PublicSans.Primary.Size14.MW"
         android:layout_gravity="center"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"

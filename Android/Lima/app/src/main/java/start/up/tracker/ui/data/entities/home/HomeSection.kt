@@ -5,5 +5,5 @@ import androidx.annotation.DrawableRes
 data class HomeSection(
     @DrawableRes val iconRes: Int,
     val title: String,
-    val numberOfTasksInside: Int
+    val numberOfTasksInside: Int? = null,
 )

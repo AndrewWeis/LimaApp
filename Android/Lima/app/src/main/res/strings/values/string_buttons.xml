@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="button_add_subtask">Add subtask</string>
-    <string name="button_done">DONE</string>
+    <string name="button_done">Done</string>
+    <string name="button_clear">Clear</string>
     <string name="button_ignore">Ignore</string>
     <string name="button_edit">Edit</string>
     <string name="button_got_it">Got it</string>
+    
+    <string name="button_rest_for_5_minutes">Rest for 5 minutes</string>
+    <string name="button_rest_for_20_minutes">Rest for 20 minutes</string>
+    <string name="button_closest_task_mode">The closest task mode</string>
+    <string name="button_free_mode">Free mode</string>
+
+    <string name="button_pause">Pause</string>
+    <string name="button_stop">Stop</string>
+    <string name="button_continue">Continue</string>
+    <string name="button_skip_rest">Skip rest</string>
+    <string name="button_start_to_focus">Start to Focus</string>
 </resources>

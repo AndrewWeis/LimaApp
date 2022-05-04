@@ -39,6 +39,9 @@ object AppModule {
     fun provideProjectsDao(db: TaskDatabase) = db.projectsDao()
 
     @Provides
+    fun provideNotificationsDao(db: TaskDatabase) = db.notificationsDao()
+
+    @Provides
     fun provideTodayTasksDao(db: TaskDatabase) = db.todayTasksDao()
 
     @Provides
@@ -52,6 +55,9 @@ object AppModule {
 
     @Provides
     fun provideTaskIdToTaskAnalyticsId(db: TaskDatabase) = db.taskIdToTaskAnalyticsIdDao()
+
+    @Provides
+    fun provideEisenhowerMatrixTasksDao(db: TaskDatabase) = db.eisenhowerMatrixTasksDao()
 
     @ApplicationScope
     @Provides

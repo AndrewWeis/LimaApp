@@ -10,7 +10,7 @@
 
     <Button
         android:id="@+id/ok_button"
-        style="@style/Contained.RobotoRegular.Size14.Gray.M_H42"
+        style="@style/Contained.PublicSans.Size14.White.M_H42"
         android:text="@string/button_got_it" />
 
 </LinearLayout>

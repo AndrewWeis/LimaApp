@@ -74,7 +74,7 @@ abstract class BaseTaskViewHolder(
     }
 
     private fun setPriority() {
-        if (task.priority == NO_PRIORITY) {
+        if (task.priority == Task.NONE) {
             priorityImage.visibility = View.GONE
             return
         }
@@ -88,28 +88,23 @@ abstract class BaseTaskViewHolder(
 
     private fun getPriorityColorByPriority(priority: Int): Int {
         return when (priority) {
-            PRIORITY_HIGH -> R.color.priority_high
-            PRIORITY_MEDIUM -> R.color.priority_medium
-            PRIORITY_LOW -> R.color.priority_low
+            Task.PRIORITY_HIGH -> R.color.priority_high
+            Task.PRIORITY_MEDIUM -> R.color.priority_medium
+            Task.PRIORITY_LOW -> R.color.priority_low
             else -> android.R.color.transparent
         }
     }
 
     private fun getPriorityImageByPriority(priority: Int): Int {
         return when (priority) {
-            PRIORITY_HIGH -> R.drawable.ic_priority_1
-            PRIORITY_MEDIUM -> R.drawable.ic_priority_2
-            PRIORITY_LOW -> R.drawable.ic_priority_3
+            Task.PRIORITY_HIGH -> R.drawable.ic_priority_fire_3
+            Task.PRIORITY_MEDIUM -> R.drawable.ic_priority_fire_2
+            Task.PRIORITY_LOW -> R.drawable.ic_priority_fire_1
             else -> NOT_FOUND
         }
     }
 
     private companion object {
-        const val NO_PRIORITY = 0
-        const val PRIORITY_HIGH = 1
-        const val PRIORITY_MEDIUM = 2
-        const val PRIORITY_LOW = 3
-
         const val NOT_FOUND = 0
     }
 }

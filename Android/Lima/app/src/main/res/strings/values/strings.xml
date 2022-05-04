@@ -18,6 +18,26 @@
     <string name="priority_medium">Medium</string>
     <string name="priority_low">Low</string>
 
+    <string name="none">None</string>
+    <string name="important_urgent">Important, urgent</string>
+    <string name="important_not_urgent">Important ,not urgent</string>
+    <string name="not_important_urgent">Not important, urgent</string>
+    <string name="not_important_not_urgent">Not important, not urgent</string>
+
+    <!-- notification type values -->
+    <string name="notification_none">None</string>
+    <string name="notification_task_time">At time of task</string>
+    <string name="notification_5_before">5 minutes before</string>
+    <string name="notification_10_before">10 minutes before</string>
+    <string name="notification_15_before">15 minutes before</string>
+    <string name="notification_30_before">30 minutes before</string>
+    <string name="notification_1_hour_before">1 hour before</string>
+    <string name="notification_2_hour_before">2 hour before</string>
+    <string name="notification_1_day_before">1 day before</string>
+
+    <!-- notification -->
+    <string name="notification_title">Task notification</string>
+
     <!-- settings -->
     <string name="appearance_text">Appearance</string>
     <string name="techniques_text">Time-management techniques</string>
@@ -65,4 +85,15 @@
     <string name="importance_icon">Importance icon</string>
     <string name="hide_completed">Hide completed</string>
     <string name="delete_all_completed">Delete all completed</string>
+
+    <!-- pomodoro dialog -->
+    <string name="pomodoro_dialog_desc">Description of pomodoro</string>
+    <string name="pomodoro_time">Time</string>
+    <string name="pomodoro_pomodoros">Pomodoros</string>
+
+
+    <!-- notification channels -->
+    <string name="notification_channel_id" translatable="false">task_channel</string>
+    <string name="notification_channel_name" translatable="true">Task</string>
+    <string name="notification_channel_description">Task reminder</string>
 </resources>

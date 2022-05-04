@@ -16,6 +16,16 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="Zero_W">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="Zero_H48">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
     <style name="LVMW" parent="MW">
         <item name="android:orientation">vertical</item>
     </style>
@@ -37,6 +47,16 @@
     <style name="M_H56">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
+    </style>
+
+    <style name="Zero_H56">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+
+    <style name="Zero_Zero">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
     </style>
 
     <style name="W40_H40">
@@ -87,5 +107,10 @@
     <style name="W24_H24">
         <item name="android:layout_width">24dp</item>
         <item name="android:layout_height">24dp</item>
+    </style>
+
+    <style name="W12_H12">
+        <item name="android:layout_width">12dp</item>
+        <item name="android:layout_height">12dp</item>
     </style>
 </resources>

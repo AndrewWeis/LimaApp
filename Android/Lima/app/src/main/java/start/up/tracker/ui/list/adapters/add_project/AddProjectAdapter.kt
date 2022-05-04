@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
-import start.up.tracker.ui.list.view_holders.add_project.AddProjectActionsViewHolder
 import start.up.tracker.ui.list.view_holders.add_project.ColorViewHolder
 import start.up.tracker.ui.list.view_holders.add_project.ColorsViewHolder
+import start.up.tracker.ui.list.view_holders.add_project.HeaderActionsViewHolder
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
 import start.up.tracker.ui.list.view_holders.forms.TextInputViewHolder
 import start.up.tracker.ui.views.forms.base.BaseInputView
@@ -15,13 +15,13 @@ import start.up.tracker.ui.views.forms.base.BaseInputView
 class AddProjectAdapter(
     layoutInflater: LayoutInflater,
     private val textInputListener: BaseInputView.TextInputListener,
-    private val addProjectActionsClickListener: AddProjectActionsViewHolder.AddProjectActionClickListener,
+    private val addProjectActionsClickListener: HeaderActionsViewHolder.AddProjectActionClickListener,
     private val colorClickListener: ColorViewHolder.ColorClickListener
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            ITEM_ACTIONS -> return AddProjectActionsViewHolder(layoutInflater, parent)
+            ITEM_ACTIONS -> return HeaderActionsViewHolder(layoutInflater, parent)
             ITEM_INPUT_TITLE -> return TextInputViewHolder(layoutInflater, parent)
             ITEM_COLORS_LIST -> return ColorsViewHolder(layoutInflater, parent)
             else -> throwUnknownViewHolderTypeException()
@@ -30,7 +30,7 @@ class AddProjectAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
-            ITEM_ACTIONS -> (holder as AddProjectActionsViewHolder).bind(item, addProjectActionsClickListener)
+            ITEM_ACTIONS -> (holder as HeaderActionsViewHolder).bind(item, addProjectActionsClickListener)
             ITEM_INPUT_TITLE -> (holder as TextInputViewHolder).bind(item, textInputListener)
             ITEM_COLORS_LIST -> (holder as ColorsViewHolder).bind(item, colorClickListener)
         }

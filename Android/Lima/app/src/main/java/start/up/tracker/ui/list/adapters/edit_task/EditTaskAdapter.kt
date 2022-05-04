@@ -7,11 +7,11 @@ import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.ListItemTypes
 import start.up.tracker.ui.list.adapters.base.BaseSequenceAdapter
+import start.up.tracker.ui.list.view_holders.add_project.HeaderActionsViewHolder
 import start.up.tracker.ui.list.view_holders.base.BaseViewHolder
-import start.up.tracker.ui.list.view_holders.edit_task.ChipsViewHolder
-import start.up.tracker.ui.list.view_holders.forms.SelectInputViewHolder
+import start.up.tracker.ui.list.view_holders.edit_task.ActionIconViewHolder
+import start.up.tracker.ui.list.view_holders.edit_task.ActionIconsViewHolder
 import start.up.tracker.ui.list.view_holders.forms.TextInputViewHolder
-import start.up.tracker.ui.list.view_holders.headers.HeaderViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.AddSubtaskViewHolder
 import start.up.tracker.ui.list.view_holders.tasks.OnTaskClickListener
 import start.up.tracker.ui.list.view_holders.tasks.TasksViewHolder
@@ -21,56 +21,48 @@ class EditTaskAdapter(
     layoutInflater: LayoutInflater,
     private val viewModel: BaseTasksOperationsViewModel,
     private val textInputListener: BaseInputView.TextInputListener,
-    private val textInputSelectionListener: SelectInputViewHolder.TextInputSelectionListener,
-    private val projectViewHolderListener: ChipsViewHolder.ProjectViewHolderListener,
     private val onTaskClickListener: OnTaskClickListener,
     private val onAddSubtaskListener: AddSubtaskViewHolder.OnAddSubtaskClickListener,
+    private val actionIconClickListener: ActionIconViewHolder.ActionIconClickListener,
+    private val addProjectActionsClickListener: HeaderActionsViewHolder.AddProjectActionClickListener,
 ) : BaseSequenceAdapter<ListItem, BaseViewHolder>(layoutInflater) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            ITEM_PRIORITY_HEADER, ITEM_PROJECT_HEADER,
-            ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
-                return HeaderViewHolder(layoutInflater, parent)
+            ITEM_ACTIONS_HEADER ->
+                return HeaderActionsViewHolder(layoutInflater, parent)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
                 return TextInputViewHolder(layoutInflater, parent)
-            ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
-            ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
-                return SelectInputViewHolder(layoutInflater, parent)
-            ITEM_PROJECTS_LIST, ITEM_PRIORITIES_LIST ->
-                return ChipsViewHolder(layoutInflater, parent)
             ITEM_SUBTASKS_LIST ->
                 return TasksViewHolder(layoutInflater, parent)
             ITEM_ADD_SUBTASK_BUTTON ->
                 return AddSubtaskViewHolder(layoutInflater, parent)
+            ITEM_ACTIONS_ICONS_LIST ->
+                return ActionIconsViewHolder(layoutInflater, parent)
             else -> throwUnknownViewHolderTypeException()
         }
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
-            ITEM_PRIORITY_HEADER, ITEM_PROJECT_HEADER,
-            ITEM_TIME_HEADER, ITEM_DATE_HEADER ->
-                (holder as HeaderViewHolder).bind(item)
+            ITEM_ACTIONS_HEADER ->
+                (holder as HeaderActionsViewHolder).bind(item, addProjectActionsClickListener)
             ITEM_INPUT_TITLE, ITEM_INPUT_DESCRIPTION ->
                 (holder as TextInputViewHolder).bind(item, textInputListener)
-            ITEM_SELECTION_TIME_START, ITEM_SELECTION_TIME_END,
-            ITEM_SELECTION_DATE, ITEM_SELECTION_REPEAT ->
-                (holder as SelectInputViewHolder).bind(item, textInputSelectionListener)
-            ITEM_PROJECTS_LIST, ITEM_PRIORITIES_LIST ->
-                (holder as ChipsViewHolder).bind(item, projectViewHolderListener)
             ITEM_SUBTASKS_LIST ->
                 (holder as TasksViewHolder).bind(item, viewModel, onTaskClickListener)
             ITEM_ADD_SUBTASK_BUTTON ->
                 (holder as AddSubtaskViewHolder).bind(onAddSubtaskListener)
+            ITEM_ACTIONS_ICONS_LIST ->
+                (holder as ActionIconsViewHolder).bind(item, actionIconClickListener)
         }
     }
 
     override fun getItemViewType(item: ListItem): Int {
         return when (item.type) {
-            ListItemTypes.HEADER -> getHeaderItemViewType(item)
+            ListItemTypes.HEADER -> ITEM_ACTIONS_HEADER
             ListItemTypes.INPUT_TEXT -> getInputTextItemViewTime(item)
-            ListItemTypes.SELECT -> getSelectionItemViewType(item)
+            ListItemTypes.SELECT -> ITEM_SELECTION_REPEAT
             ListItemTypes.LIST -> getListItemViewType(item)
             ListItemTypes.BUTTON -> ITEM_ADD_SUBTASK_BUTTON
             else -> NOT_FOUND
@@ -78,33 +70,14 @@ class EditTaskAdapter(
     }
 
     override fun getTypeSequence() = intArrayOf(
+        ITEM_ACTIONS_HEADER,
         ITEM_INPUT_TITLE,
         ITEM_INPUT_DESCRIPTION,
-        ITEM_PRIORITY_HEADER,
-        ITEM_PRIORITIES_LIST,
-        ITEM_PROJECT_HEADER,
-        ITEM_PROJECTS_LIST,
-        ITEM_TIME_HEADER,
-        ITEM_SELECTION_TIME_START,
-        ITEM_SELECTION_TIME_END,
-        ITEM_DATE_HEADER,
-        ITEM_SELECTION_DATE,
         ITEM_SELECTION_REPEAT,
+        ITEM_ACTIONS_ICONS_LIST,
         ITEM_SUBTASKS_LIST,
-        ITEM_ADD_SUBTASK_BUTTON
+        ITEM_ADD_SUBTASK_BUTTON,
     )
-
-    fun setStartTimeItem(listItem: ListItem) {
-        updateItem(listItem, ITEM_SELECTION_TIME_START)
-    }
-
-    fun setEndTimeItem(listItem: ListItem) {
-        updateItem(listItem, ITEM_SELECTION_TIME_END)
-    }
-
-    fun setDateItem(listItem: ListItem) {
-        updateItem(listItem, ITEM_SELECTION_DATE)
-    }
 
     fun setDescriptionItem(listItem: ListItem) {
         updateItem(listItem, ITEM_INPUT_DESCRIPTION)
@@ -114,20 +87,20 @@ class EditTaskAdapter(
         updateItem(listItem, ITEM_ADD_SUBTASK_BUTTON)
     }
 
+    fun setActionsIconsListItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_ACTIONS_ICONS_LIST)
+    }
+
     fun setSubtasksListItem(listItem: ListItem) {
         updateItem(listItem, ITEM_SUBTASKS_LIST)
     }
 
-    fun setPrioritiesChipListItem(listItem: ListItem) {
-        updateItem(listItem, ITEM_PRIORITIES_LIST)
-    }
-
-    fun setProjectChipListItem(listItem: ListItem) {
-        updateItem(listItem, ITEM_PROJECTS_LIST)
-    }
-
     fun setTitleItem(listItem: ListItem) {
         updateItem(listItem, ITEM_INPUT_TITLE)
+    }
+
+    fun setActionsHeaderItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_ACTIONS_HEADER)
     }
 
     private fun getInputTextItemViewTime(item: ListItem): Int {
@@ -140,47 +113,19 @@ class EditTaskAdapter(
 
     private fun getListItemViewType(item: ListItem): Int {
         return when (item.id) {
-            ListItemIds.TASK_PROJECTS -> ITEM_PROJECTS_LIST
-            ListItemIds.TASK_PRIORITIES -> ITEM_PRIORITIES_LIST
             ListItemIds.TASK_SUBTASKS -> ITEM_SUBTASKS_LIST
-            else -> NOT_FOUND
-        }
-    }
-
-    private fun getSelectionItemViewType(item: ListItem): Int {
-        return when (item.id) {
-            ListItemIds.TASK_TIME_START -> ITEM_SELECTION_TIME_START
-            ListItemIds.TASK_TIME_END -> ITEM_SELECTION_TIME_END
-            ListItemIds.TASK_DATE -> ITEM_SELECTION_DATE
-            ListItemIds.TASK_REPEAT -> ITEM_SELECTION_REPEAT
-            else -> NOT_FOUND
-        }
-    }
-
-    private fun getHeaderItemViewType(item: ListItem): Int {
-        return when (item.id) {
-            ListItemIds.TASK_PRIORITIES_HEADER -> ITEM_PRIORITY_HEADER
-            ListItemIds.TASK_PROJECTS_HEADER -> ITEM_PROJECT_HEADER
-            ListItemIds.TASK_TIME_HEADER -> ITEM_TIME_HEADER
-            ListItemIds.TASK_DATE_HEADER -> ITEM_DATE_HEADER
+            ListItemIds.ACTIONS_ICONS -> ITEM_ACTIONS_ICONS_LIST
             else -> NOT_FOUND
         }
     }
 
     private companion object {
-        const val ITEM_INPUT_TITLE = 0
-        const val ITEM_INPUT_DESCRIPTION = 1
-        const val ITEM_PRIORITY_HEADER = 2
-        const val ITEM_PRIORITIES_LIST = 3
-        const val ITEM_PROJECT_HEADER = 4
-        const val ITEM_PROJECTS_LIST = 5
-        const val ITEM_TIME_HEADER = 6
-        const val ITEM_SELECTION_TIME_START = 7
-        const val ITEM_SELECTION_TIME_END = 8
-        const val ITEM_DATE_HEADER = 9
-        const val ITEM_SELECTION_DATE = 10
-        const val ITEM_SELECTION_REPEAT = 11
-        const val ITEM_SUBTASKS_LIST = 12
-        const val ITEM_ADD_SUBTASK_BUTTON = 13
+        const val ITEM_ACTIONS_HEADER = 0
+        const val ITEM_INPUT_TITLE = 1
+        const val ITEM_INPUT_DESCRIPTION = 2
+        const val ITEM_SELECTION_REPEAT = 3
+        const val ITEM_ACTIONS_ICONS_LIST = 4
+        const val ITEM_SUBTASKS_LIST = 5
+        const val ITEM_ADD_SUBTASK_BUTTON = 6
     }
 }

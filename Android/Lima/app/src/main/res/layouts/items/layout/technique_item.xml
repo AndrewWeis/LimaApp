@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/technique_title_text"
-            style="@style/RobotoRegular.Black.Size20.Zero_W"
+            style="@style/PublicSans.Black.Size20.Zero_W"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
 
         <TextView
             android:id="@+id/technique_read_time_text"
-            style="@style/RobotoRegular.Black.Size12.Zero_W"
+            style="@style/PublicSans.Black.Size12.Zero_W"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="@id/technique_image"
