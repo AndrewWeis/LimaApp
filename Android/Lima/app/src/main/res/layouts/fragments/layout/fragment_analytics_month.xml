@@ -10,22 +10,26 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         tools:context=".ui.fragments.analytics.AnalyticsYearFragment">
 
-        <include layout="@layout/chart_layout"
+        <include
             android:id="@+id/graph_all_tasks"
-            app:layout_constraintStart_toStartOf="parent"
-            style="@style/MW" />
+            style="@style/MW"
+            layout="@layout/chart_layout"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <include layout="@layout/chart_layout"
+        <include
             android:id="@+id/graph_completed_tasks"
-            style="@style/MW" />
+            style="@style/MW"
+            layout="@layout/chart_layout" />
 
-        <include layout="@layout/chart_layout"
+        <include
             android:id="@+id/graph_productivity"
-            style="@style/MW" />
+            style="@style/MW"
+            layout="@layout/chart_layout" />
 
-        <include layout="@layout/chart_layout"
+        <include
             android:id="@+id/graph_productivity_tendency"
-            style="@style/MW" />
+            style="@style/MW"
+            layout="@layout/chart_layout" />
 
         <ProgressBar
             android:id="@+id/progress_bar"
