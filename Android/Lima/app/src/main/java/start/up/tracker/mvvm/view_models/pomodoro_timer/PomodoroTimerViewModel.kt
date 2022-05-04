@@ -30,76 +30,107 @@ class PomodoroTimerViewModel @Inject constructor(
 
     val timer = PomodoroTimer(timerDataStore)
 
-    private val _timerMode: MutableLiveData<Int> = MutableLiveData()
-    val timerMode: LiveData<Int> get() = _timerMode
-
     private val _closestTask: MutableLiveData<Task?> = MutableLiveData()
     val closestTask: LiveData<Task?> = _closestTask
 
     init {
-        setupTimerMode()
+        viewModelScope.launch {
+            timer.recoverTimerState()
+        }
     }
 
-    fun onClosestTaskModeSelected() = viewModelScope.launch {
-        val pomodoro = activeAnalytics.principlesMap[TechniquesIds.POMODORO] as Pomodoro
-        val tasks = pomodoro.getClosestTasksOfToday()
+    fun onTimerStartButtonClicked() {
+        timer.initCountDownTimer()
+        timer.startTimer()
+    }
 
-        if (tasks.isEmpty()) {
-            _closestTask.postValue(null)
-            return@launch
-        }
+    fun onTimerPauseButtonClicked() {
+        timer.pauseTimer()
+    }
 
-        val closestTask = tasks.first()
-        _closestTask.postValue(closestTask)
+    fun onTimerStopButtonClicked() {
+        timer.stopTimer()
+    }
 
-        val iteration = timerDataStore.timerIteration.first()
-        if (iteration % 2 == 1) {
-            timer.updateTimerIteration(closestTask.completedPomodoros!! * 2 + 1)
-        } else {
-            timer.updateTimerIteration(closestTask.completedPomodoros!! * 2)
-        }
+    fun onContinueButtonClicked() {
+        timer.continueTimer()
+    }
+
+    fun onSkipButtonClicked() {
+        timer.skipTimer()
     }
 
     fun updateCompletedPomodoros(pomodoros: Int) = viewModelScope.launch {
         val closestTask = _closestTask.value?.copy(completedPomodoros = pomodoros)
         closestTask?.let {
             taskDao.updateTask(it)
-            _closestTask.postValue(closestTask)
+            _closestTask.value = closestTask
         }
     }
 
-    fun onRestTimeButtonClick() = viewModelScope.launch {
+    fun onRestTimeButtonClicked() = viewModelScope.launch {
         val restTime = timerDataStore.timerRestTime.first()
         timerEventChannel.send(TimerEvent.NavigateToRestTimeDialog(restTime))
     }
 
-    fun onModeButtonClick() = viewModelScope.launch {
+    fun onModeButtonClicked() = viewModelScope.launch {
         val mode = timerDataStore.timerMode.first()
         timerEventChannel.send(TimerEvent.NavigateToModeDialog(mode))
     }
 
-    fun handleTimerMode(timerMode: Int) = viewModelScope.launch {
+    fun onTimerModeChanged(timerMode: Int) = viewModelScope.launch {
         timerDataStore.saveTimerMode(timerMode)
-        _timerMode.postValue(timerMode)
+        timer.setTimerMode(timerMode)
     }
 
-    fun getCompletedPomodoros(): Int {
-        return closestTask.value!!.completedPomodoros!!
+    fun freeModeWasSelected(isInRestoreState: Boolean) {
+        if (!isInRestoreState) {
+            timer.freeModeWasSelected()
+        }
+    }
+
+    fun closestTaskModeWasSelected(isInRestoreState: Boolean) = viewModelScope.launch {
+        val pomodoro = activeAnalytics.principlesMap[TechniquesIds.POMODORO] as Pomodoro
+        val tasks = pomodoro.getClosestTasksOfToday()
+
+        if (tasks.isEmpty()) {
+            _closestTask.value = null
+            return@launch
+        }
+
+        val closestTask = tasks.first()
+        _closestTask.value = closestTask
+
+        if (!isInRestoreState) {
+            timer.closestModeWasSelected(closestTask.completedPomodoros!!)
+        }
+    }
+
+    fun onTimerRestTimeChanged(restTime: Long) = viewModelScope.launch {
+        timerDataStore.saveRestTime(restTime)
+        timer.restTime = restTime
+    }
+
+    fun getCompletedPomodoros(): Int? {
+        return closestTask.value?.completedPomodoros
     }
 
     fun getTotalPomodoros(): Int? {
-        return closestTask.value!!.pomodoros
-    }
-
-    private fun setupTimerMode() = viewModelScope.launch {
-        val savedMode = timerDataStore.timerMode.first()
-        _timerMode.postValue(savedMode)
+        return closestTask.value?.pomodoros
     }
 
     fun onClosestTaskCheckedChanged() = viewModelScope.launch {
         val closestTask = _closestTask.value?.copy(completed = true)
         closestTask?.let { taskDao.updateTask(it) }
-        onClosestTaskModeSelected()
+        closestTaskModeWasSelected(false)
+    }
+
+    fun saveTimerState() = viewModelScope.launch {
+        timer.saveTimerState()
+    }
+
+    fun onRunningStateRestore() = viewModelScope.launch {
+        timer.restoreRunningState()
     }
 
     sealed class TimerEvent {

@@ -22,7 +22,7 @@ class HomeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
-            ITEM_INBOX, ITEM_TODAY, ITEM_UPCOMING, ITEM_POMODORO ->
+            ITEM_INBOX, ITEM_TODAY, ITEM_UPCOMING, ITEM_POMODORO, ITEM_EISENHOWER_MATRIX ->
                 return HomeSectionViewHolder(layoutInflater, parent)
             ITEM_HEADER_PROJECTS ->
                 return HeaderViewHolder(layoutInflater, parent)
@@ -34,7 +34,7 @@ class HomeAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder, item: ListItem) {
         when (holder.itemViewType) {
-            ITEM_INBOX, ITEM_TODAY, ITEM_UPCOMING, ITEM_POMODORO ->
+            ITEM_INBOX, ITEM_TODAY, ITEM_UPCOMING, ITEM_POMODORO, ITEM_EISENHOWER_MATRIX ->
                 (holder as HomeSectionViewHolder).bind(item, onHomeSectionClickListener)
             ITEM_HEADER_PROJECTS ->
                 (holder as HeaderViewHolder).bind(item)
@@ -57,6 +57,7 @@ class HomeAdapter(
         ITEM_TODAY,
         ITEM_UPCOMING,
         ITEM_POMODORO,
+        ITEM_EISENHOWER_MATRIX,
         ITEM_HEADER_PROJECTS,
         ITEM_PROJECTS_LIST,
     )
@@ -85,12 +86,17 @@ class HomeAdapter(
         updateItem(listItem, ITEM_POMODORO)
     }
 
+    fun setEisenhowerMatrixListItem(listItem: ListItem) {
+        updateItem(listItem, ITEM_EISENHOWER_MATRIX)
+    }
+
     private fun getProjectItemViewType(item: ListItem): Int {
         return when (item.id) {
             ListItemIds.TODAY -> ITEM_TODAY
             ListItemIds.UPCOMING -> ITEM_UPCOMING
             ListItemIds.INBOX -> ITEM_INBOX
             ListItemIds.POMODORO -> ITEM_POMODORO
+            ListItemIds.EISENHOWER_MATRIX -> ITEM_EISENHOWER_MATRIX
             else -> NOT_FOUND
         }
     }
@@ -100,7 +106,8 @@ class HomeAdapter(
         const val ITEM_TODAY = 1
         const val ITEM_UPCOMING = 2
         const val ITEM_POMODORO = 3
-        const val ITEM_HEADER_PROJECTS = 4
-        const val ITEM_PROJECTS_LIST = 5
+        const val ITEM_EISENHOWER_MATRIX = 4
+        const val ITEM_HEADER_PROJECTS = 5
+        const val ITEM_PROJECTS_LIST = 6
     }
 }

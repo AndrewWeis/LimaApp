@@ -53,6 +53,9 @@ object AppModule {
     @Provides
     fun provideTaskIdToTaskAnalyticsId(db: TaskDatabase) = db.taskIdToTaskAnalyticsIdDao()
 
+    @Provides
+    fun provideEisenhowerMatrixTasksDao(db: TaskDatabase) = db.eisenhowerMatrixTasksDao()
+
     @ApplicationScope
     @Provides
     @Singleton

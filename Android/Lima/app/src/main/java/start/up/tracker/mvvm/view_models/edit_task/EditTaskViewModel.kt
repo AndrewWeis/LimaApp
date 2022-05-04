@@ -156,6 +156,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(pomodoros = number, completedPomodoros = 0)
     }
 
+    fun onEisenhowerMatrixItemChanged(itemId: Int) {
+        task = task.copy(eisenhowerMatrix = itemId)
+    }
+
     fun onIconPriorityClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
     }
@@ -183,6 +187,10 @@ class EditTaskViewModel @Inject constructor(
                 task.startTimeInMinutes
             )
         )
+    }
+
+    fun onIconEisenhowerMatrixClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToEisenhowerMatrixDialog(task.eisenhowerMatrix))
     }
 
     fun onBackButtonClick() = viewModelScope.launch {
@@ -240,11 +248,15 @@ class EditTaskViewModel @Inject constructor(
             icons.add(ActionIcon(id = ActionIcon.ICON_PROJECTS, iconRes = R.drawable.ic_project))
         }
 
-        val pomodoroActionIcon =
-            ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
+        val pomodoroActionIcon = ActionIcon(id = ActionIcon.ICON_POMODORO, iconRes = R.drawable.ic_timer)
 
         if (principlesIds.contains(TechniquesIds.POMODORO)) {
             icons.add(pomodoroActionIcon)
+        }
+
+        val eisenhowerMatrixActionIcon = ActionIcon(id = ActionIcon.ICON_EISENHOWER_MATRIX, iconRes = R.drawable.ic_eisenhower_matrix)
+        if (principlesIds.contains(TechniquesIds.EISENHOWER_MATRIX)) {
+            icons.add(eisenhowerMatrixActionIcon)
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))

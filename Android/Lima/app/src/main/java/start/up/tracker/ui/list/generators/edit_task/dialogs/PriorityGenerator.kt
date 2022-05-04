@@ -18,15 +18,6 @@ class PriorityGenerator {
         return listItems
     }
 
-    fun getEisenhowerPrioritiesListItems(priorityId: Int): List<ListItem> {
-        val listItems: MutableList<ListItem> = mutableListOf()
-        listItems.add(createUrgentImportantListItem(priorityId))
-        listItems.add(createNotUrgentImportantListItem(priorityId))
-        listItems.add(createUrgentNotImportantListItem(priorityId))
-        listItems.add(createNotUrgentNotImportantListItem(priorityId))
-        return listItems
-    }
-
     private fun createNoPriorityListItem(priorityId: Int): ListItem {
         val settings = Settings(
             icon = R.drawable.ic_priority_fire_1,
@@ -34,9 +25,9 @@ class PriorityGenerator {
         )
 
         val data = ChoiceData(
-            id = Task.NO_PRIORITY,
+            id = Task.NONE,
             title = ResourcesUtils.getString(R.string.priority_undefined),
-            isSelected = Task.NO_PRIORITY == priorityId
+            isSelected = Task.NONE == priorityId
         )
 
         return ListItem(data = data, settings = settings)
@@ -82,54 +73,6 @@ class PriorityGenerator {
             id = Task.PRIORITY_LOW,
             title = ResourcesUtils.getString(R.string.priority_low),
             isSelected = Task.PRIORITY_LOW == priorityId
-        )
-
-        return ListItem(data = data, settings = settings)
-    }
-
-    private fun createUrgentImportantListItem(priorityId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.URGENT_IMPORTANT,
-            title = ResourcesUtils.getString(R.string.urgent_important),
-            isSelected = Task.URGENT_IMPORTANT == priorityId
-        )
-
-        return ListItem(data = data, settings = settings)
-    }
-
-    private fun createNotUrgentImportantListItem(priorityId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.NOT_URGENT_IMPORTANT,
-            title = ResourcesUtils.getString(R.string.not_urgent_important),
-            isSelected = Task.NOT_URGENT_IMPORTANT == priorityId
-        )
-
-        return ListItem(data = data, settings = settings)
-    }
-
-    private fun createUrgentNotImportantListItem(priorityId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.URGENT_NOT_IMPORTANT,
-            title = ResourcesUtils.getString(R.string.urgent_not_important),
-            isSelected = Task.URGENT_NOT_IMPORTANT == priorityId
-        )
-
-        return ListItem(data = data, settings = settings)
-    }
-
-    private fun createNotUrgentNotImportantListItem(priorityId: Int): ListItem {
-        val settings = Settings()
-
-        val data = ChoiceData(
-            id = Task.NOT_URGENT_NOT_IMPORTANT,
-            title = ResourcesUtils.getString(R.string.not_urgent_not_important),
-            isSelected = Task.NOT_URGENT_NOT_IMPORTANT == priorityId
         )
 
         return ListItem(data = data, settings = settings)
