@@ -26,6 +26,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         da: MutableList<DataEntry>,
         ti: String,
         av: String,
+        //to: String,
         de: String,
         fo: String,
         smax: Boolean,
@@ -36,6 +37,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         var data = da
         val title = ti
         var average = av
+        //var total = to
         var date = de
         val format = fo
         val isSoftMaximum = smax
@@ -122,7 +124,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
         return (ChartData(data, "All tasks", formatDouble(average), currentDate,
             "{%value}", false, false, shift,
-            "Number of all your tasks in the week"
+            "Number of all your tasks in day during the week"
         ))
     }
 
@@ -162,7 +164,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
         return (ChartData(data, "Completed tasks", formatDouble( average), currentDate,
             "{%value}", false,false, shift,
-            "Number of your completed tasks in the week"
+            "Number of your completed tasks in day during the week"
         ))
     }
 
@@ -214,7 +216,7 @@ class AnalyticsWeekViewModel @Inject constructor(
 
         return (ChartData(data, "Productivity", formatDouble(average) + "%",
             currentDate, "{%value}%", true, false, shift,
-            "The ratio of all tasks you completed in the week to all created tasks"
+            "The ratio of all tasks you completed in day during the week to all created tasks"
         ))
     }
 

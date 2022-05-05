@@ -121,7 +121,7 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         return (ChartData(data, "All tasks", formatDouble(average),
             currentDate, "{%value}", false, false, shift,
-            "Number of all your tasks in the month"
+            "Number of all your tasks in day during the month"
         ))
     }
 
@@ -161,7 +161,7 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         return (ChartData(data, "Completed tasks", formatDouble(average),
             currentDate, "{%value}", false, false, shift,
-            "Number of your completed tasks in the month"
+            "Number of your completed tasks in day during the month"
         ))
     }
 
@@ -212,7 +212,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         return (ChartData(data, "Productivity",
             formatDouble(average) + "%",
             currentDate, "{%value}%", true, false, shift,
-            "The ratio of all tasks you completed in the month to all created tasks"
+            "The ratio of all tasks you completed in day during the month to all created tasks"
         ))
     }
 
