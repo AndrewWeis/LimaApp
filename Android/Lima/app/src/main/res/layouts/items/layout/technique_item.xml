@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Outline.Blue.Width_1.Radius10.MW"
+    style="@style/Outline.PrimaryDark.Width_1.Radius10.MW"
     android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="16dp">
 
@@ -11,34 +11,58 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="16dp">
 
-        <ImageView
-            android:id="@+id/technique_image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/technique_image_card_view"
+            style="@style/WW"
+            app:cardCornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/technique_image"
+                style="@style/W40_H40"
+                android:scaleType="centerCrop"
+                tools:background="@drawable/img_abstract_2" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/technique_title_text"
-            style="@style/PublicSans.Black.Size20.Zero_W"
+            style="@style/PublicSans.Black.Size16.Zero_W"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:fontFamily="@font/public_sans_medium"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/technique_image"
-            app:layout_constraintTop_toTopOf="@id/technique_image"
+            app:layout_constraintStart_toEndOf="@id/technique_image_card_view"
+            app:layout_constraintTop_toTopOf="@id/technique_image_card_view"
             tools:text="Title" />
 
         <TextView
-            android:id="@+id/technique_read_time_text"
-            style="@style/PublicSans.Black.Size12.Zero_W"
+            android:id="@+id/technique_read_time_text_text"
+            style="@style/PublicSans.Gray.Size12.WW"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintBottom_toBottomOf="@id/technique_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/technique_image"
-            tools:text="Time to read" />
+            android:text="@string/time_to_read"
+            app:layout_constraintBottom_toBottomOf="@id/technique_image_card_view"
+            app:layout_constraintStart_toEndOf="@id/technique_image_card_view" />
+
+        <TextView
+            android:id="@+id/technique_read_time_text"
+            style="@style/PublicSans.Gray.Size12.WW"
+            android:layout_marginBottom="-2dp"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/work_sans_semi_bold"
+            app:layout_constraintBottom_toBottomOf="@id/technique_image_card_view"
+            app:layout_constraintStart_toEndOf="@id/technique_read_time_text_text"
+            tools:text="25" />
+
+        <TextView
+            android:id="@+id/technique_minutes_text"
+            style="@style/PublicSans.Gray.Size12.WW"
+            android:layout_marginStart="4dp"
+            android:text="@string/minutes"
+            app:layout_constraintBottom_toBottomOf="@id/technique_image_card_view"
+            app:layout_constraintStart_toEndOf="@id/technique_read_time_text" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>
