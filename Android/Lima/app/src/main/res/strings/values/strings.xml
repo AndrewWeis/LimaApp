@@ -48,17 +48,40 @@
     <string name="upcoming">Upcoming</string>
 
     <!-- Techniques -->
+    <string name="time_to_read">Time to read:</string>
+    <string name="minutes">minutes</string>
+
     <string name="pareto_title">Pareto</string>
-    <string name="pareto_body">Description of Pareto</string>
+    <string name="pareto_body">"
+        Pareto Analysis is a statistical technique in decision-making used to select a limited number of tasks that produce a significant overall effect. It uses the Pareto Principle (also known as the 80/20 rule), the idea that by doing 20% of the work, you can generate 80% of the benefit of doing the entire job.\n
+        Take quality improvement, for example. A vast majority of problems (80%) are produced by a few fundamental causes (20%). This technique is also called the vital few and the trivial many.\n
+        In the late 1940s, Romanian-born American engineer and management consultant Joseph M. Juran suggested the principle. He named it after Italian economist Vilfredo Pareto, who observed that 80% of income in Italy went to 20% of the population. Pareto later carried out surveys in some other countries and found that a similar distribution applied to his surprise.\n
+        "
+    </string>
     <string name="pareto_message_title">Pareto principle is violated</string>
     <string name="pareto_message_body">Pareto principle suggests that you should prioritize 20 percent of daily tasks over 80 percent other tasks while you have %d tasks and %d of them are prioritized </string>
     <string name="pareto_message_detailed">Try priories your tasks in a way that the principle suggests</string>
 
     <string name="eisenhower_title">Eisenhower Matrix</string>
-    <string name="eisenhower_body">Description of Eisenhower Matrix</string>
+    <string name="eisenhower_body">"
+        The Eisenhower Matrix is a task management tool that helps you organize and prioritize tasks by urgency and importance. Using the tool, you’ll divide your tasks into four boxes based on the tasks you’ll do first, the tasks you’ll schedule for later, the tasks you’ll delegate, and the tasks you’ll delete. In this piece, we’ll explain how to set up an Eisenhower Matrix and provide tips for task prioritization.\n
+        Urgent tasks require your immediate attention. When something is urgent, it must be done now, and there are clear consequences if you don’t complete these tasks within a certain timeline. These are tasks you can’t avoid, and the longer you delay these tasks, the more stress you’ll likely experience, which can lead to burnout.\n
+        Important tasks may not require immediate attention, but these tasks help you achieve your long-term goals. Just because these tasks are less urgent doesn’t mean they don’t matter. You’ll need to thoughtfully plan for these tasks so you can use your resources efficiently.\n
+        "
+    </string>
 
     <string name="pomodoro_title">Pomodoro</string>
-    <string name="pomodoro_body">Description of Pomodoro</string>
+    <string name="pomodoro_body">"
+        The pomodoro technique is a time management method based on 25-minute stretches of focused work broken by 3-to-5 minute breaks and 15-to-30 minute breaks following the completion of  four work periods.\n
+        The pomodoro technique essentially trains people to focus on tasks better by limiting the length of time they attempt to maintain that focus and ensuring restorative breaks from the effort. The method is designed to overcome the tendencies to procrastinate and to multitask — both of which have been found to impair productivity - and to help users develop more efficient work habits. Effective time management allows people to get more done in less time, while also fostering a sense of accomplishment and reducing the potential for burnout.\n
+        Steps for the pomodoro technique:\n
+        1. Decide on the task for the work segment.\n
+        2. Eliminate the potential for distraction. Close email and chat programs and shut down social media and other sites that are not related to the task.\n
+        3. Set the timer to 25 minutes.\n
+        4. Work on the task until the timer rings; record completion of the pomodoro.\n
+        5. Take a three-to-five minute break.\n
+        6. When four pomodori have been completed, take a 15-to-30 minute  break."
+    </string>
     <string name="pomodoro_message_title">Pomodoro principle cannot be applied</string>
     <string name="pomodoro_message_body">Pomodoro principle requires</string>
     <string name="pomodoro_message_detailed">Try priories your tasks in a way that the principle suggests</string>
