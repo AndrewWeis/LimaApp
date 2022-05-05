@@ -26,7 +26,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         da: MutableList<DataEntry>,
         ti: String,
         av: String,
-        //to: String,
+        to: String,
         de: String,
         fo: String,
         smax: Boolean,
@@ -37,7 +37,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         var data = da
         val title = ti
         var average = av
-        //var total = to
+        var total = to
         var date = de
         val format = fo
         val isSoftMaximum = smax
@@ -93,7 +93,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        var currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
@@ -112,18 +112,18 @@ class AnalyticsWeekViewModel @Inject constructor(
         var sum = 0
 
         stats.forEach {
-            weekList[daysName[it.dayOfWeek - 1]] = it.allTasks
+            weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = it.allTasks
             sum += it.allTasks
         }
 
-        val average = sum.toDouble() / maxDay.toDouble()
+        val average = sum.toDouble() / 7
 
         weekList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "All tasks", formatDouble(average), currentDate,
-            "{%value}", false, false, shift,
+        return (ChartData(data, "All tasks", formatDouble(average), formatDouble(sum.toDouble()),
+            currentDate, "{%value}", false, false, shift,
             "Number of all your tasks in day during the week"
         ))
     }
@@ -133,7 +133,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        var currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
@@ -152,19 +152,19 @@ class AnalyticsWeekViewModel @Inject constructor(
         var sum = 0
 
         stats.forEach {
-            weekList[daysName[it.dayOfWeek - 1]] = it.completedTasks
+            weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = it.completedTasks
             sum += it.completedTasks
         }
 
-        val average = sum.toDouble() / maxDay.toDouble()
+        val average = sum.toDouble() / 7
 
         weekList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return (ChartData(data, "Completed tasks", formatDouble( average), currentDate,
-            "{%value}", false,false, shift,
-            "Number of your completed tasks in day during the week"
+        return (ChartData(data, "Completed tasks", formatDouble(average),
+            formatDouble(sum.toDouble()), currentDate, "{%value}", false, false,
+            shift, "Number of your completed tasks in day during the week"
         ))
     }
 
@@ -173,7 +173,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        var currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
@@ -194,12 +194,12 @@ class AnalyticsWeekViewModel @Inject constructor(
 
         stats.forEach {
             if (it.completedTasks == 0 || it.allTasks == 0) {
-                weekList[daysName[it.dayOfWeek - 1]] = 0.0
-                sum += 1.0
+                weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = 0.0
+                ///sum += 100.0
             } else {
-                weekList[daysName[it.dayOfWeek - 1]] =
+                weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] =
                     it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
-                sum += weekList[daysName[it.dayOfWeek - 1]]!!
+                sum += weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]]!!
                 nonEmptyCounter++
             }
         }
@@ -215,7 +215,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity", formatDouble(average) + "%",
-            currentDate, "{%value}%", true, false, shift,
+            formatDouble(-1.0), currentDate, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in day during the week to all created tasks"
         ))
     }
@@ -225,7 +225,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) + shift * 7)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
+        var currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val stats = dao.getStatWeek(currentYear, currentWeek)
 
@@ -247,19 +247,19 @@ class AnalyticsWeekViewModel @Inject constructor(
 
         stats.forEach {
             if (it.completedTasks == 0 || it.allTasks == 0) {
-                weekList[daysName[it.dayOfWeek - 1]] = 0.0
+                weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = 0.0
                 buf = 0.0
-                sum += 1.0
+                //sum += 100.0
             } else {
                 val new = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
                 if (new == 0.0) {
-                    weekList[daysName[it.dayOfWeek - 1]] = 0.0
+                    weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = 0.0
                     buf = 0.0
                 } else {
-                    weekList[daysName[it.dayOfWeek - 1]] = (new - buf) / new * 100
+                    weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = (new - buf) / new * 100
                     buf = new
                 }
-                sum += weekList[daysName[it.dayOfWeek - 1]]!!
+                sum += weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]]!!
                 nonEmptyCounter++
             }
         }
@@ -275,7 +275,7 @@ class AnalyticsWeekViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity Tendency", formatDouble(average) + "%",
-            currentDate, "{%value}%", true, true, shift,
+            formatDouble(-1.0), currentDate, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous day of the week"
         ))
     }

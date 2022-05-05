@@ -25,6 +25,7 @@ class AnalyticsYearViewModel @Inject constructor(
         da: MutableList<DataEntry>,
         ti: String,
         av: String,
+        to: String,
         de: String,
         fo: String,
         smax: Boolean,
@@ -35,6 +36,7 @@ class AnalyticsYearViewModel @Inject constructor(
         var data = da
         val title = ti
         var average = av
+        var total = to
         var date = de
         val format = fo
         val isSoftMaximum = smax
@@ -110,13 +112,19 @@ class AnalyticsYearViewModel @Inject constructor(
             sum += yearList[month[it.month - 1]]!!
         }
 
-        val average = sum.toDouble() / 12
+        var total = 0
+
+        for (i in 0 until 12) {
+            total += yearList[month[i]]!!
+        }
+
+        val average = total.toDouble() / 12
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return ChartData(data, "All tasks", formatDouble(average),
+        return ChartData(data, "All tasks", formatDouble(average), formatDouble(total.toDouble()),
             currentYearName, "{%value}", false, false, shift,
             "Number of all your tasks in months of the year"
         )
@@ -145,15 +153,21 @@ class AnalyticsYearViewModel @Inject constructor(
             sum += yearList[month[it.month - 1]]!!
         }
 
-        val average = sum.toDouble() / 12
+        var total = 0
+
+        for (i in 0 until 12) {
+            total += yearList[month[i]]!!
+        }
+
+        val average = total.toDouble() / 12
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
         return (ChartData(data, "Completed tasks", formatDouble(average),
-            currentYearName, "{%value}", false, false, shift,
-            "Number of your completed tasks in months of the year"
+            formatDouble(total.toDouble()), currentYearName, "{%value}", false, false,
+            shift, "Number of your completed tasks in months of the year"
         ))
     }
 
@@ -209,7 +223,8 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity", formatDouble(average) + "%",
-            currentYearName, "{%value}%", true, false, shift,
+            formatDouble(-1.0), currentYearName, "{%value}%", true, false,
+            shift,
             "The ratio of all tasks you completed in months of the year to all created tasks"
         ))
     }
@@ -275,7 +290,8 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity Tendency", formatDouble(average) + "%",
-            currentYearName, "{%value}%", true, true, shift,
+            formatDouble(-1.0), currentYearName, "{%value}%", true, true,
+            shift,
             "The ratio of your productivity compared to the previous month of the year"
         ))
     }

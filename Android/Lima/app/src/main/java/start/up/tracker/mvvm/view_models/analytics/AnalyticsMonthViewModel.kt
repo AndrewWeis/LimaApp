@@ -27,6 +27,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         da: MutableList<DataEntry>,
         ti: String,
         av: String,
+        to: String,
         de: String,
         fo: String,
         smax: Boolean,
@@ -37,6 +38,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         var data = da
         val title = ti
         var average = av
+        var total = to
         var date = de
         val format = fo
         val isSoftMaximum = smax
@@ -113,13 +115,13 @@ class AnalyticsMonthViewModel @Inject constructor(
             sum += it.allTasks
         }
 
-        val average = sum.toDouble() / maxDay.toDouble()
+        val average = sum.toDouble() / maxDay
 
         monthList.forEach {
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        return (ChartData(data, "All tasks", formatDouble(average),
+        return (ChartData(data, "All tasks", formatDouble(average), formatDouble(sum.toDouble()),
             currentDate, "{%value}", false, false, shift,
             "Number of all your tasks in day during the month"
         ))
@@ -153,15 +155,15 @@ class AnalyticsMonthViewModel @Inject constructor(
             sum += it.completedTasks
         }
 
-        val average = sum.toDouble() / maxDay.toDouble()
+        val average = sum.toDouble() / maxDay
 
         monthList.forEach {
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
         return (ChartData(data, "Completed tasks", formatDouble(average),
-            currentDate, "{%value}", false, false, shift,
-            "Number of your completed tasks in day during the month"
+            formatDouble(sum.toDouble()), currentDate, "{%value}", false, false,
+            shift, "Number of your completed tasks in day during the month"
         ))
     }
 
@@ -191,7 +193,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         stats.forEach {
             if (it.completedTasks == 0 || it.allTasks == 0) {
                 monthList[it.day] = 0.0
-                sum += 1.0
+                //sum += 1.0
             } else {
                 monthList[it.day] = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
                 sum += monthList[it.day]!!
@@ -210,7 +212,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity",
-            formatDouble(average) + "%",
+            formatDouble(average) + "%", formatDouble(-1.0),
             currentDate, "{%value}%", true, false, shift,
             "The ratio of all tasks you completed in day during the month to all created tasks"
         ))
@@ -269,7 +271,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity Tendency",
-            formatDouble(average) + "%",
+            formatDouble(average) + "%", formatDouble(-1.0),
             currentDate, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous day of the month"
         ))

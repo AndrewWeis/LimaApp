@@ -91,7 +91,7 @@
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/add_project_fragment.xml" value="0.14375" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_month.xml" value="0.152" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_month2.xml" value="0.25885416666666666" />
-        <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_week.xml" value="0.11503623188405797" />
+        <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_week.xml" value="0.12907608695652173" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_week2.xml" value="0.25885416666666666" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_year.xml" value="0.10960144927536232" />
         <entry key="..\:/Users/Public/Project/Lima/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/fragment_analytics_year2.xml" value="0.25885416666666666" />
@@ -108,22 +108,12 @@
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layout/item_upcoming_section.xml" value="0.17592592592592593" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/technique_fragment.xml" value="0.2346014492753623" />
         <entry key="..\:/Users/nikit/Documents/GitHub/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/home_section_item.xml" value="0.1" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/drawable-v24/ic_baseline_add_24.xml" value="0.2" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/drawable/ic_back.xml" value="0.2" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/drawable/ic_calendar.xml" value="0.2" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/drawable/ic_notifications.xml" value="0.2" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/dialogs/layout/base_list_dialog_fragment.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/dialogs/layout/pomodoros_dialog_fragment.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/edit_task_fragment.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/fragments/layout/upcoming_fragment.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/action_icon_item.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/add_subtask_button.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/notifications_dialog_fragment.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/somka/source/repos/LimaApp/Android/Lima/app/src/main/res/layouts/items/layout/tasks_item.xml" value="0.22826086956521738" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
