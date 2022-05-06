@@ -129,7 +129,6 @@ class AnalyticsWeekViewModel @Inject constructor(
         var currentWeek: Int = calendar.get(Calendar.WEEK_OF_YEAR) + 1
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
 
-
         /////////////////////////////
 
         val habitStats: HashMap<Int, Int> = HashMap()
@@ -142,6 +141,11 @@ class AnalyticsWeekViewModel @Inject constructor(
         val calendar1 = Calendar.getInstance();
 
         for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 0 until 7) {
+                habitStatsLocal[i] = 0
+            }
+
             val calendar2 = Calendar.getInstance()
             calendar2.timeInMillis = habit.date!!
             var year = calendar2.get(Calendar.YEAR)
@@ -151,15 +155,19 @@ class AnalyticsWeekViewModel @Inject constructor(
                 if (year != calendar2.get(Calendar.YEAR) &&
                     calendar2.get(Calendar.DAY_OF_WEEK) == 0) {
                     for (i in 0 until 7) {
-                        habitStats[i] = 0
+                        habitStatsLocal[i] = 0
                     }
                     year = calendar2.get(Calendar.YEAR)
                 }
                 if (calendar2.get(Calendar.WEEK_OF_YEAR) == calendar1.get(Calendar.WEEK_OF_YEAR)) {
-                    habitStats[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7] =
-                        habitStats[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7]!! + 1
+                    habitStatsLocal[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7] =
+                        habitStatsLocal[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7]!! + 1
                 }
                 calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 0 until 7) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
             }
         }
 
@@ -249,6 +257,50 @@ class AnalyticsWeekViewModel @Inject constructor(
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val stats = analyticsDao.getStatWeek(currentYear, currentWeek)
 
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 0 until 7) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance();
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 0 until 7) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.timeInMillis = calendar.timeInMillis +
+                    86400000 * (7 - (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR) &&
+                    calendar2.get(Calendar.DAY_OF_WEEK) == 0) {
+                    for (i in 0 until 7) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.WEEK_OF_YEAR) == calendar1.get(Calendar.WEEK_OF_YEAR)) {
+                    habitStatsLocal[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7] =
+                        habitStatsLocal[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 0 until 7) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
+
         val data: MutableList<DataEntry> = ArrayList()
         val currentDate = getCurrentDate(calendar, currentYear)
 
@@ -265,12 +317,13 @@ class AnalyticsWeekViewModel @Inject constructor(
         var nonEmptyCounter = 0
 
         stats.forEach {
-            if (it.completedTasks == 0 || it.allTasks == 0) {
+            if (it.completedTasks == 0 ||
+                (habitStats[(it.dayOfWeek - 1 + 7) % 7]!! + it.allTasks) == 0) {
                 weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = 0.0
-                ///sum += 100.0
             } else {
                 weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] =
-                    it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+                    it.completedTasks.toDouble() / (habitStats[(it.dayOfWeek - 1 + 7) % 7]!!
+                            + it.allTasks) * 100
                 sum += weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]]!!
                 nonEmptyCounter++
             }
@@ -301,6 +354,50 @@ class AnalyticsWeekViewModel @Inject constructor(
         val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
         val stats = analyticsDao.getStatWeek(currentYear, currentWeek)
 
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 0 until 7) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance();
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 0 until 7) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.timeInMillis = calendar.timeInMillis +
+                    86400000 * (7 - (calendar.get(Calendar.DAY_OF_WEEK) - 1) % 7)
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR) &&
+                    calendar2.get(Calendar.DAY_OF_WEEK) == 0) {
+                    for (i in 0 until 7) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.WEEK_OF_YEAR) == calendar1.get(Calendar.WEEK_OF_YEAR)) {
+                    habitStatsLocal[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7] =
+                        habitStatsLocal[(calendar2.get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 0 until 7) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
+
         val data: MutableList<DataEntry> = ArrayList()
         val currentDate = getCurrentDate(calendar, currentYear)
 
@@ -318,12 +415,13 @@ class AnalyticsWeekViewModel @Inject constructor(
         var buf = 0.0
 
         stats.forEach {
-            if (it.completedTasks == 0 || it.allTasks == 0) {
+            if (it.completedTasks == 0 ||
+                (habitStats[(it.dayOfWeek - 1 + 7) % 7]!! + it.allTasks) == 0) {
                 weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = 0.0
                 buf = 0.0
-                //sum += 100.0
             } else {
-                val new = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+                val new = it.completedTasks.toDouble() /
+                        (habitStats[(it.dayOfWeek - 1 + 7) % 7]!! + it.allTasks) * 100
                 if (new == 0.0) {
                     weekList[daysName[(it.dayOfWeek - 1 + 7) % 7]] = 0.0
                     buf = 0.0
