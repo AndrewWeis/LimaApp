@@ -93,7 +93,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH)
+        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
         val stats = analyticsDao.getStatMonth(currentYear, currentMonth)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)

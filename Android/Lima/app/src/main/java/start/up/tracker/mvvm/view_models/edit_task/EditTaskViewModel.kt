@@ -367,9 +367,11 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            val beforeDate = taskDao.getTaskById(task.taskId)[0].date
-            updateTask()
-            analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
+            if (habitStatus == 0) {
+                updateTask()
+            } else {
+                updateHabit();
+            }
             return
         }
 
@@ -403,6 +405,8 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun repeatHabits() = viewModelScope.launch {
+        // РАЗ В КАКОЕ-ТО ВРЕМЯ ПРОВЕРКА:
+
         val allHabits = taskDao.getAllHabits()
 
         for (habit in allHabits) {
@@ -499,13 +503,41 @@ class EditTaskViewModel @Inject constructor(
         launch { activeAnalytics.editTask(task) }
 
         taskDao.updateTask(task)
+        val beforeDate = taskDao.getTaskById(task.taskId)[0].date
+        analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
     private fun updateHabit() = viewModelScope.launch {
-        launch { activeAnalytics.editTask(task) }
+        val habitStatus = 2
 
-        taskDao.updateTask(task)
+        if (task.date == null) {
+            throw RuntimeException("Привычка без даты не допустима!")
+            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
+            // TODO в то же время можно создать без указания точного времени начала и коцна!
+        }
+
+        val shift : Long = when (habitStatus) {
+            1 -> {
+                24L * 60 * 60 * 1000
+            }
+            2 -> {
+                24L * 60 * 60 * 1000 * 7
+            }
+            3 -> {
+                24L * 60 * 60 * 1000 * 14
+            }
+            4 -> {
+                24L * 60 * 60 * 1000 * 365
+            }
+            else -> {0L}
+        }
+
+        val newTask = task.copy(shift = shift)
+
+        launch { activeAnalytics.editTask(newTask) }
+
+        taskDao.updateTask(newTask)
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
