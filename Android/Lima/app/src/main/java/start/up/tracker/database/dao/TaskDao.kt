@@ -46,6 +46,13 @@ interface TaskDao {
 
     @Query(
         """
+       SELECT * FROM task_table WHERE shift > -1
+       """
+    )
+    suspend fun getAllHabits(): List<Task>
+
+    @Query(
+        """
         SELECT COUNT(*) 
         FROM task_table 
         JOIN projects_table ON task_table.projectId = projects_table.projectId

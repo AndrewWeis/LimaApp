@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import start.up.tracker.R
 import start.up.tracker.database.dao.*
 import start.up.tracker.entities.Project
+import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.home.HomeSection
@@ -109,7 +110,7 @@ class HomeViewModel @Inject constructor(
 
             val tasks = taskDao.getTasksOfProject(project.projectId)
             tasks.forEach { task ->
-                taskDao.deleteTask(task)
+                deleteTask(task)
                 taskDao.deleteSubtasks(task.taskId)
             }
 
@@ -136,5 +137,9 @@ class HomeViewModel @Inject constructor(
 
     private companion object {
         const val INBOX_ID = 1
+    }
+
+    suspend fun deleteTask(task: Task) {
+        taskDao.deleteTask(task)
     }
 }

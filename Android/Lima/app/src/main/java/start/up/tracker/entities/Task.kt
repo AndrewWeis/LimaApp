@@ -24,6 +24,10 @@ data class Task(
     val subtasksNumber: Int = 0,
     val completedSubtasksNumber: Int = 0,
 
+    // для привычек
+    val originalTaskId: Int = -1,
+    val shift: Long = -1L,
+
     // todo (maybe add task id to day stat)
     val wasCompleted: Boolean = false,
 
