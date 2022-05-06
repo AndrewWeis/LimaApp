@@ -12,7 +12,9 @@ import start.up.tracker.utils.TimeHelper
 import java.util.*
 
 fun schedule(notification: Notification) {
-        notification.triggerDateTimeInMillis = TimeHelper.getCurrentTimeInMilliseconds() + 10 * 1000
+        if (notification.triggerDateTimeInMillis == null) {
+                return
+        }
 
         val context = App.context
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -33,7 +35,7 @@ fun schedule(notification: Notification) {
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
             alarmPendingIntent
-        );
+        )
 
         notification.isActive = true;
 }

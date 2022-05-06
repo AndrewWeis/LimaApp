@@ -165,11 +165,12 @@ class EditTaskViewModel @Inject constructor(
 
     private suspend fun updateTaskNotification(type: NotificationType): Long {
         var notificationId = task.notificationId
+        val taskEnd = TimeHelper.computeEndDate(task)
         if (notificationId != -1L) {
             val notification = notificationDao.getNotificationById(notificationId).first()
-            notificationDao.updateNotification(notification.copy(type = type))
+            notificationDao.updateNotification(notification.copyFromType(type, taskEnd))
         } else {
-            val notification = Notification(type = type)
+            val notification = Notification.create(type, taskEnd)
             notificationId =
                 notificationDao.insertNotification(notification)
         }
