@@ -10,6 +10,7 @@ import kotlinx.android.parcel.Parcelize
 data class Notification(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
+    var isActive: Boolean = false,
     val type: NotificationType = NotificationType.NONE,
-    val triggerTime: Long = 0,
+    var triggerDateTimeInMillis: Long = 0,
 ) : Parcelable
