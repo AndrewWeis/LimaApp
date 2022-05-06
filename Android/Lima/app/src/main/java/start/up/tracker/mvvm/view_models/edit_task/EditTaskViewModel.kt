@@ -107,7 +107,6 @@ class EditTaskViewModel @Inject constructor(
     // 3 - fortnight
     // 4 - year (birthdays!)
     val habitStatus = 1
-    val SAMPLES = 100
     fun saveTask() {
         if (habitStatus == 0) {
             if (isEditMode) {
@@ -447,7 +446,7 @@ class EditTaskViewModel @Inject constructor(
         val newTask = task.copy(taskId = maxTaskId + 1, shift = shift)
 
         activeAnalytics.addTask(newTask)
-        analytics.addTaskToStatisticOnCreate(task.date)
+        //analytics.addTaskToStatisticOnCreate(task.date)
         taskDao.insertTask(newTask)
 
         tasksEventChannel.send(TasksEvent.NavigateBack)

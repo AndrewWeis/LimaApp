@@ -9,7 +9,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
-import start.up.tracker.entities.DayStat
+import start.up.tracker.database.dao.TaskDao
 import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -20,7 +20,8 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class AnalyticsMonthViewModel @Inject constructor(
-    private val dao: AnalyticsDao,
+    private val analyticsDao: AnalyticsDao,
+    private val taskDao: TaskDao,
 ) : ViewModel() {
 
     inner class ChartData(
@@ -92,12 +93,48 @@ class AnalyticsMonthViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val currentMonth: Int = calendar.get(Calendar.MONTH)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
         val currentDate =
             StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
+
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 1..31) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.timeInMillis = calendar.timeInMillis +
+                    86400000L * (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) -
+                    calendar.get(Calendar.DAY_OF_MONTH))
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..31) {
+                        habitStats[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.MONTH) == calendar1.get(Calendar.MONTH)) {
+                    habitStats[calendar2.get(Calendar.DAY_OF_MONTH)] =
+                        habitStats[calendar2.get(Calendar.DAY_OF_MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+        }
+
+        /////////////////////////////
 
         calendar.set(currentYear, currentMonth, 1)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -112,7 +149,11 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         stats.forEach {
             monthList[it.day] = it.allTasks
-            sum += it.allTasks
+        }
+
+        for (i in 1..maxDay) {
+            monthList[i] = monthList[i]!! + habitStats[i]!!
+            sum += monthList[i]!!
         }
 
         val average = sum.toDouble() / maxDay
@@ -132,7 +173,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth)
 
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
@@ -172,7 +213,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
         val currentDate =
@@ -223,7 +264,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
         val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
         val currentDate =
