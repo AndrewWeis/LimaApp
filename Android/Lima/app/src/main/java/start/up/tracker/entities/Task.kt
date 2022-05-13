@@ -43,9 +43,10 @@ data class Task(
     // todo (вынестим в отдельный класс)
     companion object Ids {
         const val NONE = 0
-        const val PRIORITY_HIGH = 1
+
+        const val PRIORITY_LOW = 1
         const val PRIORITY_MEDIUM = 2
-        const val PRIORITY_LOW = 3
+        const val PRIORITY_HIGH = 3
 
         const val IMPORTANT_URGENT = 1
         const val IMPORTANT_NOT_URGENT = 2

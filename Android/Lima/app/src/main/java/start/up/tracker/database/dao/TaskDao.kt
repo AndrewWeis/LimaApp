@@ -26,7 +26,7 @@ interface TaskDao {
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskTitle LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
-       ASC, created"""
+       DESC, created"""
     )
     fun getTasksOfProject(
         searchQuery: String,
