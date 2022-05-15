@@ -12,7 +12,7 @@ interface EisenhowerMatrixTasksDao {
         SELECT * 
         FROM task_table 
         WHERE eisenhowerMatrix != 0 
-        ORDER BY eisenhowerMatrix ASC, priority ASC 
+        ORDER BY eisenhowerMatrix ASC, priority DESC 
     """)
     fun getEisenhowerTasks(): Flow<List<Task>>
 }

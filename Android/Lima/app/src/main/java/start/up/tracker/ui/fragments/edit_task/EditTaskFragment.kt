@@ -16,10 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.EditTaskFragmentBinding
-import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
@@ -192,6 +190,7 @@ class EditTaskFragment :
             ActionIcon.ICON_TIME_END -> viewModel.onIconTimeEndClick()
             ActionIcon.ICON_PROJECTS -> viewModel.onIconProjectsClick()
             ActionIcon.ICON_POMODORO -> viewModel.onIconPomodoroClick()
+            ActionIcon.ICON_REPEATS -> viewModel.onIconRepeatsClick()
             ActionIcon.ICON_NOTIFICATIONS -> viewModel.onIconNotificationsClick()
             ActionIcon.ICON_EISENHOWER_MATRIX -> viewModel.onIconEisenhowerMatrixClick()
         }
@@ -406,6 +405,10 @@ class EditTaskFragment :
         setFragmentResultListener(ExtraCodes.EISENHOWER_MATRIX_REQUEST) { requestKey, bundle ->
             viewModel.onEisenhowerMatrixItemChanged(bundle.getInt(requestKey))
         }
+
+        setFragmentResultListener(ExtraCodes.REPEATS_REQUEST) { requestKey, bundle ->
+            viewModel.onRepeatsItemChanged(bundle.getInt(requestKey))
+        }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
@@ -495,6 +498,13 @@ class EditTaskFragment :
                 is TasksEvent.NavigateToEisenhowerMatrixDialog -> {
                     val action = EditTaskFragmentDirections.actionEditTaskFragmentToEisenhowerMatrixDialogFragment(
                         selectedEisenhowerMatrixId = event.optionId
+                    )
+                    navigateTo(action)
+                }
+
+                is TasksEvent.NavigateToRepeatsDialog -> {
+                    val action = EditTaskFragmentDirections.actionEditTaskToRepeats(
+                        selectedRepeatsId = event.repeatsId
                     )
                     navigateTo(action)
                 }

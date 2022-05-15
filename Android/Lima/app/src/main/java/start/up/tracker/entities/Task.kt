@@ -34,6 +34,8 @@ data class Task(
     // notification link
     val notificationId: Long = -1,
 
+    val repeatsId: Int = NEVER,
+
     val pomodoros: Int? = null,
     val completedPomodoros: Int? = null,
 
@@ -43,9 +45,15 @@ data class Task(
     // todo (вынестим в отдельный класс)
     companion object Ids {
         const val NONE = 0
-        const val PRIORITY_HIGH = 1
+
+        const val PRIORITY_LOW = 1
         const val PRIORITY_MEDIUM = 2
-        const val PRIORITY_LOW = 3
+        const val PRIORITY_HIGH = 3
+
+        const val NEVER = 0
+        const val EVERY_DAY = 1
+        const val EVERY_WEEK = 2
+        const val EVERY_SECOND_WEEK = 3
 
         const val IMPORTANT_URGENT = 1
         const val IMPORTANT_NOT_URGENT = 2
