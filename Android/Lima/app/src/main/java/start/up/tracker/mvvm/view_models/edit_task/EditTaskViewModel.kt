@@ -200,6 +200,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(eisenhowerMatrix = itemId)
     }
 
+    fun onRepeatsItemChanged(itemId: Int) {
+        task = task.copy(repeatsId = itemId)
+    }
+
     fun onIconPriorityClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
     }

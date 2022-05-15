@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_editTaskFragment_to_eisenhowerMatrixDialogFragment"
             app:destination="@id/eisenhowerMatrixDialogFragment" />
+        <action
+            android:id="@+id/action_editTask_to_repeats"
+            app:destination="@id/repeatsDialogFragment" />
     </dialog>
     <fragment
         android:id="@+id/analyticsFragment"
@@ -276,4 +279,13 @@
     <action
         android:id="@+id/action_eisenhowerMatrix_to_addEditTask"
         app:destination="@id/editTaskFragment" />
+    <dialog
+        android:id="@+id/repeatsDialogFragment"
+        android:name="start.up.tracker.ui.dialogs.edit_task.RepeatsDialogFragment"
+        android:label="RepeatsDialogFragment"
+        tools:layout="@layout/base_list_dialog_fragment">
+        <argument
+            android:name="selectedRepeatsId"
+            app:argType="integer" />
+    </dialog>
 </navigation>

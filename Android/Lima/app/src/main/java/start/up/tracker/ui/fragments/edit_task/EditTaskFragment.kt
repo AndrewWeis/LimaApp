@@ -405,6 +405,10 @@ class EditTaskFragment :
         setFragmentResultListener(ExtraCodes.EISENHOWER_MATRIX_REQUEST) { requestKey, bundle ->
             viewModel.onEisenhowerMatrixItemChanged(bundle.getInt(requestKey))
         }
+
+        setFragmentResultListener(ExtraCodes.REPEATS_REQUEST) { requestKey, bundle ->
+            viewModel.onRepeatsItemChanged(bundle.getInt(requestKey))
+        }
     }
 
     private fun initEventsListener() = viewLifecycleOwner.lifecycleScope.launchWhenCreated {
@@ -499,8 +503,10 @@ class EditTaskFragment :
                 }
 
                 is TasksEvent.NavigateToRepeatsDialog -> {
-
-                    // navigateTo(action)
+                    val action = EditTaskFragmentDirections.actionEditTaskToRepeats(
+                        selectedRepeatsId = event.repeatsId
+                    )
+                    navigateTo(action)
                 }
             }
         }

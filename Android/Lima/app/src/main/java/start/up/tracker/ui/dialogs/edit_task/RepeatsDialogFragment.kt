@@ -9,27 +9,26 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
 import start.up.tracker.databinding.BaseListDialogFragmentBinding
-import start.up.tracker.entities.NotificationType
-import start.up.tracker.mvvm.view_models.edit_task.dialogs.NotificationsDialogViewModel
+import start.up.tracker.mvvm.view_models.edit_task.dialogs.RepeatsViewModel
 import start.up.tracker.ui.extensions.list.ListExtension
 import start.up.tracker.ui.fragments.base.BaseBottomSheetDialogFragment
 import start.up.tracker.ui.list.adapters.edit_task.dialogs.DialogChoiceAdapter
-import start.up.tracker.ui.list.generators.edit_task.dialogs.NotificationsGenerator
+import start.up.tracker.ui.list.generators.edit_task.dialogs.RepeatsGenerator
 import start.up.tracker.ui.list.view_holders.edit_task.dialogs.DialogChoiceViewHolder
 import start.up.tracker.utils.screens.ExtraCodes
 
 @AndroidEntryPoint
-class NotificationsDialogFragment :
+class RepeatsDialogFragment :
     BaseBottomSheetDialogFragment(R.layout.base_list_dialog_fragment),
     DialogChoiceViewHolder.DialogChoiceClickListener {
 
-    private val viewModel: NotificationsDialogViewModel by viewModels()
+    private val viewModel: RepeatsViewModel by viewModels()
 
     private var binding: BaseListDialogFragmentBinding? = null
 
     private lateinit var adapter: DialogChoiceAdapter
     private var listExtension: ListExtension? = null
-    private val generator = NotificationsGenerator()
+    private val generator = RepeatsGenerator()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,19 +45,18 @@ class NotificationsDialogFragment :
     }
 
     override fun onChoiceClick(choiceId: Int) {
-        val type = NotificationType.getByTypeId(choiceId) ?: return
-        viewModel.onNotificationClick(type)
+        viewModel.onRepeatsClick(choiceId)
 
         setFragmentResult(
-            requestKey = ExtraCodes.NOTIFICATION_REQUEST,
-            result = bundleOf(ExtraCodes.NOTIFICATION_REQUEST to choiceId)
+            requestKey = ExtraCodes.REPEATS_REQUEST,
+            result = bundleOf(ExtraCodes.REPEATS_REQUEST to choiceId)
         )
 
         findNavController().popBackStack()
     }
 
-    private fun showData(notificationType: NotificationType) {
-        adapter.updateItems(generator.getDefaultNotificationListItems(notificationType))
+    private fun showData(repeatsId: Int) {
+        adapter.updateItems(generator.getRepeatsListItems(repeatsId))
     }
 
     private fun setupAdapter() {
@@ -73,8 +71,8 @@ class NotificationsDialogFragment :
     }
 
     private fun setupObservers() {
-        viewModel.notificationType.observe(viewLifecycleOwner) { type ->
-            showData(type)
+        viewModel.repeatsId.observe(viewLifecycleOwner) { id ->
+            showData(id)
         }
     }
 }
