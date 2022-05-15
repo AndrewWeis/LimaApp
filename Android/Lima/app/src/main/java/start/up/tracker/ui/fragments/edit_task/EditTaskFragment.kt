@@ -16,10 +16,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.EditTaskFragmentBinding
-import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.edit_task.EditTaskViewModel
 import start.up.tracker.ui.data.constants.ListItemIds
@@ -192,6 +190,7 @@ class EditTaskFragment :
             ActionIcon.ICON_TIME_END -> viewModel.onIconTimeEndClick()
             ActionIcon.ICON_PROJECTS -> viewModel.onIconProjectsClick()
             ActionIcon.ICON_POMODORO -> viewModel.onIconPomodoroClick()
+            ActionIcon.ICON_REPEATS -> viewModel.onIconRepeatsClick()
             ActionIcon.ICON_NOTIFICATIONS -> viewModel.onIconNotificationsClick()
             ActionIcon.ICON_EISENHOWER_MATRIX -> viewModel.onIconEisenhowerMatrixClick()
         }
@@ -497,6 +496,11 @@ class EditTaskFragment :
                         selectedEisenhowerMatrixId = event.optionId
                     )
                     navigateTo(action)
+                }
+
+                is TasksEvent.NavigateToRepeatsDialog -> {
+
+                    // navigateTo(action)
                 }
             }
         }

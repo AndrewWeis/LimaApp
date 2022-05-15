@@ -123,4 +123,12 @@
     <string name="notification_channel_id" translatable="false">task_channel</string>
     <string name="notification_channel_name" translatable="true">Task</string>
     <string name="notification_channel_description">Task reminder</string>
+
+
+    <!-- repeats -->
+    <string name="repeats_never">Never</string>
+    <string name="repeats_every_day">Every day</string>
+    <string name="repeats_every_week">Every week</string>
+    <string name="repeats_every_second_week">Every second week</string>
+
 </resources>

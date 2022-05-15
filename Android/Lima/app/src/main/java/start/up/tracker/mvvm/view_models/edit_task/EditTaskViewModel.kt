@@ -220,6 +220,10 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateToProjectsDialog(task.projectId))
     }
 
+    fun onIconRepeatsClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToRepeatsDialog(task.repeatsId))
+    }
+
     fun onIconPomodoroClick() = viewModelScope.launch {
         tasksEventChannel.send(
             TasksEvent.NavigateToPomodoroDialog(
@@ -300,6 +304,8 @@ class EditTaskViewModel @Inject constructor(
         if (principlesIds.contains(TechniquesIds.POMODORO)) {
             icons.add(pomodoroActionIcon)
         }
+
+        icons.add(ActionIcon(id = ActionIcon.ICON_REPEATS, iconRes = R.drawable.ic_repeat))
 
         icons.add(ActionIcon(id = ActionIcon.ICON_NOTIFICATIONS, iconRes = R.drawable.ic_notifications))
 

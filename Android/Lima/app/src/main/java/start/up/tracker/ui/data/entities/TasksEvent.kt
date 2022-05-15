@@ -21,4 +21,5 @@ sealed class TasksEvent {
     data class NavigateToEisenhowerMatrixDialog(val optionId: Int) : TasksEvent()
     data class ShowError(val error: String) : TasksEvent()
     data class NavigateToNotificationsDialog(val notificationType: NotificationType) : TasksEvent()
+    data class NavigateToRepeatsDialog(val repeatsId: Int) : TasksEvent()
 }
