@@ -5,6 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.first
 import start.up.tracker.database.TimerDataStore
+import start.up.tracker.entities.Notification
+import start.up.tracker.entities.NotificationType
+import start.up.tracker.servicies.schedule
+import start.up.tracker.utils.TimeHelper
 import javax.inject.Singleton
 
 @Singleton
@@ -22,6 +26,8 @@ class PomodoroTimer(
 
     private val _timerIteration: MutableLiveData<Int> = MutableLiveData()
     val timerIteration: MutableLiveData<Int> get() = _timerIteration
+
+    private var timerStatus: TimerStatus = TimerStatus.Paused
 
     var restTime = POMODORO_REST_SHORT
     var iteration: Int = 0
@@ -65,6 +71,14 @@ class PomodoroTimer(
     }
 
     fun startTimer() {
+        if (timerStatus === TimerStatus.WorkTime) {
+            val current = TimeHelper.getCurrentTimeInMilliseconds()
+            val notification = Notification.create(
+                NotificationType.AT_TASK_TIME,
+                TimeHelper.addSeconds(current, timerLength)!!
+            )
+            schedule(notification)
+        }
         countDownTimer.start()
         _timerState.postValue(TIMER_STATE_RUNNING)
     }
@@ -76,10 +90,12 @@ class PomodoroTimer(
 
     fun setupTimerLength() {
         // even - work time, odd - rest time
-        timerLength = if (iteration % 2 == 0) {
-            POMODORO_WORK_TIME
+        if (iteration % 2 == 0) {
+            timerLength = POMODORO_WORK_TIME
+            timerStatus = TimerStatus.WorkTime
         } else {
-            restTime
+            timerLength = restTime
+            timerStatus = TimerStatus.RestTime
         }
     }
 
@@ -137,6 +153,7 @@ class PomodoroTimer(
         _timerIteration.postValue(iteration)
 
         _timerState.postValue(TIMER_STATE_STOPPED)
+        timerStatus = TimerStatus.Paused
 
         setupTimerLength()
         _secondsRemaining.postValue(timerLength)
@@ -153,5 +170,11 @@ class PomodoroTimer(
         const val POMODORO_WORK_TIME = 6L
         const val POMODORO_REST_SHORT = 2L
         const val POMODORO_REST_LONG = 4L
+    }
+
+    enum class TimerStatus {
+        WorkTime,
+        RestTime,
+        Paused
     }
 }

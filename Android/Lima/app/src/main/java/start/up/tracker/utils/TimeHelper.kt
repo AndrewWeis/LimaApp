@@ -238,6 +238,14 @@ object TimeHelper {
         return dateTimeInMillis + minutes.toLong() * 60 * 1000
     }
 
+    fun addSeconds(dateTimeInMillis: Long?, seconds: Long): Long? {
+        if (dateTimeInMillis == null) {
+            return null
+        }
+
+        return dateTimeInMillis + seconds * 1000
+    }
+
     object DateFormats {
         const val DD_MMMM: String = "dd-MMMM"
         const val DD_MMM_EEEE: String = "dd MMM, EEEE"
