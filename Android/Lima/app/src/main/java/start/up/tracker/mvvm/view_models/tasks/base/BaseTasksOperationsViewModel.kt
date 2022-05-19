@@ -42,7 +42,7 @@ abstract class BaseTasksOperationsViewModel(
     fun onTaskSwiped(listItem: ListItem) = viewModelScope.launch {
         val task = listItem.data as Task
 
-        taskDao.deleteTask(task)
+        deleteTask(task)
 
         val subtaskToRestore = taskDao.getSubtasksToRestore(task.taskId)
         taskDao.deleteSubtasks(task.taskId)
@@ -50,5 +50,16 @@ abstract class BaseTasksOperationsViewModel(
         activeAnalytics.deleteTask(task)
 
         tasksEventChannel.send(TasksEvent.ShowUndoDeleteTaskMessage(task, subtaskToRestore))
+    }
+
+    suspend fun deleteTask(task: Task) {
+        //if (task.originalTaskId == -1) {
+            taskDao.deleteTask(task)
+        /*} else {
+            val tasksOfHabit = taskDao.getTasksOfHabit(task.originalTaskId)
+            for (taskOfHabit in tasksOfHabit) {
+                taskDao.deleteTask(taskOfHabit)
+            }
+        }*/
     }
 }
