@@ -106,6 +106,9 @@ class EditTaskViewModel @Inject constructor(
     // 2 - week
     // 3 - fortnight
     // 4 - year (birthdays!)
+    // TODO АНДРЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЙ
+    // При нажатии кнопки (выбор повторимости должно обновляться значение переменной habitStatus)
+    // По идее всё.
     val habitStatus = 1
     fun saveTask() {
         if (habitStatus == 0) {
@@ -404,6 +407,7 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
+    // TODO АНДРЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЙ. При запуске надо вызввать ЭТОООООООООООООООООООООО
     private fun repeatHabits() = viewModelScope.launch {
         // РАЗ В КАКОЕ-ТО ВРЕМЯ ПРОВЕРКА:
 
@@ -427,6 +431,7 @@ class EditTaskViewModel @Inject constructor(
 
         if (task.date == null) {
             throw RuntimeException("Привычка без даты не допустима!")
+            // TODO АНДРЕЙ Я НЕ ЗНАЮ КАК ОШИБКИ ОБРАБАТЫВАТЬ
             // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
             // TODO в то же время можно создать без указания точного времени начала и коцна!
         }
