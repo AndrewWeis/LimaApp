@@ -40,8 +40,8 @@ fun buildSystemNotification(source: Notification, context: Context): android.app
 
         // TODO: Step 1.3 set title, text and icon to builder
         .setSmallIcon(R.drawable.ic_add)
-        .setContentTitle(ResourcesUtils.getString(R.string.notification_title))
-        .setContentText("BODY")
+        .setContentTitle(source.title)
+        .setContentText(source.body)
 
         // TODO: Step 1.13 set content intent
         .setContentIntent(contentPendingIntent)
