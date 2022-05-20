@@ -9,11 +9,13 @@ class EisenhowerMatrix : Principle {
     private val isOverridesPriority = true
 
     override suspend fun validateOnAddTask(task: Task): AnalyticsMessage? {
-        TODO("Not yet implemented")
+        // todo (implement)
+        return null
     }
 
     override suspend fun validateOnEditTask(task: Task): AnalyticsMessage? {
-        TODO("Not yet implemented")
+        // todo (implement)
+        return null
     }
 
     override suspend fun getIsOverridesPriority(): Boolean {

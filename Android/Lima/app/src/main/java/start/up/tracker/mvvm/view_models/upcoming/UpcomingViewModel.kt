@@ -23,7 +23,7 @@ class UpcomingViewModel @Inject constructor(
     analytics: Analytics,
     projectsDao: ProjectsDao,
     upcomingTasksDao: UpcomingTasksDao,
-    private val activeAnalytics: ActiveAnalytics,
+    activeAnalytics: ActiveAnalytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
 
     private val upcomingTasksFlow = upcomingTasksDao.getUpcomingTasks(

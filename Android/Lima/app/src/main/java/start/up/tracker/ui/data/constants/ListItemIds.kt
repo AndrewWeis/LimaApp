@@ -17,11 +17,9 @@ object ListItemIds {
     const val TODAY = "today"
     const val UPCOMING = "upcoming"
     const val POMODORO = "pomodoro"
+    const val EISENHOWER_MATRIX = "eisenhower_matrix"
 
     const val PROJECTS = "projects"
 
     const val ACTIONS_ICONS = "actions_icons"
-
-    const val CALENDAR_TIMES = "calendar_times"
-    const val CALENDAR_TASKS = "calendar_tasks"
 }

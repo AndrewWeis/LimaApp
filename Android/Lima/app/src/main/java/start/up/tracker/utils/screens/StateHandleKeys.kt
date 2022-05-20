@@ -16,4 +16,8 @@ object StateHandleKeys {
 
     const val CURRENT_START_TIME = "currentStartTime"
     const val CURRENT_POMODOROS = "currentPomodoros"
+
+    const val SELECTED_EISENHOWER_MATRIX_ID = "selectedEisenhowerMatrixId"
+
+    const val SELECTED_REPEATS_ID = "selectedRepeatsId"
 }

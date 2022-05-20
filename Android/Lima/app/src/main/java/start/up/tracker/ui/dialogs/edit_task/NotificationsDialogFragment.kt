@@ -61,7 +61,6 @@ class NotificationsDialogFragment :
         adapter.updateItems(generator.getDefaultNotificationListItems(notificationType))
     }
 
-
     private fun setupAdapter() {
         adapter = DialogChoiceAdapter(
             layoutInflater = layoutInflater,

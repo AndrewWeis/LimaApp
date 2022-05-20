@@ -18,6 +18,8 @@ sealed class TasksEvent {
     data class ShowTimeEndPicker(val timeEnd: Int?) : TasksEvent()
     data class NavigateToProjectsDialog(val projectId: Int) : TasksEvent()
     data class NavigateToPomodoroDialog(val pomodoros: Int?, val startTime: Int?) : TasksEvent()
+    data class NavigateToEisenhowerMatrixDialog(val optionId: Int) : TasksEvent()
     data class ShowError(val error: String) : TasksEvent()
     data class NavigateToNotificationsDialog(val notificationType: NotificationType) : TasksEvent()
+    data class NavigateToRepeatsDialog(val repeatsId: Int) : TasksEvent()
 }

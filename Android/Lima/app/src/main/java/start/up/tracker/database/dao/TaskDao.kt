@@ -26,7 +26,7 @@ interface TaskDao {
        (completed != :hideCompleted OR completed = 0) AND 
        task_table.taskTitle LIKE '%' || :searchQuery || '%' 
        ORDER BY priority 
-       ASC, created"""
+       DESC, created"""
     )
     fun getTasksOfProject(
         searchQuery: String,
@@ -43,6 +43,13 @@ interface TaskDao {
        """
     )
     fun getTasksOfProject(projectId: Int): List<Task>
+
+    @Query(
+        """
+       SELECT * FROM task_table WHERE shift > -1
+       """
+    )
+    suspend fun getAllHabits(): List<Task>
 
     @Query(
         """
@@ -97,6 +104,9 @@ interface TaskDao {
 
     @Query("SELECT MAX(taskId) FROM task_table")
     suspend fun getTaskMaxId(): Int?
+
+    @Query("SELECT * FROM task_table WHERE taskId =:id")
+    suspend fun getTaskById(id: Int): List<Task>
 
     @Query("DELETE FROM task_table WHERE projectId =:projectId")
     suspend fun deleteTaskOfProject(projectId: Int)

@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import start.up.tracker.R
-import start.up.tracker.database.TechniquesIds
 import start.up.tracker.databinding.BaseListDialogFragmentBinding
 import start.up.tracker.mvvm.view_models.edit_task.dialogs.PriorityViewModel
 import start.up.tracker.ui.extensions.list.ListExtension
@@ -58,18 +57,8 @@ class PriorityDialogFragment :
 
     private fun showData(priorityId: Int) {
         when (viewModel.principleId) {
-            TechniquesIds.EISENHOWER_MATRIX -> showEisenhowerPrinciples(priorityId)
-            TechniquesIds.POMODORO -> showPomodoroPrinciples(priorityId)
             else -> showDefaultPrinciples(priorityId)
         }
-    }
-
-    private fun showPomodoroPrinciples(priorityId: Int) {
-
-    }
-
-    private fun showEisenhowerPrinciples(priorityId: Int) {
-        adapter.updateItems(generator.getEisenhowerPrioritiesListItems(priorityId))
     }
 
     private fun showDefaultPrinciples(priorityId: Int) {
@@ -79,7 +68,7 @@ class PriorityDialogFragment :
     private fun setupAdapter() {
         adapter = DialogChoiceAdapter(
             layoutInflater = layoutInflater,
-             dialogChoiceClickListener = this
+            dialogChoiceClickListener = this
         )
 
         listExtension = ListExtension(binding?.dialogList)

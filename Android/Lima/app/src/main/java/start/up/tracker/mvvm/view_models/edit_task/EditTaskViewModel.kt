@@ -28,6 +28,8 @@ import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
+import java.lang.RuntimeException
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -96,11 +98,28 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
+    // 0 - off
+    // 1 - day
+    // 2 - week
+    // 3 - fortnight
+    // 4 - year (birthdays!)
+    // TODO АНДРЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЙ
+    // При нажатии кнопки (выбор повторимости должно обновляться значение переменной habitStatus)
+    // По идее всё.
+    val habitStatus = 1
     fun saveTask() {
-        if (isEditMode) {
-            updateTask()
+        if (habitStatus == 0) {
+            if (isEditMode) {
+                updateTask()
+            } else {
+                createTask()
+            }
         } else {
-            createTask()
+            if (isEditMode) {
+                updateHabit()
+            } else {
+                createHabit()
+            }
         }
     }
 
@@ -190,6 +209,14 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(pomodoros = number, completedPomodoros = 0)
     }
 
+    fun onEisenhowerMatrixItemChanged(itemId: Int) {
+        task = task.copy(eisenhowerMatrix = itemId)
+    }
+
+    fun onRepeatsItemChanged(itemId: Int) {
+        task = task.copy(repeatsId = itemId)
+    }
+
     fun onIconPriorityClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
     }
@@ -210,6 +237,10 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateToProjectsDialog(task.projectId))
     }
 
+    fun onIconRepeatsClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToRepeatsDialog(task.repeatsId))
+    }
+
     fun onIconPomodoroClick() = viewModelScope.launch {
         tasksEventChannel.send(
             TasksEvent.NavigateToPomodoroDialog(
@@ -224,6 +255,10 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(
             TasksEvent.NavigateToNotificationsDialog(type)
         )
+    }
+
+    fun onIconEisenhowerMatrixClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToEisenhowerMatrixDialog(task.eisenhowerMatrix))
     }
 
     fun onBackButtonClick() = viewModelScope.launch {
@@ -267,7 +302,8 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
         val principlesIds = principlesDao.getActiveTechniquesIds()
 
-        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY,
+            iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
 
         if (!principlesIds.contains(TechniquesIds.POMODORO)) {
@@ -286,7 +322,14 @@ class EditTaskViewModel @Inject constructor(
             icons.add(pomodoroActionIcon)
         }
 
+        icons.add(ActionIcon(id = ActionIcon.ICON_REPEATS, iconRes = R.drawable.ic_repeat))
+
         icons.add(ActionIcon(id = ActionIcon.ICON_NOTIFICATIONS, iconRes = R.drawable.ic_notifications))
+
+        val eisenhowerMatrixActionIcon = ActionIcon(id = ActionIcon.ICON_EISENHOWER_MATRIX, iconRes = R.drawable.ic_eisenhower_matrix)
+        if (principlesIds.contains(TechniquesIds.EISENHOWER_MATRIX)) {
+            icons.add(eisenhowerMatrixActionIcon)
+        }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
     }
@@ -331,7 +374,11 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            updateTask()
+            if (habitStatus == 0) {
+                updateTask()
+            } else {
+                updateHabit();
+            }
             return
         }
 
@@ -342,7 +389,11 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            createTask()
+            if (habitStatus == 0) {
+                createTask()
+            } else {
+                createHabit();
+            }
             return
         }
 
@@ -354,15 +405,148 @@ class EditTaskViewModel @Inject constructor(
         val newTask = task.copy(taskId = maxTaskId + 1)
 
         activeAnalytics.addTask(newTask)
-
+        analytics.addTaskToStatisticOnCreate(task.date)
         taskDao.insertTask(newTask)
+
         tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
+    // TODO АНДРЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЙ. При запуске надо вызввать ЭТОООООООООООООООООООООО
+    private fun repeatHabits() = viewModelScope.launch {
+        // РАЗ В КАКОЕ-ТО ВРЕМЯ ПРОВЕРКА:
+
+        val allHabits = taskDao.getAllHabits()
+
+        for (habit in allHabits) {
+            val calendar = Calendar.getInstance()
+
+            if (calendar.timeInMillis > task.date!! + 24 * 60 * 60 * 1000) {
+                val newTask = task.copy(date = task.date!! + task.shift, completed = false,
+                    wasCompleted = false)
+
+                activeAnalytics.editTask(newTask)
+                taskDao.updateTask(newTask)
+            }
+        }
+    }
+
+    private fun createHabit() = viewModelScope.launch {
+        val maxTaskId = taskDao.getTaskMaxId() ?: 0
+
+        if (task.date == null) {
+            throw RuntimeException("Привычка без даты не допустима!")
+            // TODO АНДРЕЙ Я НЕ ЗНАЮ КАК ОШИБКИ ОБРАБАТЫВАТЬ
+            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
+            // TODO в то же время можно создать без указания точного времени начала и коцна!
+        }
+
+        val shift : Long = when (habitStatus) {
+            1 -> {
+                24L * 60 * 60 * 1000
+            }
+            2 -> {
+                24L * 60 * 60 * 1000 * 7
+            }
+            3 -> {
+                24L * 60 * 60 * 1000 * 14
+            }
+            4 -> {
+                24L * 60 * 60 * 1000 * 365
+            }
+            else -> {0L}
+        }
+
+        val newTask = task.copy(taskId = maxTaskId + 1, shift = shift)
+
+        activeAnalytics.addTask(newTask)
+        //analytics.addTaskToStatisticOnCreate(task.date)
+        taskDao.insertTask(newTask)
+
+        tasksEventChannel.send(TasksEvent.NavigateBack)
+
+        /*var maxTaskId = taskDao.getTaskMaxId() ?: 0
+        val originalTaskId = maxTaskId
+        var newTask = task.copy(taskId = maxTaskId + 1, originalTaskId = originalTaskId)
+
+        activeAnalytics.addTask(newTask)
+        analytics.addTaskToStatisticOnCreate(task.date)
+        taskDao.insertTask(newTask)
+
+        if (task.date == null) {
+            throw RuntimeException("Привычка без даты не допустима!")
+            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
+            // TODO в то же время можно создать без указания точного времени начала и коцна!
+        }
+
+        val shift : Long = when (habitStatus) {
+            1 -> {
+                24L * 60 * 60 * 1000
+            }
+            2 -> {
+                24L * 60 * 60 * 1000 * 7
+            }
+            3 -> {
+                24L * 60 * 60 * 1000 * 14
+            }
+            4 -> {
+                24L * 60 * 60 * 1000 * 365
+            }
+            else -> {0L}
+        }
+
+        for (i in 1..SAMPLES) {
+            maxTaskId = taskDao.getTaskMaxId() ?: 0
+            newTask = task.copy(taskId = maxTaskId + 1, originalTaskId = originalTaskId,
+                date = task.date!! + shift * i
+            )
+
+            activeAnalytics.addTask(newTask)
+            analytics.addTaskToStatisticOnCreate(task.date!! + shift * i)
+            taskDao.insertTask(newTask)
+        }
+
+        tasksEventChannel.send(TasksEvent.NavigateBack)*/
     }
 
     private fun updateTask() = viewModelScope.launch {
         launch { activeAnalytics.editTask(task) }
 
         taskDao.updateTask(task)
+        val beforeDate = taskDao.getTaskById(task.taskId)[0].date
+        analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
+        tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
+    private fun updateHabit() = viewModelScope.launch {
+        val habitStatus = 2
+
+        if (task.date == null) {
+            throw RuntimeException("Привычка без даты не допустима!")
+            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
+            // TODO в то же время можно создать без указания точного времени начала и коцна!
+        }
+
+        val shift : Long = when (habitStatus) {
+            1 -> {
+                24L * 60 * 60 * 1000
+            }
+            2 -> {
+                24L * 60 * 60 * 1000 * 7
+            }
+            3 -> {
+                24L * 60 * 60 * 1000 * 14
+            }
+            4 -> {
+                24L * 60 * 60 * 1000 * 365
+            }
+            else -> {0L}
+        }
+
+        val newTask = task.copy(shift = shift)
+
+        launch { activeAnalytics.editTask(newTask) }
+
+        taskDao.updateTask(newTask)
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 

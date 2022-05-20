@@ -28,29 +28,32 @@ object TechniquesStorage {
         }
     }
 
-    fun getParetoInfo(): Technique {
+    private fun getParetoInfo(): Technique {
         return Technique(
             id = PARETO,
             title = ResourcesUtils.getString(R.string.pareto_title),
             body = ResourcesUtils.getString(R.string.pareto_body),
+            image = R.drawable.img_abstract_1,
             timeToRead = 4,
         )
     }
 
-    fun getEisenhowerInfo(): Technique {
+    private fun getEisenhowerInfo(): Technique {
         return Technique(
             id = EISENHOWER_MATRIX,
             title = ResourcesUtils.getString(R.string.eisenhower_title),
             body = ResourcesUtils.getString(R.string.eisenhower_body),
+            image = R.drawable.img_abstract_2,
             timeToRead = 8,
         )
     }
 
-    fun getPomodoroInfo(): Technique {
+    private fun getPomodoroInfo(): Technique {
         return Technique(
             id = POMODORO,
             title = ResourcesUtils.getString(R.string.pomodoro_title),
             body = ResourcesUtils.getString(R.string.pomodoro_body),
+            image = R.drawable.img_abstract_3,
             timeToRead = 6,
         )
     }

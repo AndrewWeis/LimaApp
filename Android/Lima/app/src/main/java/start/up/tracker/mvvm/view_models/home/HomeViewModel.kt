@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import start.up.tracker.R
 import start.up.tracker.database.dao.*
 import start.up.tracker.entities.Project
+import start.up.tracker.entities.Task
 import start.up.tracker.ui.data.constants.ListItemIds
 import start.up.tracker.ui.data.entities.ListItem
 import start.up.tracker.ui.data.entities.home.HomeSection
@@ -98,17 +99,18 @@ class HomeViewModel @Inject constructor(
                 projectEventsChannel.send(HomeEvents.NavigateToUpcoming)
             ListItemIds.POMODORO ->
                 projectEventsChannel.send(HomeEvents.NavigateToPomodoro)
+            ListItemIds.EISENHOWER_MATRIX ->
+                projectEventsChannel.send(HomeEvents.NavigateToEisenhowerMatrix)
         }
     }
 
-    // todo (figure out how coroutines works)
     fun onProjectSwiped(listItem: ListItem) = viewModelScope.launch {
         withContext(Dispatchers.Default) {
             val project = listItem.data as Project
 
             val tasks = taskDao.getTasksOfProject(project.projectId)
             tasks.forEach { task ->
-                taskDao.deleteTask(task)
+                deleteTask(task)
                 taskDao.deleteSubtasks(task.taskId)
             }
 
@@ -130,9 +132,14 @@ class HomeViewModel @Inject constructor(
         object NavigateToToday : HomeEvents()
         object NavigateToUpcoming : HomeEvents()
         object NavigateToPomodoro : HomeEvents()
+        object NavigateToEisenhowerMatrix : HomeEvents()
     }
 
     private companion object {
         const val INBOX_ID = 1
+    }
+
+    suspend fun deleteTask(task: Task) {
+        taskDao.deleteTask(task)
     }
 }

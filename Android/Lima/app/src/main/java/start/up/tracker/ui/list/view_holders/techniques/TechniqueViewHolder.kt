@@ -30,6 +30,7 @@ class TechniqueViewHolder(
         binding.apply {
             techniqueTitleText.text = technique.title
             techniqueReadTimeText.text = technique.timeToRead.toString()
+            techniqueImage.setImageResource(technique.image)
         }
     }
 
