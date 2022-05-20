@@ -4,6 +4,8 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import com.google.gson.Gson
 import start.up.tracker.application.App
 import start.up.tracker.entities.Notification
@@ -38,4 +40,13 @@ fun schedule(notification: Notification) {
         )
 
         notification.isActive = true;
+}
+
+fun cancel(notification: Notification) {
+        val context = App.context
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val alarmPendingIntent = PendingIntent.getBroadcast(context, notification.id.toInt(), intent, 0);
+        alarmManager.cancel(alarmPendingIntent);
+        notification.isActive = false;
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.first
 import start.up.tracker.database.TimerDataStore
 import start.up.tracker.entities.Notification
 import start.up.tracker.entities.NotificationType
+import start.up.tracker.servicies.cancel
 import start.up.tracker.servicies.schedule
 import start.up.tracker.utils.TimeHelper
 
@@ -160,12 +161,14 @@ open class BaseTimer(
             NotificationType.AT_TASK_TIME,
             TimeHelper.addSeconds(current, timerLength)!!
         )
+        timerDataStore.saveNotification(notification)
         schedule(notification)
     }
 
     // todo(have fun Igor :))
     private fun cancelNotification() {
-
+        val notification = timerDataStore.notification.first() ?: return
+        cancel(notification)
     }
 
     companion object {
