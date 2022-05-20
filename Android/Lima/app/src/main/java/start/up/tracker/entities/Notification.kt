@@ -4,7 +4,9 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
+import start.up.tracker.R
 import start.up.tracker.utils.TimeHelper
+import start.up.tracker.utils.resources.ResourcesUtils
 
 @Parcelize
 @Entity(tableName = "notification_table")
@@ -52,14 +54,14 @@ data class Notification(
         private fun getBodyFromType(type: NotificationType): String {
             return when (type) {
                 NotificationType.NONE -> ""
-                NotificationType.AT_TASK_TIME -> "Время выполнения задачи истекло."
-                NotificationType.FIVE_MINUTES_BEFORE -> "Задача завершится через 5 минут, поторопитесь"
-                NotificationType.TEN_MINUTES_BEFORE -> "Задача завершится через 10 минут, поторопитесь"
-                NotificationType.FIFTEEN_MINUTES_BEFORE -> "Задача завершится через 15 минут, поторопитесь"
-                NotificationType.THIRTY_MINUTES_BEFORE -> "Задача завершится через 30 минут, поторопитесь"
-                NotificationType.ONE_HOUR_BEFORE -> "Задача завершится через 1 час, поторопитесь"
-                NotificationType.TWO_HOURS_BEFORE -> "Задача завершится через 2 часа, поторопитесь"
-                NotificationType.ONE_DAY_BEFORE -> "Задача завершится через 1 день, поторопитесь"
+                NotificationType.AT_TASK_TIME -> ResourcesUtils.getString(R.string.notification_at_task_time)
+                NotificationType.FIVE_MINUTES_BEFORE -> ResourcesUtils.getString(R.string.notification_5_minutes)
+                NotificationType.TEN_MINUTES_BEFORE -> ResourcesUtils.getString(R.string.notification_10_minutes)
+                NotificationType.FIFTEEN_MINUTES_BEFORE -> ResourcesUtils.getString(R.string.notification_15_minutes)
+                NotificationType.THIRTY_MINUTES_BEFORE -> ResourcesUtils.getString(R.string.notification_30_minutes)
+                NotificationType.ONE_HOUR_BEFORE -> ResourcesUtils.getString(R.string.notification_1_hour)
+                NotificationType.TWO_HOURS_BEFORE -> ResourcesUtils.getString(R.string.notification_2_hours)
+                NotificationType.ONE_DAY_BEFORE -> ResourcesUtils.getString(R.string.notification_1_day)
             }
         }
     }

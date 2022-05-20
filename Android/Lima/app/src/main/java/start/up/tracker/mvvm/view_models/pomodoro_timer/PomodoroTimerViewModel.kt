@@ -39,24 +39,24 @@ class PomodoroTimerViewModel @Inject constructor(
         }
     }
 
-    fun onTimerStartButtonClicked() {
+    fun onTimerStartButtonClicked() = viewModelScope.launch {
         timer.initCountDownTimer()
         timer.startTimer()
     }
 
-    fun onTimerPauseButtonClicked() {
+    fun onTimerPauseButtonClicked() = viewModelScope.launch {
         timer.pauseTimer()
     }
 
-    fun onTimerStopButtonClicked() {
+    fun onTimerStopButtonClicked() = viewModelScope.launch {
         timer.stopTimer()
     }
 
-    fun onContinueButtonClicked() {
+    fun onContinueButtonClicked() = viewModelScope.launch {
         timer.continueTimer()
     }
 
-    fun onSkipButtonClicked() {
+    fun onSkipButtonClicked() = viewModelScope.launch {
         timer.skipTimer()
     }
 
@@ -131,6 +131,10 @@ class PomodoroTimerViewModel @Inject constructor(
 
     fun onRunningStateRestore() = viewModelScope.launch {
         timer.restoreRunningState()
+    }
+
+    fun handlePhases(iteration: Int) = viewModelScope.launch {
+        timer.handlePhases(iteration)
     }
 
     sealed class TimerEvent {

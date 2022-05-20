@@ -4,13 +4,10 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import android.widget.Toast
 import com.google.gson.Gson
 import start.up.tracker.application.App
 import start.up.tracker.entities.Notification
 import start.up.tracker.receivers.AlarmReceiver
-import start.up.tracker.utils.TimeHelper
 import java.util.*
 
 fun schedule(notification: Notification) {

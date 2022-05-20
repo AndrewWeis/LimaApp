@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.first
 import start.up.tracker.database.TimerDataStore
 import start.up.tracker.entities.Notification
 import start.up.tracker.entities.NotificationType
-import start.up.tracker.servicies.cancel
 import start.up.tracker.servicies.schedule
 import start.up.tracker.utils.TimeHelper
 
@@ -65,7 +64,7 @@ open class BaseTimer(
         }
     }
 
-    open fun stopTimer() {
+    open suspend fun stopTimer() {
         countDownTimer?.let {
             cancelTimer()
         }
@@ -74,7 +73,7 @@ open class BaseTimer(
         _secondsRemaining.value = DEFAULT_TIMER_LENGTH
     }
 
-    fun cancelTimer() {
+    suspend fun cancelTimer() {
         cancelNotification()
         countDownTimer!!.cancel()
         isFinished = true
@@ -87,7 +86,7 @@ open class BaseTimer(
         _secondsRemaining.value = timerLength
     }
 
-    fun startTimer() {
+    suspend fun startTimer() {
         if (secondsRemaining.value == getDefaultTimerLength() || timerState.value == TIMER_STATE_PAUSED) {
             createNotification()
         }
@@ -97,12 +96,12 @@ open class BaseTimer(
         _timerState.value = TIMER_STATE_RUNNING
     }
 
-    fun pauseTimer() {
+    suspend fun pauseTimer() {
         cancelTimer()
         _timerState.value = TIMER_STATE_PAUSED
     }
 
-    fun continueTimer() {
+    suspend fun continueTimer() {
         timerLength = getSecondsRemaining()
         initCountDownTimer()
         startTimer()
@@ -155,20 +154,19 @@ open class BaseTimer(
         _timerIteration.value = getTimerIteration() + 1
     }
 
-    private fun createNotification() {
+    private suspend fun createNotification() {
         val current = TimeHelper.getCurrentTimeInMilliseconds()
         val notification = Notification.create(
             NotificationType.AT_TASK_TIME,
             TimeHelper.addSeconds(current, timerLength)!!
         )
-        timerDataStore.saveNotification(notification)
+        //timerDataStore.saveNotification(notification)
         schedule(notification)
     }
 
-    // todo(have fun Igor :))
-    private fun cancelNotification() {
-        val notification = timerDataStore.notification.first() ?: return
-        cancel(notification)
+    private suspend fun cancelNotification() {
+        //val notification = timerDataStore.notification.first() ?: return
+        //cancel(notification)
     }
 
     companion object {
