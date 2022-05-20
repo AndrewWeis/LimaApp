@@ -78,6 +78,10 @@ class PomodoroTimer(
         }
     }
 
+    override fun getDefaultTimerLength(): Long {
+        return POMODORO_WORK_TIME
+    }
+
     fun skipTimer() {
         cancelTimer()
         finish()

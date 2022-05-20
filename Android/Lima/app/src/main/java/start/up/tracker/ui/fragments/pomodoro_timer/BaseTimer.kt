@@ -5,6 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.flow.first
 import start.up.tracker.database.TimerDataStore
+import start.up.tracker.entities.Notification
+import start.up.tracker.entities.NotificationType
+import start.up.tracker.servicies.schedule
 import start.up.tracker.utils.TimeHelper
 
 open class BaseTimer(
@@ -71,6 +74,7 @@ open class BaseTimer(
     }
 
     fun cancelTimer() {
+        cancelNotification()
         countDownTimer!!.cancel()
         isFinished = true
     }
@@ -83,6 +87,10 @@ open class BaseTimer(
     }
 
     fun startTimer() {
+        if (secondsRemaining.value == getDefaultTimerLength() || timerState.value == TIMER_STATE_PAUSED) {
+            createNotification()
+        }
+
         isFinished = false
         countDownTimer!!.start()
         _timerState.value = TIMER_STATE_RUNNING
@@ -114,6 +122,10 @@ open class BaseTimer(
         startTimer()
     }
 
+    open fun getDefaultTimerLength(): Long {
+        return DEFAULT_TIMER_LENGTH
+    }
+
     fun setSecondsRemaining(seconds: Long) {
         _secondsRemaining.value = seconds
     }
@@ -140,6 +152,20 @@ open class BaseTimer(
 
     protected fun incrementTimerIteration() {
         _timerIteration.value = getTimerIteration() + 1
+    }
+
+    private fun createNotification() {
+        val current = TimeHelper.getCurrentTimeInMilliseconds()
+        val notification = Notification.create(
+            NotificationType.AT_TASK_TIME,
+            TimeHelper.addSeconds(current, timerLength)!!
+        )
+        schedule(notification)
+    }
+
+    // todo(have fun Igor :))
+    private fun cancelNotification() {
+
     }
 
     companion object {
