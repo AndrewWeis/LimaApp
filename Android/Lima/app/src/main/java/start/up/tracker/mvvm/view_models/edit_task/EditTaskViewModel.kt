@@ -28,7 +28,6 @@ import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
-import java.lang.RuntimeException
 import java.util.*
 import javax.inject.Inject
 
@@ -42,7 +41,6 @@ class EditTaskViewModel @Inject constructor(
     preferencesManager: PreferencesManager,
     analytics: Analytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
-
 
     private var isEditMode = true
 
@@ -76,7 +74,6 @@ class EditTaskViewModel @Inject constructor(
         showActionIcons()
     }
 
-
     fun saveDataAboutSubtask() {
         if (isEditMode) {
             updateSubtasksNumber(task.subtasksNumber)
@@ -86,8 +83,14 @@ class EditTaskViewModel @Inject constructor(
 
     fun onSaveClick() = viewModelScope.launch {
         val timeMessage = validateTime()
-        if (timeMessage != null) {
+        timeMessage?.let {
             tasksEventChannel.send(TasksEvent.ShowError(timeMessage))
+            return@launch
+        }
+
+        val habitMessage = validateHabit()
+        habitMessage?.let {
+            tasksEventChannel.send(TasksEvent.ShowError(habitMessage))
             return@launch
         }
 
@@ -98,17 +101,8 @@ class EditTaskViewModel @Inject constructor(
         }
     }
 
-    // 0 - off
-    // 1 - day
-    // 2 - week
-    // 3 - fortnight
-    // 4 - year (birthdays!)
-    // TODO АНДРЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЙ
-    // При нажатии кнопки (выбор повторимости должно обновляться значение переменной habitStatus)
-    // По идее всё.
-    val habitStatus = 1
     fun saveTask() {
-        if (habitStatus == 0) {
+        if (task.repeatsId == Task.NEVER) {
             if (isEditMode) {
                 updateTask()
             } else {
@@ -172,7 +166,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onNotificationChanged(notificationTypeId: Int) {
-        val notificationType = NotificationType.getByTypeId(notificationTypeId)?:return
+        val notificationType = NotificationType.getByTypeId(notificationTypeId) ?: return
 
         viewModelScope.launch {
             val notificationId = updateTaskNotification(notificationType)
@@ -302,8 +296,7 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
         val principlesIds = principlesDao.getActiveTechniquesIds()
 
-        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY,
-            iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
 
         if (!principlesIds.contains(TechniquesIds.POMODORO)) {
@@ -332,6 +325,14 @@ class EditTaskViewModel @Inject constructor(
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
+    }
+
+    private suspend fun validateHabit(): String? {
+        if (task.date == null) {
+            return ResourcesUtils.getString(R.string.error_data_required)
+        }
+
+        return null
     }
 
     private suspend fun validateTime(): String? {
@@ -374,10 +375,10 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            if (habitStatus == 0) {
+            if (task.repeatsId == Task.NEVER) {
                 updateTask()
             } else {
-                updateHabit();
+                updateHabit()
             }
             return
         }
@@ -389,10 +390,10 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            if (habitStatus == 0) {
+            if (task.repeatsId == Task.NEVER) {
                 createTask()
             } else {
-                createHabit();
+                createHabit()
             }
             return
         }
@@ -411,101 +412,15 @@ class EditTaskViewModel @Inject constructor(
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
-    // TODO АНДРЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЕЙ. При запуске надо вызввать ЭТОООООООООООООООООООООО
-    private fun repeatHabits() = viewModelScope.launch {
-        // РАЗ В КАКОЕ-ТО ВРЕМЯ ПРОВЕРКА:
-
-        val allHabits = taskDao.getAllHabits()
-
-        for (habit in allHabits) {
-            val calendar = Calendar.getInstance()
-
-            if (calendar.timeInMillis > task.date!! + 24 * 60 * 60 * 1000) {
-                val newTask = task.copy(date = task.date!! + task.shift, completed = false,
-                    wasCompleted = false)
-
-                activeAnalytics.editTask(newTask)
-                taskDao.updateTask(newTask)
-            }
-        }
-    }
-
     private fun createHabit() = viewModelScope.launch {
         val maxTaskId = taskDao.getTaskMaxId() ?: 0
 
-        if (task.date == null) {
-            throw RuntimeException("Привычка без даты не допустима!")
-            // TODO АНДРЕЙ Я НЕ ЗНАЮ КАК ОШИБКИ ОБРАБАТЫВАТЬ
-            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
-            // TODO в то же время можно создать без указания точного времени начала и коцна!
-        }
-
-        val shift : Long = when (habitStatus) {
-            1 -> {
-                24L * 60 * 60 * 1000
-            }
-            2 -> {
-                24L * 60 * 60 * 1000 * 7
-            }
-            3 -> {
-                24L * 60 * 60 * 1000 * 14
-            }
-            4 -> {
-                24L * 60 * 60 * 1000 * 365
-            }
-            else -> {0L}
-        }
-
-        val newTask = task.copy(taskId = maxTaskId + 1, shift = shift)
+        val newTask = task.copy(taskId = maxTaskId + 1, shift = getRepeatShift())
 
         activeAnalytics.addTask(newTask)
-        //analytics.addTaskToStatisticOnCreate(task.date)
         taskDao.insertTask(newTask)
 
         tasksEventChannel.send(TasksEvent.NavigateBack)
-
-        /*var maxTaskId = taskDao.getTaskMaxId() ?: 0
-        val originalTaskId = maxTaskId
-        var newTask = task.copy(taskId = maxTaskId + 1, originalTaskId = originalTaskId)
-
-        activeAnalytics.addTask(newTask)
-        analytics.addTaskToStatisticOnCreate(task.date)
-        taskDao.insertTask(newTask)
-
-        if (task.date == null) {
-            throw RuntimeException("Привычка без даты не допустима!")
-            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
-            // TODO в то же время можно создать без указания точного времени начала и коцна!
-        }
-
-        val shift : Long = when (habitStatus) {
-            1 -> {
-                24L * 60 * 60 * 1000
-            }
-            2 -> {
-                24L * 60 * 60 * 1000 * 7
-            }
-            3 -> {
-                24L * 60 * 60 * 1000 * 14
-            }
-            4 -> {
-                24L * 60 * 60 * 1000 * 365
-            }
-            else -> {0L}
-        }
-
-        for (i in 1..SAMPLES) {
-            maxTaskId = taskDao.getTaskMaxId() ?: 0
-            newTask = task.copy(taskId = maxTaskId + 1, originalTaskId = originalTaskId,
-                date = task.date!! + shift * i
-            )
-
-            activeAnalytics.addTask(newTask)
-            analytics.addTaskToStatisticOnCreate(task.date!! + shift * i)
-            taskDao.insertTask(newTask)
-        }
-
-        tasksEventChannel.send(TasksEvent.NavigateBack)*/
     }
 
     private fun updateTask() = viewModelScope.launch {
@@ -518,36 +433,22 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private fun updateHabit() = viewModelScope.launch {
-        val habitStatus = 2
-
-        if (task.date == null) {
-            throw RuntimeException("Привычка без даты не допустима!")
-            // TODO ошибку надо обработать - нельзя создавать привычки без указания даты
-            // TODO в то же время можно создать без указания точного времени начала и коцна!
-        }
-
-        val shift : Long = when (habitStatus) {
-            1 -> {
-                24L * 60 * 60 * 1000
-            }
-            2 -> {
-                24L * 60 * 60 * 1000 * 7
-            }
-            3 -> {
-                24L * 60 * 60 * 1000 * 14
-            }
-            4 -> {
-                24L * 60 * 60 * 1000 * 365
-            }
-            else -> {0L}
-        }
-
-        val newTask = task.copy(shift = shift)
+        val newTask = task.copy(shift = getRepeatShift())
 
         launch { activeAnalytics.editTask(newTask) }
 
         taskDao.updateTask(newTask)
         tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
+    private fun getRepeatShift(): Long {
+        return when (task.repeatsId) {
+            Task.EVERY_DAY -> { 24L * 60 * 60 * 1000 }
+            Task.EVERY_WEEK -> { 24L * 60 * 60 * 1000 * 7 }
+            Task.EVERY_SECOND_WEEK -> { 24L * 60 * 60 * 1000 * 14 }
+            Task.EVERY_YEAR -> { 24L * 60 * 60 * 1000 * 365 }
+            else -> { -1 } // this line will never be executed
+        }
     }
 
     private fun updateSubtasksNumber(number: Int) = viewModelScope.launch {

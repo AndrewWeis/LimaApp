@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import start.up.tracker.R
+import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.database.dao.*
 import start.up.tracker.entities.Project
 import start.up.tracker.entities.Task
@@ -21,13 +22,15 @@ import start.up.tracker.ui.data.entities.home.HomeSection
 import start.up.tracker.ui.data.entities.home.ProjectsData
 import start.up.tracker.utils.TimeHelper
 import start.up.tracker.utils.resources.ResourcesUtils
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val taskDao: TaskDao,
     private val projectsDao: ProjectsDao,
-    private val principlesDao: TechniquesDao,
+    private val activeAnalytics: ActiveAnalytics,
+    principlesDao: TechniquesDao,
     todayTasksDao: TodayTasksDao,
     upcomingTasksDao: UpcomingTasksDao,
 ) : ViewModel() {
@@ -70,6 +73,10 @@ class HomeViewModel @Inject constructor(
 
     private val principlesSectionsFlow: Flow<List<Int>> = principlesDao.getActivePrinciplesIds()
     val principlesSections = principlesSectionsFlow.asLiveData()
+
+    init {
+        updateRepeatedTasks()
+    }
 
     fun updateNumberOfTasks() = viewModelScope.launch {
         projects.value?.projects?.forEach { project ->
@@ -124,6 +131,33 @@ class HomeViewModel @Inject constructor(
             title = ResourcesUtils.getString(stringRes),
             numberOfTasksInside = tasksInside
         )
+    }
+
+    private fun updateRepeatedTasks() = viewModelScope.launch {
+        val allHabits = taskDao.getAllHabits()
+
+        for (habit in allHabits) {
+            val calendar = Calendar.getInstance()
+
+            if (calendar.timeInMillis > habit.date!! + 24 * 60 * 60 * 1000) {
+                val newTask = habit.copy(
+                    date = habit.date + getRepeatShift(habit.repeatsId), completed = false, wasCompleted = false
+                )
+
+                activeAnalytics.editTask(newTask)
+                taskDao.updateTask(newTask)
+            }
+        }
+    }
+
+    private fun getRepeatShift(repeatsId: Int): Long {
+        return when (repeatsId) {
+            Task.EVERY_DAY -> { 24L * 60 * 60 * 1000 }
+            Task.EVERY_WEEK -> { 24L * 60 * 60 * 1000 * 7 }
+            Task.EVERY_SECOND_WEEK -> { 24L * 60 * 60 * 1000 * 14 }
+            Task.EVERY_YEAR -> { 24L * 60 * 60 * 1000 * 365 }
+            else -> { -1 } // this line will never be executed
+        }
     }
 
     sealed class HomeEvents {
