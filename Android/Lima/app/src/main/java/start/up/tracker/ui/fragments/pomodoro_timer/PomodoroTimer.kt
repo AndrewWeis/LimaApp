@@ -39,7 +39,7 @@ class PomodoroTimer(
         return if (iteration % 2 == 1) REST_PHASE else WORK_PHASE
     }
 
-    override fun stopTimer() {
+    override suspend fun stopTimer() {
         super.stopTimer()
         timerLength = getTimerLengthOfPhase()
         setSecondsRemaining(timerLength)
@@ -82,12 +82,12 @@ class PomodoroTimer(
         return POMODORO_WORK_TIME
     }
 
-    fun skipTimer() {
+    suspend fun skipTimer() {
         cancelTimer()
         finish()
     }
 
-    fun handlePhases(iteration: Int) {
+    suspend fun handlePhases(iteration: Int) {
         if (isRestPhase(iteration)) {
             _timerPhase.value = REST_PHASE
             startRestPhase()
@@ -140,7 +140,7 @@ class PomodoroTimer(
         }
     }
 
-    private fun restoreTimerSeconds(restTime: Long, diff: Long) {
+    private suspend fun restoreTimerSeconds(restTime: Long, diff: Long) {
         timerLength = getSecondsRemaining() + restTime - diff
         initCountDownTimer()
         startTimer()

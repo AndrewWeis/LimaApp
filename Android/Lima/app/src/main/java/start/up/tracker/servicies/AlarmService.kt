@@ -8,7 +8,6 @@ import com.google.gson.Gson
 import start.up.tracker.application.App
 import start.up.tracker.entities.Notification
 import start.up.tracker.receivers.AlarmReceiver
-import start.up.tracker.utils.TimeHelper
 import java.util.*
 
 fun schedule(notification: Notification) {
@@ -38,4 +37,13 @@ fun schedule(notification: Notification) {
         )
 
         notification.isActive = true;
+}
+
+fun cancel(notification: Notification) {
+        val context = App.context
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AlarmReceiver::class.java)
+        val alarmPendingIntent = PendingIntent.getBroadcast(context, notification.id.toInt(), intent, 0);
+        alarmManager.cancel(alarmPendingIntent);
+        notification.isActive = false;
 }

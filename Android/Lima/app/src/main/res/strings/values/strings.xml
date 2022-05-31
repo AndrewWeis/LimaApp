@@ -125,10 +125,22 @@
     <string name="notification_channel_description">Task reminder</string>
 
 
+    <!-- notification messages -->
+    <string name="notification_at_task_time">The task execution time has expired.</string>
+    <string name="notification_5_minutes">The task will be completed in 5 minutes, hurry up</string>
+    <string name="notification_10_minutes">The task will be completed in 10 minutes, hurry up</string>
+    <string name="notification_15_minutes">The task will be completed in 15 minutes, hurry up</string>
+    <string name="notification_30_minutes">The task will be completed in 30 minutes, hurry up</string>
+    <string name="notification_1_hour">The task will be completed in 1 hour, hurry up</string>
+    <string name="notification_2_hours">The task will be completed in 2 hours, hurry up</string>
+    <string name="notification_1_day">The task will be completed in 1 day, hurry up</string>
+
     <!-- repeats -->
     <string name="repeats_never">Never</string>
     <string name="repeats_every_day">Every day</string>
     <string name="repeats_every_week">Every week</string>
     <string name="repeats_every_second_week">Every second week</string>
+
+
 
 </resources>

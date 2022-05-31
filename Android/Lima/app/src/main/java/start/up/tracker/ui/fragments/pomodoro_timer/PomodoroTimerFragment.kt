@@ -6,7 +6,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import start.up.tracker.R
 import start.up.tracker.databinding.PomodoroTimerFragmentBinding
 import start.up.tracker.entities.Task
@@ -80,7 +79,7 @@ class PomodoroTimerFragment :
             }
 
             if (viewModel.timer.isFinished) {
-                viewModel.timer.handlePhases(iteration)
+                viewModel.handlePhases(iteration)
             }
 
             if (viewModel.timer.isRestPhase(iteration)) {
