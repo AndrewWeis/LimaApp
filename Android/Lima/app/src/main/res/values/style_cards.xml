@@ -9,15 +9,15 @@
         <item name="strokeColor">@color/black</item>
     </style>
 
-    <style name="Outline.Blue">
-        <item name="strokeColor">@color/secondaryDarkColor</item>
+    <style name="Outline.PrimaryDark">
+        <item name="strokeColor">@color/primaryDarkColor</item>
     </style>
 
     <style name="Outline.Black.Width_05">
         <item name="strokeWidth">0.5dp</item>
     </style>
 
-    <style name="Outline.Blue.Width_1">
+    <style name="Outline.PrimaryDark.Width_1">
         <item name="strokeWidth">1dp</item>
     </style>
 
@@ -25,11 +25,11 @@
         <item name="cardCornerRadius">6dp</item>
     </style>
 
-    <style name="Outline.Blue.Width_1.Radius10">
+    <style name="Outline.PrimaryDark.Width_1.Radius10">
         <item name="cardCornerRadius">10dp</item>
     </style>
 
-    <style name="Outline.Blue.Width_1.Radius10.MW">
+    <style name="Outline.PrimaryDark.Width_1.Radius10.MW">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

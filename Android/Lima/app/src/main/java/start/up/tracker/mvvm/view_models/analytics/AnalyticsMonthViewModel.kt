@@ -9,7 +9,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
-import start.up.tracker.entities.DayStat
+import start.up.tracker.database.dao.TaskDao
 import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -20,13 +20,15 @@ import kotlin.collections.ArrayList
 
 @HiltViewModel
 class AnalyticsMonthViewModel @Inject constructor(
-    private val dao: AnalyticsDao,
+    private val analyticsDao: AnalyticsDao,
+    private val taskDao: TaskDao,
 ) : ViewModel() {
 
     inner class ChartData(
         da: MutableList<DataEntry>,
         ti: String,
         av: String,
+        to: String,
         de: String,
         fo: String,
         smax: Boolean,
@@ -37,6 +39,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         var data = da
         val title = ti
         var average = av
+        var total = to
         var date = de
         val format = fo
         val isSoftMaximum = smax
@@ -90,12 +93,56 @@ class AnalyticsMonthViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val currentMonth: Int = calendar.get(Calendar.MONTH)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth + 1)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
         val currentDate =
             StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 1..31) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 1..31) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.timeInMillis = calendar.timeInMillis +
+                    86400000L * (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) -
+                    calendar.get(Calendar.DAY_OF_MONTH))
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..31) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.MONTH) == calendar1.get(Calendar.MONTH)) {
+                    habitStatsLocal[calendar2.get(Calendar.DAY_OF_MONTH)] =
+                        habitStatsLocal[calendar2.get(Calendar.DAY_OF_MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 1..31) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
 
         calendar.set(currentYear, currentMonth, 1)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -110,18 +157,22 @@ class AnalyticsMonthViewModel @Inject constructor(
 
         stats.forEach {
             monthList[it.day] = it.allTasks
-            sum += it.allTasks
         }
 
-        val average = sum.toDouble() / maxDay.toDouble()
+        for (i in 1..maxDay) {
+            monthList[i] = monthList[i]!! + habitStats[i]!!
+            sum += monthList[i]!!
+        }
+
+        val average = sum.toDouble() / maxDay
 
         monthList.forEach {
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
-        return (ChartData(data, "All tasks", formatDouble(average),
+        return (ChartData(data, "All tasks", formatDouble(average), formatDouble(sum.toDouble()),
             currentDate, "{%value}", false, false, shift,
-            "Number of all your tasks in the month"
+            "Number of all your tasks in day during the month"
         ))
     }
 
@@ -129,8 +180,8 @@ class AnalyticsMonthViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val currentMonth: Int = calendar.get(Calendar.MONTH)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth + 1)
 
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
@@ -153,15 +204,15 @@ class AnalyticsMonthViewModel @Inject constructor(
             sum += it.completedTasks
         }
 
-        val average = sum.toDouble() / maxDay.toDouble()
+        val average = sum.toDouble() / maxDay
 
         monthList.forEach {
             data.add(ValueDataEntry(it.key.toString(), it.value))
         }
 
         return (ChartData(data, "Completed tasks", formatDouble(average),
-            currentDate, "{%value}", false, false, shift,
-            "Number of your completed tasks in the month"
+            formatDouble(sum.toDouble()), currentDate, "{%value}", false, false,
+            shift, "Number of your completed tasks in day during the month"
         ))
     }
 
@@ -169,12 +220,56 @@ class AnalyticsMonthViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val currentMonth: Int = calendar.get(Calendar.MONTH)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth + 1)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
         val currentDate =
             StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 1..31) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 1..31) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.timeInMillis = calendar.timeInMillis +
+                    86400000L * (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) -
+                    calendar.get(Calendar.DAY_OF_MONTH))
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..31) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.MONTH) == calendar1.get(Calendar.MONTH)) {
+                    habitStatsLocal[calendar2.get(Calendar.DAY_OF_MONTH)] =
+                        habitStatsLocal[calendar2.get(Calendar.DAY_OF_MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 1..31) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
 
         calendar.set(currentYear, currentMonth, 1)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -189,11 +284,11 @@ class AnalyticsMonthViewModel @Inject constructor(
         var nonEmptyCounter = 0
 
         stats.forEach {
-            if (it.completedTasks == 0 || it.allTasks == 0) {
+            if (it.completedTasks == 0 || (habitStats[it.day]!! + it.allTasks) == 0) {
                 monthList[it.day] = 0.0
-                sum += 1.0
             } else {
-                monthList[it.day] = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+                monthList[it.day] = it.completedTasks.toDouble() /
+                        (habitStats[it.day]!! + it.allTasks) * 100
                 sum += monthList[it.day]!!
                 nonEmptyCounter++
             }
@@ -210,9 +305,9 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity",
-            formatDouble(average) + "%",
+            formatDouble(average) + "%", formatDouble(-1.0),
             currentDate, "{%value}%", true, false, shift,
-            "The ratio of all tasks you completed in the month to all created tasks"
+            "The ratio of all tasks you completed in day during the month to all created tasks"
         ))
     }
 
@@ -220,12 +315,56 @@ class AnalyticsMonthViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val currentMonth: Int = calendar.get(Calendar.MONTH) + 1
-        val stats = dao.getStatMonth(currentYear, currentMonth)
+        val currentMonth: Int = calendar.get(Calendar.MONTH)
+        val stats = analyticsDao.getStatMonth(currentYear, currentMonth + 1)
         val data: MutableList<DataEntry> = ArrayList()
         val currentMonthName = SimpleDateFormat("MMMM").format(calendar.time)
         val currentDate =
             StringBuilder().append(currentMonthName).append(" ").append(currentYear).toString()
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 1..31) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 1..31) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.timeInMillis = calendar.timeInMillis +
+                    86400000L * (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) -
+                    calendar.get(Calendar.DAY_OF_MONTH))
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..31) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.MONTH) == calendar1.get(Calendar.MONTH)) {
+                    habitStatsLocal[calendar2.get(Calendar.DAY_OF_MONTH)] =
+                        habitStatsLocal[calendar2.get(Calendar.DAY_OF_MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 1..31) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
 
         calendar.set(currentYear, currentMonth, 1)
         val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -241,11 +380,11 @@ class AnalyticsMonthViewModel @Inject constructor(
         var buf = 0.0
 
         stats.forEach {
-            if (it.completedTasks == 0 || it.allTasks == 0) {
+            if (it.completedTasks == 0 || (habitStats[it.day]!! + it.allTasks) == 0) {
                 monthList[it.day] = 0.0
                 buf = 0.0
             } else {
-                val new = it.completedTasks.toDouble() / it.allTasks.toDouble() * 100
+                val new = it.completedTasks.toDouble() / (habitStats[it.day]!! + it.allTasks)  * 100
                 if (new == 0.0) {
                     monthList[it.day] = 0.0
                     buf = 0.0
@@ -269,7 +408,7 @@ class AnalyticsMonthViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity Tendency",
-            formatDouble(average) + "%",
+            formatDouble(average) + "%", formatDouble(-1.0),
             currentDate, "{%value}%", true, true, shift,
             "The ratio of your productivity compared to the previous day of the month"
         ))

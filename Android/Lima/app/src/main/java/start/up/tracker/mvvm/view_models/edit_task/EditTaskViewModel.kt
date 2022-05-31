@@ -1,7 +1,5 @@
 package start.up.tracker.mvvm.view_models.edit_task
 
-import android.app.NotificationManager
-import androidx.core.content.ContextCompat
 import androidx.hilt.Assisted
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +10,6 @@ import kotlinx.coroutines.launch
 import start.up.tracker.R
 import start.up.tracker.analytics.ActiveAnalytics
 import start.up.tracker.analytics.Analytics
-import start.up.tracker.application.App
 import start.up.tracker.database.PreferencesManager
 import start.up.tracker.database.TechniquesIds
 import start.up.tracker.database.dao.NotificationDao
@@ -22,15 +19,16 @@ import start.up.tracker.entities.Notification
 import start.up.tracker.entities.NotificationType
 import start.up.tracker.entities.Task
 import start.up.tracker.mvvm.view_models.tasks.base.BaseTasksOperationsViewModel
+import start.up.tracker.servicies.schedule
 import start.up.tracker.ui.data.entities.TasksEvent
 import start.up.tracker.ui.data.entities.edit_task.ActionIcon
 import start.up.tracker.ui.data.entities.edit_task.ActionIcons
 import start.up.tracker.ui.data.entities.header.HeaderActions
 import start.up.tracker.ui.data.entities.tasks.TasksData
 import start.up.tracker.utils.TimeHelper
-import start.up.tracker.utils.notifications.sendNotification
 import start.up.tracker.utils.resources.ResourcesUtils
 import start.up.tracker.utils.screens.StateHandleKeys
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +41,6 @@ class EditTaskViewModel @Inject constructor(
     preferencesManager: PreferencesManager,
     analytics: Analytics,
 ) : BaseTasksOperationsViewModel(taskDao, preferencesManager, analytics, activeAnalytics) {
-
 
     private var isEditMode = true
 
@@ -77,7 +74,6 @@ class EditTaskViewModel @Inject constructor(
         showActionIcons()
     }
 
-
     fun saveDataAboutSubtask() {
         if (isEditMode) {
             updateSubtasksNumber(task.subtasksNumber)
@@ -87,8 +83,14 @@ class EditTaskViewModel @Inject constructor(
 
     fun onSaveClick() = viewModelScope.launch {
         val timeMessage = validateTime()
-        if (timeMessage != null) {
+        timeMessage?.let {
             tasksEventChannel.send(TasksEvent.ShowError(timeMessage))
+            return@launch
+        }
+
+        val habitMessage = validateHabit()
+        habitMessage?.let {
+            tasksEventChannel.send(TasksEvent.ShowError(habitMessage))
             return@launch
         }
 
@@ -100,10 +102,18 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun saveTask() {
-        if (isEditMode) {
-            updateTask()
+        if (task.repeatsId == Task.NEVER) {
+            if (isEditMode) {
+                updateTask()
+            } else {
+                createTask()
+            }
         } else {
-            createTask()
+            if (isEditMode) {
+                updateHabit()
+            } else {
+                createHabit()
+            }
         }
     }
 
@@ -156,27 +166,24 @@ class EditTaskViewModel @Inject constructor(
     }
 
     fun onNotificationChanged(notificationTypeId: Int) {
-        val notificationType = NotificationType.getByTypeId(notificationTypeId)?:return
-        val notificationManager = ContextCompat.getSystemService(
-            App.context,
-            NotificationManager::class.java
-        ) as NotificationManager
+        val notificationType = NotificationType.getByTypeId(notificationTypeId) ?: return
 
         viewModelScope.launch {
             val notificationId = updateTaskNotification(notificationType)
             val notification = notificationDao.getNotificationById(notificationId).first()
+            schedule(notification)
             task = task.copy(notificationId = notificationId)
-            notificationManager.sendNotification(notification, App.context)
         }
     }
 
     private suspend fun updateTaskNotification(type: NotificationType): Long {
         var notificationId = task.notificationId
+        val taskEnd = TimeHelper.computeEndDate(task)
         if (notificationId != -1L) {
             val notification = notificationDao.getNotificationById(notificationId).first()
-            notificationDao.updateNotification(notification.copy(type = type))
+            notificationDao.updateNotification(notification.copyFromType(type, taskEnd))
         } else {
-            val notification = Notification(type = type)
+            val notification = Notification.create(type, taskEnd)
             notificationId =
                 notificationDao.insertNotification(notification)
         }
@@ -200,6 +207,10 @@ class EditTaskViewModel @Inject constructor(
         task = task.copy(eisenhowerMatrix = itemId)
     }
 
+    fun onRepeatsItemChanged(itemId: Int) {
+        task = task.copy(repeatsId = itemId)
+    }
+
     fun onIconPriorityClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToPriorityDialog(task.priority))
     }
@@ -218,6 +229,10 @@ class EditTaskViewModel @Inject constructor(
 
     fun onIconProjectsClick() = viewModelScope.launch {
         tasksEventChannel.send(TasksEvent.NavigateToProjectsDialog(task.projectId))
+    }
+
+    fun onIconRepeatsClick() = viewModelScope.launch {
+        tasksEventChannel.send(TasksEvent.NavigateToRepeatsDialog(task.repeatsId))
     }
 
     fun onIconPomodoroClick() = viewModelScope.launch {
@@ -281,8 +296,7 @@ class EditTaskViewModel @Inject constructor(
         val icons: MutableList<ActionIcon> = mutableListOf()
         val principlesIds = principlesDao.getActiveTechniquesIds()
 
-        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY,
-            iconRes = R.drawable.ic_priority_fire_1))
+        icons.add(ActionIcon(id = ActionIcon.ICON_PRIORITY, iconRes = R.drawable.ic_priority_fire_1))
         icons.add(ActionIcon(id = ActionIcon.ICON_DATE, iconRes = R.drawable.ic_calendar))
 
         if (!principlesIds.contains(TechniquesIds.POMODORO)) {
@@ -301,6 +315,8 @@ class EditTaskViewModel @Inject constructor(
             icons.add(pomodoroActionIcon)
         }
 
+        icons.add(ActionIcon(id = ActionIcon.ICON_REPEATS, iconRes = R.drawable.ic_repeat))
+
         icons.add(ActionIcon(id = ActionIcon.ICON_NOTIFICATIONS, iconRes = R.drawable.ic_notifications))
 
         val eisenhowerMatrixActionIcon = ActionIcon(id = ActionIcon.ICON_EISENHOWER_MATRIX, iconRes = R.drawable.ic_eisenhower_matrix)
@@ -309,6 +325,14 @@ class EditTaskViewModel @Inject constructor(
         }
 
         _actionsIcons.postValue(ActionIcons(icons = icons))
+    }
+
+    private suspend fun validateHabit(): String? {
+        if (task.date == null) {
+            return ResourcesUtils.getString(R.string.error_data_required)
+        }
+
+        return null
     }
 
     private suspend fun validateTime(): String? {
@@ -351,9 +375,11 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnEditTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            val beforeDate = taskDao.getTaskById(task.taskId)[0].date
-            updateTask()
-            analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
+            if (task.repeatsId == Task.NEVER) {
+                updateTask()
+            } else {
+                updateHabit()
+            }
             return
         }
 
@@ -364,8 +390,11 @@ class EditTaskViewModel @Inject constructor(
         val analyticsMessages = activeAnalytics.checkPrinciplesComplianceOnAddTask(task)
 
         if (analyticsMessages.messages.isEmpty()) {
-            createTask()
-            analytics.addTaskToStatisticOnCreate(task.date)
+            if (task.repeatsId == Task.NEVER) {
+                createTask()
+            } else {
+                createHabit()
+            }
             return
         }
 
@@ -377,8 +406,20 @@ class EditTaskViewModel @Inject constructor(
         val newTask = task.copy(taskId = maxTaskId + 1)
 
         activeAnalytics.addTask(newTask)
-
+        analytics.addTaskToStatisticOnCreate(task.date)
         taskDao.insertTask(newTask)
+
+        tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
+    private fun createHabit() = viewModelScope.launch {
+        val maxTaskId = taskDao.getTaskMaxId() ?: 0
+
+        val newTask = task.copy(taskId = maxTaskId + 1, shift = getRepeatShift())
+
+        activeAnalytics.addTask(newTask)
+        taskDao.insertTask(newTask)
+
         tasksEventChannel.send(TasksEvent.NavigateBack)
     }
 
@@ -386,7 +427,28 @@ class EditTaskViewModel @Inject constructor(
         launch { activeAnalytics.editTask(task) }
 
         taskDao.updateTask(task)
+        val beforeDate = taskDao.getTaskById(task.taskId)[0].date
+        analytics.addTaskToStatisticOnEdit(beforeDate, task.date)
         tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
+    private fun updateHabit() = viewModelScope.launch {
+        val newTask = task.copy(shift = getRepeatShift())
+
+        launch { activeAnalytics.editTask(newTask) }
+
+        taskDao.updateTask(newTask)
+        tasksEventChannel.send(TasksEvent.NavigateBack)
+    }
+
+    private fun getRepeatShift(): Long {
+        return when (task.repeatsId) {
+            Task.EVERY_DAY -> { 24L * 60 * 60 * 1000 }
+            Task.EVERY_WEEK -> { 24L * 60 * 60 * 1000 * 7 }
+            Task.EVERY_SECOND_WEEK -> { 24L * 60 * 60 * 1000 * 14 }
+            Task.EVERY_YEAR -> { 24L * 60 * 60 * 1000 * 365 }
+            else -> { -1 } // this line will never be executed
+        }
     }
 
     private fun updateSubtasksNumber(number: Int) = viewModelScope.launch {

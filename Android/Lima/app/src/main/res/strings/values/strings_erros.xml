@@ -10,5 +10,7 @@
     <string name="error_time_does_intersect">There are already task on this time</string>
     <string name="error_time_duration">The minimum task time duration is 30 minutes</string>
 
+    <string name="error_data_required">You can not set repeated task if you did not specify the data for task</string>
+
     <string name="error_no_tasks">There are no tasks for today</string>
 </resources>

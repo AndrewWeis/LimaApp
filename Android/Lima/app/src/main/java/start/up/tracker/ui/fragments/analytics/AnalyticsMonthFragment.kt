@@ -91,7 +91,18 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
             chartViews[i]!!.leftButton.text = "left"
             chartViews[i]!!.rightButton.text = "right"
             chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
-            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average.toString()
+            chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average
+            chartViews[i]!!.totalText.text = viewModel.chartDataList[i].total
+
+            if (viewModel.chartDataList[i].total == "-1") {
+                chartViews[i]!!.totalTasksText.visibility = View.GONE
+                chartViews[i]!!.totalTitleText.visibility = View.GONE
+                chartViews[i]!!.totalText.visibility = View.GONE
+            }
+
+            if (viewModel.chartDataList[i].average.contains("%")) {
+                chartViews[i]!!.averageTasksText.visibility = View.GONE
+            }
 
             val chart = AnyChart.column()
 
@@ -141,6 +152,17 @@ class AnalyticsMonthFragment : Fragment(R.layout.fragment_analytics_month) {
         chartViews[i]!!.rightButton.text = "right"
         chartViews[i]!!.dateText.text = viewModel.chartDataList[i].date
         chartViews[i]!!.averageText.text = viewModel.chartDataList[i].average
+        chartViews[i]!!.totalText.text = viewModel.chartDataList[i].total
+
+        if (viewModel.chartDataList[i].total == "-1") {
+            chartViews[i]!!.totalTasksText.visibility = View.GONE
+            chartViews[i]!!.totalTitleText.visibility = View.GONE
+            chartViews[i]!!.totalText.visibility = View.GONE
+        }
+
+        if (viewModel.chartDataList[i].average.contains("%")) {
+            chartViews[i]!!.averageTasksText.visibility = View.GONE
+        }
 
         charts[i].data(viewModel.chartDataList[i].data)
     }

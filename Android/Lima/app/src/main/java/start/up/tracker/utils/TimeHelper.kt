@@ -264,6 +264,30 @@ object TimeHelper {
         }
     }
 
+    fun addDays(dateTimeInMillis: Long?, days: Int): Long? {
+        if (dateTimeInMillis == null) {
+            return null
+        }
+
+        return dateTimeInMillis + days.toLong() * 24 * 60 * 60 * 1000
+    }
+
+    fun addMinutes(dateTimeInMillis: Long?, minutes: Int): Long? {
+        if (dateTimeInMillis == null) {
+            return null
+        }
+
+        return dateTimeInMillis + minutes.toLong() * 60 * 1000
+    }
+
+    fun addSeconds(dateTimeInMillis: Long?, seconds: Long): Long? {
+        if (dateTimeInMillis == null) {
+            return null
+        }
+
+        return dateTimeInMillis + seconds * 1000
+    }
+
     object DateFormats {
         const val DD_MMMM: String = "dd-MMMM"
         const val DD_MMM_EEEE: String = "dd MMM, EEEE"

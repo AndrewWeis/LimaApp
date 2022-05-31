@@ -9,6 +9,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import start.up.tracker.database.dao.AnalyticsDao
+import start.up.tracker.database.dao.TaskDao
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
@@ -18,13 +19,15 @@ import kotlin.collections.set
 
 @HiltViewModel
 class AnalyticsYearViewModel @Inject constructor(
-    private val dao: AnalyticsDao,
+    private val analyticsDao: AnalyticsDao,
+    private val taskDao: TaskDao,
 ) : ViewModel() {
 
     inner class ChartData(
         da: MutableList<DataEntry>,
         ti: String,
         av: String,
+        to: String,
         de: String,
         fo: String,
         smax: Boolean,
@@ -35,6 +38,7 @@ class AnalyticsYearViewModel @Inject constructor(
         var data = da
         val title = ti
         var average = av
+        var total = to
         var date = de
         val format = fo
         val isSoftMaximum = smax
@@ -91,7 +95,50 @@ class AnalyticsYearViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val stats = dao.getStatYear(currentYear)
+        val stats = analyticsDao.getStatYear(currentYear)
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 0 until 12) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 0 until 12) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.set(calendar.get(Calendar.YEAR) + 1, 0, 1)
+            calendar1.timeInMillis = calendar1.timeInMillis - 24 * 60 * 60 * 1000
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..12) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.YEAR) == calendar1.get(Calendar.YEAR)) {
+                    habitStatsLocal[calendar2.get(Calendar.MONTH)] =
+                        habitStatsLocal[calendar2.get(Calendar.MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 0 until 12) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
 
         val data: MutableList<DataEntry> = ArrayList()
         val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
@@ -102,12 +149,16 @@ class AnalyticsYearViewModel @Inject constructor(
             yearList[month[i]] = 0
         }
 
-        var sum = 0
-
         stats.forEach {
             val currentValue = yearList[month[it.month - 1]]
             yearList[month[it.month - 1]] = currentValue!! + it.allTasks
-            sum += yearList[month[it.month - 1]]!!
+        }
+
+        var sum = 0
+
+        for (i in 0 until 12) {
+            yearList[month[i]] = yearList[month[i]]!! + habitStats[i]!!
+            sum += yearList[month[i]]!!
         }
 
         val average = sum.toDouble() / 12
@@ -116,7 +167,7 @@ class AnalyticsYearViewModel @Inject constructor(
             data.add(ValueDataEntry(it.key, it.value))
         }
 
-        return ChartData(data, "All tasks", formatDouble(average),
+        return ChartData(data, "All tasks", formatDouble(average), formatDouble(sum.toDouble()),
             currentYearName, "{%value}", false, false, shift,
             "Number of all your tasks in months of the year"
         )
@@ -126,7 +177,7 @@ class AnalyticsYearViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val stats = dao.getStatYear(currentYear)
+        val stats = analyticsDao.getStatYear(currentYear)
 
         val data: MutableList<DataEntry> = ArrayList()
         val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
@@ -145,15 +196,21 @@ class AnalyticsYearViewModel @Inject constructor(
             sum += yearList[month[it.month - 1]]!!
         }
 
-        val average = sum.toDouble() / 12
+        var total = 0
+
+        for (i in 0 until 12) {
+            total += yearList[month[i]]!!
+        }
+
+        val average = total.toDouble() / 12
 
         yearList.forEach {
             data.add(ValueDataEntry(it.key, it.value))
         }
 
         return (ChartData(data, "Completed tasks", formatDouble(average),
-            currentYearName, "{%value}", false, false, shift,
-            "Number of your completed tasks in months of the year"
+            formatDouble(total.toDouble()), currentYearName, "{%value}", false, false,
+            shift, "Number of your completed tasks in months of the year"
         ))
     }
 
@@ -161,7 +218,50 @@ class AnalyticsYearViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val stats = dao.getStatYear(currentYear)
+        val stats = analyticsDao.getStatYear(currentYear)
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 0 until 12) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 0 until 12) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.set(calendar.get(Calendar.YEAR) + 1, 0, 1)
+            calendar1.timeInMillis = calendar1.timeInMillis - 24 * 60 * 60 * 1000
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..12) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.YEAR) == calendar1.get(Calendar.YEAR)) {
+                    habitStatsLocal[calendar2.get(Calendar.MONTH)] =
+                        habitStatsLocal[calendar2.get(Calendar.MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 0 until 12) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
 
         val data: MutableList<DataEntry> = ArrayList()
         val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
@@ -188,11 +288,13 @@ class AnalyticsYearViewModel @Inject constructor(
         var nonEmptyCounter = 0
 
         for (i in 1..12) {
-            if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
+            if (yearListCompleted[month[i - 1]] == 0 || (yearListAll[month[i - 1]]!!
+                        + habitStats[i - 1]!!) == 0
+            ) {
                 yearList[month[i - 1]] = 0.0
             } else {
                 yearList[month[i - 1]] = yearListCompleted[month[i - 1]]!!.toDouble() /
-                        yearListAll[month[i - 1]]!!.toDouble() * 100
+                        (yearListAll[month[i - 1]]!! + habitStats[i - 1]!!) * 100
                 sum += yearList[month[i - 1]]!!
                 nonEmptyCounter++
             }
@@ -209,7 +311,8 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity", formatDouble(average) + "%",
-            currentYearName, "{%value}%", true, false, shift,
+            formatDouble(-1.0), currentYearName, "{%value}%", true, false,
+            shift,
             "The ratio of all tasks you completed in months of the year to all created tasks"
         ))
     }
@@ -218,7 +321,50 @@ class AnalyticsYearViewModel @Inject constructor(
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) + shift)
         val currentYear: Int = calendar.get(Calendar.YEAR)
-        val stats = dao.getStatYear(currentYear)
+        val stats = analyticsDao.getStatYear(currentYear)
+
+        /////////////////////////////
+
+        val habitStats: HashMap<Int, Int> = HashMap()
+        val allHabits = taskDao.getAllHabits()
+
+        for (i in 0 until 12) {
+            habitStats[i] = 0
+        }
+
+        val calendar1 = Calendar.getInstance()
+
+        for (habit in allHabits) {
+            val habitStatsLocal: HashMap<Int, Int> = HashMap()
+            for (i in 0 until 12) {
+                habitStatsLocal[i] = 0
+            }
+
+            val calendar2 = Calendar.getInstance()
+            calendar2.timeInMillis = habit.date!!
+            var year = calendar2.get(Calendar.YEAR)
+            calendar1.set(calendar.get(Calendar.YEAR) + 1, 0, 1)
+            calendar1.timeInMillis = calendar1.timeInMillis - 24 * 60 * 60 * 1000
+            while (calendar2.timeInMillis < calendar1.timeInMillis) {
+                if (year != calendar2.get(Calendar.YEAR)) {
+                    for (i in 1..12) {
+                        habitStatsLocal[i] = 0
+                    }
+                    year = calendar2.get(Calendar.YEAR)
+                }
+                if (calendar2.get(Calendar.YEAR) == calendar1.get(Calendar.YEAR)) {
+                    habitStatsLocal[calendar2.get(Calendar.MONTH)] =
+                        habitStatsLocal[calendar2.get(Calendar.MONTH)]!! + 1
+                }
+                calendar2.timeInMillis += habit.shift
+            }
+
+            for (i in 0 until 12) {
+                habitStats[i] = habitStats[i]!! + habitStatsLocal[i]!!
+            }
+        }
+
+        /////////////////////////////
 
         val data: MutableList<DataEntry> = ArrayList()
         val currentYearName = SimpleDateFormat("yyyy").format(calendar.time)
@@ -246,12 +392,14 @@ class AnalyticsYearViewModel @Inject constructor(
         var buf = 0.0
 
         for (i in 1..12) {
-            if (yearListCompleted[month[i - 1]] == 0 || yearListAll[month[i - 1]] == 0) {
+            if (yearListCompleted[month[i - 1]] == 0 ||
+                (yearListAll[month[i - 1]]!! + habitStats[i - 1]!!) == 0
+            ) {
                 yearList[month[i - 1]] = 0.0
                 buf = 0.0
             } else {
                 val new = yearListCompleted[month[i - 1]]!!.toDouble() /
-                        yearListAll[month[i - 1]]!!.toDouble() * 100
+                        (yearListAll[month[i - 1]]!! + habitStats[i - 1]!!) * 100
                 if (new == 0.0) {
                     yearList[month[i - 1]] = 0.0
                     buf = 0.0
@@ -275,7 +423,8 @@ class AnalyticsYearViewModel @Inject constructor(
         }
 
         return (ChartData(data, "Productivity Tendency", formatDouble(average) + "%",
-            currentYearName, "{%value}%", true, true, shift,
+            formatDouble(-1.0), currentYearName, "{%value}%", true, true,
+            shift,
             "The ratio of your productivity compared to the previous month of the year"
         ))
     }
