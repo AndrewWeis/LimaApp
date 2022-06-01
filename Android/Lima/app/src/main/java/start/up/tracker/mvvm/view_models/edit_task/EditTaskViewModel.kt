@@ -328,7 +328,7 @@ class EditTaskViewModel @Inject constructor(
     }
 
     private suspend fun validateHabit(): String? {
-        if (task.date == null) {
+        if (task.repeatsId != Task.NEVER && task.date == null) {
             return ResourcesUtils.getString(R.string.error_data_required)
         }
 
@@ -358,7 +358,7 @@ class EditTaskViewModel @Inject constructor(
             today = TimeHelper.getCurrentDayInMilliseconds()
         )
 
-        if (doesTimeIntersect) {
+        if (doesTimeIntersect && task.repeatsId == Task.NEVER) {
             return ResourcesUtils.getString(R.string.error_time_does_intersect)
         }
 
