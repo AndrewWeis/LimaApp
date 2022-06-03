@@ -24,4 +24,4 @@
 
 1. [Design in figma](https://www.figma.com/file/0Z7BmaQy8rl5xGbKXvzAMT/Lima:-Life-manager?node-id=0%3A1)
 2. [Architecture](./Docs/Architecture.pdf)
-3. [Presentation](./Docs/presentation.pdf)
+3. [Presentation](./Docs/presentation.pptx)
