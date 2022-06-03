@@ -358,7 +358,7 @@ class EditTaskViewModel @Inject constructor(
             today = TimeHelper.getCurrentDayInMilliseconds()
         )
 
-        if (doesTimeIntersect && task.repeatsId == Task.NEVER) {
+        if (doesTimeIntersect && task.repeatsId == Task.NEVER && !isEditMode) {
             return ResourcesUtils.getString(R.string.error_time_does_intersect)
         }
 
